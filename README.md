@@ -271,3 +271,20 @@ extrinsics, glass position and normal, thickness, refractive indices,
 and physical tank coordinate units. This is not automatic calibration
 nor a guarantee of metrological XYZ accuracy.
 Details: docs/FLATPORT_CAMERA_GEOMETRY.md.
+
+
+## Wave 7A: full fish trajectory reconstruction with flat-port optics
+
+aqt_refractive_reconstruct_tracks() accepts explicitly reviewed,
+camera-synchronized pixel-track correspondences and returns standard
+3D fish trajectories under the supported one-interface or parallel
+glass-slab refractive model. Source IDs, timestamps, clock skew,
+physical ray residuals and observed/invalid flags remain available.
+
+aqt_refractive_track_quality() summarizes session-level reconstruction
+coverage, clock skew and ray-separation diagnostics. These outputs
+feed the same 3D swimming, spatial, visual and event-statistical
+functions as other properly calibrated XYZ tracks.
+
+**No automatic fish re-identification or camera calibration is implied.**
+See docs/REFRACTIVE_TRACK_RECONSTRUCTION.md for the contract.
