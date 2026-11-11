@@ -29,7 +29,7 @@ test_that("Snell bending gives a more distant underwater crossing than pinhole",
   expect_gt(xyz$z[1],1.2)
   expect_lt(xyz$z[1],1.6)
   expect_lt(xyz$separation[1],1e-9)
-  truth <- matrix(as.numeric(xyz[1,c("x","y","z")]),nrow=1)
+  truth <- matrix(unlist(xyz[1,c("x","y","z")],use.names=FALSE),nrow=1)
   qc <- aqt_refractive_landmark_qc(c1,pix1,truth)
   expect_equal(qc$n_valid,1)
   expect_lt(qc$rmse,1e-9)
