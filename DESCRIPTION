@@ -1,13 +1,13 @@
 Package: aquaTrajectories
 Title: Aquatic Animal Movement and Multiview Trajectories
-Version: 0.0.10.9000
+Version: 0.0.11.9000
 Authors@R: person("Stefanos", "Balaskas", email = "56984563+stefanosbalaskas@users.noreply.github.com", role = c("aut", "cre"))
 Description: Development-stage tools for validated two- and three-dimensional aquatic animal trajectories, movement and group metrics, event alignment, synchronization, and calibrated stereo geometry and observed 3D voxel occupancy, reviewer-gated cross-view hypotheses, and conditional pixel-error propagation. Automatic cross-camera identity matching, fish detection, full underwater refraction correction, and uncertainty-calibrated inference are not yet implemented.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports: stats, utils, graphics, grDevices, tools
-Suggests: testthat (>= 3.0.0), rgl, roxygen2
+Suggests: testthat (>= 3.0.0), rgl, roxygen2, fdapace, nlme
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 URL: https://github.com/stefanosbalaskas/AquaTrajectories
