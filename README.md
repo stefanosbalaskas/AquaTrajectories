@@ -208,3 +208,17 @@ Association edges do NOT prove leadership or animal preference.
 Tracking dropouts, camera calibration and independent-tank replication
 must still be handled independently. Details:
 docs/SCHOOL_SPATIAL_METHODS.md.
+
+
+## Wave 6A: explicitly parameterized refractive geometry
+
+Native functions aqt_refractive_camera(), aqt_refractive_rays(),
+aqt_refractive_triangulate() and aqt_refractive_landmark_qc()
+implement and test Snell ray bending through ONE IDEAL planar interface,
+plus independently measured 3D landmark residual checks.
+
+**Not a complete flat-glass aquarium camera model.** Typical
+air-glass-water optics involve TWO refractive surfaces; dome ports
+and lens distortion are also not represented. User-supplied camera
+parameters do not by themselves certify calibration. See
+docs/REFRACTIVE_GEOMETRY.md.
