@@ -33,3 +33,14 @@ test_that("synthetic 3D trajectories are deterministic without changing RNG", {
   expect_equal(x,aqt_simulate_tracks(5,10,dimension=3,seed=4))
   expect_error(aqt_plot_path3d(aqt_simulate_tracks(dimension=2)),"True 3D")
 })
+
+
+test_that("interpolated/non-observed coordinates are not treated as measured movement", {
+  d <- data.frame(session_id="S1",camera_id="top",track_id="A",
+    time_s=c(0,1,2),x=c(0,1,10),y=c(0,0,0),observed=c(TRUE,TRUE,FALSE))
+  tracks <- aqt_tracks(d)
+  kin <- aqt_kinematics(tracks)
+  expect_equal(kin$speed[2],1)
+  expect_true(is.na(kin$speed[3]))
+  expect_equal(aqt_path_summary(tracks)$path_length,1)
+})
