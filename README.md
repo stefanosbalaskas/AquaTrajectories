@@ -163,3 +163,12 @@ This is a conditional, fixed-identity model. It excludes camera
 calibration/refraction, timing errors, identity switches, unequal
 reference coverage and independent-tank sampling uncertainty.
 See docs/TRAJECTORY_UNCERTAINTY.md for examples and caveats.
+
+
+## Installation and API documentation
+
+The R package source now includes its generated \`NAMESPACE\` and \`man/\`
+reference pages. Package documentation is regenerated from R source
+roxygen comments during CI, and updated documentation is committed on
+in-repository pull requests before the package check. Scientific validation
+of the mathematical and biological contracts remains a separate requirement.
