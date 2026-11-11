@@ -117,17 +117,21 @@ aqt_box_iou <- function(truth,pred) {
 #' @param pred Predicted boxes with confidence.
 #' @param iou_threshold Overlap threshold, inclusive.
 #' @param confidence_threshold Predictions below this value are omitted.
+#' @param evaluated_frames Optional manifest of fully annotated video frames.
 #' @return Long table with TP, FP, FN statuses, source row indices and IoU.
 #' @export
-aqt_detection_match <- function(truth,pred,iou_threshold=.5,confidence_threshold=0) {
+aqt_detection_match <- function(truth,pred,iou_threshold=.5,confidence_threshold=0,
+                                evaluated_frames=NULL) {
   if (length(iou_threshold)!=1L || !is.finite(iou_threshold) ||
       iou_threshold<=0 || iou_threshold>1)
     stop("iou_threshold must be in (0,1]",call.=FALSE)
   if (length(confidence_threshold)!=1L || !is.finite(confidence_threshold) ||
       confidence_threshold<0 || confidence_threshold>1)
     stop("confidence_threshold must be in [0,1]",call.=FALSE)
-  g <- aqt_detection_boxes(truth,"truth")
-  p <- aqt_detection_boxes(pred,"prediction")
+  g <- .aqt_filter_evaluation_frames(aqt_detection_boxes(truth,"truth"),
+                                     evaluated_frames,reference=TRUE)
+  p <- .aqt_filter_evaluation_frames(aqt_detection_boxes(pred,"prediction"),
+                                     evaluated_frames)
   p <- p[p$confidence>=confidence_threshold,,drop=FALSE]
   columns <- data.frame(session_id=character(),camera_id=character(),
     frame_id=character(),class_id=character(),status=character(),
@@ -178,10 +182,13 @@ aqt_detection_match <- function(truth,pred,iou_threshold=.5,confidence_threshold
 #' @param truth,pred Reference and predicted boxes.
 #' @param iou_threshold Match threshold.
 #' @param confidence_threshold Prediction confidence cutoff.
+#' @param evaluated_frames Optional fully annotated frame manifest.
 #' @return Per-class rows plus a micro-pooled ALL row.
 #' @export
-aqt_detection_metrics <- function(truth,pred,iou_threshold=.5,confidence_threshold=.25) {
-  m <- aqt_detection_match(truth,pred,iou_threshold,confidence_threshold)
+aqt_detection_metrics <- function(truth,pred,iou_threshold=.5,confidence_threshold=.25,
+                                  evaluated_frames=NULL) {
+  m <- aqt_detection_match(truth,pred,iou_threshold,confidence_threshold,
+                           evaluated_frames=evaluated_frames)
   if (!nrow(m)) return(data.frame())
   classes <- unique(m$class_id)
   stat <- function(z,label) {
@@ -207,11 +214,15 @@ aqt_detection_metrics <- function(truth,pred,iou_threshold=.5,confidence_thresho
 #' @param truth Independent labelled fish bounding boxes.
 #' @param pred Predicted boxes with confidence scores.
 #' @param iou_thresholds Overlap thresholds in (0,1].
+#' @param evaluated_frames Optional fully annotated frame manifest.
 #' @return Per class and IoU threshold AP, n_truth and n_predictions.
 #' @export
-aqt_detection_ap <- function(truth,pred,iou_thresholds=seq(.5,.95,by=.05)) {
-  g <- aqt_detection_boxes(truth,"truth")
-  p <- aqt_detection_boxes(pred,"prediction")
+aqt_detection_ap <- function(truth,pred,iou_thresholds=seq(.5,.95,by=.05),
+                             evaluated_frames=NULL) {
+  g <- .aqt_filter_evaluation_frames(aqt_detection_boxes(truth,"truth"),
+                                     evaluated_frames,reference=TRUE)
+  p <- .aqt_filter_evaluation_frames(aqt_detection_boxes(pred,"prediction"),
+                                     evaluated_frames)
   if (!is.numeric(iou_thresholds) || !length(iou_thresholds) ||
       any(!is.finite(iou_thresholds)) || any(iou_thresholds<=0 | iou_thresholds>1))
     stop("Invalid IoU threshold vector",call.=FALSE)
