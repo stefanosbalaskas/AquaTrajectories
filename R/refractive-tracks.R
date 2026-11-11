@@ -52,22 +52,22 @@ aqt_refractive_reconstruct_tracks <- function(
       !all(needed %in% names(correspondences)))
     stop("Require nonempty reviewed cross-camera correspondence table",
          call.=FALSE)
-  c <- as.data.frame(correspondences)
+  paired <- as.data.frame(correspondences)
   for (nm in c("session_id","id_a","id_b","fish_id")) {
-    if (anyNA(c[[nm]]) || any(!nzchar(as.character(c[[nm]]))))
+    if (anyNA(paired[[nm]]) || any(!nzchar(as.character(paired[[nm]]))))
       stop("Reviewed biological and source IDs must be explicit",
            call.=FALSE)
-    c[[nm]] <- as.character(c[[nm]])
+    paired[[nm]] <- as.character(paired[[nm]])
   }
   for (nm in c("time_a_s","time_b_s"))
-    if (!is.numeric(c[[nm]]) || any(!is.finite(c[[nm]])))
+    if (!is.numeric(paired[[nm]]) || any(!is.finite(paired[[nm]])))
       stop("Reviewed camera timestamps must be finite numeric",call.=FALSE)
-  skew <- abs(c$time_a_s-c$time_b_s)
+  skew <- abs(paired$time_a_s-paired$time_b_s)
   if (any(skew>max_skew_s))
     stop("Source observations exceed permitted synchronization skew",
          call.=FALSE)
-  k_a <- .aqt_join_key(c$session_id,c$id_a,c$time_a_s)
-  k_b <- .aqt_join_key(c$session_id,c$id_b,c$time_b_s)
+  k_a <- .aqt_join_key(paired$session_id,paired$id_a,paired$time_a_s)
+  k_b <- .aqt_join_key(paired$session_id,paired$id_b,paired$time_b_s)
   ia <- match(k_a,.aqt_join_key(a$session_id,a$track_id,a$time_s))
   ib <- match(k_b,.aqt_join_key(b$session_id,b$track_id,b$time_s))
   if (anyNA(ia) || anyNA(ib))
@@ -82,9 +82,9 @@ aqt_refractive_reconstruct_tracks <- function(
           stats::complete.cases(xy1) & stats::complete.cases(xy2)
   xy1[!good,] <- NA_real_
   xy2[!good,] <- NA_real_
-  triangulated <- data.frame(x=rep(NA_real_,nrow(c)),
-    y=rep(NA_real_,nrow(c)),z=rep(NA_real_,nrow(c)),
-    separation=rep(NA_real_,nrow(c)),valid=rep(FALSE,nrow(c)))
+  triangulated <- data.frame(x=rep(NA_real_,nrow(paired)),
+    y=rep(NA_real_,nrow(paired)),z=rep(NA_real_,nrow(paired)),
+    separation=rep(NA_real_,nrow(paired)),valid=rep(FALSE,nrow(paired)))
   if (any(good)) {
     tri <- aqt_refractive_triangulate(
       camera_a,camera_b,xy1[good,,drop=FALSE],
@@ -95,16 +95,16 @@ aqt_refractive_reconstruct_tracks <- function(
   }
   if (!any(triangulated$valid))
     stop("No valid reviewed 3D refractive fish observations",call.=FALSE)
-  d <- data.frame(session_id=c$session_id,camera_id="REFRACTIVE3D",
-    track_id=c$fish_id,time_s=(c$time_a_s+c$time_b_s)/2,
+  d <- data.frame(session_id=paired$session_id,camera_id="REFRACTIVE3D",
+    track_id=paired$fish_id,time_s=(paired$time_a_s+paired$time_b_s)/2,
     x=triangulated$x,y=triangulated$y,z=triangulated$z,
     observed=triangulated$valid,
     source_camera_a=c_a,source_camera_b=c_b,
-    source_id_a=c$id_a,source_id_b=c$id_b,
-    source_time_a_s=c$time_a_s,source_time_b_s=c$time_b_s,
+    source_id_a=paired$id_a,source_id_b=paired$id_b,
+    source_time_a_s=paired$time_a_s,source_time_b_s=paired$time_b_s,
     time_skew_s=skew,ray_separation=triangulated$separation)
   for (extra in c("tank_id","treatment","reviewer","reason"))
-    if (extra %in% names(c)) d[[extra]] <- c[[extra]]
+    if (extra %in% names(paired)) d[[extra]] <- paired[[extra]]
   out <- aqt_tracks(d,units=camera_a$units,coordinate_system="tank")
   attr(out,"aqt_refractive_models") <- c(
     model_a=camera_a$model,model_b=camera_b$model)
