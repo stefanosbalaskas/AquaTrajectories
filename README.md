@@ -302,3 +302,16 @@ for every measurement scenario.
 The outputs **do not constitute a statistically calibrated joint confidence
 interval**. The separately resampled tanks represent a different
 uncertainty source. See `docs/JOINT_REFRACTIVE_SENSITIVITY.md`.
+
+
+## Wave 8A: descriptive behavioural change points
+
+`aqt_state_changepoint()` detects optimal piecewise-mean transitions in
+one fully observed fish behaviour time series, with an explicit
+complexity penalty and strict timestamp/missingness guards.
+`aqt_changepoint_event_delay()` compares changes with logged event
+onsets, while `aqt_plot_changepoints()` provides a basic diagnostic.
+
+These are descriptive change points, **not** automatically classified
+animal stress, welfare, HMM states or causal intervention responses.
+See `docs/FISH_BEHAVIOURAL_CHANGEPOINTS.md`.

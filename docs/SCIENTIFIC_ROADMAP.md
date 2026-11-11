@@ -147,3 +147,13 @@ tank-replicated treatment-group contrasts. Scenario inclusion and tracking
 gaps are audited. Rotation, synchronization uncertainty, automated cross-view
 identity probabilities, calibrated real-video error distributions and joint
 confidence intervals remain unqualified.
+
+
+## Wave 8A — bounded native behavioural change-point segmentation
+
+Implemented finite penalized SSE segmentation, event-onset delay
+diagnostics and observed-vs-fitted graphical outputs. Missingness
+and large timestamp gaps are rejected; video-frame sample counts
+never replace independently treated tanks. Species-calibrated state
+models, HMMs and qualified EyeTrajectories-native methods remain
+separately unimplemented.
