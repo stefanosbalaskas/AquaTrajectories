@@ -40,3 +40,11 @@ Interactive multi-trajectory 3D dashboards; time-locked school dynamics; figures
 From Pixels to Behaviour: AquaTrajectories, an R Framework for Uncertainty-Aware 2D/3D Aquatic Animal Movement and Event-Aligned Inference.
 
 No first-in-field claim is made for trajectory, stereo, or multi-camera tracking. Novelty must be established by demonstrating verified effects of error propagation on behavioural and inferential conclusions.
+
+## Wave 3B — Geometry hypotheses and conditional pixel uncertainty
+
+Implemented in the development branch: camera-time candidate enumeration,
+reprojection ranking without identity claims, explicit documented reviewer
+selections, and Monte Carlo pixel-localization uncertainty for verified
+pinhole stereo points. Real underwater calibration, multiple-ID hypotheses,
+clock/calibration correlated uncertainty and biological inference remain open.
