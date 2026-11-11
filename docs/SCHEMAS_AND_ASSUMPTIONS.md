@@ -41,3 +41,21 @@ Sparse truth annotation must pass an explicit manifest from
 aqt_evaluation_frames(), listing ALL fully reviewed frames including
 empty ones; otherwise false positives from unannotated frames are invalid.
 MD5 manifests detect file changes but do not authenticate source material.
+
+
+## Wave 3A known-correspondence camera rigs
+
+aqt_rig_new() requires >=2 named nondegenerate projective cameras with
+one common world coordinate system and cm/m units. An air-only pinhole
+path is currently required for aqt_reconstruct_3d(). A user declaring
+a water/glass refraction interface is stopped: uncorrected flat-port
+or through-glass observations cannot be passed off as exact pinhole
+reconstructions. Camera timing must have been separately corrected and
+checked. Paired fish detections require an external correspondence table
+with explicit independent camera IDs and timestamps.
+
+The resulting XYZ tracks retain both source IDs and camera timestamps,
+with missing samples explicitly flagged. No cross-camera biological
+reidentification or exact 3D body shape is claimed.
+3D voxel occupancy counts observed positions, not continuous dwell time,
+and reports samples outside the declared physical tank volume.
