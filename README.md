@@ -25,3 +25,44 @@ The simulator produces purely synthetic random walks, not biologically calibrate
 Camera- and session-scoped track IDs are not permanent animal identities. A 2D trajectory has unknown depth, not z = 0. Missing positions and long intervals are not silently interpolated. Pinhole stereo triangulation requires externally matched points and is inappropriate for uncorrected refraction. Camera-clock alignment is not physical exposure synchronization. Tank-level experimental replication and independent welfare validation remain necessary.
 
 See docs/SCIENTIFIC_ROADMAP.md for planned advanced functionality and status.
+
+
+## Wave 2: independently evaluated detectors and trackers
+
+This development branch adds validation of independent fish detections
+and individual identity assignments. The two accuracy problems are separate.
+
+- Detection: aqt_detection_boxes(), aqt_box_iou(),
+  aqt_detection_match(), aqt_detection_metrics(), aqt_detection_ap(),
+  and aqt_detection_map(). Includes precision, recall, F1, IoU and
+  confidence-ranked 101-point AP/mAP; NOT full COCO benchmark semantics.
+- Identity tracking: aqt_tracking_observations(), aqt_tracking_match(),
+  aqt_tracking_metrics(). Reports framewise matches, optimal global IDF1,
+  adjacent ID switches and positional RMSE per session and camera.
+  HOTA / official CLEAR MOT are NOT implemented.
+- Ground-truth scope: aqt_evaluation_frames() makes sparse manual
+  annotation explicit. Include manually reviewed empty frames.
+- Provenance: aqt_provenance_new(), aqt_provenance_verify().
+  File digests provide change detection, not authentication.
+- Human corrections: aqt_apply_identity_corrections() maintains the
+  original IDs and reviewer-provided correction log.
+
+### Minimal validation demonstration
+
+~~~r
+truth <- data.frame(
+  session_id="S1",camera_id="top",frame_id="0",class_id="fish",
+  xmin=0,ymin=0,xmax=20,ymax=10
+)
+prediction <- transform(truth,confidence=.94)
+aqt_detection_metrics(truth,prediction,confidence_threshold=.25)
+aqt_detection_map(truth,prediction,iou_thresholds=c(.5,.75))
+
+reference <- data.frame(session_id="S1",camera_id="top",
+  frame_id=0:2,track_id="A",x=0:2,y=0)
+estimate <- transform(reference,track_id=c("1","1","3"))
+aqt_tracking_metrics(reference,estimate,max_distance=.1)
+~~~
+
+For assumptions, reference-label requirements, and scope limitations,
+see docs/VALIDATION_CONTRACT.md.
