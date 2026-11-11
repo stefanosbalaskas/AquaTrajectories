@@ -86,6 +86,8 @@ aqt_refractive_camera <- function(K,R_c2w,center,plane_point,plane_normal,
 #' @return Data frame of refracted ray origin/direction and valid flag.
 #' @export
 aqt_refractive_rays <- function(camera,pixels) {
+  if (inherits(camera,"aqt_flatport_camera"))
+    return(aqt_flatport_rays(camera,pixels))
   if (!inherits(camera,"aqt_refraction_camera") ||
       !identical(camera$model,"single_ideal_planar_interface"))
     stop("Expected an ideal single-interface refractive camera",call.=FALSE)
@@ -127,7 +129,7 @@ aqt_refractive_rays <- function(camera,pixels) {
 #' Ray separation in physical units is a consistency diagnostic, not
 #' independent position accuracy or statistical interval coverage.
 #'
-#' @param camera_a,camera_b Two parameterized ideal refractive cameras,
+#' @param camera_a,camera_b Two compatible explicitly parameterized refractive cameras,
 #'   with matching world-coordinate units.
 #' @param pixels_a,pixels_b Explicitly corresponding undistorted n-by-2
 #'   source-image pixel coordinates.

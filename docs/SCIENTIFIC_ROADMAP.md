@@ -116,3 +116,13 @@ backend, and a fish-within-tank two-epoch mixed model using nlme.
 Qualifying EyeTrajectories R functionality requires strict cross-language
 oracle comparisons and independent contract certification first.
 Joint measurement/identity/tank uncertainty is still a research goal.
+
+
+## Wave 6D — parallel flat-glass port geometry
+
+Adds two-interface air-glass-water pixel-to-water ray tracing,
+with independent camera/landmark QC and known-geometry regression
+tests. Supports parallel planar glass walls only; measured intrinsics,
+extrinsics, surface normals/thickness and validation targets remain
+the user's responsibility. Joint optical parameter uncertainty with
+fish identity and tank-level inference remains future work.

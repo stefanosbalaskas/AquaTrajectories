@@ -13,7 +13,7 @@ aqt_refractive_triangulate(
 )
 }
 \arguments{
-\item{camera_a, camera_b}{Two parameterized ideal refractive cameras,
+\item{camera_a, camera_b}{Two compatible explicitly parameterized refractive cameras,
 with matching world-coordinate units.}
 
 \item{pixels_a, pixels_b}{Explicitly corresponding undistorted n-by-2
