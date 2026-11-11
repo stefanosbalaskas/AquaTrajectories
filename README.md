@@ -288,3 +288,17 @@ functions as other properly calibrated XYZ tracks.
 
 **No automatic fish re-identification or camera calibration is implied.**
 See docs/REFRACTIVE_TRACK_RECONSTRUCTION.md for the contract.
+
+
+## Wave 7B: conditional joint optics and fish identity uncertainty
+
+Three new native R functions combine recording-level coherent perturbations
+of refractive camera-centre and flat-glass parameters, pixel localization
+noise, and explicit whole-segment fish-ID alternatives. They reconstruct
+three-dimensional paths from reviewed camera observations and repeat
+event-level outcomes and independently tank-replicated treatment contrasts
+for every measurement scenario.
+
+The outputs **do not constitute a statistically calibrated joint confidence
+interval**. The separately resampled tanks represent a different
+uncertainty source. See `docs/JOINT_REFRACTIVE_SENSITIVITY.md`.

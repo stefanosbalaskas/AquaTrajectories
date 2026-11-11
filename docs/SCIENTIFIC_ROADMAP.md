@@ -136,3 +136,14 @@ with source provenance, known clock tolerance, invalid-position
 handling and physical ray-separation QC. Experimental metrology,
 identity ambiguity, and camera-calibration uncertainty remain
 separately qualified research topics.
+
+
+## Wave 7B — coherent optical / ID sensitivity with tank replication
+
+Implemented conditional scenario draws for shared optical camera parameters,
+per-pixel localization noise and externally postulated discrete fish identity
+swaps, propagated to 3D trajectories, event windows and independently
+tank-replicated treatment-group contrasts. Scenario inclusion and tracking
+gaps are audited. Rotation, synchronization uncertainty, automated cross-view
+identity probabilities, calibrated real-video error distributions and joint
+confidence intervals remain unqualified.
