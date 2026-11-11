@@ -125,3 +125,18 @@ exclude identity switches, refraction, timing and camera calibration errors.
 
 See docs/CROSSVIEW_UNCERTAINTY.md for the runnable example and full limits.
 
+
+
+## Wave 4A: event windows and replicated tank-level analysis
+
+- aqt_event_epoch_summary(): user-defined windows relative to actual event
+  onset, with gap-safe sample or time-weighted behavioural means.
+- aqt_design_audit(): count independent experimental tanks by treatment,
+  and reject treatment switching under a simple between-tank design.
+- aqt_tank_event_contrast(): differences in tank-level before/after
+  responses between two treatment groups, resampling **tanks**, not
+  individual fish or 30-fps video frames.
+- aqt_plot_tank_changes(): paired per-tank before/after graphics.
+
+These methods do not claim causal identification or small-sample
+bootstrap interval calibration. See docs/EVENT_INFERENCE_CONTRACT.md.
