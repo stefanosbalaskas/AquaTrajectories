@@ -58,3 +58,13 @@ and experimental-unit-correct plots. No frame-level inferential p-values
 or unwarranted causal effect claims. Experimental-design simulations,
 hierarchical mixed models and cross-stage measurement uncertainty remain
 future qualification work.
+
+
+## Wave 4B — Conditional trajectory measurement sensitivity
+
+New modules for empirically inspected point-localization residuals,
+observation-correlated 2D/3D spatial error scenarios, whole-track and
+event-aligned metric propagation, conditional quantiles and 2D/3D
+scientific overlays. Not a joint model for calibrated XYZ, species,
+experimental-unit and camera uncertainty. Real underwater tests,
+coverage studies, and coherent cross-view error modelling are open.
