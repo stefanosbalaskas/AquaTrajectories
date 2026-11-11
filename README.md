@@ -66,3 +66,46 @@ aqt_tracking_metrics(reference,estimate,max_distance=.1)
 
 For assumptions, reference-label requirements, and scope limitations,
 see docs/VALIDATION_CONTRACT.md.
+
+
+## Wave 3A: calibrated known-correspondence stereo trajectories
+
+Two (or more) named projection matrices define aqt_rig_new().
+Use aqt_rig_project() and aqt_rig_baseline() for camera geometry.
+aqt_reconstruct_3d() joins externally known cross-camera fish matches
+at their actual, synchronized observation timestamps; 3D results carry
+reprojection RMSE, camera timestamp differences and source fish IDs.
+aqt_reconstruction_quality() summarizes those diagnostics.
+aqt_voxel_occupancy() provides observed XYZ sample counts in predefined
+physical-volume cells, and aqt_plot_reconstruction_qc() plots geometry/
+clock diagnostics.
+
+This stage is **strict known-correspondence pinhole stereo**, not automatic
+cross-view matching, through-glass calibration, fisheye correction or
+refraction-aware underwater tracking. It rejects rigs declaring a
+refractive interface rather than silently producing invalid XYZ positions.
+
+### Minimal synthetic stereo demonstration
+
+~~~r
+P1 <- cbind(diag(3),c(0,0,0))
+P2 <- cbind(diag(3),c(-1,0,0))
+rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm",
+                   optical_path="air_only")
+
+top <- aqt_tracks(data.frame(session_id="S1",camera_id="TOP",
+  track_id="top1",time_s=0,x=.5,y=.25))
+side <- aqt_tracks(data.frame(session_id="S1",camera_id="SIDE",
+  track_id="side1",time_s=0,x=.25,y=.25))
+pairs <- data.frame(session_id="S1",id_a="top1",id_b="side1",
+  time_a_s=0,time_b_s=0,fish_id="fishA")
+
+xyz <- aqt_reconstruct_3d(top,side,pairs,rig)
+print(xyz[,c("x","y","z","reprojection_rmse_px")])
+
+occupancy <- aqt_voxel_occupancy(xyz,
+  list(x=c(0,5),y=c(0,2),z=c(0,5)))
+~~~
+
+A low reprojection residual does not prove correct fish matching,
+biological identity, or metric underwater accuracy.
