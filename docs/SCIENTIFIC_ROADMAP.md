@@ -48,3 +48,13 @@ reprojection ranking without identity claims, explicit documented reviewer
 selections, and Monte Carlo pixel-localization uncertainty for verified
 pinhole stereo points. Real underwater calibration, multiple-ID hypotheses,
 clock/calibration correlated uncertainty and biological inference remain open.
+
+
+## Wave 4A — Event-epoch summaries and independent-tank contrasts
+
+Descriptive event windows, tracking-gap-safe trapezoidal behavioural means,
+tank design audit, nonparametric within-treatment tank-resampling contrasts,
+and experimental-unit-correct plots. No frame-level inferential p-values
+or unwarranted causal effect claims. Experimental-design simulations,
+hierarchical mixed models and cross-stage measurement uncertainty remain
+future qualification work.
