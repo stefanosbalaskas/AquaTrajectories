@@ -255,3 +255,19 @@ fit a simple tank/fish nested random-intercept treatment-by-epoch model.
 No unqualified EyeTrajectories algorithm is called. A nested mixed model
 does not automatically establish causal treatment effects. Detailed
 contracts and examples: docs/SPARSE_HIERARCHICAL_METHODS.md.
+
+
+## Wave 6D: two-interface air-glass-water optics
+
+aqt_flatport_camera() and aqt_flatport_rays() model a physically
+explicit flat, parallel glass slab between the source camera and
+aquatic environment, tracing light through TWO optical interfaces
+using Snell's law. Existing refractive triangulation and independent
+3D landmark QC operate on these rays without automatically
+identifying fish across views.
+
+**Externally measured parameters are required**: lens intrinsics,
+extrinsics, glass position and normal, thickness, refractive indices,
+and physical tank coordinate units. This is not automatic calibration
+nor a guarantee of metrological XYZ accuracy.
+Details: docs/FLATPORT_CAMERA_GEOMETRY.md.
