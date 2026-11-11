@@ -117,8 +117,36 @@ test_that("invalid physical uncertainty and corrupt correspondence scope fail", 
   expect_error(do.call(aqt_joint_refractive_scenarios,
                       c(args,list(draws=2))),"draws")
   bad <- f$correspondences
-  bad$fish_id[1] <- "unspecified"
+  bad$fish_id[8] <- "F1"
   expect_error(aqt_refractive_reconstruct_tracks(
     f$view_a,f$view_b,bad,f$camera_a,f$camera_b),
     "Duplicate time within scoped track|multiple fused fish")
+})
+
+
+test_that("event sensitivity refuses to silently omit failed scenarios", {
+  f <- .aqt_joint_test_fixture(tanks="C1")
+  x <- aqt_joint_refractive_scenarios(
+      f$view_a,f$view_b,f$correspondences,
+      f$camera_a,f$camera_b,draws=10,seed=3)
+  x$tracks[[10]] <- aqt_tracks(
+    transform(as.data.frame(x$tracks[[10]]),
+              time_s=time_s+100),
+    units="cm",coordinate_system="tank")
+  expect_error(aqt_joint_event_sensitivity(
+      x,f$events,windows=f$windows),
+      "no estimable epochs")
+})
+
+test_that("finite max_gap_s protects joint event and tank analyses", {
+  f <- .aqt_joint_test_fixture()
+  x <- aqt_joint_refractive_scenarios(
+      f$view_a,f$view_b,f$correspondences,
+      f$camera_a,f$camera_b,draws=10,seed=3)
+  ep <- aqt_joint_event_sensitivity(x,f$events,
+          windows=f$windows,max_gap_s=.5)
+  expect_true(all(is.na(ep$value)))
+  expect_error(aqt_joint_tank_sensitivity(x,f$events,
+    windows=f$windows,tank_bootstrap_draws=100,
+    max_gap_s=.5),"finite baseline|response")
 })
