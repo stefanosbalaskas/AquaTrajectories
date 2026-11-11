@@ -27,8 +27,10 @@ test_that("pixel localization noise creates reproducible conditional intervals",
                               draws=200,seed=27,level=.95)
   expect_equal(out,out2)
   expect_true(all(out[1,c("sd_x","sd_y","sd_z")] > 0))
-  expect_true(all(out[1,c("upper_x","upper_y","upper_z")] >
-                  out[1,c("lower_x","lower_y","lower_z")]))
+  expect_true(all(unlist(out[1,c("upper_x","upper_y","upper_z")],
+                          use.names=FALSE) >
+                  unlist(out[1,c("lower_x","lower_y","lower_z")],
+                         use.names=FALSE)))
   expect_gte(out$valid_fraction,.95)
   expect_equal(attr(out,"aqt_conditional_model")$sigma_px,c(.005,.005))
   expect_error(aqt_stereo_pixel_mc(a,b,P1,P2,sigma_px=-1),"sigma_px")
