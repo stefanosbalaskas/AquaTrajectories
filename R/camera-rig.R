@@ -93,7 +93,7 @@ aqt_rig_project <- function(rig,points,camera_id) {
 
 .aqt_join_key <- function(s,id,t) {
   paste(as.character(s),as.character(id),
-        format(as.numeric(t),digits=17,scientific=FALSE,trim=TRUE),sep="\r")
+        sprintf("%.17g",as.numeric(t)),sep="\r")
 }
 
 #' Reconstruct explicitly matched two-view fish trajectories into 3D
