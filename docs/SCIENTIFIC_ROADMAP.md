@@ -68,3 +68,13 @@ event-aligned metric propagation, conditional quantiles and 2D/3D
 scientific overlays. Not a joint model for calibrated XYZ, species,
 experimental-unit and camera uncertainty. Real underwater tests,
 coverage studies, and coherent cross-view error modelling are open.
+
+
+## Wave 5A — Native trajectory comparison and dense-grid multivariate PCA
+
+Implemented: deterministic multivariate 2D/3D dynamic time warping,
+within-session/camera scoped distance matrices, observed-position RQA,
+recurrence visualization, relative-time dense-grid multivariate PCA
+and mode plots. Missing paths are not silently imputed. Qualified sparse
+FPCA, functional mixed effects, irregular longitudinal uncertainty
+and EyeTrajectories parity remain future work.
