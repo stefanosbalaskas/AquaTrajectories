@@ -270,3 +270,40 @@ aqt_detection_ap <- function(truth,pred,iou_thresholds=seq(.5,.95,by=.05),
   }
   do.call(rbind,out)
 }
+
+
+#' Summarize mean average precision across fish classes and IoU thresholds
+#'
+#' Average precision is first calculated per class. Classes absent from
+#' manually verified ground truth are excluded from the macro mean;
+#' detections in those classes remain reportable as false positives through
+#' aqt_detection_metrics(). Uses the 101-point AP convention in
+#' aqt_detection_ap(), not the full COCO benchmark protocol.
+#'
+#' @param truth Independent reference fish boxes.
+#' @param pred Predicted boxes with confidence scores.
+#' @param iou_thresholds IoU thresholds, typically 0.50:0.95 by 0.05.
+#' @param evaluated_frames Optional explicitly reviewed frame manifest.
+#' @return List containing by_class, by_threshold and mean_AP.
+#' @export
+aqt_detection_map <- function(truth,pred,
+                              iou_thresholds=seq(.5,.95,by=.05),
+                              evaluated_frames=NULL) {
+  score <- aqt_detection_ap(truth,pred,
+    iou_thresholds=iou_thresholds,evaluated_frames=evaluated_frames)
+  if (!nrow(score))
+    return(list(by_class=score,by_threshold=data.frame(),mean_AP=NA_real_))
+  used <- score[score$n_truth>0,,drop=FALSE]
+  if (!nrow(used)) {
+    threshold <- data.frame(iou_threshold=unique(score$iou_threshold),
+                            mAP=NA_real_)
+    average <- NA_real_
+  } else {
+    th <- unique(score$iou_threshold)
+    value <- vapply(th,function(t)
+      mean(used$AP[used$iou_threshold==t]),numeric(1L))
+    threshold <- data.frame(iou_threshold=th,mAP=value)
+    average <- mean(value)
+  }
+  list(by_class=score,by_threshold=threshold,mean_AP=average)
+}
