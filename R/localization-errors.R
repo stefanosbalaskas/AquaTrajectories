@@ -15,10 +15,12 @@
 aqt_tracking_position_errors <- function(truth,pred,max_distance,
                                          class_aware=TRUE,
                                          evaluated_frames=NULL) {
-  gt <- aqt_tracking_observations(truth)
-  pd <- aqt_tracking_observations(pred)
+  gt <- .aqt_filter_evaluation_frames(
+    aqt_tracking_observations(truth),evaluated_frames,reference=TRUE)
+  pd <- .aqt_filter_evaluation_frames(
+    aqt_tracking_observations(pred),evaluated_frames)
   matched <- aqt_tracking_match(gt,pd,max_distance,
-             class_aware=class_aware,evaluated_frames=evaluated_frames)
+             class_aware=class_aware)
   if (!nrow(matched)) {
     matched$error_x <- numeric()
     matched$error_y <- numeric()
