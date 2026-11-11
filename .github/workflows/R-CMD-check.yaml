@@ -35,7 +35,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add NAMESPACE man
           if ! git diff --cached --quiet; then
-            git commit -m "Synchronize roxygen documentation [skip ci]"
+            git commit -m "Synchronize roxygen documentation"
             git push origin HEAD:${{ github.head_ref }}
           fi
       - name: Test R package
