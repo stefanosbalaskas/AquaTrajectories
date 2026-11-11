@@ -106,3 +106,13 @@ labels, and propagation of alternative assignments into path/event
 summaries and independent-tank contrasts. Measurement sensitivity and
 tank-bootstrap sampling variability remain separate outputs.
 Independent video annotation and uncertainty calibration are pending.
+
+
+## Wave 6C — sparse functional data and tank-nested modelling
+
+Implements a ragged-list adapter with exact observation support, a
+time coverage audit, an optional independent fdapace sparse-FPCA
+backend, and a fish-within-tank two-epoch mixed model using nlme.
+Qualifying EyeTrajectories R functionality requires strict cross-language
+oracle comparisons and independent contract certification first.
+Joint measurement/identity/tank uncertainty is still a research goal.
