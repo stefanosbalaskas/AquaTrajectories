@@ -194,7 +194,9 @@ aqt_joint_event_sensitivity <- function(
     epoch
   })
   out <- Filter(Negate(is.null),out)
-  if (!length(out)) return(data.frame())
+  if (!length(out)) stop("No estimable epochs across measurement scenarios",call.=FALSE)
+  if (length(out)!=length(scenarios$tracks))
+    stop("An optical/identity scenario has no estimable epochs; review missingness before comparison",call.=FALSE)
   result <- do.call(rbind,unname(out))
   rownames(result) <- NULL
   result
@@ -214,12 +216,14 @@ aqt_joint_event_sensitivity <- function(
 #' @param outcome Kinematic outcome.
 #' @param tank_bootstrap_draws Replications >= 100 per scenario.
 #' @param seed Bootstrap seed, independent of optical/ID draw seed.
+#' @param max_gap_s Maximum permissible interval between swimming observations.
+#'   Explicit gaps remain invalid; use a finite value appropriate to frame rate.
 #' @return List of per-scenario tank contrasts and conditional quantiles.
 #' @export
 aqt_joint_tank_sensitivity <- function(
     scenarios,events,outcome="speed",
     windows=list(baseline=c(-3,0),response=c(0,3)),
-    tank_bootstrap_draws=100L,seed=103L) {
+    tank_bootstrap_draws=100L,seed=103L,max_gap_s=Inf) {
   if (!inherits(scenarios,"aqt_joint_refractive_scenarios"))
     stop("Expected joint refractive scenarios",call.=FALSE)
   if (!all(vapply(scenarios$tracks,function(d)
@@ -228,8 +232,11 @@ aqt_joint_tank_sensitivity <- function(
          call.=FALSE)
   epochs <- aqt_joint_event_sensitivity(scenarios,events,
     outcome=outcome,windows=windows,
-    unit_cols=c("camera_id","track_id","tank_id","treatment"))
+    unit_cols=c("camera_id","track_id","tank_id","treatment"),
+    max_gap_s=max_gap_s)
   if (!nrow(epochs)) stop("No estimable event outcomes",call.=FALSE)
+  if (!setequal(unique(epochs$draw),seq_along(scenarios$tracks)))
+    stop("Some measurement scenarios are missing event outcomes",call.=FALSE)
   pieces <- lapply(split(epochs,epochs$draw),function(x) {
     fit <- aqt_tank_event_contrast(
       x,draws=tank_bootstrap_draws,
@@ -243,6 +250,8 @@ aqt_joint_tank_sensitivity <- function(
   })
   result <- do.call(rbind,unname(pieces))
   rownames(result) <- NULL
+  if (any(!is.finite(result$contrast)))
+    stop("Nonfinite treatment contrasts: inspect missing event/tank data",call.=FALSE)
   conditional <- unname(stats::quantile(result$contrast,
                         c(.025,.975)))
   list(per_draw=result,
