@@ -49,7 +49,7 @@ test_that("pairwise DTW matrix is symmetric and respects scoped IDs", {
   a <- aqt_tracks(d)
   mat <- aqt_trajectory_dtw_matrix(a,window=0)
   expect_equal(dim(mat),c(3,3))
-  expect_equal(mat,t(mat),ignore_attr=TRUE)
+  expect_true(isSymmetric(mat))
   expect_true(all(diag(mat)==0))
   expect_equal(mat["S/TOP/A","S/TOP/C"],0)
   expect_gt(mat["S/TOP/A","S/TOP/B"],0)
