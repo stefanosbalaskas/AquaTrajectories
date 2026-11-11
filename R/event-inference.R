@@ -15,6 +15,8 @@
 #'   if it is constant within the observational unit.
 #' @param estimator sample_mean or trapezoid time_weighted mean.
 #' @param min_points Minimum finite observed points for an estimate.
+#' @param max_gap_s Largest interval for trapezoid weighting; missing or
+#'   non-observed observations also break a time-weighted segment.
 #' @return Descriptive per-session/event/epoch/unit means, counts and time spans.
 #' @export
 aqt_event_epoch_summary <- function(
@@ -23,7 +25,7 @@ aqt_event_epoch_summary <- function(
                  recovery=c(120,600)),
     unit_cols=c("camera_id","track_id"),
     estimator=c("sample_mean","time_weighted"),
-    min_points=2L) {
+    min_points=2L,max_gap_s=Inf) {
   estimator <- match.arg(estimator)
   if (!is.data.frame(data) ||
       !all(c("session_id","time_s",outcome,unit_cols) %in% names(data)))
@@ -55,6 +57,8 @@ aqt_event_epoch_summary <- function(
       stop("Every event window requires finite increasing limits",call.=FALSE)
   limits <- do.call(rbind,windows)
   ord <- order(limits[,1L])
+  if (!identical(ord,seq_along(windows)))
+    stop("Event windows must be listed in chronological order",call.=FALSE)
   if (length(ord)>1L &&
       any(limits[ord[-1L],1L] < limits[ord[-length(ord)],2L]))
     stop("Epoch windows must not overlap",call.=FALSE)
@@ -62,6 +66,9 @@ aqt_event_epoch_summary <- function(
       !is.finite(min_points) || min_points<1 ||
       min_points!=floor(min_points))
     stop("min_points must be a positive integer",call.=FALSE)
+  if (length(max_gap_s)!=1L || !is.numeric(max_gap_s) ||
+      is.na(max_gap_s) || max_gap_s<=0)
+    stop("max_gap_s must be positive",call.=FALSE)
   e <- aqt_event_table(events)
   results <- list()
   n <- 0L
@@ -71,32 +78,41 @@ aqt_event_epoch_summary <- function(
     relative <- d$time_s-e$start_s[k]
     for (j in seq_along(windows)) {
       w <- windows[[j]]
-      active <- if (j==length(windows))
+      active <- if (j==length(windows)) {
         relative>=w[1L] & relative<=w[2L]
-        else relative>=w[1L] & relative<w[2L]
+      } else {
+        relative>=w[1L] & relative<w[2L]
+      }
       subset <- d[active,,drop=FALSE]
       if (!nrow(subset)) next
       keys <- do.call(paste,c(lapply(subset[unit_cols],as.character),
                               list(sep="\r")))
       for (idx in split(seq_len(nrow(subset)),keys)) {
         z <- subset[idx,,drop=FALSE]
+        z <- z[order(z$time_s),,drop=FALSE]
         valid <- is.finite(z[[outcome]])
+        if ("observed" %in% names(z)) valid <- valid & z$observed
         good <- z[valid,,drop=FALSE]
-        if (nrow(good)>1L)
-          good <- good[order(good$time_s),,drop=FALSE]
-        span <- if (nrow(good)>=2L)
-          max(good$time_s)-min(good$time_s) else 0
-        if (estimator=="time_weighted" && nrow(good)>=2L &&
-            any(diff(good$time_s)<=0))
+        if (estimator=="time_weighted" && nrow(z)>=2L &&
+            any(diff(z$time_s)<=0))
           stop("time_weighted estimator requires unique timestamps within unit",call.=FALSE)
         v <- NA_real_
+        span <- 0
         if (nrow(good)>=min_points) {
           if (estimator=="sample_mean") {
             v <- mean(good[[outcome]])
-          } else if (nrow(good)>=2L && span>0) {
-            dt <- diff(good$time_s)
-            v <- sum(dt*(good[[outcome]][-1L]+
-                         good[[outcome]][-nrow(good)])/2)/span
+            span <- if (nrow(good)>=2L)
+              max(good$time_s)-min(good$time_s) else 0
+          } else if (nrow(z)>=2L) {
+            dt <- diff(z$time_s)
+            contiguous <- valid[-nrow(z)] & valid[-1L] &
+                          dt>0 & dt<=max_gap_s
+            if (any(contiguous)) {
+              use <- which(contiguous)
+              span <- sum(dt[use])
+              v <- sum(dt[use]*(z[[outcome]][use]+
+                 z[[outcome]][use+1L])/2)/span
+            }
           }
         }
         n <- n+1L
