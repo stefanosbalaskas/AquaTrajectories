@@ -88,3 +88,12 @@ spatial edge lists, observed 3D voxel Shannon entropy, and optional rgl
 3D school/voxel graphics plus base-R group temporal plots.
 True aquatic refraction correction, 3D metrology benchmarks and welfare
 interpretations remain unqualified research work.
+
+
+## Wave 6A — bounded refractive optics primitives
+
+Implemented an explicitly single-planar-interface Snell ray tracer,
+two-view forward-ray midpoint triangulation and known-landmark ray QC.
+The optics contract rejects misleading claims of complete flat-port
+glass/water calibration. Thick glass ports, real camera parameter
+fitting and independent underwater 3D metrology remain future work.
