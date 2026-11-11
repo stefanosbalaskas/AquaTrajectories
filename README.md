@@ -172,3 +172,20 @@ reference pages. Package documentation is regenerated from R source
 roxygen comments during CI, and updated documentation is committed on
 in-repository pull requests before the package check. Scientific validation
 of the mathematical and biological contracts remains a separate requirement.
+
+
+## Wave 5A: native fish trajectory comparison and functional-shape analysis
+
+- aqt_trajectory_dtw(): Euclidean dynamic time warping for observed
+  2D/3D fish positions, with a declared warping window.
+- aqt_trajectory_dtw_matrix(): pairwise scoped fish trajectory distances.
+- aqt_trajectory_recurrence(), aqt_plot_recurrence(): observed-position
+  recurrence rate, diagonal-line determinism and laminarity with
+  specified radius and Theiler exclusion.
+- aqt_trajectory_grid_pca(), aqt_plot_grid_pca(): explicitly finite-grid
+  multivariate XY/XYZ principal components registered to relative time,
+  with mode curves and variance explained.
+
+These methods reject missing/unobserved positions rather than inventing
+data. Dense-grid PCA is not sparse/continuous FPCA and does not use an
+unqualified EyeTrajectories backend. See docs/FUNCTIONAL_TRAJECTORY_METHODS.md.
