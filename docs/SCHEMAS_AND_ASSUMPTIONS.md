@@ -22,3 +22,22 @@ aqt_triangulate_pairs requires externally known correspondences, synchronized ob
 ## Events and inference
 Point and interval events are supported. Overlapping events duplicate observation/event rows explicitly, without implying statistically independent rows.
 All features currently descriptive. Fish welfare assessment needs biological validation; tank-level treatment assignment cannot be assessed using frame count as an independent sample size.
+
+
+## Independent ground-truth evaluation: Wave 2
+
+Fish reference bounding boxes and predicted bounding boxes must use identical
+pixel coordinate frames. IoU class-aware matching is one-to-one; detection
+AP uses a declared 101-point interpolation and is not identical to all
+COCO benchmark conventions.
+
+Tracking validation uses externally verified framewise fish identities and
+point locations. Every identity is scoped by camera and session. Global
+identity F1 (IDF1) is computed from maximum-weight one-to-one identity
+assignment. Adjacent ID switches omit unmatched gaps: they are NOT
+official CLEAR MOT ID-switch scores; HOTA remains external TrackEval work.
+
+Sparse truth annotation must pass an explicit manifest from
+aqt_evaluation_frames(), listing ALL fully reviewed frames including
+empty ones; otherwise false positives from unannotated frames are invalid.
+MD5 manifests detect file changes but do not authenticate source material.
