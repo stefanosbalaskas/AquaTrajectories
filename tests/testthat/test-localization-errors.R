@@ -28,3 +28,18 @@ test_that("unannotated frames are excluded from reference residuals", {
   expect_equal(e$error_x,.1)
   expect_true(is.na(aqt_tracking_position_error_summary(e)$sd_x))
 })
+
+
+test_that("sparse-frame residuals use correctly filtered source indices", {
+  truth <- data.frame(session_id="S",camera_id="TOP",
+    frame_id=c(0,10),track_id="A",x=c(50,10),y=c(50,0))
+  pred <- data.frame(session_id="S",camera_id="TOP",
+    frame_id=c(0,10),track_id="P",x=c(100,10.2),y=c(100,.3))
+  evaluated <- aqt_evaluation_frames(data.frame(
+    session_id="S",camera_id="TOP",frame_id=10))
+  residual <- aqt_tracking_position_errors(truth,pred,
+    max_distance=1,evaluated_frames=evaluated)
+  expect_equal(nrow(residual),1)
+  expect_equal(residual$error_x,.2,tolerance=1e-12)
+  expect_equal(residual$error_y,.3,tolerance=1e-12)
+})
