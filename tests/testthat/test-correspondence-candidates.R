@@ -28,7 +28,7 @@ test_that("stereo candidate hypotheses preserve ambiguity and need human review"
   expect_equal(sort(xyz$track_id),c("F1","F2"))
   duplicated_source <- transform(review,fish_id=c("F1","F2"))
   duplicated_source$candidate_id[2] <- candidates$candidate_id[
-    which(candidates$id_a=="a1" & candidates$id_b=="b8")]
+    which(candidates$id_a=="a2" & candidates$id_b=="b7")]
   expect_error(aqt_correspondences_from_review(candidates,duplicated_source),
                "multiple fish")
   expect_error(aqt_correspondences_from_review(candidates,
