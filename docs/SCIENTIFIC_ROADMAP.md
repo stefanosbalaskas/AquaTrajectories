@@ -136,3 +136,12 @@ with source provenance, known clock tolerance, invalid-position
 handling and physical ray-separation QC. Experimental metrology,
 identity ambiguity, and camera-calibration uncertainty remain
 separately qualified research topics.
+
+
+## Wave 7C — independent 3D truth and limited camera parameter refinement
+
+Added reference-landmark XYZ reconstruction benchmarks with valid/invalid
+denominators, per-axis 3D biases/RMSE, depth-stratified accuracy and
+bounded single-camera translation refinement using disjoint training and
+heldout physical targets. Neither source calibration parameter covariance
+nor full glass/lens/rotation optimization has been certified.
