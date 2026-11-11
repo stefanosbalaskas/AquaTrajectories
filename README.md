@@ -140,3 +140,26 @@ See docs/CROSSVIEW_UNCERTAINTY.md for the runnable example and full limits.
 
 These methods do not claim causal identification or small-sample
 bootstrap interval calibration. See docs/EVENT_INFERENCE_CONTRACT.md.
+
+
+## Wave 4B: coherent path-error scenarios and movement sensitivity
+
+AquaTrajectories now evaluates how explicitly assumed measurement errors
+can alter 2D/3D fish paths, swimming metrics and event-aligned outcomes.
+
+- aqt_tracking_position_errors(), aqt_tracking_position_error_summary():
+  inspect 2D coordinate residuals on independently annotated video frames.
+- aqt_trajectory_ensemble(), aqt_ensemble_tracks(): draw reproducible
+  paths with axis-specific noise, adjacent-sample correlation and
+  systematic per-fish offsets.
+- aqt_ensemble_path_summary(), aqt_ensemble_event_summary():
+  recompute fish speeds, path lengths and event epochs in each scenario.
+- aqt_ensemble_summarize(): empirical between-scenario sensitivity SD
+  and interval, NOT a calibrated biological or experimental CI.
+- aqt_plot_ensemble2d(), aqt_plot_ensemble3d(): visualize how
+  hypothetical errors affect fish trajectories, with optional rgl.
+
+This is a conditional, fixed-identity model. It excludes camera
+calibration/refraction, timing errors, identity switches, unequal
+reference coverage and independent-tank sampling uncertainty.
+See docs/TRAJECTORY_UNCERTAINTY.md for examples and caveats.
