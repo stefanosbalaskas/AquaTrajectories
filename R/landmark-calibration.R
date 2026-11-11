@@ -107,6 +107,8 @@ aqt_flatport_refine_center <- function(camera,pixels,landmarks_xyz,
   test <- .aqt_landmark_idx(holdout,n,"holdout",2L)
   if (any(train %in% test))
     stop("Training and holdout landmarks must be disjoint",call.=FALSE)
+  if (anyDuplicated(as.data.frame(xyz[c(train,test),,drop=FALSE])))
+    stop("Physical landmark coordinates must not repeat across training and holdout",call.=FALSE)
   if (length(unique(round(xyz[train,3L],8)))<2L)
     stop("Training landmarks require variation in 3D depth",call.=FALSE)
   if (any(!is.finite(xyz)) ||
@@ -201,6 +203,7 @@ aqt_stereo_depth_audit <- function(benchmark,depth_breaks) {
     stop("Depth breaks must encompass all independently measured landmarks",
          call.=FALSE)
   groups <- split(seq_len(nrow(d)),intervals)
+  groups <- Filter(length,groups)
   result <- lapply(seq_along(groups),function(i) {
     idx <- groups[[i]]
     x <- d[idx,,drop=FALSE]
