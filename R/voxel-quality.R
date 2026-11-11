@@ -58,8 +58,11 @@ aqt_voxel_occupancy <- function(tracks,breaks,by=c("group","fish")) {
     out$n_samples <- counts
     out$n_valid <- nrow(pos)
     out$n_outside <- sum(!inside)
-    out$sample_fraction <- if (nrow(pos)) counts/nrow(pos)
-                           else rep(NA_real_,length(counts))
+    out$sample_fraction <- if (nrow(pos)>0L) {
+      counts/nrow(pos)
+    } else {
+      rep(NA_real_,length(counts))
+    }
     out
   })
   ans <- do.call(rbind,unname(output))
