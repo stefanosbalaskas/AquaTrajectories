@@ -65,7 +65,7 @@ test_that("functional grid refuses interpolation across gaps and missing frames"
                "Insufficient independent-tank fish coverage")
   alt <- aqt_functional_tank_contrast(g,draws=100,
                                      min_fish_fraction=.5)
-  expect_equal(alt$curve$contrast,c(0,1,1))
+  expect_equal(alt$curve$contrast,c(.5,1,1))
   g2 <- aqt_functional_event_grid(f$data,f$events,"speed",
         grid_s=c(-1.5,-1,0),max_gap_s=.25)
   expect_true(all(!g2$supported[g2$time_relative_s==-1.5]))
@@ -93,4 +93,24 @@ test_that("independent-tank design and source structure are guarded", {
   d$time_s[2] <- d$time_s[1]
   expect_error(aqt_functional_event_grid(d,f$events,"speed",
        grid_s=f$grid,max_gap_s=1.1),"Repeated timestamps")
+})
+
+
+test_that("interpolation never straddles event onset or drops unmatched sessions", {
+  f <- .aqt_functional_fixture()
+  d <- f$data
+  # Two samples directly around event onset but none at onset.
+  single <- d[d$session_id=="C1" & d$track_id=="F1",]
+  single <- single[single$time_s %in% c(2,4),]
+  single$time_s <- c(2.8,3.2)
+  single$speed <- c(1,9)
+  event <- f$events[f$events$session_id=="C1",]
+  g <- aqt_functional_event_grid(single,event,"speed",
+        grid_s=c(-.2,0,.2),max_gap_s=.5)
+  expect_equal(g$value[1L],1)
+  expect_false(g$supported[2L])
+  expect_equal(g$value[3L],9)
+  expect_error(aqt_functional_event_grid(f$data,event,
+      outcome="speed",grid_s=c(-1,0,1),max_gap_s=1.1),
+      "All supplied fish sessions")
 })
