@@ -2,9 +2,9 @@
 # Reference rectangles must come from external manual review, not the detector
 # under evaluation. Score and IoU conventions are recorded in the outputs.
 
-.aqt_required <- function(x, names, name) {
-  if (!is.data.frame(x) || !all(names %in% names(x)))
-    stop(name, " must be a data frame with: ", paste(names,collapse=", "),call.=FALSE)
+.aqt_required <- function(x, fields, label) {
+  if (!is.data.frame(x) || !all(fields %in% names(x)))
+    stop(label, " must be a data frame with: ", paste(fields,collapse=", "),call.=FALSE)
 }
 
 .aqt_scope <- function(x) {
