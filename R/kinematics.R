@@ -27,6 +27,7 @@ aqt_kinematics <- function(tracks,max_gap_s=Inf) {
     xy <- as.matrix(out[idx,coord_cols,drop=FALSE])
     delta <- xy[-1L,,drop=FALSE]-xy[-m,,drop=FALSE]
     valid <- dt>0 & dt<=max_gap_s &
+      out$observed[idx[-1L]] & out$observed[idx[-m]] &
       stats::complete.cases(xy[-1L,,drop=FALSE]) &
       stats::complete.cases(xy[-m,,drop=FALSE])
     distance <- sqrt(rowSums(delta^2))
@@ -118,7 +119,7 @@ aqt_group_metrics <- function(tracks,max_gap_s=Inf) {
   result <- lapply(split(seq_len(nrow(d)),keys),function(idx) {
     g <- d[idx,,drop=FALSE]
     coords <- as.matrix(g[,c("x","y",if (is3d) "z"),drop=FALSE])
-    coords <- coords[stats::complete.cases(coords),,drop=FALSE]
+    coords <- coords[stats::complete.cases(coords) & g$observed,,drop=FALSE]
     n <- nrow(coords)
     centre <- if (n) colMeans(coords) else rep(NA_real_,ncol(coords))
     nearest <- NA_real_
