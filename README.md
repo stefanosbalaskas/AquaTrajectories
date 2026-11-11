@@ -316,3 +316,15 @@ landmarks and explicit before/after residuals.
 These are external metrology tools, not automatic full-camera calibration.
 The physical reference positions must actually be surveyed independently
 in the tank. Full contracts: `docs/PHYSICAL_LANDMARK_BENCHMARKS.md`.
+
+## Wave 8A: descriptive behavioural change points
+
+`aqt_state_changepoint()` detects optimal piecewise-mean transitions in
+one fully observed fish behaviour time series, with an explicit
+complexity penalty and strict timestamp/missingness guards.
+`aqt_changepoint_event_delay()` compares changes with logged event
+onsets, while `aqt_plot_changepoints()` provides a basic diagnostic.
+
+These are descriptive change points, **not** automatically classified
+animal stress, welfare, HMM states or causal intervention responses.
+See `docs/FISH_BEHAVIOURAL_CHANGEPOINTS.md`.

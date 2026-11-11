@@ -155,3 +155,12 @@ denominators, per-axis 3D biases/RMSE, depth-stratified accuracy and
 bounded single-camera translation refinement using disjoint training and
 heldout physical targets. Neither source calibration parameter covariance
 nor full glass/lens/rotation optimization has been certified.
+
+## Wave 8A — bounded native behavioural change-point segmentation
+
+Implemented finite penalized SSE segmentation, event-onset delay
+diagnostics and observed-vs-fitted graphical outputs. Missingness
+and large timestamp gaps are rejected; video-frame sample counts
+never replace independently treated tanks. Species-calibrated state
+models, HMMs and qualified EyeTrajectories-native methods remain
+separately unimplemented.
