@@ -15,7 +15,8 @@ aqt_plot_school3d <- function(tracks,session_id,camera_id,time_s,
                               label_ids=TRUE) {
   aqt_tracks_validate(tracks)
   if (!identical(attr(tracks,"aqt_dimension"),3L) ||
-      !identical(attr(tracks,"aqt_coordinate_system"),"tank"))
+      !identical(attr(tracks,"aqt_coordinate_system"),"tank") ||
+      !attr(tracks,"aqt_units") %in% c("cm","m"))
     stop("True calibrated 3D tank trajectories are required",call.=FALSE)
   if (!requireNamespace("rgl",quietly=TRUE))
     stop("Install optional rgl for interactive 3D plotting",call.=FALSE)

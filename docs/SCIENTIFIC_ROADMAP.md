@@ -78,3 +78,13 @@ recurrence visualization, relative-time dense-grid multivariate PCA
 and mode plots. Missing paths are not silently imputed. Qualified sparse
 FPCA, functional mixed effects, irregular longitudinal uncertainty
 and EyeTrajectories parity remain future work.
+
+
+## Wave 5B — fish-school geometry and interactive spatial outputs
+
+Implemented candidate methods: simultaneous camera-scoped pairwise
+distances, centroid and radius of gyration, school extent, thresholded
+spatial edge lists, observed 3D voxel Shannon entropy, and optional rgl
+3D school/voxel graphics plus base-R group temporal plots.
+True aquatic refraction correction, 3D metrology benchmarks and welfare
+interpretations remain unqualified research work.

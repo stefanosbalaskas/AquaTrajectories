@@ -189,3 +189,22 @@ of the mathematical and biological contracts remains a separate requirement.
 These methods reject missing/unobserved positions rather than inventing
 data. Dense-grid PCA is not sparse/continuous FPCA and does not use an
 unqualified EyeTrajectories backend. See docs/FUNCTIONAL_TRAJECTORY_METHODS.md.
+
+
+## Wave 5B: school spatial geometry and interactive 3D
+
+Fish-school spatial functions are now included in native R:
+aqt_group_pairwise_distances(), aqt_group_spatial_summary(),
+aqt_group_spatial_edges(), and aqt_voxel_entropy() quantify
+simultaneous 2D/3D fish separation, school radius and spatial extent,
+thresholded proximity edges, and conditional 3D occupancy entropy.
+
+aqt_plot_school3d() visualizes an exact synchronized, calibrated 3D
+school snapshot; aqt_plot_voxel3d() displays observed 3D voxel
+occupancy; aqt_plot_school_dynamics() plots school geometry over time.
+The 3D graphics use optional rgl; the core metrics need no Python.
+
+Association edges do NOT prove leadership or animal preference.
+Tracking dropouts, camera calibration and independent-tank replication
+must still be handled independently. Details:
+docs/SCHOOL_SPATIAL_METHODS.md.
