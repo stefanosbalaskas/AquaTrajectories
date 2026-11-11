@@ -126,7 +126,7 @@ aqt_plot_grid_pca <- function(fit,component=1L) {
     graphics::plot(fit$time_relative,mn,type="l",lwd=2,
       xlab="Relative trajectory time (0 to 1)",
       ylab=paste0(colnames(fit$mean_path)[j]," (",fit$units,")"),
-      main=paste0("Grid PCA mode ",component," — ",
+      main=paste0("Grid PCA mode ",component," - ",
                   colnames(fit$mean_path)[j]),ylim=ylim)
     graphics::lines(fit$time_relative,lo,col="#1B7F8C",lty=2)
     graphics::lines(fit$time_relative,hi,col="#AA5533",lty=2)
