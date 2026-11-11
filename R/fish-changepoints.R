@@ -33,9 +33,12 @@ aqt_state_changepoint <- function(data,outcome="speed",
       !is.numeric(data$time_s) || any(!is.finite(data$time_s)))
     stop("Missing/nonfinite outcomes or timestamps; segment or audit gaps first",
          call.=FALSE)
-  if ("observed" %in% names(data) && any(!data$observed))
-    stop("Non-observed samples must be removed or handled explicitly",
-         call.=FALSE)
+  if ("observed" %in% names(data)) {
+    if (!is.logical(data$observed) || anyNA(data$observed) ||
+        any(!data$observed))
+      stop("Non-observed or invalid observed flags must be audited first",
+           call.=FALSE)
+  }
   if (!is.numeric(penalty) || length(penalty)!=1L ||
       !is.finite(penalty) || penalty<0)
     stop("penalty must be a finite nonnegative squared-outcome cost",
@@ -49,7 +52,8 @@ aqt_state_changepoint <- function(data,outcome="speed",
     stop("max_gap_s must be positive",call.=FALSE)
   for (nm in c("session_id","camera_id","track_id")) {
     v <- as.character(data[[nm]])
-    if (anyNA(v) || length(unique(v))!=1L)
+    if (anyNA(v) || any(!nzchar(trimws(v))) ||
+        length(unique(v))!=1L)
       stop("Change-point detection requires one scoped fish track",
            call.=FALSE)
   }
