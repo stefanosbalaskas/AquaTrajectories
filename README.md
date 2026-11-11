@@ -109,3 +109,19 @@ occupancy <- aqt_voxel_occupancy(xyz,
 
 A low reprojection residual does not prove correct fish matching,
 biological identity, or metric underwater accuracy.
+
+## Wave 3B: geometry hypotheses and conditional 3D uncertainty
+
+The native R package can now enumerate and rank plausible fish observation
+pairs across two calibrated camera views WITHOUT automatically declaring a
+permanent fish identity. Use aqt_view_candidates(), aqt_candidate_rank()
+and aqt_correspondences_from_review() for an auditable review-to-reconstruction
+pipeline. The raw source camera timestamps and identifiers remain traceable.
+
+aqt_stereo_pixel_mc() and aqt_reconstruction_pixel_uncertainty() propagate
+an explicitly assumed Gaussian image-localization error into 3D XYZ
+sensitivity intervals. These are NOT validated confidence intervals, and
+exclude identity switches, refraction, timing and camera calibration errors.
+
+See docs/CROSSVIEW_UNCERTAINTY.md for the runnable example and full limits.
+
