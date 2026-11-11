@@ -120,7 +120,7 @@ aqt_view_candidates <- function(view_a,view_b,rig,max_skew_s=.02,
 aqt_candidate_rank <- function(candidates,max_reprojection_px=2) {
   if (!is.data.frame(candidates) ||
       !all(c("candidate_id","session_id","id_a","time_a_s",
-             "reprojection_rmse_px","valid") %in% names(candidates)))
+             "reprojection_rmse_px","time_skew_s","valid") %in% names(candidates)))
     stop("Invalid candidate table",call.=FALSE)
   if (length(max_reprojection_px)!=1L ||
       !is.numeric(max_reprojection_px) || !is.finite(max_reprojection_px) ||
@@ -150,10 +150,12 @@ aqt_candidate_rank <- function(candidates,max_reprojection_px=2) {
     ordered <- eligible[order(d$reprojection_rmse_px[eligible],
                                d$time_skew_s[eligible],d$candidate_id[eligible])]
     d$rank_a[ordered] <- seq_along(ordered)
-    gap <- if (length(ordered)>=2L)
+    gap <- if (length(ordered)>=2L) {
       d$reprojection_rmse_px[ordered[2L]] -
         d$reprojection_rmse_px[ordered[1L]]
-      else Inf
+    } else {
+      Inf
+    }
     d$best_margin_px[idx] <- gap
   }
   d
