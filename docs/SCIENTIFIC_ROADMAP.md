@@ -155,3 +155,22 @@ denominators, per-axis 3D biases/RMSE, depth-stratified accuracy and
 bounded single-camera translation refinement using disjoint training and
 heldout physical targets. Neither source calibration parameter covariance
 nor full glass/lens/rotation optimization has been certified.
+
+## Wave 8A — bounded native behavioural change-point segmentation
+
+Implemented finite penalized SSE segmentation, event-onset delay
+diagnostics and observed-vs-fitted graphical outputs. Missingness
+and large timestamp gaps are rejected; video-frame sample counts
+never replace independently treated tanks. Species-calibrated state
+models, HMMs and qualified EyeTrajectories-native methods remain
+separately unimplemented.
+
+
+## Wave 8B — event-aligned functional analysis with independent tanks
+
+Implemented observed-only, onset-protected interpolation onto a declared
+real-time grid, support audit, and equal-weight independently
+replicated tank-level functional treatment contrasts. Separate
+resampling bands describe sampling variation only; optical error,
+discrete fish IDs, causal identification, GLMM/GAMM and sparse FPCA
+inference are not automatically addressed.
