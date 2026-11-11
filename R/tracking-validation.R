@@ -110,16 +110,20 @@ aqt_tracking_observations <- function(data) {
 #' @param truth,pred Independent truth and predicted point-track tables.
 #' @param max_distance Positive maximum positional error for association.
 #' @param class_aware Restrict matches to identical species labels.
+#' @param evaluated_frames Optional manifest of all manually annotated frames.
 #' @return One row per matched pair, with original row IDs and distance.
 #' @export
-aqt_tracking_match <- function(truth,pred,max_distance,class_aware=TRUE) {
+aqt_tracking_match <- function(truth,pred,max_distance,class_aware=TRUE,
+                               evaluated_frames=NULL) {
   if (!is.numeric(max_distance) || length(max_distance)!=1L ||
       !is.finite(max_distance) || max_distance<=0)
     stop("max_distance must be positive and finite",call.=FALSE)
   if (!is.logical(class_aware) || length(class_aware)!=1L || is.na(class_aware))
     stop("class_aware must be a logical scalar",call.=FALSE)
-  gt <- aqt_tracking_observations(truth)
-  pd <- aqt_tracking_observations(pred)
+  gt <- .aqt_filter_evaluation_frames(aqt_tracking_observations(truth),
+                                       evaluated_frames,reference=TRUE)
+  pd <- .aqt_filter_evaluation_frames(aqt_tracking_observations(pred),
+                                       evaluated_frames)
   empty <- data.frame(session_id=character(),camera_id=character(),
     frame_id=double(),truth_row=integer(),pred_row=integer(),
     truth_id=character(),pred_id=character(),truth_class=character(),
@@ -162,12 +166,16 @@ aqt_tracking_match <- function(truth,pred,max_distance,class_aware=TRUE) {
 #' @param truth,pred Independent per-frame point-track tables.
 #' @param max_distance Maximum spatial association error in coordinate units.
 #' @param class_aware Match within class/species.
+#' @param evaluated_frames Optional manifest of all manually annotated frames.
 #' @return One row per session/camera with precision, recall, IDF1,
 #'   positional RMSE, adjacent identity switches, and transparent counts.
 #' @export
-aqt_tracking_metrics <- function(truth,pred,max_distance,class_aware=TRUE) {
-  gt <- aqt_tracking_observations(truth)
-  pd <- aqt_tracking_observations(pred)
+aqt_tracking_metrics <- function(truth,pred,max_distance,class_aware=TRUE,
+                                 evaluated_frames=NULL) {
+  gt <- .aqt_filter_evaluation_frames(aqt_tracking_observations(truth),
+                                       evaluated_frames,reference=TRUE)
+  pd <- .aqt_filter_evaluation_frames(aqt_tracking_observations(pred),
+                                       evaluated_frames)
   matched <- aqt_tracking_match(gt,pd,max_distance,class_aware)
   key_gt <- paste(gt$session_id,gt$camera_id,sep="\r")
   key_pd <- paste(pd$session_id,pd$camera_id,sep="\r")
