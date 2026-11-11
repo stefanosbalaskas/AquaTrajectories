@@ -55,3 +55,21 @@ test_that("raw underwater interfaces cannot be treated as pinhole calibration", 
     time_a_s=0,time_b_s=0,fish_id="F")
   expect_error(aqt_reconstruct_3d(top,side,pair,rig),"Refraction")
 })
+
+
+test_that("correspondence lookup uses stable per-timestamp serialization", {
+  P1 <- cbind(diag(3),c(0,0,0))
+  P2 <- cbind(diag(3),c(-1,0,0))
+  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2))
+  top <- aqt_tracks(data.frame(session_id="S",camera_id="TOP",
+    track_id="A",time_s=c(0,.12345678901234,1),
+    x=c(.5,.6,.75),y=.25))
+  side <- aqt_tracks(data.frame(session_id="S",camera_id="SIDE",
+    track_id="B",time_s=c(0,.001,1),
+    x=c(.25,.4,.5),y=.25))
+  pair <- data.frame(session_id="S",id_a="A",id_b="B",
+    time_a_s=c(0,1),time_b_s=c(0,1),fish_id="fish")
+  xyz <- aqt_reconstruct_3d(top,side,pair,rig)
+  expect_equal(nrow(xyz),2)
+  expect_equal(xyz$x,c(2,3),tolerance=1e-8)
+})
