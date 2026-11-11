@@ -41,7 +41,7 @@ test_that("independent physical XYZ benchmark recovers known stereo geometry", {
 test_that("invalid triangulation remains in benchmark denominator", {
   f <- .aqt_known_landmark_fixture()
   bad <- f$pixel_b
-  bad[1,1] <- bad[1,1]+.7
+  bad[1,2] <- bad[1,2]+.7
   b <- aqt_stereo_landmark_benchmark(
       f$camera_a,f$camera_b,f$pixel_a,bad,f$world,
       max_separation=1e-7)
@@ -94,4 +94,18 @@ test_that("calibration refuses overlapping target sets and degenerate geometry",
   expect_error(aqt_flatport_refine_center(f$camera_a,f$pixel_a,
      behind,training=2:13,holdout=c(1,14)),
      "beyond the glass")
+})
+
+
+test_that("coplanar wrong matches can have tiny ray separation but large 3D error", {
+  f <- .aqt_known_landmark_fixture()
+  wrong <- f$pixel_b
+  wrong[1,1] <- wrong[1,1]+.7
+  b <- aqt_stereo_landmark_benchmark(
+      f$camera_a,f$camera_b,f$pixel_a,wrong,f$world)
+  expect_true(b$per_landmark$valid[1])
+  expect_lt(b$per_landmark$ray_separation[1],1e-8)
+  expect_gt(b$per_landmark$error_3d[1],.1)
+  expect_gt(b$summary$rmse_3d,0)
+  # A small ray residual is NOT proof of correct fish correspondence.
 })
