@@ -126,3 +126,13 @@ tests. Supports parallel planar glass walls only; measured intrinsics,
 extrinsics, surface normals/thickness and validation targets remain
 the user's responsibility. Joint optical parameter uncertainty with
 fish identity and tank-level inference remains future work.
+
+
+## Wave 7A — reviewed refractive 2D-to-3D fish tracking
+
+Adds a time-stamped 3D fusion path for explicitly reviewed camera
+pixel correspondences under one- or two-interface Snell models,
+with source provenance, known clock tolerance, invalid-position
+handling and physical ray-separation QC. Experimental metrology,
+identity ambiguity, and camera-calibration uncertainty remain
+separately qualified research topics.
