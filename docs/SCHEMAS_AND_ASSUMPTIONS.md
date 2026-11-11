@@ -59,3 +59,5 @@ with missing samples explicitly flagged. No cross-camera biological
 reidentification or exact 3D body shape is claimed.
 3D voxel occupancy counts observed positions, not continuous dwell time,
 and reports samples outside the declared physical tank volume.
+
+For safety, the default rig optical path is unknown. The caller must explicitly declare air_only before using pinhole projection/reconstruction. Do not falsely mark underwater-through-glass recordings as air_only.

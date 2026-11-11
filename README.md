@@ -90,7 +90,8 @@ refractive interface rather than silently producing invalid XYZ positions.
 ~~~r
 P1 <- cbind(diag(3),c(0,0,0))
 P2 <- cbind(diag(3),c(-1,0,0))
-rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm")
+rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm",
+                   optical_path="air_only")
 
 top <- aqt_tracks(data.frame(session_id="S1",camera_id="TOP",
   track_id="top1",time_s=0,x=.5,y=.25))

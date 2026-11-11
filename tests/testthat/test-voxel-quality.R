@@ -19,7 +19,7 @@ test_that("voxel counts and denominators are explicit and reproducible", {
 test_that("stereo diagnostic plotting runs on a noninteractive PDF device", {
   P1 <- cbind(diag(3),c(0,0,0))
   P2 <- cbind(diag(3),c(-1,0,0))
-  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2))
+  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),optical_path="air_only")
   top <- aqt_tracks(data.frame(session_id="S1",camera_id="TOP",
     track_id="1",time_s=c(0,1),x=c(.5,.75),y=c(.25,.25)))
   side <- aqt_tracks(data.frame(session_id="S1",camera_id="SIDE",

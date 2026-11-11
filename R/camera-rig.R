@@ -14,7 +14,7 @@
 #' @return A validated aqt_rig object.
 #' @export
 aqt_rig_new <- function(projections,units="cm",
-                        optical_path=c("air_only","refractive_interface")) {
+                        optical_path=c("unknown","air_only","refractive_interface")) {
   optical_path <- match.arg(optical_path)
   if (!is.list(projections) || length(projections)<2L ||
       is.null(names(projections)) ||
@@ -81,6 +81,8 @@ aqt_rig_project <- function(rig,points,camera_id) {
     stop("points must be a numeric n-by-3 matrix",call.=FALSE)
   if (any(!is.finite(p)))
     stop("XYZ points must be finite",call.=FALSE)
+  if (!identical(rig$optical_path,"air_only"))
+    stop("Pinhole projection requires an explicitly declared air_only optical path",call.=FALSE)
   P <- rig$projections[[camera_id]]
   world <- cbind(p,1)
   proj <- t(P %*% t(world))
@@ -127,7 +129,7 @@ aqt_reconstruct_3d <- function(view_a,view_b,correspondences,rig,
       !identical(attr(view_b,"aqt_units"),"px"))
     stop("Requires two 2D pixel-space image trajectory objects",call.=FALSE)
   if (!identical(rig$optical_path,"air_only"))
-    stop("Refraction-aware reconstruction is not implemented; no pinhole shortcut",call.=FALSE)
+    stop("Refraction or unknown optical paths are not supported by pinhole reconstruction",call.=FALSE)
   if (length(max_skew_s)!=1L || !is.numeric(max_skew_s) ||
       !is.finite(max_skew_s) || max_skew_s<0)
     stop("max_skew_s must be a finite nonnegative threshold",call.=FALSE)

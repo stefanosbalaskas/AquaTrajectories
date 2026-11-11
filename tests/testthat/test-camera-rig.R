@@ -1,7 +1,7 @@
 test_that("calibrated pinhole rig recovers known camera baseline and projections", {
   P1 <- cbind(diag(3),c(0,0,0))
   P2 <- cbind(diag(3),c(-1,0,0))
-  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm")
+  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm",optical_path="air_only")
   expect_true(aqt_rig_validate(rig))
   expect_equal(aqt_rig_baseline(rig,"TOP","SIDE"),1)
   pts <- matrix(c(2,1,4,3,1,4),byrow=TRUE,ncol=3)
@@ -18,7 +18,7 @@ test_that("calibrated pinhole rig recovers known camera baseline and projections
 test_that("externally matched two-camera tracks recover world XYZ", {
   P1 <- cbind(diag(3),c(0,0,0))
   P2 <- cbind(diag(3),c(-1,0,0))
-  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm")
+  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),units="cm",optical_path="air_only")
   top <- aqt_tracks(data.frame(session_id="S1",camera_id="TOP",
      track_id="top_9",time_s=c(0,1),x=c(.5,.75),y=c(.25,.25)))
   side <- aqt_tracks(data.frame(session_id="S1",camera_id="SIDE",
@@ -60,7 +60,7 @@ test_that("raw underwater interfaces cannot be treated as pinhole calibration", 
 test_that("correspondence lookup uses stable per-timestamp serialization", {
   P1 <- cbind(diag(3),c(0,0,0))
   P2 <- cbind(diag(3),c(-1,0,0))
-  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2))
+  rig <- aqt_rig_new(list(TOP=P1,SIDE=P2),optical_path="air_only")
   top <- aqt_tracks(data.frame(session_id="S",camera_id="TOP",
     track_id="A",time_s=c(0,.12345678901234,1),
     x=c(.5,.6,.75),y=.25))
