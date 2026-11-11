@@ -44,3 +44,19 @@ test_that("interpolated/non-observed coordinates are not treated as measured mov
   expect_true(is.na(kin$speed[3]))
   expect_equal(aqt_path_summary(tracks)$path_length,1)
 })
+
+
+test_that("planar scale and zone occupancy have exact reference values", {
+  d <- data.frame(session_id="S1",camera_id="TOP",track_id="fish1",
+    time_s=0:3,x=c(0,10,20,30),y=c(0,0,0,0))
+  x <- aqt_tracks(d)
+  c <- aqt_scale_calibrate(x,pixels_per_cm=10)
+  expect_equal(c$x,c(0,1,2,3))
+  expect_equal(c$x_px,d$x)
+  expect_equal(aqt_kinematics(c)$speed[2],1)
+  zones <- data.frame(zone_id="left",xmin=-1,xmax=1,ymin=-1,ymax=1)
+  v <- aqt_zone_occupancy(c,zones)
+  expect_equal(v$n_in_zone,2)
+  expect_equal(v$sample_fraction,.5)
+  expect_error(aqt_scale_calibrate(c,10),"2D pixel-space")
+})
