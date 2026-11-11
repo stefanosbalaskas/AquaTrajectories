@@ -148,6 +148,13 @@ gaps are audited. Rotation, synchronization uncertainty, automated cross-view
 identity probabilities, calibrated real-video error distributions and joint
 confidence intervals remain unqualified.
 
+## Wave 7C — independent 3D truth and limited camera parameter refinement
+
+Added reference-landmark XYZ reconstruction benchmarks with valid/invalid
+denominators, per-axis 3D biases/RMSE, depth-stratified accuracy and
+bounded single-camera translation refinement using disjoint training and
+heldout physical targets. Neither source calibration parameter covariance
+nor full glass/lens/rotation optimization has been certified.
 
 ## Wave 8A — bounded native behavioural change-point segmentation
 

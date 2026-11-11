@@ -303,6 +303,19 @@ The outputs **do not constitute a statistically calibrated joint confidence
 interval**. The separately resampled tanks represent a different
 uncertainty source. See `docs/JOINT_REFRACTIVE_SENSITIVITY.md`.
 
+## Wave 7C: independently measured 3D calibration landmarks
+
+Physical 3D landmark comparison now has dedicated methods:
+`aqt_stereo_landmark_benchmark()` reports absolute XYZ RMSE, bias and
+failed reconstruction rates; `aqt_stereo_depth_audit()` examines
+accuracy across true physical depth ranges; and
+`aqt_flatport_refine_center()` offers strictly bounded
+camera-centre-only optimization, with separately held-out known
+landmarks and explicit before/after residuals.
+
+These are external metrology tools, not automatic full-camera calibration.
+The physical reference positions must actually be surveyed independently
+in the tank. Full contracts: `docs/PHYSICAL_LANDMARK_BENCHMARKS.md`.
 
 ## Wave 8A: descriptive behavioural change points
 
