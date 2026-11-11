@@ -238,3 +238,20 @@ are sensitivity assumptions, not automatically calibrated probabilities.
 This module does not combine measurement and experimental sampling into
 a validated joint confidence interval. Full assumptions are in
 docs/IDENTITY_SCENARIOS.md.
+
+
+## Wave 6C: sparse functional trajectories and hierarchical tanks
+
+A new sparse-FDA preparation layer preserves only actual observed 2D/3D
+coordinate values and timestamps. aqt_sparse_fpca_input() and
+aqt_sparse_fpca_design_audit() report temporal support and missingness;
+aqt_sparse_fpca_fit() optionally delegates strictly sparse estimation to
+the established fdapace backend.
+
+aqt_hierarchical_event_prepare() validates fish-within-tank repeated
+measurements, while aqt_hierarchical_event_fit() uses optional nlme to
+fit a simple tank/fish nested random-intercept treatment-by-epoch model.
+
+No unqualified EyeTrajectories algorithm is called. A nested mixed model
+does not automatically establish causal treatment effects. Detailed
+contracts and examples: docs/SPARSE_HIERARCHICAL_METHODS.md.
