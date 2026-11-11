@@ -97,3 +97,12 @@ two-view forward-ray midpoint triangulation and known-landmark ray QC.
 The optics contract rejects misleading claims of complete flat-port
 glass/water calibration. Thick glass ports, real camera parameter
 fitting and independent underwater 3D metrology remain future work.
+
+
+## Wave 6B — discrete identity-assignment uncertainty
+
+Implemented whole-suffix fish ID-switch scenarios, auditable original
+labels, and propagation of alternative assignments into path/event
+summaries and independent-tank contrasts. Measurement sensitivity and
+tank-bootstrap sampling variability remain separate outputs.
+Independent video annotation and uncertainty calibration are pending.

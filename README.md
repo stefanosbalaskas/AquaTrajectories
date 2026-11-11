@@ -222,3 +222,19 @@ air-glass-water optics involve TWO refractive surfaces; dome ports
 and lens distortion are also not represented. User-supplied camera
 parameters do not by themselves certify calibration. See
 docs/REFRACTIVE_GEOMETRY.md.
+
+
+## Wave 6B: discrete identity-switch scenarios through statistical conclusions
+
+Five new functions model full-suffix ID exchanges within a camera/session
+and propagate candidate identity assignments through speed, path length
+and event-window summaries. For independently treated aquaculture tanks,
+aqt_identity_tank_sensitivity() reports the distribution of separate
+tank-level contrasts under each identity scenario and keeps
+within-scenario tank bootstrap intervals separate.
+
+**Caution:** externally specified identity-switch probabilities
+are sensitivity assumptions, not automatically calibrated probabilities.
+This module does not combine measurement and experimental sampling into
+a validated joint confidence interval. Full assumptions are in
+docs/IDENTITY_SCENARIOS.md.
