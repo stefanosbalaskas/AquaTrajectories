@@ -49,6 +49,9 @@ aqt_functional_event_grid <- function(data,events,outcome="speed",
       stop("Identity, treatment and tank scope cannot be missing",call.=FALSE)
   }
   ev <- aqt_event_table(events)
+  if (!all(unique(as.character(data$session_id)) %in% ev$session_id))
+    stop("All supplied fish sessions require an explicitly logged event",
+         call.=FALSE)
   if (anyDuplicated(ev$session_id))
     stop("One event per session is required; separate repeated-event studies",
          call.=FALSE)
@@ -83,7 +86,9 @@ aqt_functional_event_grid <- function(data,events,outcome="speed",
       if (left>=1L && left<length(t) &&
           t[left]<target && target<t[left+1L] &&
           valid[left] && valid[left+1L] &&
-          (t[left+1L]-t[left])<=max_gap_s) {
+          (t[left+1L]-t[left])<=max_gap_s &&
+          !(t[left]<event$start_s[1L] &&
+            t[left+1L]>=event$start_s[1L])) {
         ratio <- (target-t[left])/(t[left+1L]-t[left])
         obs[j] <- (1-ratio)*d[[outcome]][left]+
           ratio*d[[outcome]][left+1L]
