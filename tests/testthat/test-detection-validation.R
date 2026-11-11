@@ -71,3 +71,15 @@ test_that("sparse reference annotations never penalize unseen frames", {
        data.frame(session_id="S1",camera_id="TOP",frame_id="1")),
        "outside")
 })
+
+
+test_that("macro AP correctly averages classes with reference data", {
+  gt <- data.frame(session_id="S1",camera_id="top",frame_id="0",
+    class_id=c("seabass","seabream"),xmin=c(0,10),ymin=0,
+    xmax=c(2,12),ymax=2)
+  pred <- transform(gt,confidence=.9)
+  res <- aqt_detection_map(gt,pred,iou_thresholds=c(.5,.75))
+  expect_equal(res$mean_AP,1)
+  expect_equal(res$by_threshold$mAP,c(1,1))
+  expect_equal(nrow(res$by_class),4)
+})
