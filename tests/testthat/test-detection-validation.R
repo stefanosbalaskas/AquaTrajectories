@@ -6,8 +6,8 @@ test_that("bounding box contract and IoU are correct", {
   moved <- transform(pred,xmin=1,xmax=3)
   expect_equal(aqt_box_iou(ref,moved)[1,1],1/3)
   expect_error(aqt_detection_boxes(transform(ref,xmax=0)),"Degenerate")
-  expect_error(aqt_detection_boxes(transform(pred,confidence=1.5),"prediction"),
-    regexp=NA)
+  expect_error(aqt_detection_boxes(transform(pred,confidence=1.5),
+                                    role="prediction"),"confidence")
 })
 
 test_that("one missed fish and one false fish yield known F1", {
@@ -51,4 +51,23 @@ test_that("cardinality matching can recover two pairs rather than greedy one", {
   weights <- matrix(c(.8,.9,.6,.1),nrow=2)
   selected <- aquaTrajectories:::.aqt_cardinality_match(weights,.5)
   expect_equal(selected,c(2L,1L))
+})
+
+
+test_that("sparse reference annotations never penalize unseen frames", {
+  gt <- data.frame(session_id="S1",camera_id="TOP",frame_id="0",
+    class_id="fish",xmin=0,ymin=0,xmax=2,ymax=2)
+  pd <- data.frame(session_id="S1",camera_id="TOP",frame_id="1",
+    class_id="fish",xmin=0,ymin=0,xmax=2,ymax=2,confidence=.9)
+  frames <- aqt_evaluation_frames(data.frame(session_id="S1",
+                      camera_id="TOP",frame_id="0"))
+  without_scope <- aqt_detection_metrics(gt,pd,confidence_threshold=0)
+  expect_equal(without_scope$FP[without_scope$class_id=="ALL"],1)
+  with_scope <- aqt_detection_metrics(gt,pd,confidence_threshold=0,
+                                      evaluated_frames=frames)
+  expect_equal(with_scope$FP[with_scope$class_id=="ALL"],0)
+  expect_equal(with_scope$FN[with_scope$class_id=="ALL"],1)
+  expect_error(aqt_detection_metrics(gt,pd,evaluated_frames=
+       data.frame(session_id="S1",camera_id="TOP",frame_id="1")),
+       "outside")
 })
