@@ -154,8 +154,8 @@ aqt_refractive_triangulate <- function(camera_a,camera_b,pixels_a,pixels_b,
     valid=rep(FALSE,n))
   for (i in seq_len(n)) {
     if (!a$valid[i] || !b$valid[i]) next
-    p <- as.numeric(a[i,1:3]); q <- as.numeric(b[i,1:3])
-    d <- as.numeric(a[i,4:6]); e <- as.numeric(b[i,4:6])
+    p <- unlist(a[i,1:3],use.names=FALSE); q <- unlist(b[i,1:3],use.names=FALSE)
+    d <- unlist(a[i,4:6],use.names=FALSE); e <- unlist(b[i,4:6],use.names=FALSE)
     cross <- sum(d*e)
     denom <- 1-cross^2
     if (denom<=1e-10) next
@@ -197,8 +197,8 @@ aqt_refractive_landmark_qc <- function(camera,pixels,landmarks_xyz) {
   d <- rep(NA_real_,n)
   for (i in seq_len(n)) {
     if (!rays$valid[i]) next
-    start <- as.numeric(rays[i,1:3])
-    dir <- as.numeric(rays[i,4:6])
+    start <- unlist(rays[i,1:3],use.names=FALSE)
+    dir <- unlist(rays[i,4:6],use.names=FALSE)
     relative <- world[i,]-start
     depth <- sum(relative*dir)
     if (depth<0) next
