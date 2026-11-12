@@ -101,12 +101,14 @@ test_that("calibration target registry refuses leaked and degenerate benchmarks"
 test_that("auditor refuses missing camera models and incompatible physical units", {
   fixture <- .aqt_target_experiment_fixture()
   d <- aqt_target_trial_table(fixture$data)
+  plain <- d
+  class(plain) <- "data.frame"
   expect_error(aqt_target_holdout_benchmark(
-    as.data.frame(d),fixture$models),
+    plain,fixture$models),
     "Expected aqt_target_trials")
   expect_error(aqt_target_holdout_benchmark(
     d,list(TOP=fixture$models$TOP,SIDE=fixture$models$TOP)),
-    "refractive camera models|Missing camera model|triang")
+    "physically distinct camera centres")
   expect_error(aqt_target_holdout_benchmark(
     d,list(TOP=fixture$models$TOP)),
     "named refractive camera models")
