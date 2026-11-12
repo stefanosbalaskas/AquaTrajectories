@@ -9,6 +9,7 @@ on:
       - "tests/python/test_recording_probe.py"
       - "tests/python/test_ros_stereo_audit.py"
       - "tests/fixtures/fishsizing/**"
+      - "tests/fixtures/gopro/**"
       - ".github/workflows/dataset-schema-probes.yml"
   pull_request:
     paths:
@@ -40,6 +41,17 @@ jobs:
         run: python -m unittest discover -s tests/python -p "test_*probe.py" -v
       - name: Test actual FishSizing ROS YAML pair
         run: python -m unittest discover -s tests/python -p "test_ros_stereo_audit.py" -v
+      - name: Probe original GoPro HERO5 MP4 from authoritative source
+        shell: bash
+        run: |
+          curl --fail --show-error --location --retry 3 --max-time 120 \
+            "https://raw.githubusercontent.com/gopro/gpmf-parser/main/samples/hero5.mp4" \
+            --output "$RUNNER_TEMP/hero5_actual.mp4"
+          test "$(git hash-object "$RUNNER_TEMP/hero5_actual.mp4")" = "11e80a54756827b01ea4375764a4bc2458b2443f"
+          python inst/python/aqt_probe_recording.py \
+            --video "$RUNNER_TEMP/hero5_actual.mp4" --scan-frames 80 \
+            --sha256-video --output "$RUNNER_TEMP/hero5_report.json"
+          python -c 'import json,os; p=os.path.join(os.environ["RUNNER_TEMP"],"hero5_report.json"); x=json.load(open(p)); assert x["video"]["gpmf_stream_detected"]; assert x["video"]["finite_frame_pts_rows"]>3; assert x["video"]["camera_exposure_clock_synchronized"] is False'
       - name: Exercise ffprobe against a generated MP4 (not real GoPro video)
         shell: bash
         run: |
