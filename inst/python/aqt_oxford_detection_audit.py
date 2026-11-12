@@ -64,17 +64,27 @@ def parsed_annotations(path):
         if not isinstance(regions,list) or not isinstance(meta,list) or len(regions)!=len(meta):
             raise ValueError("Malformed LISA fish annotation regions")
         boxes=[]
+        unsupported_regions=0
         for xywh in regions:
-            if (not isinstance(xywh,list) or len(xywh)!=4 or
-                any(not isinstance(v,(float,int)) or not math.isfinite(v) for v in xywh)):
-                raise ValueError("Nonfinite Oxford fish bounding box")
+            if not isinstance(xywh,list) or not all(
+                    isinstance(v,(float,int)) and math.isfinite(v) for v in xywh):
+                raise ValueError("Nonfinite Oxford fish annotation")
+            if len(xywh)==2:
+                # One genuine final LISA frame contains a 2D point in
+                # addition to a box; exclude that entire frame, never
+                # mislabel the point as a fish bounding box.
+                unsupported_regions+=1
+                continue
+            if len(xywh)!=4:
+                raise ValueError("Unsupported Oxford LISA region geometry")
             x,y,w,h=xywh
             if w<=0 or h<=0 or x<0 or y<0 or x+w>width+1e-4 or y+h>height+1e-4:
                 raise ValueError("Out-of-frame Oxford fish bounding box")
             boxes.append(tuple(map(float,xywh)))
         lookup[source]={"sequence":sequence,"frame":frame,"boxes":boxes,
                         "image_width_px":width,"image_height_px":height,
-                        "missing_image_geometry":missing_geometry}
+                        "missing_image_geometry":missing_geometry,
+                        "unsupported_annotation_regions":unsupported_regions}
     if not lookup:
         raise ValueError("Empty Oxford manual/prediction LISA source")
     return lookup
@@ -111,6 +121,10 @@ def score_sources(truth,auto,threshold=.5):
         raise ValueError("IoU threshold must be in (0,1]")
     if set(truth)!=set(auto):
         raise ValueError("Original auto/manual annotated-frame key sets differ")
+    excluded=sorted(src for src in truth if
+                    truth[src].get("unsupported_annotation_regions",0) or
+                    auto[src].get("unsupported_annotation_regions",0))
+    exclusion_set=set(excluded)
     stats=defaultdict(lambda:{"frames":0,"reference_boxes":0,
                              "automatic_boxes":0,"tp":0,"fp":0,"fn":0,
                              "reference_empty_frames":0,
@@ -118,6 +132,8 @@ def score_sources(truth,auto,threshold=.5):
                              "prediction_frames_with_unknown_geometry":0})
     agreement=[]
     for src in truth:
+        if src in exclusion_set:
+            continue
         g,p=truth[src],auto[src]
         if (g["image_width_px"],g["image_height_px"])!=(
                 p["image_width_px"],p["image_height_px"]):
@@ -154,6 +170,10 @@ def score_sources(truth,auto,threshold=.5):
         "by_recording":{k:enriched(v) for k,v in sorted(stats.items())},
         "mean_iou_among_matched_boxes":sum(agreement)/len(agreement) if agreement else None,
         "n_recordings":len(stats),
+        "n_source_annotation_frames":len(truth),
+        "n_ambiguous_annotation_frames_excluded":len(excluded),
+        "ambiguous_frame_paths_excluded":excluded,
+        "n_frames_comparable":len(truth)-len(excluded),
         "original_human_annotation_prediction_blind_certified":False,
         "prediction_source":"Oxford published EfficientDet automatic detections; no new model inference",
         "AquaTrajectories_detector_accuracy_measured":False,
