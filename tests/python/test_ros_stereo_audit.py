@@ -61,6 +61,19 @@ class FishSizingSchemaContracts(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "focal lengths"):
             audit.audit_ros_stereo_pair(left, right)
 
+    def test_real_published_nine_specimen_manual_length_source(self):
+        path = FIXTURES / "fish_gt_measures.csv"
+        original = audit.audit_length_csv(path)
+        self.assertEqual(original["n_specimens"], 9)
+        self.assertEqual(original["records"][0]["dataset"], "Dataset A")
+        self.assertEqual(original["records"][0]["total_length_cm"], 31.5)
+        self.assertEqual(original["records"][-1]["total_length_cm"], 32.3)
+        self.assertEqual(
+            len({row["species_scientific"] for row in original["records"]}), 4)
+        self.assertFalse(original["measured_true_XYZ_positions_provided"])
+        self.assertFalse(
+            original["fish_trajectories_or_swimming_behaviour_certified"])
+
     def test_quoted_comma_decimal_fish_lengths_from_real_source_convention(self):
         self.assertAlmostEqual(audit.parse_length_cm("31,5"), 31.5)
         self.assertAlmostEqual(audit.parse_length_cm("29,1"), 29.1)
