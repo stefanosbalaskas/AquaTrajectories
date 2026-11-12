@@ -328,3 +328,18 @@ onsets, while `aqt_plot_changepoints()` provides a basic diagnostic.
 These are descriptive change points, **not** automatically classified
 animal stress, welfare, HMM states or causal intervention responses.
 See `docs/FISH_BEHAVIOURAL_CHANGEPOINTS.md`.
+
+
+## Wave 10A: fish–device closed-loop measurements for ACI
+
+`aqt_aci_trials()` validates independently annotated animal action,
+detection, controller command, physical device activation, and observed
+response timestamps against explicit opportunity windows.
+`aqt_aci_loop_metrics()` reports detection/actuator failures, false
+triggers, and descriptive action-to-actuation contingency.
+`aqt_aci_latency_summary()` audits detection, controller and physical
+actuation delays without inventing missing latencies.
+
+**These are measurements of a controlled fish–device interaction**, not
+proof of animal agency, preference, learning, stress or welfare.
+See `docs/ACI_CLOSED_LOOP_TELEMETRY.md`.
