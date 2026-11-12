@@ -151,3 +151,27 @@ test_that("unreviewed camera-local duplicates cannot count twice as fish", {
     response_window_s=c(0,6)),
     "do not double-count cross-view tracks")
 })
+
+test_that("extra fish in one tank do not become independent treatment units", {
+  f <- .aqt_hmm_event_fixture()
+  e <- aqt_hmm_event_tank_epochs(f$decoded,f$events,
+    state=2,baseline_window_s=c(-6,0),
+    response_window_s=c(0,6))
+  reference <- aqt_hmm_tank_event_contrast(e,draws=199,seed=91)
+  x <- as.data.frame(f$decoded)
+  extra <- x[x$tank_id=="T3" & x$track_id=="F1",,drop=FALSE]
+  extra$track_id <- "F3"
+  more_fish <- rbind(x,extra)
+  class(more_fish) <- class(f$decoded)
+  attr(more_fish,"aqt_hmm_model") <- attr(f$decoded,"aqt_hmm_model")
+  e2 <- aqt_hmm_event_tank_epochs(more_fish,f$events,
+    state=2,baseline_window_s=c(-6,0),
+    response_window_s=c(0,6))
+  changed <- aqt_hmm_tank_event_contrast(e2,draws=199,seed=91)
+  expect_equal(e2$n_fish[e2$tank_id=="T3"],c(3L,3L))
+  expect_equal(changed$n_tanks_control,2L)
+  expect_equal(changed$n_tanks_treatment,2L)
+  expect_equal(changed$estimate,reference$estimate,tolerance=1e-12)
+  expect_equal(changed$lower,reference$lower,tolerance=1e-12)
+  expect_equal(changed$upper,reference$upper,tolerance=1e-12)
+})
