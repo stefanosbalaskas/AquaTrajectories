@@ -245,3 +245,15 @@ species-specific state learning, continuous-time transition modelling,
 welfare diagnosis or experimental tank-level hypothesis testing.
 Independent 3D measurement/identity uncertainty and real-video
 validation remain unqualified.
+
+## Wave 8E — fixed-emission Baum-Welch transition learning and holdout audit
+
+Implements native log-domain EM for HMM initial distributions and sample-step
+transition probabilities, holding externally specified Gaussian state
+means and SDs fixed; split sequences respect observed gaps and scoped
+animal/tank identities. Out-of-sample conditional log likelihood explicitly
+rejects reused fish scopes and, by default, reused independent tanks.
+This is neither full HMM emission estimation nor calibrated fish welfare
+classification. Nonrandom missingness, changing frame intervals,
+species-specific reference labels, uncertainty propagation, heldout
+multi-camera calibration, and tank-treatment effects remain open.
