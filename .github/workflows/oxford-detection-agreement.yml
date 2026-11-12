@@ -68,6 +68,7 @@ jobs:
           assert x["automatic_boxes"]==1656,x
           assert (x["tp"],x["fp"],x["fn"])==(1654,2,2505),x
           assert x["reference_empty_frames"]==304,x
+          assert x["prediction_frames_with_unknown_geometry"]==1,x
           assert not r["AquaTrajectories_detector_accuracy_measured"]
           assert not r["original_human_annotation_prediction_blind_certified"]
           assert not r["track_identity_HOTA_or_IDF1_measured"]
