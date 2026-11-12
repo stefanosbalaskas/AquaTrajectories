@@ -293,3 +293,13 @@ does not run YOLO or ByteTrack, extract frame metadata itself, calibrate
 detection confidence, resolve fish identity across cameras or verify
 rolling-shutter exposure synchronization. Real-video experiments and
 external annotated tracking comparisons are still needed.
+
+## Wave 11B — optional single-decoder fish video runner
+
+Adds a Python/PyAV-to-YOLO+ByteTrack execution pathway that sends the
+exact decoded frame to the model and its PTS to the manifest. Exports
+MOTChallenge tracked boxes, per-row class sidecar, empty-frame
+metadata and source/model SHA-256 hashes. Independent Python CI tests
+conversion invariants, not installed ML runtime or real fish data.
+Model training, biological identity, detection/tracking reliability,
+multi-camera synchronization and underwater calibration remain unqualified.

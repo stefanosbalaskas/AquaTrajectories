@@ -514,3 +514,17 @@ This is **not** a YOLO, ByteTrack or idtracker.ai execution engine,
 not a variable-FPS estimator, and not hardware exposure-sync
 certification. It accepts externally verified inputs only.
 See `docs/MOT_FRAME_PTS_INGESTION.md`.
+
+## Wave 11B: optional actual video-to-fish-tracking execution
+
+The Python runner `inst/python/aqt_track_video.py` accepts local video
+and **user-supplied fish-trained YOLO weights**. It decodes each image
+ONCE through PyAV, obtains that same frame's PTS, and runs Ultralytics
+YOLO+ByteTrack with persistent tracker state. Outputs include a frame
+manifest (even empty frames), MOTChallenge boxes, species-class sidecar,
+and video/model SHA-256 provenance. Use `aqt_frame_manifest()` and
+`aqt_import_mot()` to ingest these in R.
+
+Python CI tests do not install video/ML dependencies or evaluate real
+fish. Detection accuracy, identity, hardware exposure timing and
+underwater XYZ remain unverified. See `docs/PYAV_YOLO_BYTETRACK_RUNNER.md`.
