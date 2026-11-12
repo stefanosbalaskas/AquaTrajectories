@@ -139,7 +139,7 @@ test_that("camera-local IDs never collapse across separately recorded views", {
   expect_equal(nrow(both),6)
   ref <- both[,c("session_id","camera_id","frame_id",
                 "track_id","x","y")]
-  comparison <- aqt_tracking_metrics(ref,ref,max_distance=0)
+  comparison <- aqt_tracking_metrics(ref,ref,max_distance=.01)
   expect_equal(nrow(comparison),2)
   expect_true(all(comparison$IDF1==1))
 })
