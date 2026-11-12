@@ -15,7 +15,7 @@ produced model predictions and frame review are supplied, **no real fish
 prediction accuracy is calculated**, even though original labels are inspected.
 
 This is a narrower engineering milestone toward Level 2 and **does not close**
-the overall [scientific validation gate](../issues/40) or certify real underwater
+the overall [scientific validation gate](https://github.com/stefanosbalaskas/AquaTrajectories/issues/40) or certify real underwater
 XYZ, absolute camera synchronization, HOTA, or fish welfare inference.
 
 ## Source constraints
@@ -144,3 +144,12 @@ camera-specific independent 2D annotations and predictions.
 
 Passing package tests or authentic-label format audits does **not** satisfy
 these scientific validation gates.
+
+## Native R integration
+
+After a separately completed Python comparison, use
+`aqt_3dzef_agreement_import("/data/zef_agreement")` in R.
+The importer independently checks all output CSV hashes, per-frame TP/FP/FN
+accounting, identity uniqueness, matched 3D distance arithmetic, and the
+unqualified scientific status of the report. It is an audit of the benchmark
+handoff, not an independent validation of the source fish tracks.
