@@ -68,3 +68,47 @@ https://github.com/stefanosbalaskas/AquaTrajectories/issues/46
 
 Wave 12B is a source-video execution and timing-integration milestone, not
 full fish-video tracking measurement validation.
+
+## Additional original-source quantitative comparison
+
+Oxford's published methods state these 454 behavioural recordings were
+captured by an **overhead GoPro Hero 5**, at nominal 1080-pixel resolution
+and 60 frames per second. Trial segments were later converted to H.264 MP4.
+Consequently these genuine **fish GoPro video** clips may no longer carry
+the original camera's raw GPMF metadata or physical shutter time. The
+AquaTrajectories source probe only claims PTS of the published MP4 clips.
+
+The original project repository also includes:
+
+- Manually reviewed fish LISA annotations: final
+  data/annotations/eval/fish/4-all-frames-DONE.json
+- Previously generated EfficientDet fish detections:
+  data/annotations/eval/fish/2-all-frames-auto-detections.json
+- Source commit 0d57a17148f750ed7c327ba5d36ce587d3b7dcfe.
+- Source manual/auto Git blob SHA:
+  8e2b2a30d87dae2f0624450cf7c8f51c4fbb0760 /
+  831418e7780864d1caecb1469b31f3a908e2269d.
+
+A separate Python audit and dedicated GitHub Actions job compare these two
+**real source** JSON datasets, retaining 4,462 evaluated frames across 15
+recordings including 304 manually empty frames. On the original files,
+using maximum-cardinality 0.50-IoU box matching, our reproduced source
+comparison produced 4,159 reviewed fish boxes, 1,656 automatic fish
+detections, TP=1,654, FP=2 and FN=2,505; pooled precision 99.8792%,
+recall 39.7692%, and F1 56.8874%. The CI checks these exact source
+denominators, hashes and scientific claim flags before exporting an
+evidence JSON artifact.
+
+**Interpretation:** this describes agreement between Oxford's **original
+published EfficientDet automatic detections** and the source's final human
+reviewed annotations. AquaTrajectories has not yet rerun the original
+EfficientDet or a new trained detector on video; the manual annotations
+may themselves have been assisted by the original detector and cannot be
+declared prediction-blind. High precision combined with low recall
+supports studying missed detections, but is not proof of improved
+AquaTrajectories tracking or animal welfare measurement. HOTA/IDF1
+require actual identities and separate official scoring.
+
+The new source audit is available at
+inst/python/aqt_oxford_detection_audit.py and
+.github/workflows/oxford-detection-agreement.yml.
