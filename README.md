@@ -328,3 +328,17 @@ onsets, while `aqt_plot_changepoints()` provides a basic diagnostic.
 These are descriptive change points, **not** automatically classified
 animal stress, welfare, HMM states or causal intervention responses.
 See `docs/FISH_BEHAVIOURAL_CHANGEPOINTS.md`.
+
+
+## Wave 9A: measured 3D tank storyboard and event overlays
+
+`aqt_tank_scene_snapshot()` selects truly observed fish positions at
+a specific recording time, retaining original IDs and never reusing
+stale positions after an occlusion. Historical fish tails break at
+missing frames and long gaps. `aqt_tank_scene_storyboard()` prepares
+bounded sets of time-ordered verified scenes, while
+`aqt_plot_tank_projection()` and optional
+`aqt_plot_tank_scene3d()` visualize physical XY/XZ/YZ and XYZ.
+
+This is not automatic 3D calibration, video playback or an inferred
+welfare state. See `docs/THREED_TANK_STORYBOARD.md`.
