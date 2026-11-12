@@ -16,3 +16,12 @@ These are **camera calibration metadata**, not actual independent underwater
 XYZ truth or real GoPro parameters. The reported stereo P translation does not
 declare translation units. The files do not establish whether a physically
 correct refraction model was fitted. No fish video/ROS bag image data copied.
+
+
+Additional independently measured fish body-length reference fixture:
+- fish_gt_measures.csv
+- Upstream file: https://github.com/Caterina1996/fish_sizing/blob/paper/paper/paper_dataset/dataset_to_zenodo/gt_annotations_and_samples/fish_gt_measures.csv
+- Byte-identical source Git blob: bcfef613e281a2c30f9858e1701624884e49423b
+- Nine manually reported specimen total lengths, in cm, including decimal-comma values.
+- Measurements provide BODY LENGTH reference only, not true fish XYZ,
+  swimming trajectories or exposure-camera synchronization.
