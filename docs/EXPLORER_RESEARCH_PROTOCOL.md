@@ -68,3 +68,24 @@ multiple-camera switching and screen-reader accessibility.
 
 Full roadmap acceptance:
 https://github.com/stefanosbalaskas/AquaTrajectories/issues/51
+
+## ACI safety-gated offline controller prototype
+
+The browser interface now includes an **explicitly simulated**
+animal–computer interaction event-plan panel. The pure function
+`dryRunACI(events,options)` consumes only externally logged
+`aci_choice_request` events and requires a nonempty external study
+approval reference, virtual device name, maximum intensity/duration,
+cooldown and maximum command count. Emergency-stop is **engaged by
+default**; engaging it produces zero commands. It returns only
+`execution_status: SIMULATED_ONLY` entries. There are **no physical
+actuators, hardware network requests or animals controlled**.
+
+CI tests check cooldown, maximum commands, emergency stop, missing
+approval and invalid intensity. This is a dry-run architecture for
+priority 8, **not** proof of adequate animal welfare constraints.
+Real ACI controllers need actual approved protocols, independent
+device emergency stop implementation, limits validated for the fish
+species, fish-observed choice logs, device-level trials and
+independently replicated tank designs. It would be inappropriate to
+describe a local browser simulation as a deployed enrichment device.
