@@ -330,16 +330,46 @@ animal stress, welfare, HMM states or causal intervention responses.
 See `docs/FISH_BEHAVIOURAL_CHANGEPOINTS.md`.
 
 
-## Wave 10A: fish–device closed-loop measurements for ACI
+## Wave 8B: tank-replicated event-relative functional curves
 
-`aqt_aci_trials()` validates independently annotated animal action,
-detection, controller command, physical device activation, and observed
-response timestamps against explicit opportunity windows.
-`aqt_aci_loop_metrics()` reports detection/actuator failures, false
-triggers, and descriptive action-to-actuation contingency.
-`aqt_aci_latency_summary()` audits detection, controller and physical
-actuation delays without inventing missing latencies.
+`aqt_functional_event_grid()` aligns observed fish speed/XYZ outcomes
+to actual event-relative recording seconds with strict missing-frame,
+large-gap, and intervention-boundary interpolation guards.
+`aqt_functional_coverage()` audits visible fish support over time.
+`aqt_functional_tank_contrast()` estimates descriptive between-treatment
+curves from independently replicated tank averages, with separate
+pointwise and empirical simultaneous tank-resampling bands.
 
-**These are measurements of a controlled fish–device interaction**, not
-proof of animal agency, preference, learning, stress or welfare.
-See `docs/ACI_CLOSED_LOOP_TELEMETRY.md`.
+The resampling bands are NOT empirically coverage-certified confidence
+intervals and DO NOT propagate glass-camera and fish identity errors.
+See `docs/FUNCTIONAL_EVENT_TANK_CURVES.md`.
+
+## Wave 9A: measured 3D tank storyboard and event overlays
+
+`aqt_tank_scene_snapshot()` selects truly observed fish positions at
+a specific recording time, retaining original IDs and never reusing
+stale positions after an occlusion. Historical fish tails break at
+missing frames and long gaps. `aqt_tank_scene_storyboard()` prepares
+bounded sets of time-ordered verified scenes, while
+`aqt_plot_tank_projection()` and optional
+`aqt_plot_tank_scene3d()` visualize physical XY/XZ/YZ and XYZ.
+
+This is not automatic 3D calibration, video playback or an inferred
+welfare state. See `docs/THREED_TANK_STORYBOARD.md`.
+
+
+## Wave 10A: animal–computer closed-loop telemetry and choice opportunities
+
+`aqt_aci_trials()`, `aqt_aci_loop_metrics()` and
+`aqt_aci_latency_summary()` audit externally recorded fish action,
+detection, command, physical actuator and response times, separating
+true and false triggers and incomplete loops. `aqt_aci_choice_log()`,
+`aqt_aci_choice_summary()` and `aqt_aci_access_inequality()` separately
+audit the actual options available to fish, the exercised selections,
+and unequal access normalized by genuine multi-option opportunities.
+
+These are descriptive fish–device measures, **not** validated agency,
+preference, dominance or welfare scores; timing and biological
+annotations require independent evidence. See
+`docs/ACI_CLOSED_LOOP_TELEMETRY.md` and
+`docs/ACI_CHOICE_AND_ACCESS.md`.

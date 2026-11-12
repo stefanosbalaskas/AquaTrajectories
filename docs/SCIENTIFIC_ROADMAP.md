@@ -166,11 +166,30 @@ models, HMMs and qualified EyeTrajectories-native methods remain
 separately unimplemented.
 
 
-## Wave 10A — animal-computer closed-loop telemetry
+## Wave 8B — event-aligned functional analysis with independent tanks
 
-Implemented opportunity-level fish actions, detector commands,
-physical actuator observations and optional fish-response timestamps,
-with strict temporal ordering, true/false activations, action-contingency
-comparisons and stage-specific latency audits. Validated animal
-agency, preference, welfare, yoked controls and controller timing
-calibration remain independent research requirements.
+Implemented observed-only, onset-protected interpolation onto a declared
+real-time grid, support audit, and equal-weight independently
+replicated tank-level functional treatment contrasts. Separate
+resampling bands describe sampling variation only; optical error,
+discrete fish IDs, causal identification, GLMM/GAMM and sparse FPCA
+inference are not automatically addressed.
+
+## Wave 9A — time-indexed measured 3D fish scenes
+
+Adds observation-only physical XYZ scene snapshots, gap-separated
+trajectory tails, event annotations, finite storyboards, headless
+orthographic projections and optional rgl 3D display. No missing
+fish position is silently carried forward; it is not an integrated
+video-playing, uncertainty-volume or species-body-modeling interface.
+
+
+## Wave 10A — animal-device closed loop and genuinely offered choices
+
+Implements opportunity-level fish action and detector/controller/physical
+actuator timeline validation, true/false physical activation,
+contingency and stage latency. Separately represents physically offered
+alternatives, exercised selections, conditional per-option exposure,
+and normalized inequality of actual multi-option exercise among fish.
+No automatic video-to-action algorithm, yoked-control causal estimate,
+preference stability or biological welfare validation is claimed.
