@@ -1,0 +1,1 @@
+trial_id,tank_id,session_id,camera_a_id,camera_b_id,target_id,target_group,partition,truth_x,truth_y,truth_z,a_u_px,a_v_px,b_u_px,b_v_px
