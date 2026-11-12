@@ -338,3 +338,7 @@ bins or insufficient acquired frames. Audits original frame support
 and enforces a completed-annotation gate before scoring video bundles.
 Human annotation validity, fish independence and real evaluation
 results remain outside the software tests.
+
+## Wave 11F — real GoPro and stereo dataset schema discovery
+
+Adds structure-only FFprobe and GPMF raw probes; validates real published FishSizing ROS calibration K/D/R/P and manual fish-size CSV structures. A real HERO5 upstream GPMF raw KLV sample and FishSizing YAML/CSV/JSON were examined. A source-ranked public dataset catalogue distinguishes actual observed metadata from undownloaded/gated large video archives and records explicit boundaries on 3D accuracy. The next acquisition gate is actual raw GoPro fish video, approved fish-specific training weights, manually annotated identities and independently surveyed underwater XYZ.

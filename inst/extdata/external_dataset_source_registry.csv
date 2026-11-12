@@ -1,0 +1,13 @@
+dataset_id,modality,confirmed_structure,primary_use,source_url,access,actual_files_examined,real_xyz_certified
+gopro_gpmf,MP4_GPMF,MP4+GPMF_KLV,video_metadata,https://github.com/gopro/gpmf-parser/tree/main/samples,public,raw_binary_only,false
+fraunhofer_ricefish,aquaculture_video,Datumaro_YOLO_MOT,tracking,https://cvg.hhi.fraunhofer.de/FishTracking.htm,public_links,site_documentation_only,false
+mft25,underwater_MOT,MOT_sequence_archives,tracking,https://huggingface.co/datasets/Vranlee/MFT25,gated,repository_docs_only,false
+fishtrack23,underwater_MOT,boxes_tracks,tracking,https://openaccess.thecvf.com/content/WACV2024/html/Dawkins_FishTrack23_An_Ensemble_Underwater_Dataset_for_Multi-Object_Tracking_WACV_2024_paper.html,see_paper,paper_only,false
+sfishtrack,underwater_video,COCO_JSON_masks_tracks,tracking,https://github.com/JosepSanchezCano/SFISHTRACK,external_drive,repository_readme_only,false
+tuhh_zebrafish,stereo_RGB,ZIP_video_manual_labels,stereo_tracking,https://tore.tuhh.de/entities/product/01d8baa1-b6a5-4163-924a-01f40ff3bc81,public_large,record_description_only,false
+fishsizing,ROS_stereo,ROS_bag_YAML_CSV_JSON,stereo_size_geometry,https://github.com/Caterina1996/fish_sizing/tree/paper,public_large,real_YAML_CSV_JSON_results,false
+deepsea_mot,ROV_underwater,MOV_gt_seqinfo_YOLO_VOC,tracking,https://huggingface.co/datasets/MBARI-org/DeepSea-MOT,public_large,dataset_card_only,false
+fish4knowledge,trajectory_MAT,matlab_fish_detections,trajectory_analysis,https://homepages.inf.ed.ac.uk/rbf/Fish4Knowledge/GROUNDTRUTH/BEHAVIOR/,public,site_documentation_only,false
+gopro_mediterranean,diver_GoPro,YOLO_frames,GoPro_detection,https://github.com/filippovarini/community-fish-detector-dataset,public_large,index_only,false
+uwslam,stereo_underwater,ROS_YAML_poses_times,geometric_reference,https://github.com/gidobot/UWslamdataset,public,repository_readme_only,false
+fishtrac_vft,underwater_fish,headerless_frame_norm_center_xywh,detection_format,https://github.com/tmandel/fish-detrac/blob/master/fishtrac/trackers/VFT/detections.csv,public,actual_csv_and_converter_code,false

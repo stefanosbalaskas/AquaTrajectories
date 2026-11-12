@@ -1,0 +1,98 @@
+name: Real dataset schema and GoPro structure probes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_probe_recording.py"
+      - "inst/python/aqt_ros_stereo_audit.py"
+      - "inst/python/aqt_ros_image_header_pairing.py"
+      - "tests/python/test_recording_probe.py"
+      - "tests/python/test_ros_stereo_audit.py"
+      - "inst/python/aqt_fishsizing_length_reproduction.py"
+      - "tests/python/test_fishsizing_length_reproduction.py"
+      - "tests/python/test_ros_image_header_pairing.py"
+      - "tests/fixtures/fishsizing/**"
+      - "tests/fixtures/gopro/**"
+      - ".github/workflows/dataset-schema-probes.yml"
+  pull_request:
+    paths:
+      - "inst/python/aqt_probe_recording.py"
+      - "inst/python/aqt_ros_stereo_audit.py"
+      - "inst/python/aqt_ros_image_header_pairing.py"
+      - "tests/python/test_recording_probe.py"
+      - "tests/python/test_ros_stereo_audit.py"
+      - "inst/python/aqt_fishsizing_length_reproduction.py"
+      - "tests/python/test_fishsizing_length_reproduction.py"
+      - "tests/python/test_ros_image_header_pairing.py"
+      - "tests/fixtures/fishsizing/**"
+      - ".github/workflows/dataset-schema-probes.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  data-format-probes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install optional published ROS YAML parser
+        run: python -m pip install "PyYAML>=6,<7"
+      - name: Install FFmpeg and FFprobe (Ubuntu 26.04 runner image omits both)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          ffprobe -version | head -n 1
+          ffmpeg -version | head -n 1
+      - name: Compile structural probes
+        run: |
+          python -m py_compile inst/python/aqt_probe_recording.py
+          python -m py_compile inst/python/aqt_ros_stereo_audit.py
+      - name: Test GPMF KLV and real published stereo YAML schemas
+        run: python -m unittest discover -s tests/python -p "test_*probe.py" -v
+      - name: Test unequal stereo ROS header timestamp streams
+        run: python -m unittest discover -s tests/python -p "test_ros_image_header_pairing.py" -v
+      - name: Test actual FishSizing ROS YAML pair
+        run: python -m unittest discover -s tests/python -p "test_ros_stereo_audit.py" -v
+      - name: Reproduce an actual FishSizing source-model length-error table
+        shell: bash
+        run: |
+          python -m unittest discover -s tests/python -p "test_fishsizing_length_reproduction.py" -v
+          curl --fail --location --show-error --retry 3 --max-time 120 \
+            "https://raw.githubusercontent.com/Caterina1996/fish_sizing/paper/paper/results_csvs/DATASET_1/2024_11_12/single_fish/10_44_11/10-44-11_0/results/10_44_11_raw.csv" \
+            --output "$RUNNER_TEMP/fishsizing_original_results.csv"
+          test "$(git hash-object "$RUNNER_TEMP/fishsizing_original_results.csv")" = "89728c89a647c49ca4d0dc0b259ceeb7dffa7ca0"
+          python inst/python/aqt_fishsizing_length_reproduction.py \
+            --source-results "$RUNNER_TEMP/fishsizing_original_results.csv" \
+            --manual-gt tests/fixtures/fishsizing/fish_gt_measures.csv \
+            --out "$RUNNER_TEMP/fishsizing_model_error_audit.json"
+          python -c 'import json,os; x=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"fishsizing_model_error_audit.json"))); assert x["n_original_result_rows"]==168; assert x["n_rows_with_filtered_length"]==82; assert x["n_rows_with_invalid_length_sentinel_minus_one"]==3; assert x["n_rows_with_reproducible_source_errors"]==82; assert x["n_rows_fish_3d_ok_true"]==71; assert abs(x["source_model_per_frame_mae_cm"]-21.411021444134455)<1e-8; assert not x["source_model_predictions_are_aquatrajectories"]'
+      - name: Probe original GoPro HERO5 MP4 from authoritative source
+        shell: bash
+        run: |
+          curl --fail --show-error --location --retry 3 --max-time 120 \
+            "https://raw.githubusercontent.com/gopro/gpmf-parser/main/samples/hero5.mp4" \
+            --output "$RUNNER_TEMP/hero5_actual.mp4"
+          test "$(git hash-object "$RUNNER_TEMP/hero5_actual.mp4")" = "11e80a54756827b01ea4375764a4bc2458b2443f"
+          python inst/python/aqt_probe_recording.py \
+            --video "$RUNNER_TEMP/hero5_actual.mp4" --scan-frames 80 \
+            --sha256-video --output "$RUNNER_TEMP/hero5_report.json"
+          python -c 'import json,os; p=os.path.join(os.environ["RUNNER_TEMP"],"hero5_report.json"); x=json.load(open(p)); assert x["video"]["gpmf_stream_detected"]; assert x["video"]["finite_frame_pts_rows"]>3; assert x["video"]["camera_exposure_clock_synchronized"] is False'
+      - name: Exercise ffprobe against a generated MP4 (not real GoPro video)
+        shell: bash
+        run: |
+          ffmpeg -hide_banner -loglevel error -f lavfi -i color=c=black:s=64x64:r=30 -frames:v 6 -c:v mpeg4 -y "$RUNNER_TEMP/smoke.mp4"
+          python inst/python/aqt_probe_recording.py --video "$RUNNER_TEMP/smoke.mp4" --scan-frames 6 --output "$RUNNER_TEMP/stream_inspection.json"
+          python -c 'import json,os; d=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"stream_inspection.json"))); assert d["video"]["finite_frame_pts_rows"]==6; assert d["video"]["camera_exposure_clock_synchronized"] is False'
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: original-gopro-fishsizing-structure-and-error-audits
+          retention-days: 90
+          path: |
+            ${{ runner.temp }}/hero5_report.json
+            ${{ runner.temp }}/fishsizing_model_error_audit.json
+            ${{ runner.temp }}/stream_inspection.json
