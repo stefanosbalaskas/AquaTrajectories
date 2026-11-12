@@ -88,8 +88,10 @@ test_that("truth simulation and recovery require scientifically valid design", {
     state_sds=c(1,0)),"positive")
   x <- aqt_hmm_simulate_truth(
     n_tanks=5,fish_per_tank=1,n_samples=20,seed=19)
+  plain <- x
+  class(plain) <- "data.frame"
   expect_error(aqt_hmm_recovery_audit(
-    as.data.frame(x),training_tanks=c("T001","T002")),
+    plain,training_tanks=c("T001","T002")),
     "Expected aqt_hmm_known_truth")
   expect_error(aqt_hmm_recovery_audit(x,training_tanks="T001"),
                ">=2 distinct")
