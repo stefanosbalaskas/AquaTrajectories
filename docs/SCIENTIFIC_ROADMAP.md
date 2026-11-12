@@ -193,3 +193,14 @@ alternatives, exercised selections, conditional per-option exposure,
 and normalized inequality of actual multi-option exercise among fish.
 No automatic video-to-action algorithm, yoked-control causal estimate,
 preference stability or biological welfare validation is claimed.
+
+
+## Wave 9B — multimodal optical and fish-identity XYZ visualization
+
+Provides visible-by-scenario physical XYZ fish cloud samples,
+explicit missing/stale fish rejection, label assignment-change
+rates and descriptive marginal quantiles; base projected scatter
+and optional rgl XYZ scatter. The full cloud retains multimodal
+identity alternatives. No calibrated uncertainty ellipsoid,
+real-video overlay, joint statistical confidence model or
+independent underwater metrology claim is made.

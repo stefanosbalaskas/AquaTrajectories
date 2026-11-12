@@ -373,3 +373,18 @@ preference, dominance or welfare scores; timing and biological
 annotations require independent evidence. See
 `docs/ACI_CLOSED_LOOP_TELEMETRY.md` and
 `docs/ACI_CHOICE_AND_ACCESS.md`.
+
+
+## Wave 9B: multimodal 3D fish position uncertainty clouds
+
+`aqt_joint_scene_cloud()` extracts all observed physical XYZ positions
+from coherent joint optical/identity scenarios at a declared recording
+frame and reports how many scenarios show each fish label.
+`aqt_plot_joint_scene_cloud()` and optional
+`aqt_plot_joint_scene_cloud3d()` display the full label-specific cloud
+in physical XY/XZ/YZ and XYZ without imposing a Gaussian ellipsoid.
+
+These are descriptive conditional sensitivity visualizations,
+**not** scientifically calibrated 3D confidence regions or proof
+of biological fish identity. Details:
+`docs/JOINT_UNCERTAINTY_SCENE_CLOUD.md`.
