@@ -22,7 +22,7 @@ aqt_tracks <- function(data, units = "px", coordinate_system = "image") {
   }
   for (nm in c("time_s","x","y"))
     if (!is.numeric(d[[nm]])) stop(nm, " must be numeric", call. = FALSE)
-  if (!"z" %in% names(d)) d$z <- NA_real_
+  if (!"z" %in% names(d)) d$z <- rep(NA_real_,nrow(d))
   if (!is.numeric(d$z)) stop("z must be numeric", call. = FALSE)
   if (any(!is.finite(d$time_s))) stop("time_s must be finite", call. = FALSE)
   if (any(is.infinite(d$x)) || any(is.infinite(d$y)) || any(is.infinite(d$z)))
