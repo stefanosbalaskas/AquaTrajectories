@@ -1,0 +1,30 @@
+name: Python video runner contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/**"
+      - "tests/python/**"
+      - ".github/workflows/python-video-runner.yml"
+  pull_request:
+    paths:
+      - "inst/python/**"
+      - "tests/python/**"
+      - ".github/workflows/python-video-runner.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  python-video-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Syntax-check optional runner
+        run: python -m py_compile inst/python/aqt_track_video.py
+      - name: Run stdlib-only contracts
+        run: python -m unittest discover -s tests/python -p "test_*.py" -v
