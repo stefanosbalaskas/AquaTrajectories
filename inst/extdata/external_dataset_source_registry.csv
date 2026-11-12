@@ -10,3 +10,4 @@ deepsea_mot,ROV_underwater,MOV_gt_seqinfo_YOLO_VOC,tracking,https://huggingface.
 fish4knowledge,trajectory_MAT,matlab_fish_detections,trajectory_analysis,https://homepages.inf.ed.ac.uk/rbf/Fish4Knowledge/GROUNDTRUTH/BEHAVIOR/,public,site_documentation_only,false
 gopro_mediterranean,diver_GoPro,YOLO_frames,GoPro_detection,https://github.com/filippovarini/community-fish-detector-dataset,public_large,index_only,false
 uwslam,stereo_underwater,ROS_YAML_poses_times,geometric_reference,https://github.com/gidobot/UWslamdataset,public,repository_readme_only,false
+fishtrac_vft,underwater_fish,headerless_frame_norm_center_xywh,detection_format,https://github.com/tmandel/fish-detrac/blob/master/fishtrac/trackers/VFT/detections.csv,public,actual_csv_and_converter_code,false
