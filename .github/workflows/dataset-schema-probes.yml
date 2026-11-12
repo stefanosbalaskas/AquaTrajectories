@@ -6,8 +6,10 @@ on:
     paths:
       - "inst/python/aqt_probe_recording.py"
       - "inst/python/aqt_ros_stereo_audit.py"
+      - "inst/python/aqt_ros_image_header_pairing.py"
       - "tests/python/test_recording_probe.py"
       - "tests/python/test_ros_stereo_audit.py"
+      - "tests/python/test_ros_image_header_pairing.py"
       - "tests/fixtures/fishsizing/**"
       - "tests/fixtures/gopro/**"
       - ".github/workflows/dataset-schema-probes.yml"
@@ -15,8 +17,10 @@ on:
     paths:
       - "inst/python/aqt_probe_recording.py"
       - "inst/python/aqt_ros_stereo_audit.py"
+      - "inst/python/aqt_ros_image_header_pairing.py"
       - "tests/python/test_recording_probe.py"
       - "tests/python/test_ros_stereo_audit.py"
+      - "tests/python/test_ros_image_header_pairing.py"
       - "tests/fixtures/fishsizing/**"
       - ".github/workflows/dataset-schema-probes.yml"
 
@@ -39,6 +43,8 @@ jobs:
           python -m py_compile inst/python/aqt_ros_stereo_audit.py
       - name: Test GPMF KLV and real published stereo YAML schemas
         run: python -m unittest discover -s tests/python -p "test_*probe.py" -v
+      - name: Test unequal stereo ROS header timestamp streams
+        run: python -m unittest discover -s tests/python -p "test_ros_image_header_pairing.py" -v
       - name: Test actual FishSizing ROS YAML pair
         run: python -m unittest discover -s tests/python -p "test_ros_stereo_audit.py" -v
       - name: Probe original GoPro HERO5 MP4 from authoritative source
