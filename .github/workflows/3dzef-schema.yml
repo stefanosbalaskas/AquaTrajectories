@@ -1,0 +1,46 @@
+name: 3D-ZeF GoPro stereo labels and calibration contracts
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_3dzef_source_probe.py"
+      - "tests/python/test_3dzef_source_probe.py"
+      - "docs/3D_ZEF_REAL_GO_PRO_BENCHMARK.md"
+      - ".github/workflows/3dzef-schema.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_3dzef_source_probe.py"
+      - "tests/python/test_3dzef_source_probe.py"
+      - ".github/workflows/3dzef-schema.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  three-d-zef-source-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source syntax and known-truth structural contracts
+        run: |
+          python -m py_compile inst/python/aqt_3dzef_source_probe.py
+          python -m unittest discover -s tests/python -p "test_3dzef_source_probe.py" -v
+      - name: Download original published small GoPro stereo fish labels
+        shell: bash
+        run: |
+          curl --fail --location --show-error --retry 3 --max-time 180 \
+            "https://motchallenge.net/data/3DZeF20Lables.zip" \
+            --output "$RUNNER_TEMP/3DZeF20Lables.zip"
+          python inst/python/aqt_3dzef_source_probe.py \
+            --labels-zip "$RUNNER_TEMP/3DZeF20Lables.zip" \
+            --out "$RUNNER_TEMP/3dzef_source_audit.json"
+          python -c 'import json,os; p=os.path.join(os.environ["RUNNER_TEMP"],"3dzef_source_audit.json"); x=json.load(open(p)); assert x["labels_archive"]["n_member_files"]>0; assert not x["physical_accuracy_certified"]'
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: original-3dzef-label-structure-audit
+          path: ${{ runner.temp }}/3dzef_source_audit.json
