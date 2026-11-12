@@ -178,9 +178,9 @@ aqt_annotation_plan_audit <- function(plan,frames) {
           w$stratum_start_s[1L]>=w$stratum_end_s[1L])
         stop("Invalid temporal stratum bounds",call.=FALSE)
       lo <- w$stratum_start_s[1L]; hi <- w$stratum_end_s[1L]
-      n_available <- sum(available$time_s>=lo &
-        if (j==max(bins)) available$time_s<=hi
-        else available$time_s<hi)
+      in_interval <- if (j==max(bins))
+        available$time_s<=hi else available$time_s<hi
+      n_available <- sum(available$time_s>=lo & in_interval)
       n_selected <- nrow(w)
       if (n_available!=w$n_stratum_available[1L] ||
           n_selected!=w$n_stratum_selected[1L] ||
