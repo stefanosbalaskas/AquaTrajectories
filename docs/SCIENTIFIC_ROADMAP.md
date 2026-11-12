@@ -174,3 +174,11 @@ replicated tank-level functional treatment contrasts. Separate
 resampling bands describe sampling variation only; optical error,
 discrete fish IDs, causal identification, GLMM/GAMM and sparse FPCA
 inference are not automatically addressed.
+
+## Wave 9A — time-indexed measured 3D fish scenes
+
+Adds observation-only physical XYZ scene snapshots, gap-separated
+trajectory tails, event annotations, finite storyboards, headless
+orthographic projections and optional rgl 3D display. No missing
+fish position is silently carried forward; it is not an integrated
+video-playing, uncertainty-volume or species-body-modeling interface.
