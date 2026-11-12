@@ -546,3 +546,27 @@ physical GoPro calibration measurements themselves. Real independently
 surveyed targets, actual GoPro intrinsics and port geometry, frame
 synchronization and independent trial replication are still required.
 See `docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md`.
+
+## Wave 11D — verified video bundles and independent annotation benchmark
+
+The Python runner now generates SHA-256 digests for its frame, MOT and
+class outputs, rejects reused output prefixes and rejects species-class
+changes within a camera-local track. R's `aqt_video_bundle_import()`
+loads and validates all four files together, checking digests, exact
+frame PTS, sidecar row keys and metadata counts. It also accepts a
+legitimate zero-detection fish video (empty MOT file without inventing
+fish observations). This is **file consistency, not cryptographically
+signed chain of custody or independent model validation**.
+
+`aqt_video_bundle_benchmark()` accepts an explicit list of independently
+*fully annotated* frames, including frames with no fish, and separately
+annotated boxes and fish IDs. It reports native class-aware detection
+precision/recall/F1 and within-video point-track IDF1 plus frame-coverage
+denominators. Benchmarking **does not** create reference truth by copying
+predictions; unannotated frames never count as false positives.
+
+A new Python-to-R integration CI generates mock-decoder output through
+the actual Python runner and then installs and exercises the R package
+on the exact resulting files. It verifies the serialization bridge,
+not real GoPro/Ultralytics runtime or biological tracking accuracy.
+See `docs/INDEPENDENT_VIDEO_BENCHMARK.md`.

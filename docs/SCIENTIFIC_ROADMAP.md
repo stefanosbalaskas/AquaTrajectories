@@ -315,3 +315,15 @@ benchmarks. Per-target residuals retain invalid denominators; per-trial
 metrics avoid treating individual target corners as independent
 validation experiments. True GoPro calibration, external survey
 uncertainty and real measurements remain unverified.
+
+## Wave 11D — SHA-256 video bundles and independent annotated-frame scoring
+
+Creates runner outputs with file digests and stable class identities,
+a four-file R ingestion gate rejecting mismatched CSV/PTS/class keys,
+and empty-MOT support for zero detection frames. A named bundle scorer
+requires independently fully annotated frame manifests (including
+zero-fish frames) and externally established reference fish boxes and
+identities. A separate Python→installed-R CI tests exact serialization,
+frame PTS and sample-scoped precision/IDF1 calculations. This is
+mock-video interoperability only: no calibrated GoPro fish detection,
+hardware synchronization, underwater 3D truth or welfare claim.
