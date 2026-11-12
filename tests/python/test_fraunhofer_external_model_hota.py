@@ -27,7 +27,7 @@ class RealRicefishExternalModelContracts(unittest.TestCase):
                 m.source_archive(path)
 
     def test_exact_source_archive_geometry_no_training_as_truth(self):
-        self.assertIn("source_image_frame",Path(
+        self.assertIn("source_original_image_sha256",Path(
             m.__file__).read_text())
         self.assertIn("original_fish_IDs_visible_to_model_or_tracker",Path(
             m.__file__).read_text())
