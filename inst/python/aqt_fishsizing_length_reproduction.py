@@ -76,6 +76,7 @@ def inspect_source_results(csv_path: Path,
     }
     n = 0
     with_length = 0
+    invalid_sentinel = 0
     with_source_error = 0
     passing_three_d_flag = 0
     complete_flagged_errors = 0
@@ -104,7 +105,15 @@ def inspect_source_results(csv_path: Path,
             gt = _optional_number(row["gt"], "ground_truth_cm")
             abs_e = _optional_number(row["abs_error_cm"], "abs_error_cm")
             rel_e = _optional_number(row["rel_error_%"], "rel_error_percent")
-            if prediction is not None:
+            if prediction == -1.0:
+                # Real FishSizing export includes -1.0 as an invalid-result
+                # sentinel, not a biologically impossible negative fish.
+                if ok3 != "false" or abs_e is not None or rel_e is not None:
+                    raise ValueError(
+                        "Invalid sentinel cannot have 3D quality or an error")
+                invalid_sentinel += 1
+                prediction = None
+            elif prediction is not None:
                 if prediction <= 0:
                     raise ValueError("Model length must be positive")
                 with_length += 1
@@ -146,6 +155,7 @@ def inspect_source_results(csv_path: Path,
             sha256(manual_gt_csv) if manual_gt_csv else None),
         "n_original_result_rows": n,
         "n_rows_with_filtered_length": with_length,
+        "n_rows_with_invalid_length_sentinel_minus_one": invalid_sentinel,
         "n_rows_with_reproducible_source_errors": with_source_error,
         "n_rows_fish_3d_ok_true": passing_three_d_flag,
         "n_rows_fish_3d_ok_with_reproduced_error": complete_flagged_errors,
