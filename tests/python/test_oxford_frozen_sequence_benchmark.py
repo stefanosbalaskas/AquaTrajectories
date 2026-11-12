@@ -4,7 +4,10 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
-import numpy as np
+try:
+    import numpy as np
+except ImportError:  # stdlib-only CI; dedicated inference CI installs NumPy
+    np = None
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/"inst/python"))
@@ -12,6 +15,7 @@ import aqt_oxford_frozen_sequence_benchmark as m
 
 
 class RealFishModelSequenceContracts(unittest.TestCase):
+    @unittest.skipIf(np is None, "NumPy needed for genuine frozen model tensor tests")
     def test_true_source_model_tensor_order_no_guessed_class_identity(self):
         x=np.array([[[0,10,20,50,70,.8,1],
                      [0,40,30,80,60,.1,1]]],dtype=np.float32)
