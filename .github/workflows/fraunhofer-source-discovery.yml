@@ -1,0 +1,67 @@
+name: Wave 14A - original Fraunhofer dense-fish dataset source-discovery qualification
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_fraunhofer_link_audit.py"
+      - "tests/python/test_fraunhofer_link_audit.py"
+      - "docs/FRAUNHOFER_DATASET_SOURCE_DISCOVERY.md"
+      - ".github/workflows/fraunhofer-source-discovery.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_fraunhofer_link_audit.py"
+      - "tests/python/test_fraunhofer_link_audit.py"
+      - ".github/workflows/fraunhofer-source-discovery.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-original-download-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source URL and fail-closed contracts
+        run: |
+          python -m py_compile inst/python/aqt_fraunhofer_link_audit.py
+          python -m unittest discover -s tests/python -p "test_fraunhofer_link_audit.py" -v
+      - name: Retrieve ACTUAL official Fraunhofer source webpage and inspect original links
+        run: |
+          # Original HHI server currently presents an incomplete TLS issuer
+          # chain to GitHub ubuntu runners. This is URL DISCOVERY ONLY.
+          # Never qualify/download scientific data bytes by this bypass.
+          if curl --fail --location --show-error --retry 1 --max-time 120 \
+            "https://cvg.hhi.fraunhofer.de/FishTracking.htm" \
+            --output "$RUNNER_TEMP/fraunhofer_original.html"; then
+            echo "TLS verification succeeded" > "$RUNNER_TEMP/tls_status.txt"
+          else
+            echo "TLS verification FAILED; link discovery only, original data unverified" \
+              > "$RUNNER_TEMP/tls_status.txt"
+            curl --insecure --fail --location --show-error --retry 2 --max-time 120 \
+              "https://cvg.hhi.fraunhofer.de/FishTracking.htm" \
+              --output "$RUNNER_TEMP/fraunhofer_original.html"
+          fi
+          python inst/python/aqt_fraunhofer_link_audit.py \
+            --html "$RUNNER_TEMP/fraunhofer_original.html" \
+            --out "$RUNNER_TEMP/fraunhofer_links.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"fraunhofer_links.json"
+          a=json.loads(p.read_text())
+          assert a["n_candidate_links"]>=6,a
+          print((pathlib.Path(os.environ["RUNNER_TEMP"])/"tls_status.txt").read_text())
+          assert a["actual_annotation_bytes_downloaded"] is False
+          assert not a["actual_annotation_bytes_downloaded"]
+          assert not a["official_HOTA_IDF1_computed"]
+          print("Original source links inspected; downloaded annotations NOT claimed")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14a-fraunhofer-original-source-link-evidence
+          path: ${{ runner.temp }}/fraunhofer_links.json
