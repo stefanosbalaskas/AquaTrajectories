@@ -1,0 +1,59 @@
+name: Wave 13F - exact research-release evidence registry and scientific block
+
+on:
+  pull_request:
+    paths:
+      - "inst/evidence/scientific-validation-gates.json"
+      - "inst/python/aqt_scientific_release_gate.py"
+      - "tests/python/test_scientific_release_gate.py"
+      - "docs/SCIENTIFIC_RELEASE_READINESS.md"
+      - ".github/workflows/scientific-release-gates.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/evidence/scientific-validation-gates.json"
+      - "inst/python/aqt_scientific_release_gate.py"
+      - "tests/python/test_scientific_release_gate.py"
+      - ".github/workflows/scientific-release-gates.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  research-release-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Regress mandatory scientific evidence and nine milestone schema
+        run: |
+          python -m py_compile inst/python/aqt_scientific_release_gate.py
+          python -m unittest discover -s tests/python -p "test_scientific_release_gate.py" -v
+      - name: Publish software evidence registry while PROHIBITING scientific release
+        run: |
+          python inst/python/aqt_scientific_release_gate.py \
+            --manifest inst/evidence/scientific-validation-gates.json \
+            --mode engineering_registry \
+            --report "$RUNNER_TEMP/scientific_release_readiness.json"
+          # Scientifically unsupported releases MUST fail nonzero.
+          if python inst/python/aqt_scientific_release_gate.py \
+            --manifest inst/evidence/scientific-validation-gates.json \
+            --mode scientific_release; then
+            echo "ERROR: unverified scientific release incorrectly approved"
+            exit 1
+          fi
+          python - <<'PY'
+          import json,os,pathlib
+          d=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"scientific_release_readiness.json").read_text())
+          assert d["n_scientifically_blocked_milestones"]==9
+          assert not d["scientific_release_permitted"]
+          assert d["software_manifest_is_not_external_certification"]
+          print("Nine milestone software inventory completed. Scientific release is BLOCKED.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wave13f-scientific-release-not-approved-evidence
+          path: ${{ runner.temp }}/scientific_release_readiness.json
