@@ -528,3 +528,21 @@ and video/model SHA-256 provenance. Use `aqt_frame_manifest()` and
 Python CI tests do not install video/ML dependencies or evaluate real
 fish. Detection accuracy, identity, hardware exposure timing and
 underwater XYZ remain unverified. See `docs/PYAV_YOLO_BYTETRACK_RUNNER.md`.
+
+## Wave 11C: independent physical underwater stereo targets
+
+`aqt_target_trial_table()` checks real-world surveyed XYZ, reviewed
+paired undistorted pixel positions, camera IDs, and physically separate
+training versus holdout target assemblies. It requires >=6 fit and >=3
+heldout 3D targets with depth variation per trial.
+`aqt_target_holdout_benchmark()` then scores only heldout targets
+against externally supplied refractive camera models. It reports
+per-target 3D residuals, per-trial XYZ RMSE, failed triangulation
+fractions and descriptive multi-tank summaries, without using frames or
+individual targets as independent treatment-level replicates.
+
+This implements the **validation protocol and analysis code**, not the
+physical GoPro calibration measurements themselves. Real independently
+surveyed targets, actual GoPro intrinsics and port geometry, frame
+synchronization and independent trial replication are still required.
+See `docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md`.

@@ -303,3 +303,15 @@ metadata and source/model SHA-256 hashes. Independent Python CI tests
 conversion invariants, not installed ML runtime or real fish data.
 Model training, biological identity, detection/tracking reliability,
 multi-camera synchronization and underwater calibration remain unqualified.
+
+## Wave 11C — heldout underwater target experiment audit
+
+Introduces externally surveyed target registry with strict whole-assembly
+train/holdout separation, within-trial physical depth variation,
+camera-pair and tank/session scope, coincident-camera degeneracy checks
+and optional ray-separation rejection. Scores *only* independent
+holdout targets through existing physical 3D refractive reconstruction
+benchmarks. Per-target residuals retain invalid denominators; per-trial
+metrics avoid treating individual target corners as independent
+validation experiments. True GoPro calibration, external survey
+uncertainty and real measurements remain unverified.
