@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "last_development_evidence_commit": "bb2d9b20965647f2041bcacafed877861936c0a7",
+  "date": "2026-11-12",
+  "scientific_release_approved": false,
+  "independently_validated_research_system": false,
+  "notes": "Engineering source qualification is separate from external empirical scientific certification. Do not modify false flags to bypass required real evidence.",
+  "milestones": [
+    {
+      "id": 1,
+      "name": "Real fish detection",
+      "engineering_state": "real_source_qualified",
+      "qualified_prs": [
+        50,
+        54
+      ],
+      "scientific_certified": false,
+      "remaining": "Prediction-blind held-out fish boxes across tanks/species, independently verified frozen model and cross-domain AP/F1."
+    },
+    {
+      "id": 2,
+      "name": "Fish identity tracking",
+      "engineering_state": "real_source_qualified",
+      "qualified_prs": [
+        49,
+        54
+      ],
+      "scientific_certified": false,
+      "remaining": "Independently annotated multi-fish ID GT and official HOTA, DetA, AssA, IDF1 with a tracker holdout."
+    },
+    {
+      "id": 3,
+      "name": "Multicamera exposure synchronization",
+      "engineering_state": "software_contract_passed",
+      "qualified_prs": [
+        53
+      ],
+      "scientific_certified": false,
+      "remaining": "Measured corresponding shutter/exposure hardware pulses for two actual cameras with heldout drift."
+    },
+    {
+      "id": 4,
+      "name": "Physical underwater 3D XYZ accuracy",
+      "engineering_state": "software_contract_passed",
+      "qualified_prs": [
+        53
+      ],
+      "scientific_certified": false,
+      "remaining": "Independently surveyed XYZ physical targets with disjoint calibration/test boards and refractive optical parameters."
+    },
+    {
+      "id": 5,
+      "name": "Joint measurement uncertainty",
+      "engineering_state": "software_contract_passed",
+      "qualified_prs": [
+        53
+      ],
+      "scientific_certified": false,
+      "remaining": "Empirical detector misses, identity errors, timestamp/camera/optics residuals calibrated and joint coverage checked externally."
+    },
+    {
+      "id": 6,
+      "name": "Behavioural and replicated-tank inference",
+      "engineering_state": "software_contract_passed",
+      "qualified_prs": [
+        53
+      ],
+      "scientific_certified": false,
+      "remaining": "Independent ethological/physiological reference labels, independently randomized tanks, heldout HMM/GLMM/functional validity."
+    },
+    {
+      "id": 7,
+      "name": "Unified local video/3D explorer",
+      "engineering_state": "software_contract_passed",
+      "qualified_prs": [
+        52
+      ],
+      "scientific_certified": false,
+      "remaining": "Real multiview user interaction and accessibility review plus external reviewer/cross-camera alignment audit."
+    },
+    {
+      "id": 8,
+      "name": "Animal–Computer Interaction",
+      "engineering_state": "simulation_only",
+      "qualified_prs": [
+        52
+      ],
+      "scientific_certified": false,
+      "remaining": "Ethics-approved device wiring, hard emergency stop, species limits, fish response data and replicated tank welfare tests."
+    },
+    {
+      "id": 9,
+      "name": "Independent scientific release",
+      "engineering_state": "software_contract_passed",
+      "qualified_prs": [
+        44,
+        47,
+        49,
+        50,
+        52,
+        53,
+        54
+      ],
+      "scientific_certified": false,
+      "remaining": "Third-party replication, physical/biological external accuracy, licensing/release checks and independently reviewed methods manuscript."
+    }
+  ]
+}
