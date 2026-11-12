@@ -164,3 +164,12 @@ and large timestamp gaps are rejected; video-frame sample counts
 never replace independently treated tanks. Species-calibrated state
 models, HMMs and qualified EyeTrajectories-native methods remain
 separately unimplemented.
+
+
+## Wave 9A — time-indexed measured 3D fish scenes
+
+Adds observation-only physical XYZ scene snapshots, gap-separated
+trajectory tails, event annotations, finite storyboards, headless
+orthographic projections and optional rgl 3D display. No missing
+fish position is silently carried forward; it is not an integrated
+video-playing, uncertainty-volume or species-body-modeling interface.
