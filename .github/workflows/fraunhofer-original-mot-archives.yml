@@ -1,0 +1,74 @@
+name: Wave 14C - original Fraunhofer multi-fish MOT A B source bytes and ID audit
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_fraunhofer_mot_archive_audit.py"
+      - "tests/python/test_fraunhofer_mot_archive_audit.py"
+      - "docs/FRAUNHOFER_REAL_MOT_SOURCE_BYTES.md"
+      - ".github/workflows/fraunhofer-original-mot-archives.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_fraunhofer_mot_archive_audit.py"
+      - "tests/python/test_fraunhofer_mot_archive_audit.py"
+      - ".github/workflows/fraunhofer-original-mot-archives.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audited-real-fish-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Original archive structure, source identity and security tests
+        run: |
+          python -m py_compile inst/python/aqt_fraunhofer_mot_archive_audit.py
+          python -m unittest discover -s tests/python -p "test_fraunhofer_mot_archive_audit.py" -v
+      - name: Acquire actual official A and B MOT archive bytes from discovered original URLs
+        shell: bash
+        run: |
+          # Original Fraunhofer TLS issuer chain fails verification in
+          # GitHub runner. -k is used for SOURCE INSPECTION ONLY.
+          # No "trusted scientific source"/independent accuracy claim.
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            --output "$RUNNER_TEMP/fraunhofer_mot_a.zip"
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_b/mot_b.zip" \
+            --output "$RUNNER_TEMP/fraunhofer_mot_b.zip"
+          python inst/python/aqt_fraunhofer_mot_archive_audit.py \
+            --zip "$RUNNER_TEMP/fraunhofer_mot_a.zip" \
+            --source-url "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            --sequence A --out "$RUNNER_TEMP/fraunhofer_original_A_audit.json"
+          python inst/python/aqt_fraunhofer_mot_archive_audit.py \
+            --zip "$RUNNER_TEMP/fraunhofer_mot_b.zip" \
+            --source-url "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_b/mot_b.zip" \
+            --sequence B --out "$RUNNER_TEMP/fraunhofer_original_B_audit.json"
+          python - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          for seq in ("A","B"):
+              audit=json.loads((root/f"fraunhofer_original_{seq}_audit.json").read_text())
+              assert audit["archive_members_count"]>1
+              assert audit["original_zip_bytes"]>1000
+              assert audit["original_download_peer_tls_verified"] is False
+              assert audit["official_HOTA_IDF1_measured"] is False
+              print("Original real source",seq,
+                    "ZIP sha256:",audit["original_zip_sha256"],
+                    "GT:",audit.get("native_gt"))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14c-fraunhofer-real-original-mot-annotation-source-evidence
+          path: |
+            ${{ runner.temp }}/fraunhofer_original_A_audit.json
+            ${{ runner.temp }}/fraunhofer_original_B_audit.json
