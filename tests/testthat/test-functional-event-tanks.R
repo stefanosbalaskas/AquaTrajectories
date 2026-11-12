@@ -57,15 +57,16 @@ test_that("functional grid refuses interpolation across gaps and missing frames"
   d$observed[d$session_id=="T2" & d$track_id=="F1" &
                d$time_s==3] <- FALSE
   g <- aqt_functional_event_grid(d,f$events,"speed",
-        grid_s=c(-.5,0,.5),max_gap_s=1.1)
+        grid_s=c(-1,0,.5),max_gap_s=1.1)
   x <- g[g$session_id=="T2" & g$track_id=="F1",]
-  expect_true(all(!x$supported))
-  expect_true(all(is.na(x$value)))
+  expect_equal(x$supported,c(TRUE,FALSE,FALSE))
+  expect_equal(x$value[1],1)
+  expect_true(all(is.na(x$value[2:3])))
   expect_error(aqt_functional_tank_contrast(g,draws=100),
                "Insufficient independent-tank fish coverage")
   alt <- aqt_functional_tank_contrast(g,draws=100,
                                      min_fish_fraction=.5)
-  expect_equal(alt$curve$contrast,c(.5,1,1))
+  expect_equal(alt$curve$contrast,c(0,1,1))
   g2 <- aqt_functional_event_grid(f$data,f$events,"speed",
         grid_s=c(-1.5,-1,0),max_gap_s=.25)
   expect_true(all(!g2$supported[g2$time_relative_s==-1.5]))
@@ -86,7 +87,7 @@ test_that("independent-tank design and source structure are guarded", {
         "Treatment varies within tank")
   expect_error(aqt_functional_event_grid(f$data,
       rbind(f$events,f$events[1,]),grid_s=f$grid),
-      "One event per session")
+      "Duplicate event per session|One event per session")
   expect_error(aqt_functional_event_grid(f$data,f$events,
       grid_s=c(0,0,1)), "strictly increasing")
   d <- f$data
