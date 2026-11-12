@@ -37,6 +37,12 @@ jobs:
           python-version: "3.11"
       - name: Install optional published ROS YAML parser
         run: python -m pip install "PyYAML>=6,<7"
+      - name: Install FFmpeg and FFprobe (Ubuntu 26.04 runner image omits both)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          ffprobe -version | head -n 1
+          ffmpeg -version | head -n 1
       - name: Compile structural probes
         run: |
           python -m py_compile inst/python/aqt_probe_recording.py
