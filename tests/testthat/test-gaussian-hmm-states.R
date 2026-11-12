@@ -119,3 +119,36 @@ test_that("zero-probability HMM transitions remain numerical and audited", {
   expect_equal(d$hmm_p2,rep(0,5),tolerance=1e-12)
   expect_equal(d$hmm_entropy,rep(0,5),tolerance=1e-12)
 })
+
+test_that("forward-backward posterior matches exhaustive hidden-path enumeration", {
+  y <- c(-.2,1.1,.4)
+  means <- c(0,2)
+  sds <- c(1,1.5)
+  T <- matrix(c(.8,.2,.3,.7),nrow=2,byrow=TRUE)
+  pi <- c(.6,.4)
+  observed <- data.frame(session_id="S",camera_id="C",track_id="F",
+    time_s=0:2,speed=y)
+  fit <- aqt_hmm_decode(
+    observed,state_means=means,state_sds=sds,
+    transition=T,initial=pi,max_gap_s=1.1)
+  paths <- as.matrix(expand.grid(s1=1:2,s2=1:2,s3=1:2))
+  weights <- vapply(seq_len(nrow(paths)),function(i) {
+    s <- paths[i,]
+    pi[s[1]]*
+      stats::dnorm(y[1],means[s[1]],sds[s[1]])*
+      T[s[1],s[2]]*
+      stats::dnorm(y[2],means[s[2]],sds[s[2]])*
+      T[s[2],s[3]]*
+      stats::dnorm(y[3],means[s[3]],sds[s[3]])
+  },numeric(1))
+  Z <- sum(weights)
+  posterior <- vapply(seq_along(y),function(t)
+    sum(weights[paths[,t]==1L])/Z,numeric(1))
+  expect_equal(fit$hmm_p1,posterior,tolerance=1e-11)
+  expect_equal(fit$hmm_p2,1-posterior,tolerance=1e-11)
+  expect_equal(attr(fit,"aqt_hmm_total_loglik"),log(Z),
+               tolerance=1e-11)
+  expect_equal(fit$hmm_state,
+               as.integer(paths[which.max(weights),]),
+               tolerance=0)
+})
