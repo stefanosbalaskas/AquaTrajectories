@@ -195,6 +195,16 @@ No automatic video-to-action algorithm, yoked-control causal estimate,
 preference stability or biological welfare validation is claimed.
 
 
+## Wave 8C — time-varying nested fish/tank longitudinal model
+
+Adds strict validation of complete, equally spaced event-relative
+fish curves with independent tank replication, and a Gaussian
+nested tank/fish random-intercept natural-spline model with
+optional AR(1) within-fish residuals through independently
+maintained nlme. Real-video/physical calibration and model
+coverage/power remain pending; sparse/irregular mixed functional
+models require separate validation.
+
 ## Wave 9B — multimodal optical and fish-identity XYZ visualization
 
 Provides visible-by-scenario physical XYZ fish cloud samples,
