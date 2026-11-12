@@ -478,3 +478,20 @@ benchmark evaluation, not automatically supplied to fitting.
 no inference about fish stress, species, positive welfare, underwater
 camera accuracy or measurement uncertainty is warranted.
 See `docs/HMM_KNOWN_TRUTH_RECOVERY.md`.
+
+## Wave 8G: intervention-aligned HMM behavioural states at tank level
+
+`aqt_hmm_event_tank_epochs()` requires independently logged events,
+decoded Gaussian HMM state probabilities, two study arms and at least two
+independent tanks per arm. Every scoped fish must contribute supported
+baseline **and** response observations. Posterior state probabilities
+are sample-averaged for each fish first, then complete fish are
+equal-weighted inside each tank. Incomplete fish epochs fail closed.
+`aqt_hmm_tank_event_contrast()` reuses the existing within-treatment
+tank-bootstrap contrast of between-epoch change.
+
+The event-aligned contrast is descriptive; it is not a frame-level
+test, dwell-time weighting, calibrated posterior uncertainty,
+species-specific stress detection or causal identification without
+suitable experimental randomization.
+See `docs/HMM_EVENT_TANK_INFERENCE.md`.

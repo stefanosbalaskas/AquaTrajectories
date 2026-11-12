@@ -269,3 +269,16 @@ disjoint synthetic tanks. Ground-truth availability here is created
 by the simulator, not obtained by manual fish annotation. A positive
 simulation result does not certify real fish movement, multi-camera
 identity, underwater XYZ accuracy or welfare.
+
+## Wave 8G — HMM state event alignment and independently replicated tanks
+
+Connects state-decoder posterior probabilities to externally recorded
+feeding, enrichment or device events. Requires a single event and
+single recording session per tank, complete within-fish baseline/
+response support, fixed treatment assignment and >=2 independent
+tanks per arm. Equal-weight fish-to-tank aggregation feeds the
+preexisting independent-tank bootstrap contrast. Effects describe
+sample-averaged posterior occupancy and are not frame-level,
+measurement-error-calibrated, causal, biological-welfare or
+time-weighted occupancy estimates. Repeated events, crossovers
+and irregular sampling demand a different model.
