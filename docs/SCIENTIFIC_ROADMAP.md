@@ -282,3 +282,14 @@ sample-averaged posterior occupancy and are not frame-level,
 measurement-error-calibrated, causal, biological-welfare or
 time-weighted occupancy estimates. Repeated events, crossovers
 and irregular sampling demand a different model.
+
+## Wave 11A — measured video PTS / MOT tracker-file bridge
+
+Introduces a finite, zero-based acquired-frame/timestamp and frame-size
+manifest, a strict external MOTChallenge/ByteTrack XYWH+confidence import
+using actual observed video PTS, and per-track audits that distinguish
+missed acquired frames from missing video frame numbers. The conversion
+does not run YOLO or ByteTrack, extract frame metadata itself, calibrate
+detection confidence, resolve fish identity across cameras or verify
+rolling-shutter exposure synchronization. Real-video experiments and
+external annotated tracking comparisons are still needed.
