@@ -445,3 +445,19 @@ recorded samples, NOT continuous-time rates when sampling is irregular.
 Frame-wise state frequencies are NOT independent tank replication,
 physiological stress evidence, calibrated uncertainty or a causal effect.
 Details: `docs/GAUSSIAN_HMM_BEHAVIOURAL_STATES.md`.
+
+## Wave 8E: learned transition probabilities and independent-tank holdouts
+
+`aqt_hmm_transition_fit()` fits Gaussian HMM initial and transition
+probabilities using Baum-Welch expected state/transition counts over
+gap-separated fish recordings. Means and SDs of each state remain
+externally specified; the method does **not** estimate the full HMM
+emission model. `aqt_hmm_holdout_score()` evaluates predictive log
+likelihood on disjoint fish, requiring previously unseen experimental
+tanks by default.
+
+Training-frame scores, apparent convergence and even an independently
+held-out likelihood are **not** validated welfare labels or
+measurement-uncertainty-aware treatment estimates. Transitions represent
+recorded observation steps, not continuous-time hazards.
+See `docs/HMM_TRANSITION_HOLDOUT.md`.

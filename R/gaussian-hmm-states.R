@@ -127,7 +127,8 @@
   if (n>1L) for (i in seq.int(n-1L,1L,by=-1L))
     states[i] <- backptr[i+1L,states[i+1L]]
   entropy <- -rowSums(ifelse(post>0,post*log(pmax(post,.Machine$double.xmin)),0))
-  list(posterior=post,path=states,entropy=entropy,loglik=ll)
+  list(posterior=post,path=states,entropy=entropy,loglik=ll,
+       logalpha=alpha,logbeta=beta,logemission=emission)
 }
 
 #' Decode bounded fish behavioural states under an explicit Gaussian HMM
