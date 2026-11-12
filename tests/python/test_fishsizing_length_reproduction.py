@@ -73,6 +73,25 @@ class FishSizingLengthReproductionContracts(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"not among"):
                 audit.inspect_source_results(results,manual)
 
+    def test_real_source_negative_one_invalid_sentinel_is_counted_not_used(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source=Path(tmp)/"source.csv"
+            source_results(source)
+            with source.open("a", newline="") as stream:
+                stream.write("frame_86,255,False,-1.0,29.1,,\n")
+            report=audit.inspect_source_results(source)
+            self.assertEqual(report["n_original_result_rows"],4)
+            self.assertEqual(
+                report["n_rows_with_invalid_length_sentinel_minus_one"],1)
+            self.assertEqual(report["n_rows_with_filtered_length"],2)
+            self.assertEqual(
+                report["n_rows_with_reproducible_source_errors"],2)
+            source.write_text(source.read_text().replace(
+                "frame_86,255,False,-1.0,29.1,,",
+                "frame_86,255,True,-1.0,29.1,,"))
+            with self.assertRaisesRegex(ValueError, "Invalid sentinel"):
+                audit.inspect_source_results(source)
+
     def test_bad_source_reported_error_does_not_silently_pass(self):
         with tempfile.TemporaryDirectory() as tmp:
             source=Path(tmp)/"source.csv"
