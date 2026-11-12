@@ -150,15 +150,20 @@ def run_video(video: Path, weights: Path, output_dir: Path, prefix: str,
             "R package dependencies alone do not execute the model") from exc
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    tmpdir = Path(tempfile.mkdtemp(prefix=f".{prefix}-", dir=output_dir))
     names = {
         "frames": f"{prefix}.frames.csv",
         "mot": f"{prefix}.mot.txt",
         "classes": f"{prefix}.classes.csv",
         "metadata": f"{prefix}.run.json",
     }
+    # Never mix an old run with a new run under the same output prefix.
+    # These files form one logical scientific bundle, not four independent CSVs.
+    if any((output_dir / name).exists() for name in names.values()):
+        raise FileExistsError("Refusing to overwrite an existing video bundle prefix")
+    tmpdir = Path(tempfile.mkdtemp(prefix=f".{prefix}-", dir=output_dir))
     n_frames, n_tracked, n_unassigned = 0, 0, 0
-    origin, prev, shape = None, None, None
+    origin, prev, shape = None, None
+    track_classes: dict[int, int] = {}, None
     try:
         model = YOLO(str(weights))
         with (tmpdir / names["frames"]).open("w", newline="", encoding="utf-8") as ff, \
@@ -201,6 +206,12 @@ def run_video(video: Path, weights: Path, output_dir: Path, prefix: str,
                     observations, ignored = _extract_tracked_boxes(result[0])
                     rows, labels = mot_rows(
                         observations, n_frames, width_px, height_px)
+                    for _, track_id, class_id in labels:
+                        old_class = track_classes.get(track_id)
+                        if old_class is not None and old_class != class_id:
+                            raise ValueError(
+                                "Track class changed within one camera-local identity")
+                        track_classes[track_id] = class_id
                     mwriter.writerows(rows)
                     cwriter.writerows(labels)
                     n_frames += 1
@@ -208,8 +219,14 @@ def run_video(video: Path, weights: Path, output_dir: Path, prefix: str,
                     n_unassigned += ignored
         if n_frames == 0:
             raise ValueError("No decodable video frames")
+        # SHA-256 protects the R side from accidental/mismatched files,
+        # although it is not an authenticated chain of custody.
+        file_sha256 = {
+            part: sha256_file(tmpdir / names[part])
+            for part in ("frames", "mot", "classes")
+        }
         manifest = {
-            "schema_version": "1.0",
+            "schema_version": "1.1",
             "session_id": session_id,
             "camera_id": camera_id,
             "video_sha256": sha256_file(video),
@@ -235,6 +252,8 @@ def run_video(video: Path, weights: Path, output_dir: Path, prefix: str,
             "hardware_exposure_synchronization_certified": False,
             "underwater_3d_calibration_certified": False,
             "outputs": names,
+            "output_sha256": file_sha256,
+            "output_bundle_integrity": "unkeyed_sha256_not_signed",
         }
         with (tmpdir / names["metadata"]).open("w", encoding="utf-8") as fh:
             json.dump(manifest, fh, indent=2, sort_keys=True)
