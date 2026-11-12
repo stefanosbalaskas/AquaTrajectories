@@ -38,17 +38,56 @@ def original_zip_gt(path,frame_count):
             i.filename.lower() in ("gt.txt","gt/gt.txt")]
         if len(gt)!=1 or gt[0].file_size>40000000:
             raise ValueError("Require one original MOT gt/gt.txt file")
-        raw=z.read(gt[0]).decode("utf-8-sig")
-        member_sha=hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        raw_bytes=z.read(gt[0])
+        raw=raw_bytes.decode("utf-8-sig")
+        member_sha=hashlib.sha256(raw_bytes).hexdigest()
         image_files=[i.filename for i in z.infolist() if
                      i.filename.lower().endswith((".jpg",".jpeg",".png"))]
+    if len(image_files)!=frame_count:
+        raise ValueError("Original source frame image coverage differs from declared size")
+    try:
+        source_image_frames=[int(Path(x).stem) for x in image_files]
+    except ValueError as e:
+        raise ValueError("Original source image frame names not numeric") from e
+    if len(set(source_image_frames))!=frame_count:
+        raise ValueError("Duplicate source image frame names")
+    first_source=min(source_image_frames)
+    last_source=max(source_image_frames)
+    if sorted(source_image_frames)!=list(range(first_source,first_source+frame_count)):
+        raise ValueError("Original source image frames must be contiguous")
+    rows_from_source=list(csv.reader(io.StringIO(raw)))
+    gt_frame_values=set()
+    remapped=[]
+    for source_row in rows_from_source:
+        if not source_row:continue
+        if len(source_row)<6:
+            raise ValueError("Original source GT has incomplete MOT row")
+        try:
+            frame=int(source_row[0])
+        except ValueError as e:
+            raise ValueError("Original GT has nonnumeric source frame") from e
+        if frame<first_source or frame>last_source:
+            raise ValueError("Source GT fish observation outside original image sequence")
+        gt_frame_values.add(frame)
+        mapped=list(source_row)
+        mapped[0]=str(frame-first_source+1)
+        remapped.append(mapped)
+    if gt_frame_values!=set(source_image_frames):
+        raise ValueError("Original fully annotated frames lack GT fish observations")
     with tempfile.TemporaryDirectory() as td:
-        path=Path(td)/"source_gt.txt"
-        path.write_text(raw,encoding="utf-8")
+        path=Path(td)/"source_gt_local_frames.txt"
+        with path.open("w",newline="",encoding="utf-8") as stream:
+            writer=csv.writer(stream)
+            writer.writerows(remapped)
         rows=official.mot_rows(path,frame_count,is_ground_truth=True)
     if len(rows)<10:
         raise ValueError("Not enough actual source fish observations")
     return rows,{"source_gt_sha256":member_sha,"gt_rows":len(rows),
+                 "original_source_first_frame":first_source,
+                 "original_source_last_frame":last_source,
+                 "local_first_frame":1,
+                 "local_last_frame":frame_count,
+                 "original_image_frame_coverage_verified":True,
                  "image_members":len(image_files),
                  "source_gt_member":gt[0].filename}
 
