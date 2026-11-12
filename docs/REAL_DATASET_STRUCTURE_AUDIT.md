@@ -112,3 +112,45 @@ Physically and biologically validated fish tracks -> independently logged device
 6. Independently survey underwater target XYZ and camera positions under actual aquarium optics. At least two experimental views and multiple depth targets are needed to certify absolute 3D trajectory errors.
 
 Passing software contracts, matched ray residuals or accurate total body length estimates does not establish independent true 3D fish trajectories.
+
+
+## 6. FishSizing ROS bag stereo synchronization — executable pairer
+
+New code: inst/python/aqt_ros_image_header_pairing.py
+
+Its optional extract_image_headers(bag_path, left_topic, right_topic)
+uses rosbags.highlevel.AnyReader on *actual* ROS1 or ROS2 image
+message topics. It reads acquisition header.stamp and separately records
+bag reception time in integer nanoseconds, avoiding floating-point
+epoch precision loss. The raw image header is not a promise of a
+physical shutter exposure and independent camera hardware sync is
+still required for such a claim.
+
+Export original left/right header records to CSV using exact columns:
+frame_index,topic,header_stamp_ns,bag_time_ns,optical_frame_id
+(all integer nanosecond stamps). A topic may contain more captured
+images than its companion. Missing images are NOT repaired by
+reassigning frame numbers.
+
+~~~sh
+python inst/python/aqt_ros_image_header_pairing.py \
+  --left-csv /data/left_image_headers.csv \
+  --right-csv /data/right_image_headers.csv \
+  --tolerance-ns 2000000 \
+  --right-to-left-offset-ns 0 \
+  --output /data/stereo_header_audit
+~~~
+
+The script performs a one-to-one chronological pairing within the
+explicitly chosen two-millisecond header-stamp tolerance for this
+*illustrative command only*. A different tolerance must be justified
+from actual hardware marker uncertainty; no universal two-millisecond
+recommendation is implied. Outputs stereo_pairs.csv and an audit of
+unpaired images, timestamp residuals, ROS bag receipt delays,
+recording proportions and source SHA-256. Clock-offset correction is
+user-provided, not automatically estimated or certified.
+
+Important: a low header-stamp residual does not verify true exposure
+midpoint synchrony or underwater stereo point accuracy. FishSizing
+manual body-length ground truth can assess size prediction error,
+not true 3D fish-centroid coordinate error.
