@@ -69,7 +69,7 @@ jobs:
             --source-results "$RUNNER_TEMP/fishsizing_original_results.csv" \
             --manual-gt tests/fixtures/fishsizing/fish_gt_measures.csv \
             --out "$RUNNER_TEMP/fishsizing_model_error_audit.json"
-          python -c 'import json,os; x=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"fishsizing_model_error_audit.json"))); assert x["n_original_result_rows"]==168; assert x["n_rows_with_filtered_length"]==85; assert x["n_rows_with_reproducible_source_errors"]==82; assert x["n_rows_fish_3d_ok_true"]==71; assert abs(x["source_model_per_frame_mae_cm"]-21.411021444134455)<1e-8; assert not x["source_model_predictions_are_aquatrajectories"]'
+          python -c 'import json,os; x=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"fishsizing_model_error_audit.json"))); assert x["n_original_result_rows"]==168; assert x["n_rows_with_filtered_length"]==82; assert x["n_rows_with_invalid_length_sentinel_minus_one"]==3; assert x["n_rows_with_reproducible_source_errors"]==82; assert x["n_rows_fish_3d_ok_true"]==71; assert abs(x["source_model_per_frame_mae_cm"]-21.411021444134455)<1e-8; assert not x["source_model_predictions_are_aquatrajectories"]'
       - name: Probe original GoPro HERO5 MP4 from authoritative source
         shell: bash
         run: |
