@@ -44,7 +44,7 @@
     official_TrackEval_HOTA_computed=FALSE,
     official_ZF3D_MOTA_computed=FALSE)
   jsonlite::write_json(meta,file.path(directory,"summary.json"),
-                       auto_unbox=TRUE,pretty=TRUE)
+                       auto_unbox=TRUE,pretty=TRUE,digits=NA)
   list(meta=meta,frames=per_frame,matches=matches)
 }
 
@@ -79,7 +79,7 @@ test_that("3D-ZeF import rejects internally inconsistent but rehashed evidence",
     unname(digest::digest(file.path(p,"matches.csv"),
                           algo="sha256",file=TRUE))
   jsonlite::write_json(meta,file.path(p,"summary.json"),
-                       auto_unbox=TRUE,pretty=TRUE)
+                       auto_unbox=TRUE,pretty=TRUE,digits=NA)
   expect_error(aqt_3dzef_agreement_import(p),
                "matched distance exceeds reported geometry")
   corrupted <- fixture$matches
@@ -89,7 +89,7 @@ test_that("3D-ZeF import rejects internally inconsistent but rehashed evidence",
                           algo="sha256",file=TRUE))
   meta$scientific_accuracy_certified <- TRUE
   jsonlite::write_json(meta,file.path(p,"summary.json"),
-                       auto_unbox=TRUE,pretty=TRUE)
+                       auto_unbox=TRUE,pretty=TRUE,digits=NA)
   expect_error(aqt_3dzef_agreement_import(p),
                "Incomplete or overclaimed")
 })
