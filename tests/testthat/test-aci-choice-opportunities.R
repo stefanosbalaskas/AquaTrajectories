@@ -60,8 +60,7 @@ test_that("multi-option usage inequality reports exposure balance without welfar
 
 test_that("choice log rejects unoffered, duplicate and inconsistent trials", {
   d <- .aqt_aci_choice_fixture()
-  d$selected[d$option_id=="C"][1] <- TRUE
-  # Explicit row indexing ensures the mutation changes the original frame.
+  # Explicitly mutate one unavailable alternative.
   idx <- which(d$option_id=="C")[1]
   d$selected[idx] <- TRUE
   d$choice_s[idx] <- d$trial_s[idx]+1
