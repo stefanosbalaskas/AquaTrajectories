@@ -5,7 +5,7 @@ Audited 12 November 2026. This document distinguishes actual external file reads
 
 Official repository: https://github.com/gopro/gpmf-parser/tree/main/samples
 
-The public GitHub tree confirms hero5.mp4 (11,581,756 bytes) and hero5.raw (4,792 bytes). The real binary hero5.raw was retrieved through the GitHub repository connector and parsed as big-endian GPMF KLV. The full MP4 was NOT downloaded or decoded in this audit.
+The public GitHub tree confirms hero5.mp4 (11,581,756 bytes) and hero5.raw (4,792 bytes). Exact upstream Git blob SHAs: hero5.mp4 11e80a54756827b01ea4375764a4bc2458b2443f; hero5.raw 338d94bd94449b80ced5ad6e63c1647323ecb79e. The real binary hero5.raw was retrieved through the GitHub repository connector and parsed as big-endian GPMF KLV. The full MP4 was NOT downloaded or decoded in this audit.
 
 Observed top-level key DEVC with nested STRM and metadata keys DVID, DVNM, TICK, TSMP, STNM, TMPC, SIUN, SCAL, UNIT, GPSF, GPSU, GPSP. Sensor KLV descriptors in the one observed payload:
 
