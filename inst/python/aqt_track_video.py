@@ -162,8 +162,8 @@ def run_video(video: Path, weights: Path, output_dir: Path, prefix: str,
         raise FileExistsError("Refusing to overwrite an existing video bundle prefix")
     tmpdir = Path(tempfile.mkdtemp(prefix=f".{prefix}-", dir=output_dir))
     n_frames, n_tracked, n_unassigned = 0, 0, 0
-    origin, prev, shape = None, None
-    track_classes: dict[int, int] = {}, None
+    origin, prev, shape = None, None, None
+    track_classes: dict[int, int] = {}
     try:
         model = YOLO(str(weights))
         with (tmpdir / names["frames"]).open("w", newline="", encoding="utf-8") as ff, \
