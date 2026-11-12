@@ -413,3 +413,19 @@ rejects failed heldout mappings by default, and refuses unapproved
 time extrapolation. This adds physical timing diagnostics to underwater
 reconstruction, **not** automatic hardware or biological synchronization
 certification. See `docs/CAMERA_CLOCK_HOLDOUT.md`.
+
+## Wave 7E: perspective-lens correction before underwater 3D fish tracking
+
+`aqt_brown_camera()` declares an externally measured Brown–Conrady
+perspective lens with radial and tangential distortion; the related
+`aqt_brown_distort_pixels()` and `aqt_brown_undistort_pixels()`
+perform forward and inversion maps with explicit convergence and
+roundtrip pixel-error diagnostics. `aqt_brown_undistort_tracks()`
+retains original detector pixels and missing fish observations, ready
+for existing reviewed 2D-to-3D refractive reconstruction.
+`aqt_flatport_rays_distorted()` composes this correction with
+parallel two-interface air–glass–water rays.
+
+**Not a universal GoPro fisheye lens model or automatic camera calibration.**
+Perspective lens suitability and parameters must be independently
+verified. See `docs/BROWN_LENS_FLATPORT.md`.

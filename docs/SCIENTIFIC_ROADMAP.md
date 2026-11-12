@@ -223,3 +223,13 @@ and strict timestamp transformation with preserved raw clock values.
 A good residual is conditional on independently verified common pulses;
 rolling shutter, nonlinear jitter, event-log clock registration and
 joint clock/optics error propagation remain open research tasks.
+
+## Wave 7E — explicit Brown perspective lens correction before flatport optics
+
+Adds externally parameterized radial/tangential source-pixel correction,
+validated numerical inversion, canonical fish-track provenance and
+Snell air–glass–water integration. Camera K and lens parameters are
+supplied, not estimated or calibrated, and fisheye/omnidirectional
+GoPro modes are not implicitly supported. Real target metrology,
+uncertainty of lens parameters and physical 3D reference comparison
+remain separate scientific gates.
