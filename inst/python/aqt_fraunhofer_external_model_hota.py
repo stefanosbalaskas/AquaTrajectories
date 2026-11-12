@@ -82,11 +82,11 @@ def source_archive(path):
     return gt_tracks,ordered
 
 def evaluate_frozen_model(archive,model_dir,out):
+    if out.exists():
+        raise FileExistsError("Refuse overwrite real external source benchmark")
     import numpy as np
     import tensorflow as tf
     import supervision as sv
-    if out.exists():
-        raise FileExistsError("Refuse overwrite real external source benchmark")
     if sv.__version__!="0.26.1":
         raise ValueError("Frozen ByteTrack supervision version changed")
     weights=check_frozen_model(model_dir)
@@ -113,6 +113,8 @@ def evaluate_frozen_model(archive,model_dir,out):
             name=Path(td)/"current_original_ricefish.jpg"
             name.write_bytes(pixels)
             tensor,transform=input_array(name,spec)
+        if (transform["original_width_px"],transform["original_height_px"])!=(W,H):
+            raise ValueError("Original real fish source image geometry differs from published dimensions")
         transforms.add(transform["input_transform"])
         sha_by_source[str(source_frame)]=hashlib.sha256(pixels).hexdigest()
         result=sig(**{key:tensor})
@@ -170,7 +172,12 @@ def evaluate_frozen_model(archive,model_dir,out):
                 ri,ci=linear_sum_assignment(-sim)
                 n=sum(sim[i,j]>=.5 for i,j in zip(ri,ci))
             tp+=n;fp+=len(bb)-n;fn+=len(aa)-n
+        # Original model boxes rejected for invalid image geometry are
+        # false positives rather than silently omitted from detection metrics.
+        extra_fp=sum(v["score"]>=score_threshold for v in invalid)
+        fp+=extra_fp
         source_eval[str(score_threshold)]={
+            "invalid_source_boxes_counted_as_FP":extra_fp,
             "tp":tp,"fp":fp,"fn":fn,
             "precision":tp/(tp+fp) if tp+fp else None,
             "recall":tp/(tp+fn) if tp+fn else None,
