@@ -3,9 +3,14 @@
 **Purpose:** Run two independent tracking-association methods on the
 **original**, densely populated Fraunhofer HHI Sulawesi ricefish MOT A/B
 annotations and score their *assigned identities* using the unmodified
-official TrackEval HOTA/IDF1/CLEAR implementation. These two real
-sequences have 101 annotated frames each and source-published 256/45
-fish IDs (A/B), with frequent occlusions.
+official TrackEval HOTA/IDF1/CLEAR implementation. The two original downloaded archives have 101 original image frames each;
+**actual raw MOT GT** has **260/45 unique fish IDs (A/B)** and **9,214/1,969
+annotations**. The source website's 256 fish IDs for A does not agree with
+its download's 260 IDs. Actual source A frame labels are 43,450–43,550 and
+B 13,654–13,754. The evaluator maps these original source frames to local
+1–101 **only after verifying exact source JPEG filename and GT coverage**.
+Original raw absolute frame provenance remains recorded alongside the
+original ZIP SHA256. The fish are frequently occluded.
 
 ## Critical distinction: oracle input, not original model detections
 
@@ -65,3 +70,13 @@ underwater physical XYZ or fish welfare/ACI validation.
 
 See https://github.com/stefanosbalaskas/AquaTrajectories/issues/46
 and https://github.com/stefanosbalaskas/AquaTrajectories/issues/51 .
+
+## Verified exact source bytes (Wave 14C)
+
+Original A ZIP SHA-256:
+`18c39619b1f84ea774f16fedfac5911d92de86ab7da4aa03cf365b9b4be58ceb`.
+Original B ZIP SHA-256:
+`29b1396397b5ba74450cc1388a0be94b2920de1c45530b8e2d3b184fd07adb9d`.
+The source website has invalid default CA-chain verification; source bytes
+are reproducible across our audits, but upstream peer TLS authentication
+remains externally unverified.
