@@ -1,0 +1,31 @@
+name: External fish dataset annotation adapters
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_public_fish_adapters.py"
+      - "tests/python/test_public_fish_adapters.py"
+      - "docs/EXTERNAL_FISH_DATASET_INGESTION.md"
+      - ".github/workflows/external-fish-dataset-adapters.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_public_fish_adapters.py"
+      - "tests/python/test_public_fish_adapters.py"
+      - ".github/workflows/external-fish-dataset-adapters.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  external-fish-adapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile source
+        run: python -m py_compile inst/python/aqt_public_fish_adapters.py
+      - name: Evaluate native Datumaro and MOT fish-reference contracts
+        run: python -m unittest discover -s tests/python -p 'test_public_fish_adapters.py' -v
