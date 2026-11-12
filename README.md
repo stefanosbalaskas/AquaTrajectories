@@ -386,3 +386,17 @@ residual structure. It is a bounded model, not a missing-data
 solution, fish welfare classifier, causal estimator or qualified
 EyeTrajectories native R port. Details:
 `docs/FUNCTIONAL_LONGITUDINAL_NLME.md`.
+
+
+## Wave 7D: independent camera clock synchronization holdouts
+
+`aqt_sync_holdout_fit()` estimates camera-to-reference time offset and
+drift separately for each recording session from externally matched
+synchronization pulses. It requires >=4 training markers and >=2
+disjoint physical heldout pulse IDs, reporting holdout RMSE and maximal
+clock skew against a predeclared tolerance.
+`aqt_sync_holdout_apply()` preserves original camera timestamps,
+rejects failed heldout mappings by default, and refuses unapproved
+time extrapolation. This adds physical timing diagnostics to underwater
+reconstruction, **not** automatic hardware or biological synchronization
+certification. See `docs/CAMERA_CLOCK_HOLDOUT.md`.
