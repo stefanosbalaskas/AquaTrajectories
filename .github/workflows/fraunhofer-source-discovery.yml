@@ -32,9 +32,20 @@ jobs:
           python -m unittest discover -s tests/python -p "test_fraunhofer_link_audit.py" -v
       - name: Retrieve ACTUAL official Fraunhofer source webpage and inspect original links
         run: |
-          curl --fail --location --show-error --retry 3 --max-time 120 \
+          # Original HHI server currently presents an incomplete TLS issuer
+          # chain to GitHub ubuntu runners. This is URL DISCOVERY ONLY.
+          # Never qualify/download scientific data bytes by this bypass.
+          if curl --fail --location --show-error --retry 1 --max-time 120 \
             "https://cvg.hhi.fraunhofer.de/FishTracking.htm" \
-            --output "$RUNNER_TEMP/fraunhofer_original.html"
+            --output "$RUNNER_TEMP/fraunhofer_original.html"; then
+            echo "TLS verification succeeded" > "$RUNNER_TEMP/tls_status.txt"
+          else
+            echo "TLS verification FAILED; link discovery only, original data unverified" \
+              > "$RUNNER_TEMP/tls_status.txt"
+            curl --insecure --fail --location --show-error --retry 2 --max-time 120 \
+              "https://cvg.hhi.fraunhofer.de/FishTracking.htm" \
+              --output "$RUNNER_TEMP/fraunhofer_original.html"
+          fi
           python inst/python/aqt_fraunhofer_link_audit.py \
             --html "$RUNNER_TEMP/fraunhofer_original.html" \
             --out "$RUNNER_TEMP/fraunhofer_links.json"
@@ -43,6 +54,8 @@ jobs:
           p=pathlib.Path(os.environ["RUNNER_TEMP"])/"fraunhofer_links.json"
           a=json.loads(p.read_text())
           assert a["n_candidate_links"]>=6,a
+          print((pathlib.Path(os.environ["RUNNER_TEMP"])/"tls_status.txt").read_text())
+          assert a["actual_annotation_bytes_downloaded"] is False
           assert not a["actual_annotation_bytes_downloaded"]
           assert not a["official_HOTA_IDF1_computed"]
           print("Original source links inspected; downloaded annotations NOT claimed")
