@@ -59,7 +59,7 @@ test_that("scene storyboard is chronological and 2D views use measured 3D", {
      tail_s=1,max_age_s=.01,max_gap_s=1.1)
   expect_s3_class(frames,"aqt_tank_storyboard")
   expect_equal(length(frames),3)
-  expect_equal(vapply(frames,function(x)x$frame_s,numeric(1L)),
+  expect_equal(unname(vapply(frames,function(x)x$frame_s,numeric(1L))),
                c(1,2,3))
   file <- tempfile(fileext=".pdf")
   grDevices::pdf(file)
