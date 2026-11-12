@@ -200,6 +200,12 @@ aqt_video_bundle_benchmark <- function(
           evaluated_frames$frame_id!=floor(evaluated_frames$frame_id)))
     stop("Fully annotated frame IDs must be nonnegative integers",
          call.=FALSE)
+  if ("annotation_status" %in% names(evaluated_frames) &&
+      (anyNA(evaluated_frames$annotation_status) ||
+       any(as.character(evaluated_frames$annotation_status)!=
+           "fully_annotated")))
+    stop("Planned annotation frames must be fully_annotated before benchmark scoring",
+         call.=FALSE)
   e <- aqt_evaluation_frames(evaluated_frames)
   if (!nrow(e))
     stop("At least one fully annotated evaluation frame is required",
