@@ -250,7 +250,7 @@ aqt_hmm_state_summary <- function(decoded) {
     modelled <- which(!is.na(a$hmm_state))
     if (!length(modelled)) next
     switch <- 0L
-    for (j in seq.int(2L,nrow(a))) {
+    if (nrow(a)>1L) for (j in seq.int(2L,nrow(a))) {
       if (!is.na(a$hmm_segment[j]) &&
           !is.na(a$hmm_segment[j-1L]) &&
           a$hmm_segment[j]==a$hmm_segment[j-1L] &&
