@@ -546,3 +546,9 @@ physical GoPro calibration measurements themselves. Real independently
 surveyed targets, actual GoPro intrinsics and port geometry, frame
 synchronization and independent trial replication are still required.
 See `docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md`.
+
+## Wave 11F: real dataset and GoPro structure reconnaissance
+
+Two read-only Python tools inspect real external data structures: inst/python/aqt_probe_recording.py uses FFprobe MP4 streams and actual GPMF KLV header inspection, while inst/python/aqt_ros_stereo_audit.py validates FishSizing stereo ROS K/D/R/P YAML and decimal-comma manual fish length CSV. Tiny unmodified published left/right stereo calibration YAML fixtures are attributed and tested with optional PyYAML.
+
+The source-separated dataset audit, download links, eligibility, known limits and proposed real validation pipelines are in docs/REAL_DATASET_STRUCTURE_AUDIT.md. Original GoPro HERO5 raw GPMF and published FishSizing YAML/CSV/JSON data structures were directly examined. No actual GoPro fish-video performance or underwater XYZ accuracy is certified.

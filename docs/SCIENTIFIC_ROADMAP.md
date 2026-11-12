@@ -315,3 +315,7 @@ benchmarks. Per-target residuals retain invalid denominators; per-trial
 metrics avoid treating individual target corners as independent
 validation experiments. True GoPro calibration, external survey
 uncertainty and real measurements remain unverified.
+
+## Wave 11F — real GoPro and stereo dataset schema discovery
+
+Adds structure-only FFprobe and GPMF raw probes; validates real published FishSizing ROS calibration K/D/R/P and manual fish-size CSV structures. A real HERO5 upstream GPMF raw KLV sample and FishSizing YAML/CSV/JSON were examined. A source-ranked public dataset catalogue distinguishes actual observed metadata from undownloaded/gated large video archives and records explicit boundaries on 3D accuracy. The next acquisition gate is actual raw GoPro fish video, approved fish-specific training weights, manually annotated identities and independently surveyed underwater XYZ.
