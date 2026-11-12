@@ -64,7 +64,7 @@ aqt_detection_dropout_scenarios <- function(
       for (j in idx) {
         if (state && x$observed[j]) added[j] <- TRUE
         state <- stats::runif(1L) <
-          if (state) p11 else p01
+          (if (state) p11 else p01)
       }
     }
     x$simulated_detection_dropout <- added
