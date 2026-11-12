@@ -166,6 +166,15 @@ models, HMMs and qualified EyeTrajectories-native methods remain
 separately unimplemented.
 
 
+## Wave 8B — event-aligned functional analysis with independent tanks
+
+Implemented observed-only, onset-protected interpolation onto a declared
+real-time grid, support audit, and equal-weight independently
+replicated tank-level functional treatment contrasts. Separate
+resampling bands describe sampling variation only; optical error,
+discrete fish IDs, causal identification, GLMM/GAMM and sparse FPCA
+inference are not automatically addressed.
+
 ## Wave 9A — time-indexed measured 3D fish scenes
 
 Adds observation-only physical XYZ scene snapshots, gap-separated

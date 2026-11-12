@@ -330,6 +330,20 @@ animal stress, welfare, HMM states or causal intervention responses.
 See `docs/FISH_BEHAVIOURAL_CHANGEPOINTS.md`.
 
 
+## Wave 8B: tank-replicated event-relative functional curves
+
+`aqt_functional_event_grid()` aligns observed fish speed/XYZ outcomes
+to actual event-relative recording seconds with strict missing-frame,
+large-gap, and intervention-boundary interpolation guards.
+`aqt_functional_coverage()` audits visible fish support over time.
+`aqt_functional_tank_contrast()` estimates descriptive between-treatment
+curves from independently replicated tank averages, with separate
+pointwise and empirical simultaneous tank-resampling bands.
+
+The resampling bands are NOT empirically coverage-certified confidence
+intervals and DO NOT propagate glass-camera and fish identity errors.
+See `docs/FUNCTIONAL_EVENT_TANK_CURVES.md`.
+
 ## Wave 9A: measured 3D tank storyboard and event overlays
 
 `aqt_tank_scene_snapshot()` selects truly observed fish positions at
