@@ -39,6 +39,21 @@ class RecordingProbeContracts(unittest.TestCase):
         self.assertFalse(report["physical_camera_clock_synchronized"])
         self.assertFalse(report["sensor_value_decoding_performed"])
 
+    def test_real_gopro_hero5_binary_payload_structure(self):
+        source = ROOT / "tests" / "fixtures" / "gopro" / "hero5.raw"
+        data = source.read_bytes()
+        self.assertEqual(len(data), 4792)
+        report = probe.inspect_gpmf_payload(data)
+        observed = [x["path"] for x in report["entries"]]
+        self.assertEqual(report["root_keys"], ["DEVC"])
+        self.assertTrue(any(x.endswith("/ACCL") for x in observed))
+        self.assertTrue(any(x.endswith("/GYRO") for x in observed))
+        self.assertTrue(any(x.endswith("/GPS5") for x in observed))
+        self.assertTrue(any(x.endswith("/ISOG") for x in observed))
+        self.assertTrue(any(x.endswith("/SHUT") for x in observed))
+        self.assertFalse(report["physical_camera_clock_synchronized"])
+        self.assertFalse(report["sensor_value_decoding_performed"])
+
     def test_gpmf_bad_size_or_padding_rejected(self):
         good = klv("DEVC", 0, 1, 12,
                    klv("TICK", ord("L"), 4, 1, b"\x00\x00\x00\x01"))
