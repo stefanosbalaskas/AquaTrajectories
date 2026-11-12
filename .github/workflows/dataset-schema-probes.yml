@@ -9,6 +9,8 @@ on:
       - "inst/python/aqt_ros_image_header_pairing.py"
       - "tests/python/test_recording_probe.py"
       - "tests/python/test_ros_stereo_audit.py"
+      - "inst/python/aqt_fishsizing_length_reproduction.py"
+      - "tests/python/test_fishsizing_length_reproduction.py"
       - "tests/python/test_ros_image_header_pairing.py"
       - "tests/fixtures/fishsizing/**"
       - "tests/fixtures/gopro/**"
@@ -20,6 +22,8 @@ on:
       - "inst/python/aqt_ros_image_header_pairing.py"
       - "tests/python/test_recording_probe.py"
       - "tests/python/test_ros_stereo_audit.py"
+      - "inst/python/aqt_fishsizing_length_reproduction.py"
+      - "tests/python/test_fishsizing_length_reproduction.py"
       - "tests/python/test_ros_image_header_pairing.py"
       - "tests/fixtures/fishsizing/**"
       - ".github/workflows/dataset-schema-probes.yml"
@@ -53,6 +57,19 @@ jobs:
         run: python -m unittest discover -s tests/python -p "test_ros_image_header_pairing.py" -v
       - name: Test actual FishSizing ROS YAML pair
         run: python -m unittest discover -s tests/python -p "test_ros_stereo_audit.py" -v
+      - name: Reproduce an actual FishSizing source-model length-error table
+        shell: bash
+        run: |
+          python -m unittest discover -s tests/python -p "test_fishsizing_length_reproduction.py" -v
+          curl --fail --location --show-error --retry 3 --max-time 120 \
+            "https://raw.githubusercontent.com/Caterina1996/fish_sizing/paper/paper/results_csvs/DATASET_1/2024_11_12/single_fish/10_44_11/10-44-11_0/results/10_44_11_raw.csv" \
+            --output "$RUNNER_TEMP/fishsizing_original_results.csv"
+          test "$(git hash-object "$RUNNER_TEMP/fishsizing_original_results.csv")" = "89728c89a647c49ca4d0dc0b259ceeb7dffa7ca0"
+          python inst/python/aqt_fishsizing_length_reproduction.py \
+            --source-results "$RUNNER_TEMP/fishsizing_original_results.csv" \
+            --manual-gt tests/fixtures/fishsizing/fish_gt_measures.csv \
+            --out "$RUNNER_TEMP/fishsizing_model_error_audit.json"
+          python -c 'import json,os; x=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"fishsizing_model_error_audit.json"))); assert x["n_original_result_rows"]==168; assert x["n_rows_with_filtered_length"]==85; assert x["n_rows_with_reproducible_source_errors"]==82; assert x["n_rows_fish_3d_ok_true"]==71; assert abs(x["source_model_per_frame_mae_cm"]-21.411021444134455)<1e-8; assert not x["source_model_predictions_are_aquatrajectories"]'
       - name: Probe original GoPro HERO5 MP4 from authoritative source
         shell: bash
         run: |
