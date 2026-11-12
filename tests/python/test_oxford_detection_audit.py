@@ -91,6 +91,20 @@ class OriginalOxfordAgreement(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 mod.main(["--auto",str(p),"--manual",str(g),"--out",str(out)])
 
+    def test_original_missing_geometry_sentinel_only_for_empty_prediction(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)/"source.json"
+            row={"src":"F40_T21/f00727.jpg","regions":[],"rdata":[],
+                 "fdata":{"width":-1,"height":-1}}
+            p.write_text(json.dumps({"files":[row]}))
+            parsed=mod.parsed_annotations(p)
+            self.assertTrue(parsed[row["src"]]["missing_image_geometry"])
+            row["regions"]=[[1,1,10,10]]
+            row["rdata"]=[{}]
+            p.write_text(json.dumps({"files":[row]}))
+            with self.assertRaisesRegex(ValueError,"image dimensions"):
+                mod.parsed_annotations(p)
+
 
 if __name__=="__main__":
     unittest.main()
