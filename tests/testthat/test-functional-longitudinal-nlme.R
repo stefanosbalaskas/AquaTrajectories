@@ -98,5 +98,5 @@ test_that("spline model refuses invalid inputs and overly flexible bases", {
                "spline_df")
   expect_error(aqt_functional_longitudinal_fit(prep,
                residual="unsupported"),
-               "arg should be")
+               "should be one of")
 })
