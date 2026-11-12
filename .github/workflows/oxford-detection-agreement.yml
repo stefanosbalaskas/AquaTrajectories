@@ -1,0 +1,85 @@
+name: Wave 12B - real Oxford human-reviewed fish detection agreement
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_oxford_detection_audit.py"
+      - "tests/python/test_oxford_detection_audit.py"
+      - "docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md"
+      - ".github/workflows/oxford-detection-agreement.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_oxford_detection_audit.py"
+      - "tests/python/test_oxford_detection_audit.py"
+      - ".github/workflows/oxford-detection-agreement.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  original-oxford-source-detection-agreement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Qualify original LISA fish labels, empty-frame and IoU contracts
+        run: |
+          python -m py_compile inst/python/aqt_oxford_detection_audit.py
+          python -m unittest discover -s tests/python -p "test_oxford_detection_audit.py" -v
+      - name: Acquire pinned original human-reviewed and auto-detection JSON
+        shell: bash
+        run: |
+          ROOT="https://raw.githubusercontent.com/ox-vgg/fish-tank-obstacles/0d57a17148f750ed7c327ba5d36ce587d3b7dcfe/data/annotations/eval/fish"
+          curl --fail --location --show-error --retry 3 --max-time 120 \
+            "$ROOT/4-all-frames-DONE.json" -o "$RUNNER_TEMP/oxford_manual.json"
+          curl --fail --location --show-error --retry 3 --max-time 120 \
+            "$ROOT/2-all-frames-auto-detections.json" -o "$RUNNER_TEMP/oxford_auto.json"
+          python - <<'PY'
+          import hashlib,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          blobs=(("oxford_manual.json","8e2b2a30d87dae2f0624450cf7c8f51c4fbb0760"),
+                 ("oxford_auto.json","831418e7780864d1caecb1469b31f3a908e2269d"))
+          for filename,expected in blobs:
+              data=(root/filename).read_bytes()
+              blob=hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+              assert blob==expected,(filename,blob,expected)
+              print(filename,"original Git blob SHA",blob)
+          PY
+      - name: Compute original source-model agreement with manually reviewed labels
+        shell: bash
+        run: |
+          python inst/python/aqt_oxford_detection_audit.py \
+            --auto "$RUNNER_TEMP/oxford_auto.json" \
+            --manual "$RUNNER_TEMP/oxford_manual.json" \
+            --threshold 0.5 \
+            --out "$RUNNER_TEMP/oxford_original_detection_agreement.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"oxford_original_detection_agreement.json"
+          r=json.loads(p.read_text())
+          x=r["pooled"]
+          assert r["n_recordings"]==15,r
+          assert r["n_source_annotation_frames"]==4462,r
+          assert r["n_ambiguous_annotation_frames_excluded"]==1,r
+          assert r["ambiguous_frame_paths_excluded"]==["F39_T92/f00339.jpg"],r
+          assert x["frames"]==4461,x
+          assert x["reference_boxes"]==4157,x
+          assert x["automatic_boxes"]==1656,x
+          assert (x["tp"],x["fp"],x["fn"])==(1654,2,2503),x
+          assert x["reference_empty_frames"]==304,x
+          assert x["prediction_frames_with_unknown_geometry"]==1,x
+          assert not r["AquaTrajectories_detector_accuracy_measured"]
+          assert not r["original_human_annotation_prediction_blind_certified"]
+          assert not r["track_identity_HOTA_or_IDF1_measured"]
+          print("Actual source-model agreement:",
+                "Precision",x["precision"],"Recall",x["recall"],"F1",x["f1"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: oxford-original-detector-agreement-audit
+          path: ${{ runner.temp }}/oxford_original_detection_agreement.json
