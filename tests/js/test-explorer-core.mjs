@@ -1,7 +1,7 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {parseCSV,normalizeTracks,normalizeFrames,normalizeEvents,
-        sourceFrameAt,observationsAt,project3D,localAuditSummary}
+        sourceFrameAt,observationsAt,project3D,localAuditSummary,dryRunACI}
   from "../../inst/explorer/core.mjs";
 
 test("valid RFC-style quoted comma and source frame time survive",()=>{
@@ -57,4 +57,30 @@ test("3D screen projection is visualization only and never changes source",()=>{
   assert.equal(result.camera_hardware_exposure_synced,false);
   assert.equal(result.underwater_physical_xyz_certified,false);
   assert.equal(result.ACI_device_controlled,false);
+});
+
+
+test("ACI dry-run enforces explicit limits, cooldown and emergency stop",()=>{
+  const events=[
+    {event_id:"a",time_s:1,event_type:"aci_choice_request"},
+    {event_id:"b",time_s:2,event_type:"aci_choice_request"},
+    {event_id:"c",time_s:8,event_type:"aci_choice_request"},
+    {event_id:"feed",time_s:9,event_type:"feeding"},
+    {event_id:"d",time_s:15,event_type:"aci_choice_request"}];
+  const options={approval_reference:"protocolA",device_id:"offline-virtual",
+    action_type:"simulated_light",cooldown_s:5,max_commands:2,
+    duration_s:.5,max_duration_s:1,intensity:.3,max_intensity:.5,
+    emergency_stop:false};
+  const result=dryRunACI(events,options);
+  assert.deepEqual(result.commands.map(x=>x.event_id),["a","c"]);
+  assert.deepEqual(result.rejected.map(x=>x.reason),
+    ["cooldown_active","maximum_command_count"]);
+  assert.equal(result.hardware_device_contacted,false);
+  assert.equal(result.biological_safety_certified,false);
+  assert.ok(result.commands.every(x=>x.execution_status==="SIMULATED_ONLY"));
+  const stopped=dryRunACI(events,{...options,emergency_stop:true});
+  assert.equal(stopped.commands.length,0);
+  assert.throws(()=>dryRunACI(events,{...options,intensity:5}),/limits violated/);
+  assert.throws(()=>dryRunACI(events,{...options,approval_reference:""}),/approval/);
+  assert.throws(()=>dryRunACI(events,{...options,emergency_stop:null}),/emergency stop/);
 });
