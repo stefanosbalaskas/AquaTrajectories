@@ -50,8 +50,15 @@ def parsed_annotations(path):
         frame_ids[sequence].add(frame)
         width=(item.get("fdata") or {}).get("width")
         height=(item.get("fdata") or {}).get("height")
-        if not isinstance(width,int) or not isinstance(height,int) or width<1 or height<1:
+        if (width,height)==(-1,-1) and item.get("regions")==[]:
+            # Original Oxford detector export has one genuine empty last
+            # frame with unknown dimension sentinel; keep it explicit.
+            missing_geometry=True
+        elif (not isinstance(width,int) or not isinstance(height,int) or
+              width<1 or height<1):
             raise ValueError("Invalid source annotated image dimensions")
+        else:
+            missing_geometry=False
         regions=item.get("regions")
         meta=item.get("rdata")
         if not isinstance(regions,list) or not isinstance(meta,list) or len(regions)!=len(meta):
@@ -66,7 +73,8 @@ def parsed_annotations(path):
                 raise ValueError("Out-of-frame Oxford fish bounding box")
             boxes.append(tuple(map(float,xywh)))
         lookup[source]={"sequence":sequence,"frame":frame,"boxes":boxes,
-                        "image_width_px":width,"image_height_px":height}
+                        "image_width_px":width,"image_height_px":height,
+                        "missing_image_geometry":missing_geometry}
     if not lookup:
         raise ValueError("Empty Oxford manual/prediction LISA source")
     return lookup
@@ -106,18 +114,23 @@ def score_sources(truth,auto,threshold=.5):
     stats=defaultdict(lambda:{"frames":0,"reference_boxes":0,
                              "automatic_boxes":0,"tp":0,"fp":0,"fn":0,
                              "reference_empty_frames":0,
-                             "false_positives_on_reference_empty_frames":0})
+                             "false_positives_on_reference_empty_frames":0,
+                             "prediction_frames_with_unknown_geometry":0})
     agreement=[]
     for src in truth:
         g,p=truth[src],auto[src]
         if (g["image_width_px"],g["image_height_px"])!=(
                 p["image_width_px"],p["image_height_px"]):
-            raise ValueError("Human/pred image geometry mismatch")
+            if not p.get("missing_image_geometry") or p["boxes"]:
+                raise ValueError("Human/pred image geometry mismatch")
         gt,pred=g["boxes"],p["boxes"]
         pairs=optimal_matches(gt,pred,float(threshold))
         tp=len(pairs);fp=len(pred)-tp;fn=len(gt)-tp
         group=stats[g["sequence"]]
-        group["frames"]+=1;group["reference_boxes"]+=len(gt)
+        group["frames"]+=1
+        group["prediction_frames_with_unknown_geometry"]+=int(
+            p.get("missing_image_geometry",False))
+        group["reference_boxes"]+=len(gt)
         group["automatic_boxes"]+=len(pred);group["tp"]+=tp
         group["fp"]+=fp;group["fn"]+=fn
         if not gt:
@@ -132,7 +145,8 @@ def score_sources(truth,auto,threshold=.5):
         d["f1"]=2*a/(2*a+b+c) if 2*a+b+c else None
         return d
     keys=["frames","reference_boxes","automatic_boxes","tp","fp","fn",
-          "reference_empty_frames","false_positives_on_reference_empty_frames"]
+          "reference_empty_frames","false_positives_on_reference_empty_frames",
+          "prediction_frames_with_unknown_geometry"]
     total={k:sum(v[k] for v in stats.values()) for k in keys}
     return {
         "iou_threshold":float(threshold),
