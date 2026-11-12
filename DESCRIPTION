@@ -1,6 +1,6 @@
 Package: aquaTrajectories
 Title: Aquatic Animal Movement and Multiview Trajectories
-Version: 0.0.27.9000
+Version: 0.0.28.9000
 Authors@R: person("Stefanos", "Balaskas", email = "56984563+stefanosbalaskas@users.noreply.github.com", role = c("aut", "cre"))
 Description: Development-stage tools for validated two- and three-dimensional aquatic animal trajectories, movement and group metrics, event alignment, synchronization, and calibrated stereo geometry and observed 3D voxel occupancy, reviewer-gated cross-view hypotheses, and conditional pixel-error propagation. Automatic cross-camera fish identity matching, fish detection, independently metrology-certified underwater accuracy, and measurement-error-calibrated inference are not yet implemented.
 License: MIT + file LICENSE

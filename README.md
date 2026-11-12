@@ -495,3 +495,22 @@ test, dwell-time weighting, calibrated posterior uncertainty,
 species-specific stress detection or causal identification without
 suitable experimental randomization.
 See `docs/HMM_EVENT_TANK_INFERENCE.md`.
+
+## Wave 11A: timestamp-faithful video-tracker export ingestion
+
+`aqt_frame_manifest()` validates externally measured, camera-local
+per-frame presentation timestamps (PTS), dimensions and actual frame
+indices, including missing frame numbers and unequal intervals.
+`aqt_import_mot()` converts *already generated*
+MOTChallenge-format / ByteTrack-format 1-based frame/ID/XYWH/confidence
+outputs to native `aqt_tracks` with original detector boxes,
+confidence, class and video PTS retained; it refuses absent frame
+metadata, invalid boxes, unassigned IDs and unreviewed species
+switching within tracks. `aqt_mot_support_audit()` separates
+acquired-but-undetected frames between tracker observations from
+video frame numbers genuinely absent from the acquisition.
+
+This is **not** a YOLO, ByteTrack or idtracker.ai execution engine,
+not a variable-FPS estimator, and not hardware exposure-sync
+certification. It accepts externally verified inputs only.
+See `docs/MOT_FRAME_PTS_INGESTION.md`.
