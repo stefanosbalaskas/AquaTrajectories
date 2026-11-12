@@ -214,3 +214,12 @@ and optional rgl XYZ scatter. The full cloud retains multimodal
 identity alternatives. No calibrated uncertainty ellipsoid,
 real-video overlay, joint statistical confidence model or
 independent underwater metrology claim is made.
+
+## Wave 7D — heldout camera clock drift validation
+
+Adds per-session affine camera timing alignment with disjoint physical
+marker training/validation sets, fit/heldout clock residuals, ppm drift,
+and strict timestamp transformation with preserved raw clock values.
+A good residual is conditional on independently verified common pulses;
+rolling shutter, nonlinear jitter, event-log clock registration and
+joint clock/optics error propagation remain open research tasks.
