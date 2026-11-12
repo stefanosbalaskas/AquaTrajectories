@@ -143,3 +143,20 @@ test_that("camera-local IDs never collapse across separately recorded views", {
   expect_equal(nrow(comparison),2)
   expect_true(all(comparison$IDF1==1))
 })
+
+test_that("explicit zero-based MOT exporter origin prevents one-frame shifts", {
+  f <- .aqt_mot_fixture()
+  one_based <- aqt_import_mot(f$mot,f$frames,"S1","TOP",
+                              frame_origin=1L)
+  zero_based <- f$mot
+  zero_based$frame <- zero_based$frame-1L
+  converted <- aqt_import_mot(zero_based,f$frames,"S1","TOP",
+                              frame_origin=0L)
+  expect_equal(converted$frame_id,one_based$frame_id)
+  expect_equal(converted$time_s,one_based$time_s)
+  expect_equal(converted$x,one_based$x)
+  expect_equal(converted$y,one_based$y)
+  expect_error(aqt_import_mot(zero_based,f$frames,"S1","TOP",
+                              frame_origin=1L),
+               "MOT frame must be integer")
+})
