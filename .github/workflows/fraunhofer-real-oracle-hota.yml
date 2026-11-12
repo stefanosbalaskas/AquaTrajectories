@@ -62,6 +62,20 @@ jobs:
       - name: Actual fish identities vs ByteTrack and IoU Hungarian on both source GT-box sequences
         shell: bash
         run: |
+          python - <<'PY'
+          import hashlib,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          expected={
+            "fraunhofer_mot_a.zip":"18c39619b1f84ea774f16fedfac5911d92de86ab7da4aa03cf365b9b4be58ceb",
+            "fraunhofer_mot_b.zip":"29b1396397b5ba74450cc1388a0be94b2920de1c45530b8e2d3b184fd07adb9d"}
+          for filename,want in expected.items():
+              h=hashlib.sha256()
+              with (root/filename).open("rb") as f:
+                  for part in iter(lambda:f.read(1<<20),b""):
+                      h.update(part)
+              assert h.hexdigest()==want,(filename,h.hexdigest())
+              print("Exact source archive SHA256 verified against prior independent CI:",filename)
+          PY
           python inst/python/aqt_fraunhofer_oracle_bytetrack_hota.py \
             --archive "$RUNNER_TEMP/fraunhofer_mot_a.zip" \
             --source-url "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
@@ -78,7 +92,13 @@ jobs:
           for seq in ("A","B"):
               out=json.loads((root/f"fraunhofer_ricefish_{seq}_oracle_metrics.json").read_text())
               assert out["declared_original_frame_count"]==101
-              assert out["original_source_box_count"]>101
+              expected={"A":{"boxes":9214,"ids":260,"first":43450,"last":43550},
+                        "B":{"boxes":1969,"ids":45,"first":13654,"last":13754}}[seq]
+              assert out["original_source_box_count"]==expected["boxes"],out
+              assert out["real_id_count"]==expected["ids"],out
+              assert out["published_source"]["original_source_first_frame"]==expected["first"],out
+              assert out["published_source"]["original_source_last_frame"]==expected["last"],out
+              assert out["published_source"]["original_image_frame_coverage_verified"]
               assert out["actual_real_fish_annotations_scored"] is True
               assert out["tracking_identity_under_oracle_detections_only"] is True
               assert out["independent_model_based_detection_accuracy_certified"] is False
