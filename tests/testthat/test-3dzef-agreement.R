@@ -93,3 +93,42 @@ test_that("3D-ZeF import rejects internally inconsistent but rehashed evidence",
   expect_error(aqt_3dzef_agreement_import(p),
                "Incomplete or overclaimed")
 })
+
+
+test_that("original Python scorer produces files accepted by native R audit", {
+  python <- Sys.which("python3")
+  if (!nzchar(python)) skip("Python 3 unavailable on this machine")
+  runner <- system.file("python","aqt_3dzef_agreement.py",
+                        package="aquaTrajectories")
+  expect_true(nzchar(runner))
+  tmp <- tempfile("zef-real-roundtrip-")
+  dir.create(tmp)
+  on.exit(unlink(tmp,recursive=TRUE),add=TRUE)
+  gt <- file.path(tmp,"truth.txt")
+  pred <- file.path(tmp,"pred.txt")
+  manifest <- file.path(tmp,"evaluated.csv")
+  output <- file.path(tmp,"results")
+  writeLines(c("1,1,1,2,3","2,1,2,2,3"),gt)
+  writeLines(c("1,8,1.1,2,3","2,8,2.1,2,3","3,9,7,8,9"),pred)
+  writeLines(c("frame,review_status","1,fully_annotated",
+               "2,fully_annotated","3,fully_annotated"),manifest)
+  args <- c(shQuote(runner),"--truth",shQuote(gt),
+            "--predictions",shQuote(pred),
+            "--evaluated-frames",shQuote(manifest),
+            "--frame-count","3","--threshold-cm","1",
+            "--output-dir",shQuote(output))
+  log <- suppressWarnings(system2(unname(python),args=args,
+                                  stdout=TRUE,stderr=TRUE))
+  expect_true(is.null(attr(log,"status")) ||
+              identical(as.integer(attr(log,"status")),0L),
+              info=paste(log,collapse="\n"))
+  expect_true(file.exists(file.path(output,"summary.json")),
+              info=paste(log,collapse="\n"))
+  imported <- aqt_3dzef_agreement_import(output)
+  expect_true(imported$software_integrity_verified)
+  expect_equal(imported$summary$n_matches,2)
+  expect_equal(imported$summary$false_positives,1)
+  expect_equal(imported$summary$matched_3d_euclidean_rmse_cm,.1,
+               tolerance=1e-8)
+  expect_false(imported$summary$scientific_accuracy_certified)
+})
