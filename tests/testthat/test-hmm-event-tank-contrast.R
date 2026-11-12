@@ -73,11 +73,9 @@ test_that("treatment contrast bootstraps tanks and preserves RNG", {
 
 test_that("HMM event analysis refuses incomplete fish epochs and repeated events", {
   f <- .aqt_hmm_event_fixture()
-  w <- list(baseline_window_s=c(-6,0),response_window_s=c(0,6))
   basecall <- function(d=f$decoded,ev=f$events,...)
     aqt_hmm_event_tank_epochs(d,ev,state=2,
       baseline_window_s=c(-6,0),response_window_s=c(0,6),...)
-  expect_error(basecall(state=3),"unused argument")
   expect_error(aqt_hmm_event_tank_epochs(
     f$decoded,f$events,state=3,
     baseline_window_s=c(-6,0),response_window_s=c(0,6)),
@@ -93,6 +91,8 @@ test_that("HMM event analysis refuses incomplete fish epochs and repeated events
     !(f$decoded$tank_id=="T3" &
       f$decoded$track_id=="F1" &
       f$decoded$time_s %in% 0:4),,drop=FALSE]
+  class(incomplete) <- class(f$decoded)
+  attr(incomplete,"aqt_hmm_model") <- attr(f$decoded,"aqt_hmm_model")
   expect_error(basecall(d=incomplete),
                "Each fish requires supported")
   no_tank <- f$decoded
@@ -107,6 +107,8 @@ test_that("HMM event analysis refuses incomplete fish epochs and repeated events
     f$decoded$tank_id %in% c("T1","T3"),,drop=FALSE]
   matching_events <- f$events[
     f$events$session_id %in% c("S1","S3"),,drop=FALSE]
+  class(one_tank_per_arm) <- class(f$decoded)
+  attr(one_tank_per_arm,"aqt_hmm_model") <- attr(f$decoded,"aqt_hmm_model")
   expect_error(basecall(d=one_tank_per_arm,ev=matching_events),
                ">=2 independent tanks")
   expect_error(aqt_hmm_tank_event_contrast(f$decoded),
