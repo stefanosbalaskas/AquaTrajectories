@@ -63,10 +63,13 @@ jobs:
           r=json.loads(p.read_text())
           x=r["pooled"]
           assert r["n_recordings"]==15,r
-          assert x["frames"]==4462,x
-          assert x["reference_boxes"]==4159,x
+          assert r["n_source_annotation_frames"]==4462,r
+          assert r["n_ambiguous_annotation_frames_excluded"]==1,r
+          assert r["ambiguous_frame_paths_excluded"]==["F39_T92/f00339.jpg"],r
+          assert x["frames"]==4461,x
+          assert x["reference_boxes"]==4157,x
           assert x["automatic_boxes"]==1656,x
-          assert (x["tp"],x["fp"],x["fn"])==(1654,2,2505),x
+          assert (x["tp"],x["fp"],x["fn"])==(1654,2,2503),x
           assert x["reference_empty_frames"]==304,x
           assert x["prediction_frames_with_unknown_geometry"]==1,x
           assert not r["AquaTrajectories_detector_accuracy_measured"]
