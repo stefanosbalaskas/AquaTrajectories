@@ -67,7 +67,7 @@ class RealFishOracleContracts(unittest.TestCase):
             offset=43449
             with zipfile.ZipFile(path,"w") as z:
                 z.writestr("mot/gt/gt.txt",
-                    "".join(f"{f},1,10,10,8,8,1,1,1\\n".replace("\\\\n","\\n")
+                    "".join(f"{f},1,10,10,8,8,1,1,1\n"
                             for f in range(offset+1,offset+4)))
                 for frame in range(offset+1,offset+4):
                     z.writestr(f"mot/img1/{frame:06d}.jpg",b"original image placeholder")
@@ -82,7 +82,7 @@ class RealFishOracleContracts(unittest.TestCase):
             path=pathlib.Path(td)/"incomplete.zip"
             with zipfile.ZipFile(path,"w") as z:
                 z.writestr("mot/gt/gt.txt",
-                    "".join(f"{f},1,10,10,8,8,1,1,1\\n".replace("\\\\n","\\n")
+                    "".join(f"{f},1,10,10,8,8,1,1,1\n"
                             for f in range(1,4)))
                 z.writestr("mot/img1/000001.jpg",b"x")
                 z.writestr("mot/img1/000002.jpg",b"x")
