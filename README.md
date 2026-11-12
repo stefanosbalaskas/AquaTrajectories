@@ -429,3 +429,19 @@ parallel two-interface air–glass–water rays.
 **Not a universal GoPro fisheye lens model or automatic camera calibration.**
 Perspective lens suitability and parameters must be independently
 verified. See `docs/BROWN_LENS_FLATPORT.md`.
+
+## Wave 8D: gap-safe conditional Gaussian fish-state decoding
+
+`aqt_hmm_decode()` performs stable forward-backward posterior inference and
+Viterbi decoding for 2..5 externally specified one-dimensional Gaussian
+behavioural states (for example, speed). It requires explicitly supplied
+state means, SDs and transition probabilities. `aqt_hmm_state_summary()`
+reports fish-scoped sample fractions and state switches.
+
+Tracking gaps, invalid observations, short unsupported segments and fish,
+tank, camera or session boundaries are never bridged. No state parameters
+are fitted from these observations; transitions describe consecutive
+recorded samples, NOT continuous-time rates when sampling is irregular.
+Frame-wise state frequencies are NOT independent tank replication,
+physiological stress evidence, calibrated uncertainty or a causal effect.
+Details: `docs/GAUSSIAN_HMM_BEHAVIOURAL_STATES.md`.

@@ -233,3 +233,15 @@ supplied, not estimated or calibrated, and fisheye/omnidirectional
 GoPro modes are not implicitly supported. Real target metrology,
 uncertainty of lens parameters and physical 3D reference comparison
 remain separate scientific gates.
+
+## Wave 8D — gap-safe conditional Gaussian behavioural states
+
+Implements externally parameterized 1D Gaussian HMM posterior probabilities,
+Viterbi state decoding, conditional sequence likelihood and fish-scoped
+sample-state/transition summaries. Explicitly splits tracking gaps,
+unobserved points and tank/fish/camera/session boundaries; short observed
+runs remain unclassified. This is NOT automatic HMM parameter estimation,
+species-specific state learning, continuous-time transition modelling,
+welfare diagnosis or experimental tank-level hypothesis testing.
+Independent 3D measurement/identity uncertainty and real-video
+validation remain unqualified.
