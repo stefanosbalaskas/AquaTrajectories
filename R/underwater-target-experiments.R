@@ -128,6 +128,13 @@ aqt_target_holdout_benchmark <- function(
     a <- z$camera_a_id[1L];b <- z$camera_b_id[1L]
     if (!all(c(a,b) %in% names(cameras)))
       stop("Missing camera model for a physical target trial",call.=FALSE)
+    ca <- cameras[[a]]$center; cb <- cameras[[b]]$center
+    if (is.numeric(ca) && is.numeric(cb) &&
+        length(ca)==3L && length(cb)==3L &&
+        all(is.finite(ca)) && all(is.finite(cb)) &&
+        sqrt(sum((ca-cb)^2))<=1e-10)
+      stop("Stereo models must have physically distinct camera centres",
+           call.=FALSE)
     heldout <- z[z$partition=="holdout",,drop=FALSE]
     truth <- as.matrix(heldout[,c("truth_x","truth_y","truth_z")])
     xy_a <- as.matrix(heldout[,c("a_u_px","a_v_px")])
