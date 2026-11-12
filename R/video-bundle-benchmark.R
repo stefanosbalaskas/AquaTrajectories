@@ -41,7 +41,9 @@ aqt_video_bundle_import <- function(directory,prefix) {
       !identical(metadata$time_source,
         "decoded_video_frame_pts_from_same_buffer_as_model_input") ||
       !identical(metadata$time_s_relative_to_first_frame,TRUE) ||
-      !identical(metadata$frame_origin_in_mot,1L) ||
+      !is.numeric(metadata$frame_origin_in_mot) ||
+      length(metadata$frame_origin_in_mot)!=1L ||
+      !isTRUE(metadata$frame_origin_in_mot==1) ||
       !is.list(metadata$outputs) ||
       !is.list(metadata$output_sha256))
     stop("Incompatible or incomplete video bundle metadata schema",
