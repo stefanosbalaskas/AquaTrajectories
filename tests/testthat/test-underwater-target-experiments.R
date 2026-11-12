@@ -123,3 +123,21 @@ test_that("auditor refuses missing camera models and incompatible physical units
     wrong_units,fixture$models),
     "units must match")
 })
+
+test_that("modifying calibration-fit pixels never contaminates heldout XYZ scores", {
+  fixture <- .aqt_target_experiment_fixture()
+  base <- aqt_target_holdout_benchmark(
+    aqt_target_trial_table(fixture$data),fixture$models)
+  modified <- fixture$data
+  modified$a_u_px[modified$partition=="fit"] <-
+    modified$a_u_px[modified$partition=="fit"]+5
+  modified$b_v_px[modified$partition=="fit"] <-
+    modified$b_v_px[modified$partition=="fit"]-2
+  test <- aqt_target_holdout_benchmark(
+    aqt_target_trial_table(modified),fixture$models)
+  expect_equal(test$per_target$error_3d,base$per_target$error_3d)
+  expect_equal(test$per_trial$rmse_3d,base$per_trial$rmse_3d)
+  expect_equal(test$summary$pooled_target_rmse_3d,
+               base$summary$pooled_target_rmse_3d)
+  expect_equal(test$summary$n_heldout_targets,12)
+})
