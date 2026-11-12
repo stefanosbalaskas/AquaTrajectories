@@ -33,9 +33,14 @@ aqt_video_bundle_import <- function(directory,prefix) {
   if (any(!file.exists(locations) | dir.exists(locations)))
     stop("Missing video bundle component; all four outputs are required",
          call.=FALSE)
-  metadata <- tryCatch(
-    jsonlite::fromJSON(unname(locations["metadata"]),simplifyVector=FALSE),
-    error=function(e) stop("Malformed video run metadata JSON",call.=FALSE))
+  metadata <- tryCatch({
+    source_json <- paste(readLines(unname(locations["metadata"]),
+                                   warn=FALSE,encoding="UTF-8"),
+                         collapse="\n")
+    jsonlite::fromJSON(source_json,simplifyVector=FALSE)
+  },error=function(e)
+    stop("Malformed video run metadata JSON: ",conditionMessage(e),
+         call.=FALSE))
   if (!is.list(metadata) ||
       !identical(metadata$schema_version,"1.1") ||
       !identical(metadata$time_source,
