@@ -139,3 +139,57 @@ test_that("unknown fish image detections remain invalid through glass ray tracin
   expect_true(is.na(ray$undistorted_x_px[2]))
   expect_false(attr(ray,"aqt_lens_calibration_certified"))
 })
+
+test_that("synchronized raw lens pixels reconstruct known XYZ end to end", {
+  f <- .aqt_brown_fixture()
+  true_time <- 0:4
+  true_x <- true_time/10
+  pulse_time <- seq(0,80,by=10)
+  marker_id <- paste0("P",seq_along(pulse_time))
+  pulses <- rbind(
+    data.frame(session_id="S",camera_id="TOP",
+               marker_id=marker_id,time_s=pulse_time),
+    data.frame(session_id="S",camera_id="SIDE",
+               marker_id=marker_id,
+               time_s=(pulse_time-.1)/1.0002))
+  clock <- aqt_sync_holdout_fit(
+    pulses,reference_camera="TOP",
+    train_markers=c("P7","P1","P5","P3"),
+    holdout_markers=c("P6","P2","P4"),
+    max_holdout_error_s=1e-4)
+  expect_true(all(clock$fits$within_tolerance))
+  raw_view <- function(cam,cx,ts,id) {
+    pinhole <- cbind(
+      320+f$K[1,1]*(true_x-cx)/2,
+      rep(240,length(true_x)))
+    measured <- aqt_brown_distort_pixels(f$lens,pinhole)
+    aqt_tracks(data.frame(
+      session_id="S",camera_id=cam,track_id=id,time_s=ts,
+      x=measured$x_px,y=measured$y_px))
+  }
+  top_raw <- raw_view("TOP",-1,true_time,"A")
+  side_raw <- raw_view("SIDE",1,(true_time-.1)/1.0002,"B")
+  top <- aqt_brown_undistort_tracks(
+    aqt_sync_holdout_apply(top_raw,clock),f$lens)
+  side <- aqt_brown_undistort_tracks(
+    aqt_sync_holdout_apply(side_raw,clock),f$lens)
+  expect_equal(side$time_s,top$time_s,tolerance=1e-8)
+  expect_true(all(side$clock_within_tolerance))
+  expect_true(any(abs(side$time_raw_s-side$time_s)>.05))
+  expect_true(all(side$lens_undistortion_valid))
+  pairs <- data.frame(
+    session_id="S",id_a="A",id_b="B",
+    time_a_s=top$time_s,time_b_s=side$time_s,fish_id="F")
+  xyz <- aqt_refractive_reconstruct_tracks(
+    top,side,pairs,f$left,f$right,
+    max_skew_s=1e-8,max_ray_separation=1e-5)
+  expect_true(all(xyz$observed))
+  expect_equal(xyz$x,true_x,tolerance=1e-7)
+  expect_equal(xyz$y,rep(0,5),tolerance=1e-7)
+  expect_equal(xyz$z,rep(1,5),tolerance=1e-7)
+  qc <- aqt_refractive_track_quality(xyz)
+  expect_equal(qc$n_valid,5)
+  expect_false(qc$calibration_certified)
+  # Synthetic equal-index optics verify integration, not real-water RMSE.
+  expect_false(clock$camera_timing_certified)
+})
