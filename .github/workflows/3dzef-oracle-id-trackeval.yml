@@ -1,0 +1,75 @@
+name: Wave 14E - original 3D-ZeF fish tracks 3D oracle HOTA IDF1
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_3dzef_oracle_id_trackeval.py"
+      - "tests/python/test_3dzef_oracle_id_trackeval.py"
+      - "docs/3DZEF_REAL_3D_ORACLE_ID_ASSOCIATION.md"
+      - ".github/workflows/3dzef-oracle-id-trackeval.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_3dzef_oracle_id_trackeval.py"
+      - "tests/python/test_3dzef_oracle_id_trackeval.py"
+      - ".github/workflows/3dzef-oracle-id-trackeval.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  actual-source-zebrafish-three-dimensional-oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install exact official TrackEval and 3D association dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.23.5" "scipy==1.10.1"
+          git clone "https://github.com/JonathonLuiten/TrackEval.git" "$RUNNER_TEMP/trackeval"
+          git -C "$RUNNER_TEMP/trackeval" checkout 12c8791b303e0a0b50f753af204249e622d0281a
+          test "$(git -C "$RUNNER_TEMP/trackeval" rev-parse HEAD)" = \
+            12c8791b303e0a0b50f753af204249e622d0281a
+          python -m pip install --no-deps --no-build-isolation -e "$RUNNER_TEMP/trackeval"
+      - name: Regression-check that source real IDs are not passed to associator
+        run: |
+          python -m py_compile inst/python/aqt_3dzef_oracle_id_trackeval.py
+          python -m unittest discover -s tests/python -p "test_3dzef_oracle_id_trackeval.py" -v
+      - name: Acquire ORIGINAL public 3D-ZeF fish-label archive
+        run: |
+          curl --fail --location --show-error --retry 3 --max-time 180 \
+            "https://motchallenge.net/data/3DZeF20Lables.zip" \
+            -o "$RUNNER_TEMP/original_3dzef_labels.zip"
+          python inst/python/aqt_3dzef_oracle_id_trackeval.py \
+            --original-labels-zip "$RUNNER_TEMP/original_3dzef_labels.zip" \
+            --gate-cm 5.0 --zero-distance-cm 2.0 \
+            --out "$RUNNER_TEMP/original_zebrafish_oracle_id_metrics.json"
+      - name: Confirm four original source sequences and full 27026 GT source identities
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"original_zebrafish_oracle_id_metrics.json"
+          report=json.loads(p.read_text())
+          assert report["n_real_source_sequences"]==4
+          assert report["n_source_gt_observations"]==27026
+          assert report["uses_oracle_positions_not_real_model_detections"]
+          assert not report["official_ZF3D_scoring_or_submission_certified"]
+          assert not report["independently_surveyed_physical_xyz_certified"]
+          for name,v in report["results_by_sequence"].items():
+              assert 0<=v["HOTA"]<=1
+              assert 0<=v["IDF1"]<=1
+              assert v["algorithm_assigned_observations"]==v["gt_observations"]
+              assert v["GT_fish_identity_supplied_to_associator"] is False
+              print("REAL ZEBRAFISH SOURCE ORACLE",name,
+                    "HOTA",v["HOTA"],"IDF1",v["IDF1"],
+                    "IDSW",v["IDSW"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14e-real-3dzef-3d-oracle-id-association-metrics
+          path: ${{ runner.temp }}/original_zebrafish_oracle_id_metrics.json
