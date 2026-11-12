@@ -327,3 +327,14 @@ identities. A separate Python→installed-R CI tests exact serialization,
 frame PTS and sample-scoped precision/IDF1 calculations. This is
 mock-video interoperability only: no calibrated GoPro fish detection,
 hardware synchronization, underwater 3D truth or welfare claim.
+
+## Wave 11E — prediction-blind acquired-frame annotation sampling
+
+Adds deterministic, per-camera recording equal-duration PTS strata,
+bounded within-stratum random sampling and frame inclusion
+probabilities. It never conditions on fish detection/tracking results,
+records planned-vs-reviewed status and fails closed on empty time
+bins or insufficient acquired frames. Audits original frame support
+and enforces a completed-annotation gate before scoring video bundles.
+Human annotation validity, fish independence and real evaluation
+results remain outside the software tests.

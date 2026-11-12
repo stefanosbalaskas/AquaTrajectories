@@ -570,3 +570,22 @@ the actual Python runner and then installs and exercises the R package
 on the exact resulting files. It verifies the serialization bridge,
 not real GoPro/Ultralytics runtime or biological tracking accuracy.
 See `docs/INDEPENDENT_VIDEO_BENCHMARK.md`.
+
+## Wave 11E — prespecified independent video-frame annotation design
+
+`aqt_annotation_frame_plan()` prespecifies equal-duration temporal
+strata for each video camera/session using **only externally acquired
+frame PTS**, then samples available frames without replacement under
+a reproducible seed. The sample is blind to detector confidence,
+predicted fish presence and algorithmic success. Required strata
+without enough acquired frames fail closed rather than being silently
+reallocated. Every sampled row includes its inclusion probability,
+inverse weight and **planned_not_annotated** state.
+
+`aqt_annotation_plan_audit()` checks selected frame PTS, per-video
+coverage, temporal strata and selection weights against the original
+manifest. The independent benchmark refuses those planned frames until
+they are actually marked `fully_annotated` following manual review.
+Annotation independence, species labels and reviewer reliability
+still require external verification. See
+`docs/PREDECLARED_VIDEO_ANNOTATION_SAMPLING.md`.
