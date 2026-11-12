@@ -204,3 +204,13 @@ optional AR(1) within-fish residuals through independently
 maintained nlme. Real-video/physical calibration and model
 coverage/power remain pending; sparse/irregular mixed functional
 models require separate validation.
+
+
+## Wave 7D — heldout camera clock drift validation
+
+Adds per-session affine camera timing alignment with disjoint physical
+marker training/validation sets, fit/heldout clock residuals, ppm drift,
+and strict timestamp transformation with preserved raw clock values.
+A good residual is conditional on independently verified common pulses;
+rolling shutter, nonlinear jitter, event-log clock registration and
+joint clock/optics error propagation remain open research tasks.
