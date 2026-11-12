@@ -356,3 +356,20 @@ bounded sets of time-ordered verified scenes, while
 
 This is not automatic 3D calibration, video playback or an inferred
 welfare state. See `docs/THREED_TANK_STORYBOARD.md`.
+
+
+## Wave 10A: animal–computer closed-loop telemetry and choice opportunities
+
+`aqt_aci_trials()`, `aqt_aci_loop_metrics()` and
+`aqt_aci_latency_summary()` audit externally recorded fish action,
+detection, command, physical actuator and response times, separating
+true and false triggers and incomplete loops. `aqt_aci_choice_log()`,
+`aqt_aci_choice_summary()` and `aqt_aci_access_inequality()` separately
+audit the actual options available to fish, the exercised selections,
+and unequal access normalized by genuine multi-option opportunities.
+
+These are descriptive fish–device measures, **not** validated agency,
+preference, dominance or welfare scores; timing and biological
+annotations require independent evidence. See
+`docs/ACI_CLOSED_LOOP_TELEMETRY.md` and
+`docs/ACI_CHOICE_AND_ACCESS.md`.

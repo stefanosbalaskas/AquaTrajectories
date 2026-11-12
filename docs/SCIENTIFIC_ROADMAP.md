@@ -182,3 +182,14 @@ trajectory tails, event annotations, finite storyboards, headless
 orthographic projections and optional rgl 3D display. No missing
 fish position is silently carried forward; it is not an integrated
 video-playing, uncertainty-volume or species-body-modeling interface.
+
+
+## Wave 10A — animal-device closed loop and genuinely offered choices
+
+Implements opportunity-level fish action and detector/controller/physical
+actuator timeline validation, true/false physical activation,
+contingency and stage latency. Separately represents physically offered
+alternatives, exercised selections, conditional per-option exposure,
+and normalized inequality of actual multi-option exercise among fish.
+No automatic video-to-action algorithm, yoked-control causal estimate,
+preference stability or biological welfare validation is claimed.
