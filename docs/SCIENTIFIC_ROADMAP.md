@@ -164,3 +164,13 @@ and large timestamp gaps are rejected; video-frame sample counts
 never replace independently treated tanks. Species-calibrated state
 models, HMMs and qualified EyeTrajectories-native methods remain
 separately unimplemented.
+
+
+## Wave 10A — animal-computer closed-loop telemetry
+
+Implemented opportunity-level fish actions, detector commands,
+physical actuator observations and optional fish-response timestamps,
+with strict temporal ordering, true/false activations, action-contingency
+comparisons and stage-specific latency audits. Validated animal
+agency, preference, welfare, yoked controls and controller timing
+calibration remain independent research requirements.
