@@ -373,3 +373,16 @@ preference, dominance or welfare scores; timing and biological
 annotations require independent evidence. See
 `docs/ACI_CLOSED_LOOP_TELEMETRY.md` and
 `docs/ACI_CHOICE_AND_ACCESS.md`.
+
+
+## Wave 8C: correlated longitudinal fish behaviour from independent tanks
+
+`aqt_functional_longitudinal_prepare()` validates equally spaced,
+fully observed fish event curves with between-tank treatments and
+independent tanks; `aqt_functional_longitudinal_fit()` uses an
+optional `nlme` Gaussian treatment-by-natural-spline model with
+nested tank/fish random intercepts and optional within-fish AR(1)
+residual structure. It is a bounded model, not a missing-data
+solution, fish welfare classifier, causal estimator or qualified
+EyeTrajectories native R port. Details:
+`docs/FUNCTIONAL_LONGITUDINAL_NLME.md`.
