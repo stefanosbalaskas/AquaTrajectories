@@ -87,3 +87,12 @@ jobs:
           ffmpeg -hide_banner -loglevel error -f lavfi -i color=c=black:s=64x64:r=30 -frames:v 6 -c:v mpeg4 -y "$RUNNER_TEMP/smoke.mp4"
           python inst/python/aqt_probe_recording.py --video "$RUNNER_TEMP/smoke.mp4" --scan-frames 6 --output "$RUNNER_TEMP/stream_inspection.json"
           python -c 'import json,os; d=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"stream_inspection.json"))); assert d["video"]["finite_frame_pts_rows"]==6; assert d["video"]["camera_exposure_clock_synchronized"] is False'
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: original-gopro-fishsizing-structure-and-error-audits
+          retention-days: 90
+          path: |
+            ${{ runner.temp }}/hero5_report.json
+            ${{ runner.temp }}/fishsizing_model_error_audit.json
+            ${{ runner.temp }}/stream_inspection.json
