@@ -107,3 +107,19 @@ test_that("transition fitting rejects statistically invalid inputs", {
   expect_error(aqt_hmm_holdout_score(x,fit,
                require_disjoint_tanks=NA),"single logical")
 })
+
+test_that("expected transition mass counts only observed within-segment steps", {
+  train <- .aqt_transition_fixture()
+  fit <- aqt_hmm_transition_fit(
+    train,state_means=c(0,10),state_sds=c(.5,.5),
+    max_gap_s=.11,prior=.01,tol=1e-8,max_iter=100)
+  # Four 40-point fish sequences contribute 4*(40-1) transitions.
+  # No transition may be attributed between separate tanks or fish.
+  expect_equal(sum(fit$expected_transition_counts),
+               4*(40-1),tolerance=1e-7)
+  expect_equal(sum(fit$expected_state_observations),160,
+               tolerance=1e-7)
+  expect_equal(fit$n_training_fish,4)
+  expect_true(fit$has_tank_id)
+  expect_setequal(fit$training_tanks,c("T1","T2","T3","T4"))
+})
