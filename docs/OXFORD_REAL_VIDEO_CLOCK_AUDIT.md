@@ -90,12 +90,14 @@ The original project repository also includes:
   831418e7780864d1caecb1469b31f3a908e2269d.
 
 A separate Python audit and dedicated GitHub Actions job compare these two
-**real source** JSON datasets, retaining 4,462 evaluated frames across 15
-recordings including 304 manually empty frames. On the original files,
-using maximum-cardinality 0.50-IoU box matching, our reproduced source
-comparison produced 4,159 reviewed fish boxes, 1,656 automatic fish
-detections, TP=1,654, FP=2 and FN=2,505; pooled precision 99.8792%,
-recall 39.7692%, and F1 56.8874%. The CI checks these exact source
+**real source** JSON datasets, starting from 4,462 source frames across 15 recordings. A source final-review
+frame F39_T92/f00339.jpg contains an unclassified 2-coordinate point
+alongside a valid fish box, so we **exclude this entire ambiguous frame**
+from strict box scoring. The resulting 4,461 comparable frames include
+304 manually empty frames; 4,157 reviewed fish boxes and 1,656 original
+automatic detections. Using maximum-cardinality 0.50-IoU box matching,
+the reproduced agreement is TP=1,654, FP=2 and FN=2,503; pooled precision
+99.8792%, recall 39.7883%, and F1 56.9069%. The CI checks these exact source
 denominators, hashes and scientific claim flags before exporting an
 evidence JSON artifact.
 
