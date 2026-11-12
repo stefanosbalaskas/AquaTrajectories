@@ -39,11 +39,16 @@ class RealFishOracleContracts(unittest.TestCase):
                 z.writestr("A/gt/gt.txt",
                     "".join(f"{frame},{idx},{idx*20},{idx*20},8,8,1,1,1\n"
                             for frame in range(1,4) for idx in range(1,5)))
-                z.writestr("A/img1/000001.jpg",b"real_format_placeholder")
+                for source_frame in range(1,4):
+                    z.writestr(f"A/img1/{source_frame:06d}.jpg",
+                               b"real_format_placeholder")
             gt,info=m.original_zip_gt(source,3)
             self.assertEqual(len(gt),12)
             self.assertEqual(info["gt_rows"],12)
-            self.assertEqual(info["image_members"],1)
+            self.assertEqual(info["image_members"],3)
+            self.assertEqual(info["original_source_first_frame"],1)
+            self.assertEqual(info["local_first_frame"],1)
+            self.assertTrue(info["original_image_frame_coverage_verified"])
             frames=m.group_frames(gt,3)
             self.assertEqual(len(frames),3)
             self.assertEqual(len(frames[0]),4)
@@ -55,6 +60,34 @@ class RealFishOracleContracts(unittest.TestCase):
                 z.writestr("../../evil.txt","x")
             with self.assertRaisesRegex(ValueError,"Unsafe"):
                 m.original_zip_gt(source,101)
+
+    def test_real_absolute_source_frame_origin_is_reindexed_not_fabricated(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=pathlib.Path(td)/"original_ricefish_a.zip"
+            offset=43449
+            with zipfile.ZipFile(path,"w") as z:
+                z.writestr("mot/gt/gt.txt",
+                    "".join(f"{f},1,10,10,8,8,1,1,1\\n".replace("\\\\n","\\n")
+                            for f in range(offset+1,offset+4)))
+                for frame in range(offset+1,offset+4):
+                    z.writestr(f"mot/img1/{frame:06d}.jpg",b"original image placeholder")
+            gt,info=m.original_zip_gt(path,3)
+            self.assertEqual([x[0] for x in gt],[1,2,3])
+            self.assertEqual(info["original_source_first_frame"],43450)
+            self.assertEqual(info["original_source_last_frame"],43452)
+            self.assertTrue(info["original_image_frame_coverage_verified"])
+
+    def test_reject_incomplete_or_mismatched_original_source_jpegs(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=pathlib.Path(td)/"incomplete.zip"
+            with zipfile.ZipFile(path,"w") as z:
+                z.writestr("mot/gt/gt.txt",
+                    "".join(f"{f},1,10,10,8,8,1,1,1\\n".replace("\\\\n","\\n")
+                            for f in range(1,4)))
+                z.writestr("mot/img1/000001.jpg",b"x")
+                z.writestr("mot/img1/000002.jpg",b"x")
+            with self.assertRaisesRegex(ValueError,"frame image coverage"):
+                m.original_zip_gt(path,3)
 
 if __name__=="__main__":
     unittest.main()
