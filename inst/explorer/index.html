@@ -70,6 +70,23 @@ input[type=range]{accent-color:#75c4ff;flex:1;min-width:140px;padding:2px}
 <p id="notesLabel">No draft review notes.</p>
 </section>
 <section>
+<h2 style="font-size:1rem;margin-top:0">ACI — simulated device events only</h2>
+<p class="help">Requires an externally approved study reference and explicit proposed device limits. No animal or physical hardware is contacted; emergency stop always blocks commands.</p>
+<div class="controls">
+<label>Protocol approval reference <input id="aciApproval" placeholder="External approval reference"></label>
+<label>Virtual device ID <input id="aciDevice" value="local-demo"></label>
+<label>Cooldown (s) <input id="aciCooldown" type="number" min="0" value="5"></label>
+<label>Max commands <input id="aciMax" type="number" min="0" step="1" value="2"></label>
+<label>Duration (s) <input id="aciDuration" type="number" min=".01" step=".1" value=".5"></label>
+<label>Max duration (s) <input id="aciDurationMax" type="number" min=".01" step=".1" value="1"></label>
+<label>Intensity (relative) <input id="aciIntensity" type="number" min="0" step=".1" value=".1"></label>
+<label>Max intensity (relative) <input id="aciIntensityMax" type="number" min=".01" step=".1" value=".5"></label>
+<label>Emergency stop <select id="aciStop"><option value="true" selected>Engaged (safe default)</option><option value="false">Disengaged — simulation only</option></select></label>
+<button id="aciSimulate">Simulate event plan</button>
+</div>
+<pre id="aciStatus">No ACI commands generated. External protocol and welfare safety remain unverified.</pre>
+</section>
+<section>
 <h2 style="font-size:1rem;margin-top:0">Provenance and scientific status</h2>
 <div id="status">Load a real canonical trajectory CSV to begin.</div>
 </section>
@@ -77,7 +94,7 @@ input[type=range]{accent-color:#75c4ff;flex:1;min-width:140px;padding:2px}
 </main>
 <script type="module">
 import {parseCSV,normalizeTracks,normalizeFrames,normalizeEvents,
-        sourceFrameAt,observationsAt,project3D,localAuditSummary} from "./core.mjs";
+        sourceFrameAt,observationsAt,project3D,localAuditSummary,dryRunACI} from "./core.mjs";
 const $ = id=>document.getElementById(id);
 const v=$("video"), overlay=$("overlay"), scene=$("scene3d");
 let tracks=[],frames=[],events=[],notes=[],activeVideoURL=null,playing=false;
@@ -195,6 +212,22 @@ $("addNote").addEventListener("click",()=>{
               review_status:"draft_unverified"});
   $("note").value="";
   $("notesLabel").textContent=notes.length+" draft notes; no independent review.";
+});
+$("aciSimulate").addEventListener("click",()=>{
+  try{
+    const options={
+      approval_reference:$("aciApproval").value,
+      device_id:$("aciDevice").value,action_type:"simulated_light",
+      cooldown_s:Number($("aciCooldown").value),
+      max_commands:Number($("aciMax").value),
+      duration_s:Number($("aciDuration").value),
+      max_duration_s:Number($("aciDurationMax").value),
+      intensity:Number($("aciIntensity").value),
+      max_intensity:Number($("aciIntensityMax").value),
+      emergency_stop:$("aciStop").value==="true"};
+    const result=dryRunACI(events,options);
+    $("aciStatus").textContent=JSON.stringify(result,null,2);
+  }catch(e){$("aciStatus").textContent="ACI dry-run rejected: "+e.message;}
 });
 $("export").addEventListener("click",()=>{
   const payload={schema:"aqt_explorer_draft_notes_v1",video_name:lastVideoFile?.name??null,
