@@ -117,7 +117,7 @@ test_that("training and independently heldout pulses may be interleaved", {
   # artificially forcing every holdout to extrapolate beyond training.
   fit <- aqt_sync_holdout_fit(
     m,"TOP",c("M7","M1","M5","M3"),
-    c("M6","M2","M8"),max_holdout_error_s=.0001)
+    c("M6","M2","M4"),max_holdout_error_s=.0001)
   expect_true(all(fit$fits$within_tolerance))
   expect_true(all(fit$fits$holdout_max_abs_s<1e-8))
   expect_false(any(fit$fits$holdout_extrapolates))
@@ -133,6 +133,6 @@ test_that("training and independently heldout pulses may be interleaved", {
   corrupt$time_s[i] <- rev(corrupt$time_s[i])
   expect_error(
     aqt_sync_holdout_fit(corrupt,"TOP",c("M7","M1","M5","M3"),
-                         c("M6","M2","M8")),
+                         c("M6","M2","M4")),
     "physical order")
 })
