@@ -1,0 +1,43 @@
+name: Wave 13C - offline synchronized research explorer contract qualification
+
+on:
+  pull_request:
+    paths:
+      - "inst/explorer/**"
+      - "tests/js/**"
+      - "docs/EXPLORER_RESEARCH_PROTOCOL.md"
+      - ".github/workflows/research-explorer.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/explorer/**"
+      - "tests/js/**"
+      - ".github/workflows/research-explorer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-explorer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Syntax and CSV-clock-provenance tests
+        run: |
+          node --check inst/explorer/core.mjs
+          node --test tests/js/test-explorer-core.mjs
+      - name: Serve standalone offline explorer from exact repository source
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory inst/explorer > /tmp/aqt-explorer-server.log 2>&1 &
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            if curl --fail --silent http://127.0.0.1:8765/index.html -o /tmp/explorer-index.html; then break; fi
+            sleep 1
+          done
+          grep -F 'AquaTrajectories — Local researcher explorer' /tmp/explorer-index.html
+          curl --fail --silent http://127.0.0.1:8765/core.mjs > /tmp/explorer-module.mjs
+          node --check /tmp/explorer-module.mjs
+          echo "Standalone local explorer available without a remote service"

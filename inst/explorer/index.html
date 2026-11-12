@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AquaTrajectories | Local video / 2D / 3D research explorer</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:dark;background:#101923;color:#f1f7fc}
+*{box-sizing:border-box}body{margin:0}header{padding:18px 22px;background:#182431;border-bottom:1px solid #314251}
+header h1{font-size:1.35rem;margin:0 0 8px}header p{margin:0;color:#c5d5e2;font-size:.87rem}
+main{padding:18px;max-width:1550px;margin:auto}
+section{background:#1a2835;border:1px solid #394b5a;border-radius:10px;padding:13px;margin-bottom:15px}
+label{font-size:.85rem;display:grid;gap:5px}input,select,button{background:#273c50;color:#f3f8ff;border:1px solid #56728a;border-radius:6px;padding:8px;font:inherit}
+button{cursor:pointer}button:hover{background:#355775}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.panel{min-width:0}.panel h2{font-size:1rem;margin:0 0 9px}
+.scene{position:relative;aspect-ratio:16/9;background:#0b1118;border-radius:6px;overflow:hidden}
+video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+canvas{pointer-events:none}#scene3d{position:static;display:block;width:100%;height:auto;aspect-ratio:16/9}
+small,.help{color:#b7c9d8}#status{white-space:pre-wrap;font-size:.88rem;color:#cde6f5}
+#events{max-height:140px;overflow:auto;display:flex;flex-wrap:wrap;gap:5px}
+#events button{padding:4px 8px;font-size:.8rem}#controls2{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+input[type=range]{accent-color:#75c4ff;flex:1;min-width:140px;padding:2px}
+#footer{color:#bdcbd8;font-size:.8rem}
+@media(max-width:880px){.panels{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>AquaTrajectories — Local researcher explorer</h1>
+<p>Runs in your own browser. Observed tracks and video-local timestamps only. No cloud uploads, interpolated identities, calibration certification or biological welfare conclusions.</p>
+</header>
+<main>
+<section class="controls">
+<label>Original local video <input type="file" id="videoFile" accept="video/*"></label>
+<label>Canonical trajectories CSV <input type="file" id="tracksFile" accept=".csv,text/csv"></label>
+<label>Decoded frame PTS CSV <input type="file" id="framesFile" accept=".csv,text/csv"></label>
+<label>External event log CSV <input type="file" id="eventsFile" accept=".csv,text/csv"></label>
+<label>Session <select id="session"><option value="">Load tracks</option></select></label>
+<label>Camera <select id="camera"><option value="">Load tracks</option></select></label>
+</section>
+<div id="controls2">
+<button id="play">Play / pause</button>
+<label>Time from source first frame <input type="range" id="clock" min="0" max="10" step=".001" value="0"></label>
+<output id="timeLabel">t=0.000s</output>
+<label>Match tolerance (s) <input id="tolerance" type="number" min=".001" max="1" step=".01" value=".08"></label>
+</div>
+<div class="panels">
+<section class="panel">
+<h2>Original video and observed 2D locations</h2>
+<div class="scene"><video id="video" controls playsinline preload="metadata"></video><canvas id="overlay" width="960" height="540"></canvas></div>
+<p class="help">2D overlays require image-pixel coordinates from a source camera. File PTS never proves synchronized hardware exposure.</p>
+</section>
+<section class="panel">
+<h2>Interactive projected 3D tank scene</h2>
+<canvas id="scene3d" width="960" height="540"></canvas>
+<div class="controls"><label>Yaw <input type="range" id="yaw" min="-3.14" max="3.14" step=".01" value=".6"></label>
+<label>Pitch <input type="range" id="pitch" min="-.9" max=".9" step=".01" value=".25"></label></div>
+<p class="help">Only 3D rows with measured/reconstructed finite XYZ are displayed. Projection is for visualization, not new physical reconstruction.</p>
+</section>
+</div>
+<section>
+<h2 style="font-size:1rem;margin-top:0">Externally logged events</h2>
+<div id="events"></div>
+</section>
+<section>
+<h2 style="font-size:1rem;margin-top:0">Reviewer draft notes (not independently certified)</h2>
+<div class="controls"><label>Note <input id="note" placeholder="e.g. reflection at this frame"></label><button id="addNote">Mark current video time</button><button id="export">Export local draft notes JSON</button></div>
+<p id="notesLabel">No draft review notes.</p>
+</section>
+<section>
+<h2 style="font-size:1rem;margin-top:0">ACI — simulated device events only</h2>
+<p class="help">Requires an externally approved study reference and explicit proposed device limits. No animal or physical hardware is contacted; emergency stop always blocks commands.</p>
+<div class="controls">
+<label>Protocol approval reference <input id="aciApproval" placeholder="External approval reference"></label>
+<label>Virtual device ID <input id="aciDevice" value="local-demo"></label>
+<label>Cooldown (s) <input id="aciCooldown" type="number" min="0" value="5"></label>
+<label>Max commands <input id="aciMax" type="number" min="0" step="1" value="2"></label>
+<label>Duration (s) <input id="aciDuration" type="number" min=".01" step=".1" value=".5"></label>
+<label>Max duration (s) <input id="aciDurationMax" type="number" min=".01" step=".1" value="1"></label>
+<label>Intensity (relative) <input id="aciIntensity" type="number" min="0" step=".1" value=".1"></label>
+<label>Max intensity (relative) <input id="aciIntensityMax" type="number" min=".01" step=".1" value=".5"></label>
+<label>Emergency stop <select id="aciStop"><option value="true" selected>Engaged (safe default)</option><option value="false">Disengaged — simulation only</option></select></label>
+<button id="aciSimulate">Simulate event plan</button>
+</div>
+<pre id="aciStatus">No ACI commands generated. External protocol and welfare safety remain unverified.</pre>
+</section>
+<section>
+<h2 style="font-size:1rem;margin-top:0">Provenance and scientific status</h2>
+<div id="status">Load a real canonical trajectory CSV to begin.</div>
+</section>
+<p id="footer">Source: aquaTrajectories CSV format. For local use, serve this folder with: python -m http.server 8765 --directory inst/explorer . Then open localhost:8765. No tracking or ACI device commands are issued by this interface.</p>
+</main>
+<script type="module">
+import {parseCSV,normalizeTracks,normalizeFrames,normalizeEvents,
+        sourceFrameAt,observationsAt,project3D,localAuditSummary,dryRunACI} from "./core.mjs";
+const $ = id=>document.getElementById(id);
+const v=$("video"), overlay=$("overlay"), scene=$("scene3d");
+let tracks=[],frames=[],events=[],notes=[],activeVideoURL=null,playing=false;
+let lastVideoFile=null;
+const ctx=overlay.getContext("2d"),g=scene.getContext("2d");
+const n=(x,d=3)=>Number(x).toFixed(d);
+function scopes(){
+  const all=[...new Set(tracks.map(r=>r.session_id))].sort();
+  $("session").replaceChildren(...all.map(name=>new Option(name,name)));
+  cameras();
+}
+function cameras(){
+  const session=$("session").value;
+  const all=[...new Set(tracks.filter(r=>r.session_id===session).map(r=>r.camera_id))].sort();
+  $("camera").replaceChildren(...all.map(name=>new Option(name,name)));
+  draw();
+}
+function pointColor(track){
+  let h=0;for(let i=0;i<track.length;i++)h=(h*31+track.charCodeAt(i))>>>0;
+  return "hsl("+(h%360)+" 86% 67%)";
+}
+function draw(){
+  const time=Number($("clock").value),session=$("session").value,camera=$("camera").value;
+  const tol=Number($("tolerance").value);
+  $("timeLabel").textContent="t="+n(time)+"s";
+  ctx.clearRect(0,0,overlay.width,overlay.height);
+  g.fillStyle="#0b1118";g.fillRect(0,0,scene.width,scene.height);
+  if(!session||!camera||!(tol>0))return;
+  const present=observationsAt(tracks,time,session,camera,tol);
+  const imageRows=present.filter(r=>r.z===null);
+  const frame=sourceFrameAt(frames,time,session,camera,tol);
+  const w=frame?.width_px||v.videoWidth,h=frame?.height_px||v.videoHeight;
+  if(w>0&&h>0){
+    for(const p of imageRows){
+      const x=p.x/w*overlay.width,y=p.y/h*overlay.height;
+      ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);
+      ctx.strokeStyle=pointColor(p.track_id);ctx.lineWidth=3;ctx.stroke();
+      ctx.fillStyle="#fff";ctx.font="15px system-ui";ctx.fillText(p.track_id,x+9,y-7);
+    }
+  }
+  const xyz=present.filter(p=>p.z!==null);
+  if(xyz.length){
+    const yaw=Number($("yaw").value),pitch=Number($("pitch").value);
+    const cloud=xyz.map(p=>({...project3D(p,yaw,pitch),id:p.track_id}));
+    const ext=Math.max(...cloud.map(p=>Math.max(Math.abs(p.x),Math.abs(p.y))),1);
+    const scale=.39*Math.min(scene.width,scene.height)/ext;
+    const ordered=[...cloud].sort((a,b)=>a.z-b.z);
+    for(const p of ordered){
+      const x=scene.width/2+p.x*scale,y=scene.height/2-p.y*scale;
+      g.fillStyle=pointColor(p.id);g.beginPath();
+      g.arc(x,y,7,0,Math.PI*2);g.fill();
+      g.fillStyle="#f4f8ff";g.font="15px system-ui";g.fillText(p.id,x+10,y-6);
+    }
+  } else {
+    g.fillStyle="#9fb4c5";g.font="18px system-ui";
+    g.fillText("No observed XYZ for selected camera and time",22,42);
+  }
+  const audit=localAuditSummary(tracks,frames,events);
+  $("status").textContent=JSON.stringify({...audit,selected_session:session,
+    selected_camera:camera,selected_video_frame:frame?.frame_id??null,
+    source_frame_clock_error_s:frame?.clock_difference_s??null,
+    shown_image_tracks:imageRows.length,shown_3d_tracks:xyz.length},null,2);
+}
+async function loadTracks(){
+  const f=$("tracksFile").files[0];if(!f)return;
+  try{tracks=normalizeTracks(parseCSV(await f.text()));scopes();}
+  catch(e){tracks=[];$("status").textContent="Tracks validation failure: "+e.message;}
+}
+async function loadFrames(){
+  const f=$("framesFile").files[0];if(!f)return;
+  try{frames=normalizeFrames(parseCSV(await f.text()));draw();}
+  catch(e){frames=[];$("status").textContent="Frame PTS validation failure: "+e.message;}
+}
+async function loadEvents(){
+  const f=$("eventsFile").files[0];if(!f)return;
+  try{
+    events=normalizeEvents(parseCSV(await f.text()));
+    $("events").replaceChildren(...events.map(event=>{
+      const b=document.createElement("button");
+      b.textContent=event.event_type+" at "+n(event.time_s)+"s";
+      b.addEventListener("click",()=>seek(event.time_s));return b;
+    }));draw();
+  }catch(e){events=[];$("status").textContent="Event validation failure: "+e.message;}
+}
+function seek(t){
+  if(!(Number.isFinite(t)&&t>=0))return;
+  if(v.duration&&Number.isFinite(v.duration))t=Math.min(t,v.duration);
+  v.currentTime=t;$("clock").value=String(t);draw();
+}
+$("tracksFile").addEventListener("change",loadTracks);
+$("framesFile").addEventListener("change",loadFrames);
+$("eventsFile").addEventListener("change",loadEvents);
+$("session").addEventListener("change",cameras);
+for(const id of ["camera","clock","tolerance","yaw","pitch"]){
+  $(id).addEventListener("input",()=>id==="clock"?seek(Number($("clock").value)):draw());
+}
+$("videoFile").addEventListener("change",()=>{
+  const f=$("videoFile").files[0];if(!f)return;
+  if(activeVideoURL)URL.revokeObjectURL(activeVideoURL);
+  activeVideoURL=URL.createObjectURL(f);lastVideoFile=f;v.src=activeVideoURL;
+  v.load();
+});
+v.addEventListener("loadedmetadata",()=>{
+  if(Number.isFinite(v.duration))$("clock").max=String(v.duration);
+  draw();
+});
+v.addEventListener("timeupdate",()=>{
+  $("clock").value=String(v.currentTime);draw();
+});
+$("play").addEventListener("click",()=>v.paused?v.play():v.pause());
+$("addNote").addEventListener("click",()=>{
+  const text=$("note").value.trim();if(!text)return;
+  notes.push({session_id:$("session").value,camera_id:$("camera").value,
+              time_s:Number($("clock").value),note:text,
+              review_status:"draft_unverified"});
+  $("note").value="";
+  $("notesLabel").textContent=notes.length+" draft notes; no independent review.";
+});
+$("aciSimulate").addEventListener("click",()=>{
+  try{
+    const options={
+      approval_reference:$("aciApproval").value,
+      device_id:$("aciDevice").value,action_type:"simulated_light",
+      cooldown_s:Number($("aciCooldown").value),
+      max_commands:Number($("aciMax").value),
+      duration_s:Number($("aciDuration").value),
+      max_duration_s:Number($("aciDurationMax").value),
+      intensity:Number($("aciIntensity").value),
+      max_intensity:Number($("aciIntensityMax").value),
+      emergency_stop:$("aciStop").value==="true"};
+    const result=dryRunACI(events,options);
+    $("aciStatus").textContent=JSON.stringify(result,null,2);
+  }catch(e){$("aciStatus").textContent="ACI dry-run rejected: "+e.message;}
+});
+$("export").addEventListener("click",()=>{
+  const payload={schema:"aqt_explorer_draft_notes_v1",video_name:lastVideoFile?.name??null,
+    notes,independent_annotation_review_certified:false};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],
+                                        {type:"application/json"}));
+  const a=document.createElement("a");a.href=url;a.download="aqt_draft_notes.json";
+  a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+</script>
+</body></html>
