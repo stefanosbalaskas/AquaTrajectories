@@ -71,8 +71,12 @@ aqt_sync_holdout_fit <- function(
       stop("Reference camera is missing a required independent sync pulse",
            call.=FALSE)
     reference_times <- ref$time_s[match(all_ids,ref$marker_id)]
-    if (any(diff(reference_times)<=0))
-      stop("Selected physical reference pulses must increase in time",
+    # User-specified training and holdout ID vectors are sets, not a
+    # chronological sequence. Check physical order by reference time,
+    # preserving the original ID-index alignment for estimation.
+    physical_order <- order(reference_times)
+    if (any(diff(reference_times[physical_order])<=0))
+      stop("Selected physical reference pulses must be unique in time",
            call.=FALSE)
     for (cam in cameras) {
       d <- z[z$camera_id==cam,,drop=FALSE]
@@ -80,7 +84,7 @@ aqt_sync_holdout_fit <- function(
         stop("Camera ",cam," is missing a required sync pulse",
              call.=FALSE)
       t <- d$time_s[match(all_ids,d$marker_id)]
-      if (any(diff(t)<=0))
+      if (any(diff(t[physical_order])<=0))
         stop("Matched camera pulses must increase in physical order",
              call.=FALSE)
       train <- seq_along(train_markers)
