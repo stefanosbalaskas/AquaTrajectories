@@ -80,9 +80,10 @@ test_that("HMM event analysis refuses incomplete fish epochs and repeated events
     f$decoded,f$events,state=3,
     baseline_window_s=c(-6,0),response_window_s=c(0,6)),
     "valid integer")
-  expect_error(basecall(
-    baseline_window_s=c(-6,1)),
-    "matched by multiple actual arguments")
+  expect_error(aqt_hmm_event_tank_epochs(
+    f$decoded,f$events,state=2,
+    baseline_window_s=c(-6,1),response_window_s=c(0,6)),
+    "Baseline must precede")
   ev <- rbind(f$events,
     data.frame(session_id="S1",event_id="second",
                start_s=8,end_s=8))
