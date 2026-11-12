@@ -218,8 +218,77 @@ class VideoIngestContracts(unittest.TestCase):
             with (root / "outputs" / "test.run.json").open() as f:
                 record = json.load(f)
             self.assertEqual(record["n_tracked_box_rows"], 1)
+            self.assertEqual(record["schema_version"], "1.1")
             self.assertEqual(record["time_source"],
                 "decoded_video_frame_pts_from_same_buffer_as_model_input")
+            for part in ("frames", "mot", "classes"):
+                path = root / "outputs" / record["outputs"][part]
+                self.assertEqual(record["output_sha256"][part],
+                                 aqt.sha256_file(path))
+            self.assertEqual(record["output_bundle_integrity"],
+                             "unkeyed_sha256_not_signed")
+            with patch.dict(sys.modules, {"av": av, "ultralytics": ultra}):
+                with self.assertRaisesRegex(FileExistsError,
+                                            "existing video bundle"):
+                    aqt.run_video(video, weights, root / "outputs", "test",
+                                  "S1", "TOP", confidence=.25)
+
+
+    def test_tracker_class_drift_fails_without_publishing_partial_bundle(self):
+        class FakeFrame:
+            time = 42.0
+
+            def to_ndarray(self, format):
+                return types.SimpleNamespace(shape=(80, 100, 3))
+
+        class FakeContainer:
+            streams = types.SimpleNamespace(video=[1])
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+            def decode(self, stream):
+                first = FakeFrame()
+                second = FakeFrame()
+                second.time = 42.1
+                return [first, second]
+
+        av = types.ModuleType("av")
+        av.open = lambda path: FakeContainer()
+        av.__version__ = "mock"
+        ultra = types.ModuleType("ultralytics")
+        ultra.__version__ = "mock"
+
+        class FakeYOLO:
+            count = 0
+
+            def __init__(self, weights):
+                pass
+
+            def track(self, **kwargs):
+                self.count += 1
+                return [DummyResult(DummyBoxes(
+                    [[1, 2, 10, 20]], [5], [.9],
+                    [1 if self.count == 1 else 2]))]
+
+        ultra.YOLO = FakeYOLO
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            video = root / "video.mp4"
+            weights = root / "weights.pt"
+            video.write_bytes(b"not a real video")
+            weights.write_bytes(b"not real weights")
+            target = root / "outputs"
+            with patch.dict(sys.modules, {"av": av, "ultralytics": ultra}):
+                with self.assertRaisesRegex(
+                        ValueError, "Track class changed"):
+                    aqt.run_video(
+                        video, weights, target, "trial", "S1", "TOP")
+            self.assertFalse((target / "trial.run.json").exists())
+            self.assertFalse((target / "trial.mot.txt").exists())
 
 
 if __name__ == "__main__":

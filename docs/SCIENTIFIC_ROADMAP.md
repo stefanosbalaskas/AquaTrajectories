@@ -316,6 +316,29 @@ metrics avoid treating individual target corners as independent
 validation experiments. True GoPro calibration, external survey
 uncertainty and real measurements remain unverified.
 
+## Wave 11D — SHA-256 video bundles and independent annotated-frame scoring
+
+Creates runner outputs with file digests and stable class identities,
+a four-file R ingestion gate rejecting mismatched CSV/PTS/class keys,
+and empty-MOT support for zero detection frames. A named bundle scorer
+requires independently fully annotated frame manifests (including
+zero-fish frames) and externally established reference fish boxes and
+identities. A separate Python→installed-R CI tests exact serialization,
+frame PTS and sample-scoped precision/IDF1 calculations. This is
+mock-video interoperability only: no calibrated GoPro fish detection,
+hardware synchronization, underwater 3D truth or welfare claim.
+
+## Wave 11E — prediction-blind acquired-frame annotation sampling
+
+Adds deterministic, per-camera recording equal-duration PTS strata,
+bounded within-stratum random sampling and frame inclusion
+probabilities. It never conditions on fish detection/tracking results,
+records planned-vs-reviewed status and fails closed on empty time
+bins or insufficient acquired frames. Audits original frame support
+and enforces a completed-annotation gate before scoring video bundles.
+Human annotation validity, fish independence and real evaluation
+results remain outside the software tests.
+
 ## Wave 11F — real GoPro and stereo dataset schema discovery
 
 Adds structure-only FFprobe and GPMF raw probes; validates real published FishSizing ROS calibration K/D/R/P and manual fish-size CSV structures. A real HERO5 upstream GPMF raw KLV sample and FishSizing YAML/CSV/JSON were examined. A source-ranked public dataset catalogue distinguishes actual observed metadata from undownloaded/gated large video archives and records explicit boundaries on 3D accuracy. The next acquisition gate is actual raw GoPro fish video, approved fish-specific training weights, manually annotated identities and independently surveyed underwater XYZ.

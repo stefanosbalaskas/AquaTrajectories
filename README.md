@@ -547,6 +547,49 @@ surveyed targets, actual GoPro intrinsics and port geometry, frame
 synchronization and independent trial replication are still required.
 See `docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md`.
 
+## Wave 11D — verified video bundles and independent annotation benchmark
+
+The Python runner now generates SHA-256 digests for its frame, MOT and
+class outputs, rejects reused output prefixes and rejects species-class
+changes within a camera-local track. R's `aqt_video_bundle_import()`
+loads and validates all four files together, checking digests, exact
+frame PTS, sidecar row keys and metadata counts. It also accepts a
+legitimate zero-detection fish video (empty MOT file without inventing
+fish observations). This is **file consistency, not cryptographically
+signed chain of custody or independent model validation**.
+
+`aqt_video_bundle_benchmark()` accepts an explicit list of independently
+*fully annotated* frames, including frames with no fish, and separately
+annotated boxes and fish IDs. It reports native class-aware detection
+precision/recall/F1 and within-video point-track IDF1 plus frame-coverage
+denominators. Benchmarking **does not** create reference truth by copying
+predictions; unannotated frames never count as false positives.
+
+A new Python-to-R integration CI generates mock-decoder output through
+the actual Python runner and then installs and exercises the R package
+on the exact resulting files. It verifies the serialization bridge,
+not real GoPro/Ultralytics runtime or biological tracking accuracy.
+See `docs/INDEPENDENT_VIDEO_BENCHMARK.md`.
+
+## Wave 11E — prespecified independent video-frame annotation design
+
+`aqt_annotation_frame_plan()` prespecifies equal-duration temporal
+strata for each video camera/session using **only externally acquired
+frame PTS**, then samples available frames without replacement under
+a reproducible seed. The sample is blind to detector confidence,
+predicted fish presence and algorithmic success. Required strata
+without enough acquired frames fail closed rather than being silently
+reallocated. Every sampled row includes its inclusion probability,
+inverse weight and **planned_not_annotated** state.
+
+`aqt_annotation_plan_audit()` checks selected frame PTS, per-video
+coverage, temporal strata and selection weights against the original
+manifest. The independent benchmark refuses those planned frames until
+they are actually marked `fully_annotated` following manual review.
+Annotation independence, species labels and reviewer reliability
+still require external verification. See
+`docs/PREDECLARED_VIDEO_ANNOTATION_SAMPLING.md`.
+
 ## Wave 11F: real dataset and GoPro structure reconnaissance
 
 Two read-only Python tools inspect real external data structures: inst/python/aqt_probe_recording.py uses FFprobe MP4 streams and actual GPMF KLV header inspection, while inst/python/aqt_ros_stereo_audit.py validates FishSizing stereo ROS K/D/R/P YAML and decimal-comma manual fish length CSV. Tiny unmodified published left/right stereo calibration YAML fixtures are attributed and tested with optional PyYAML.
