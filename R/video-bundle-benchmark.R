@@ -29,7 +29,10 @@ aqt_video_bundle_import <- function(directory,prefix) {
                mot=paste0(prefix,".mot.txt"),
                classes=paste0(prefix,".classes.csv"),
                metadata=paste0(prefix,".run.json"))
-  locations <- file.path(directory,outputs)
+  # file.path() may drop vector names; restore exact file-part keys so
+  # locations["metadata"] and locations["mot"] never resolve to NA.
+  locations <- stats::setNames(file.path(directory,unname(outputs)),
+                               names(outputs))
   if (any(!file.exists(locations) | dir.exists(locations)))
     stop("Missing video bundle component; all four outputs are required",
          call.=FALSE)
