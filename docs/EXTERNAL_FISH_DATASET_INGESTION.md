@@ -103,3 +103,18 @@ calculate official TrackEval HOTA on the original split, not a proxy metric.
   evidence of live locomotion in its post-mortem Dataset A.
 
 Independent real underwater XYZ calibration remains a field metrology gate.
+
+## Actual original detector file: FISHTRAC/VFT — structural gate
+
+External source: https://github.com/tmandel/fish-detrac/blob/master/fishtrac/trackers/VFT/detections.csv
+Verified upstream Git blob SHA-1: f6d7538c4799742e18f7df0df2afd08da716116c.
+
+Direct structural examination on 12 Nov 2026: 171 rows, 71 distinct source frames (1–71), 1–4 boxes per represented frame, zero invalid normalized bounding boxes. The file is a five-column headerless detection export: frame, center_x_norm, center_y_norm, width_norm, height_norm.
+
+These are detector outputs, NOT independently annotated reference boxes. They carry no confidence, fish identity, species, complete video frame schedule or physical PTS. Never use these data to claim fish detector accuracy, IDF1, HOTA or camera/XYZ validation.
+
+New inst/python/aqt_fishtrac_detection_probe.py validates the original frame convention, converts to normalized XYXY and optionally to pixels using externally verified image dimensions. No fish ID/PTS/confidence is synthesized. CI temporarily downloads the original file, checks its Git blob and audits the 171 rows without committing source data (source dataset redistribution rights are not established).
+
+Example: python inst/python/aqt_fishtrac_detection_probe.py --input /data/fishtrac_detections.csv --frame-origin 1 --output /data/fishtrac_audit.json
+
+Successful testing closes only real external detector-file format compatibility, not verified fish-video-to-trajectory accuracy.
