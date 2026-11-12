@@ -109,3 +109,30 @@ test_that("sync holdout rejects camera marker omission and training overlap", {
   expect_error(aqt_sync_holdout_apply(out_of_support,fit),
                "pulse support")
 })
+
+test_that("training and independently heldout pulses may be interleaved", {
+  m <- .aqt_sync_holdout_fixture()
+  # Deliberately interleave both sets and supply non-chronological IDs.
+  # Holdouts between training pulses give interpolation rather than
+  # artificially forcing every holdout to extrapolate beyond training.
+  fit <- aqt_sync_holdout_fit(
+    m,"TOP",c("M7","M1","M5","M3"),
+    c("M6","M2","M8"),max_holdout_error_s=.0001)
+  expect_true(all(fit$fits$within_tolerance))
+  expect_true(all(fit$fits$holdout_max_abs_s<1e-8))
+  expect_false(any(fit$fits$holdout_extrapolates))
+  expect_equal(fit$fits$n_training,rep(4,4))
+  expect_equal(fit$fits$n_holdout,rep(3,4))
+
+  # Physical matching is still necessary: non-monotone camera timestamps
+  # against physically ordered reference events must be rejected.
+  corrupt <- m
+  i <- which(corrupt$session_id=="S1" &
+             corrupt$camera_id=="SIDE" &
+             corrupt$marker_id %in% c("M3","M5"))
+  corrupt$time_s[i] <- rev(corrupt$time_s[i])
+  expect_error(
+    aqt_sync_holdout_fit(corrupt,"TOP",c("M7","M1","M5","M3"),
+                         c("M6","M2","M8")),
+    "physical order")
+})
