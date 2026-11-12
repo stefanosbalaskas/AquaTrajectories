@@ -1,0 +1,48 @@
+name: Python-to-R video bundle roundtrip
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "R/video-mot-ingestion.R"
+      - "R/video-bundle-benchmark.R"
+      - "inst/python/aqt_track_video.py"
+      - "tests/python/generate_video_bundle_fixture.py"
+      - "tests/integration/video_bundle_roundtrip.R"
+      - ".github/workflows/video-bundle-roundtrip.yml"
+      - "DESCRIPTION"
+  pull_request:
+    paths:
+      - "R/video-mot-ingestion.R"
+      - "R/video-bundle-benchmark.R"
+      - "inst/python/aqt_track_video.py"
+      - "tests/python/generate_video_bundle_fixture.py"
+      - "tests/integration/video_bundle_roundtrip.R"
+      - ".github/workflows/video-bundle-roundtrip.yml"
+      - "DESCRIPTION"
+
+permissions:
+  contents: read
+
+jobs:
+  video-bundle-python-r:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::roxygen2
+      - name: Generate R namespace and manuals
+        run: Rscript -e 'roxygen2::roxygenise()'
+      - name: Install exact PR package
+        run: R CMD INSTALL .
+      - name: Generate signed-off synthetic Python-runner bytes (no fish/ML data)
+        run: python tests/python/generate_video_bundle_fixture.py "$RUNNER_TEMP/aqt-video-bridge"
+      - name: Verify Python-to-R PTS/box/class/SHA-256 roundtrip and benchmark
+        run: Rscript tests/integration/video_bundle_roundtrip.R "$RUNNER_TEMP/aqt-video-bridge"
