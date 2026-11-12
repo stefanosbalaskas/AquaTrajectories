@@ -1,0 +1,84 @@
+name: Wave 13A - genuine Oxford source fish detections through ByteTrack
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_oxford_real_bytetrack.py"
+      - "tests/python/test_oxford_real_bytetrack.py"
+      - ".github/workflows/oxford-real-bytetrack.yml"
+      - "docs/WAVE_13_VALIDATION_EXECUTION.md"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_oxford_real_bytetrack.py"
+      - "tests/python/test_oxford_real_bytetrack.py"
+      - ".github/workflows/oxford-real-bytetrack.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  real-source-byte-track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install reproducible ByteTrack runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "supervision==0.26.1" "numpy<3"
+          python - <<'PY'
+          import supervision, numpy
+          assert supervision.__version__=="0.26.1"
+          print("Supervision",supervision.__version__,"NumPy",numpy.__version__)
+          PY
+      - name: Source and tracking contracts
+        run: |
+          python -m py_compile inst/python/aqt_oxford_real_bytetrack.py
+          python -m unittest discover -s tests/python -p "test_oxford_real_bytetrack.py" -v
+      - name: Acquire original published Oxford fish detections and validate source Git blob
+        shell: bash
+        run: |
+          curl --fail --location --show-error --retry 3 --max-time 120 \
+            "https://raw.githubusercontent.com/ox-vgg/fish-tank-obstacles/0d57a17148f750ed7c327ba5d36ce587d3b7dcfe/data/annotations/eval/fish/2-all-frames-auto-detections.json" \
+            -o "$RUNNER_TEMP/oxford_original_auto_detections.json"
+          python - <<'PY'
+          import hashlib,os,pathlib
+          source=(pathlib.Path(os.environ["RUNNER_TEMP"])/"oxford_original_auto_detections.json").read_bytes()
+          blob=hashlib.sha1(b"blob "+str(len(source)).encode()+b"\0"+source).hexdigest()
+          assert blob=="831418e7780864d1caecb1469b31f3a908e2269d",blob
+          print("Original source Git object",blob)
+          PY
+      - name: Execute ByteTrack on all real Oxford fish detections
+        run: |
+          python inst/python/aqt_oxford_real_bytetrack.py \
+            --detections "$RUNNER_TEMP/oxford_original_auto_detections.json" \
+            --output-dir "$RUNNER_TEMP/oxford_source_tracker"
+          python - <<'PY'
+          import csv,json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"oxford_source_tracker"
+          report=json.loads((root/"audit.json").read_text())
+          with (root/"real_source_bytetrack.csv").open(newline="") as f:
+              obs=list(csv.DictReader(f))
+          assert report["n_recordings"]==15,report
+          assert report["n_original_frames"]==4462,report
+          assert report["n_original_detections"]==1656,report
+          assert 0<len(obs)<=1656,report
+          assert report["n_tracker_observations"]==len(obs)
+          assert not report["official_HOTA_IDF1_measured"]
+          assert not report["detector_run_on_video_here"]
+          assert not report["human_ground_truth_identity_ids_available"]
+          assert all(int(r["track_id"])>=0 for r in obs)
+          print("QUALIFIED real Oxford source ByteTrack executed.",
+                "Original boxes:",1656,"Tracked:",len(obs))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave13a-real-source-bytetrack-observations
+          path: |
+            ${{ runner.temp }}/oxford_source_tracker/audit.json
+            ${{ runner.temp }}/oxford_source_tracker/real_source_bytetrack.csv
