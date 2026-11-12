@@ -1,0 +1,62 @@
+name: Wave 12A - original 3D-ZeF label agreement qualification
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_3dzef_agreement.py"
+      - "inst/python/aqt_3dzef_source_probe.py"
+      - "tests/python/test_3dzef_agreement.py"
+      - "docs/3DZEF_AGREEMENT_BENCHMARK.md"
+      - ".github/workflows/3dzef-agreement.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_3dzef_agreement.py"
+      - "inst/python/aqt_3dzef_source_probe.py"
+      - "tests/python/test_3dzef_agreement.py"
+      - ".github/workflows/3dzef-agreement.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  original-label-agreement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile and exercise exact-head geometry and identity contracts
+        run: |
+          python -m py_compile inst/python/aqt_3dzef_agreement.py
+          python -m unittest discover -s tests/python -p "test_3dzef_agreement.py" -v
+          python -m unittest discover -s tests/python -p "test_3dzef_source_probe.py" -v
+      - name: Download and audit original published 3D-ZeF20 labels
+        shell: bash
+        run: |
+          curl --fail --location --show-error --retry 3 --max-time 180 \
+            "https://motchallenge.net/data/3DZeF20Lables.zip" \
+            --output "$RUNNER_TEMP/3DZeF20Lables.zip"
+          sha256sum "$RUNNER_TEMP/3DZeF20Lables.zip"
+          python inst/python/aqt_3dzef_agreement.py \
+            --labels-zip "$RUNNER_TEMP/3DZeF20Lables.zip" \
+            --audit-json "$RUNNER_TEMP/3dzef_wave12a_original_labels.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import os
+          path = Path(os.environ["RUNNER_TEMP"])/"3dzef_wave12a_original_labels.json"
+          report = json.loads(path.read_text())
+          assert report["native_gt_count"] == 4, report
+          assert sum(x["observations"] for x in report["sequences"]) == 27026, report
+          assert not report["actual_fish_predictions_scored"]
+          assert not report["physical_xyz_certified"]
+          print("Original published 3D-ZeF20 GT: 4 sequences, 27026 observations.")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave12a-original-3dzef-agreement-readiness
+          path: ${{ runner.temp }}/3dzef_wave12a_original_labels.json
