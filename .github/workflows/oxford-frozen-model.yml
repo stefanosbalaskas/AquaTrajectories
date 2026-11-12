@@ -1,0 +1,91 @@
+name: Wave 13B - actual frozen Oxford fish model forward pass on real video pixels
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_oxford_frozen_model_smoke.py"
+      - "tests/python/test_oxford_frozen_model_smoke.py"
+      - "docs/OXFORD_FROZEN_FISH_INFERENCE.md"
+      - ".github/workflows/oxford-frozen-model.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_oxford_frozen_model_smoke.py"
+      - "tests/python/test_oxford_frozen_model_smoke.py"
+      - ".github/workflows/oxford-frozen-model.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  original-frozen-fish-inference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source model digest and fail-closed contracts
+        run: |
+          python -m py_compile inst/python/aqt_oxford_frozen_model_smoke.py
+          python -m unittest discover -s tests/python -p "test_oxford_frozen_model_smoke.py" -v
+      - name: Install explicit TensorFlow CPU runtime and real video decoder
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "tensorflow-cpu==2.16.2" "Pillow>=10,<12"
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+      - name: Retrieve exact original published model and evaluation recording
+        shell: bash
+        run: |
+          MODEL="$RUNNER_TEMP/oxford_model"
+          mkdir -p "$MODEL/variables"
+          BASE="https://raw.githubusercontent.com/ox-vgg/fish-tank-obstacles/0d57a17148f750ed7c327ba5d36ce587d3b7dcfe/data/models/detect/d2-fish/v2/saved_model"
+          curl --fail --location --show-error --retry 3 --max-time 180 \
+            "$BASE/saved_model.pb" -o "$MODEL/saved_model.pb"
+          curl --fail --location --show-error --retry 3 --max-time 180 \
+            "$BASE/variables/variables.index" -o "$MODEL/variables/variables.index"
+          curl --fail --location --show-error --retry 3 --max-time 240 \
+            "$BASE/variables/variables.data-00000-of-00001" \
+            -o "$MODEL/variables/variables.data-00000-of-00001"
+          curl --fail --location --show-error --retry 3 --max-time 240 \
+            "https://thor.robots.ox.ac.uk/~vgg/data/fish/fish-tank-obstacles-eval-15.zip" \
+            -o "$RUNNER_TEMP/oxford_eval.zip"
+          python - <<'PY'
+          import hashlib,os,pathlib,zipfile
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          zipfile_path=root/"oxford_eval.zip"
+          expected="91c71d297b7bfa6bd19c6f34ec5d12e1534bf7ef2f90d3249662605507ca9ae4"
+          assert hashlib.sha256(zipfile_path.read_bytes()).hexdigest()==expected
+          with zipfile.ZipFile(zipfile_path) as archive:
+              original=archive.read("eval/F30_T15.mp4")
+          assert hashlib.sha256(original).hexdigest()=="acd118909b7bd44b013450e35525409ab2bfe53e15e81f48834fe33bfea682c0"
+          (root/"fish.mp4").write_bytes(original)
+          print("Original fish video matched source hashes")
+          PY
+          ffmpeg -nostdin -hide_banner -loglevel error \
+            -i "$RUNNER_TEMP/fish.mp4" -frames:v 1 -q:v 2 \
+            "$RUNNER_TEMP/one_actual_fish_frame.jpg"
+      - name: Execute original frozen fish-specific model on genuine decoded source pixels
+        run: |
+          python inst/python/aqt_oxford_frozen_model_smoke.py \
+            --model-dir "$RUNNER_TEMP/oxford_model" \
+            --frame-jpeg "$RUNNER_TEMP/one_actual_fish_frame.jpg" \
+            --out "$RUNNER_TEMP/frozen_model_inference_audit.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"frozen_model_inference_audit.json"
+          report=json.loads(p.read_text())
+          assert report["frozen_fish_model_actually_executed"] is True
+          assert report["detection_boxes_scored_against_manual_ground_truth"] is False
+          assert report["original_training_overlap_audited"] is False
+          assert len(report["weights"])==3
+          assert report["outputs"]
+          print("REAL FISH-MODEL forward pass qualified; NOT an accuracy claim.")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave13b-original-frozen-fish-model-execution
+          path: ${{ runner.temp }}/frozen_model_inference_audit.json
