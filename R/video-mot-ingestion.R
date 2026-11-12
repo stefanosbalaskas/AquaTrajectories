@@ -101,8 +101,17 @@ aqt_import_mot <- function(detections,frames,session_id,camera_id,
       !is.na(detections)) {
     if (!file.exists(detections) || dir.exists(detections))
       stop("MOT text path does not exist",call.=FALSE)
-    detections <- utils::read.csv(
-      detections,header=FALSE,stringsAsFactors=FALSE)
+    if (is.na(file.info(detections)$size))
+      stop("Cannot inspect MOT export file size",call.=FALSE)
+    if (file.info(detections)$size==0) {
+      # All-empty videos still have acquired frames and valid PTS.
+      # ByteTrack correctly emits an empty MOT file in this situation.
+      detections <- as.data.frame(
+        matrix(numeric(),nrow=0L,ncol=10L))
+    } else {
+      detections <- utils::read.csv(
+        detections,header=FALSE,stringsAsFactors=FALSE)
+    }
   }
   if (!is.data.frame(detections) || ncol(detections)<7L)
     stop("MOT export requires at least seven positional columns",
