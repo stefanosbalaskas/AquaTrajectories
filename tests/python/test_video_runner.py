@@ -5,9 +5,14 @@ No artificial CI claim of independently validated fish detection.
 from __future__ import annotations
 
 import importlib.util
+import csv
+import json
 from pathlib import Path
+import sys
 import tempfile
+import types
 import unittest
+from unittest.mock import patch
 
 
 RUNNER = Path(__file__).resolve().parents[2] / "inst" / "python" / "aqt_track_video.py"
@@ -130,6 +135,91 @@ class VideoIngestContracts(unittest.TestCase):
                 aqt.run_video(video, weights, folder, "valid",
                               "session", "camera", class_filter=[1, 1])
             self.assertEqual(len(aqt.sha256_file(video)), 64)
+
+
+    def test_full_mock_video_runner_exports_same_decoded_frame_pts(self):
+        """Mock only the external AV/ML dependencies, not the export logic."""
+        class FakeFrame:
+            def __init__(self, pts):
+                self.time = pts
+
+            def to_ndarray(self, format):
+                if format != "bgr24":
+                    raise AssertionError("Expected actual BGR video frame")
+                return types.SimpleNamespace(shape=(80, 100, 3))
+
+        class FakeContainer:
+            streams = types.SimpleNamespace(video=["VIDEO_STREAM"])
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+            def decode(self, stream):
+                if stream != "VIDEO_STREAM":
+                    raise AssertionError("Wrong selected video stream")
+                return [FakeFrame(83.2), FakeFrame(83.375), FakeFrame(83.42)]
+
+        av = types.ModuleType("av")
+        av.__version__ = "mock"
+        av.open = lambda path: FakeContainer()
+        ultra = types.ModuleType("ultralytics")
+        ultra.__version__ = "mock"
+
+        class FakeYOLO:
+            def __init__(self, weights):
+                self.n = 0
+
+            def track(self, **kwargs):
+                if kwargs["tracker"] != "bytetrack.yaml" or \
+                        not kwargs["persist"]:
+                    raise AssertionError("Model tracker state must persist")
+                if kwargs["source"].shape != (80, 100, 3):
+                    raise AssertionError("Wrong video image")
+                self.n += 1
+                if self.n == 1:
+                    return [DummyResult(DummyBoxes(
+                        [[1, 2, 11, 22]], [7], [.9], [2]))]
+                if self.n == 2:
+                    return [DummyResult(DummyBoxes(
+                        [[4, 5, 12, 22]], None, [.8], [1]))]
+                return [DummyResult(DummyBoxes([], None, [], []))]
+
+        ultra.YOLO = FakeYOLO
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            video = root / "video.mp4"
+            weights = root / "fish.pt"
+            video.write_bytes(b"fake video bytes")
+            weights.write_bytes(b"fake weights bytes")
+            with patch.dict(sys.modules, {"av": av, "ultralytics": ultra}):
+                meta = aqt.run_video(
+                    video, weights, root / "outputs", "test",
+                    "S1", "TOP", confidence=.25)
+            self.assertEqual(meta["n_decoded_frames"], 3)
+            self.assertEqual(meta["n_tracked_box_rows"], 1)
+            self.assertEqual(meta["n_unassigned_detector_boxes_skipped"], 1)
+            self.assertFalse(meta["fish_identity_accuracy_certified"])
+            self.assertFalse(meta["underwater_3d_calibration_certified"])
+            with (root / "outputs" / "test.frames.csv").open() as f:
+                frames = list(csv.DictReader(f))
+            self.assertEqual([int(z["frame_id"]) for z in frames], [0, 1, 2])
+            self.assertAlmostEqual(float(frames[1]["time_s"]), .175)
+            self.assertAlmostEqual(float(frames[2]["time_s"]), .22)
+            with (root / "outputs" / "test.mot.txt").open() as f:
+                mot = list(csv.reader(f))
+            self.assertEqual(len(mot), 1)
+            self.assertEqual(mot[0][:2], ["1", "7"])
+            with (root / "outputs" / "test.classes.csv").open() as f:
+                classes = list(csv.DictReader(f))
+            self.assertEqual(classes[0]["class_id"], "2")
+            with (root / "outputs" / "test.run.json").open() as f:
+                record = json.load(f)
+            self.assertEqual(record["n_tracked_box_rows"], 1)
+            self.assertEqual(record["time_source"],
+                "decoded_video_frame_pts_from_same_buffer_as_model_input")
 
 
 if __name__ == "__main__":
