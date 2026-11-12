@@ -84,10 +84,14 @@ aqt_hmm_event_tank_epochs <- function(
          call.=FALSE)
   # One session per independently treated tank; repeated events,
   # crossover and multi-session animal reuse need another design.
-  for (idx in split(seq_len(nrow(d)),as.character(d$tank_id)))
+  for (idx in split(seq_len(nrow(d)),as.character(d$tank_id))) {
     if (length(unique(as.character(d$session_id[idx])))!=1L)
       stop("This design requires one recording session per tank",
            call.=FALSE)
+    if (length(unique(as.character(d$camera_id[idx])))!=1L)
+      stop("Use one camera view per tank or reviewed fused fish identities; do not double-count cross-view tracks",
+           call.=FALSE)
+  }
   e <- aqt_event_table(events)
   if (anyDuplicated(e$session_id) ||
       !setequal(as.character(e$session_id),
