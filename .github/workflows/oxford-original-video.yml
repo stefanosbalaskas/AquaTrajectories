@@ -1,0 +1,73 @@
+name: Wave 12B - original Oxford fish-video PTS and decoded pixels
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_oxford_video_probe.py"
+      - "tests/python/test_oxford_video_probe.py"
+      - "docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md"
+      - ".github/workflows/oxford-original-video.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_oxford_video_probe.py"
+      - "tests/python/test_oxford_video_probe.py"
+      - ".github/workflows/oxford-original-video.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  oxford-real-fish-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source Python contracts
+        run: |
+          python -m py_compile inst/python/aqt_oxford_video_probe.py
+          python -m unittest discover -s tests/python -p "test_oxford_video_probe.py" -v
+      - name: Explicit FFmpeg / FFprobe install
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
+      - name: Download original Oxford Detect+Track Picasso triggerfish videos
+        shell: bash
+        run: |
+          curl --fail --location --show-error --retry 3 --max-time 240 \
+            "https://thor.robots.ox.ac.uk/~vgg/data/fish/fish-tank-obstacles-eval-15.zip" \
+            --output "$RUNNER_TEMP/oxford_evaluation_15.zip"
+          sha256sum "$RUNNER_TEMP/oxford_evaluation_15.zip"
+          python inst/python/aqt_oxford_video_probe.py \
+            --archive "$RUNNER_TEMP/oxford_evaluation_15.zip" \
+            --session-id oxford_eval \
+            --camera-id oxford_single_video \
+            --output-dir "$RUNNER_TEMP/oxford_frame_audit"
+          python - <<'PY'
+          import json,os,pathlib,csv
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"oxford_frame_audit"
+          x=json.loads((p/"audit.json").read_text())
+          assert x["source_archive_video_members"] == 15, x
+          assert x["frame_count"] > 1
+          assert x["first_original_frame_decoded_with_ffmpeg"] is True
+          assert x["fish_detection_or_track_identity_accuracy_certified"] is False
+          assert x["camera_exposure_synchronization_certified"] is False
+          with (p/"frames.csv").open(newline="") as s:
+              rows=list(csv.DictReader(s))
+          assert len(rows)==x["frame_count"],x
+          assert [int(row["frame_id"]) for row in rows]==list(range(len(rows)))
+          assert float(rows[0]["time_s"])==0
+          print("VERIFIED original Oxford fish-video pixel decode + all real PTS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: oxford-original-fish-video-pts-audit
+          path: |
+            ${{ runner.temp }}/oxford_frame_audit/audit.json
+            ${{ runner.temp }}/oxford_frame_audit/frames.csv
