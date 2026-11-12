@@ -65,6 +65,23 @@ The script inspects K,D,R,P shapes, camera image geometry and decimal-comma spec
 | Mediterranean autoUC | https://github.com/filippovarini/community-fish-detector-dataset | Third-party index describes diver-operated GoPro reef fish frames/YOLO labels | GoPro fish detection domain adaptation |
 | UWslamdataset | https://github.com/gidobot/UWslamdataset | README describes stereo calibrations, time stamps and camera poses | Underwater camera metadata only, not fish trajectories |
 
+A further **actual fish detector export** was examined from
+https://github.com/tmandel/fish-detrac/blob/master/fishtrac/trackers/VFT/detections.csv .
+It is a headerless five-column table containing:
+frame_number, normalized_bbox_center_x, normalized_bbox_center_y,
+normalized_bbox_width, normalized_bbox_height.
+The upstream VFT wrapper source confirms conversion from pixel XYWH
+to normalized center coordinates and subsequent conversion back using
+frame width and height. This is **detection-only**, without individual
+fish track IDs or detector confidence values; it must NOT be imported
+as MOTChallenge identity ground truth or given fabricated confidence.
+
+For an image of known width W and height H, convert to pixel rectangle:
+xmin=(center_x-width/2)*W, ymin=(center_y-height/2)*H,
+xmax=(center_x+width/2)*W, ymax=(center_y+height/2)*H.
+Preserve the original frame indexing convention and attach true PTS
+only if the matching video/metadata provides it.
+
 The large fish-video and ROS bag archives were not downloaded or benchmarked here. In particular, MFT25 on Hugging Face requires accepted access conditions. Dataset licenses and train/test splits must be independently verified before reuse.
 
 ## 4. Proposed executable research workflows
