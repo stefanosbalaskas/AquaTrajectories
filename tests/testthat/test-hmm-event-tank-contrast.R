@@ -136,3 +136,18 @@ test_that("sample count support of gaps is disclosed and never imputed", {
   expect_equal(t4$n_valid_fish_samples,11)
   expect_equal(t4$n_total_fish_samples,12)
 })
+
+test_that("unreviewed camera-local duplicates cannot count twice as fish", {
+  f <- .aqt_hmm_event_fixture()
+  x <- as.data.frame(f$decoded)
+  mirrored <- x[x$tank_id=="T1",,drop=FALSE]
+  mirrored$camera_id <- "SIDE"
+  doubled <- rbind(x,mirrored)
+  class(doubled) <- class(f$decoded)
+  attr(doubled,"aqt_hmm_model") <- attr(f$decoded,"aqt_hmm_model")
+  expect_error(aqt_hmm_event_tank_epochs(
+    doubled,f$events,state=2,
+    baseline_window_s=c(-6,0),
+    response_window_s=c(0,6)),
+    "do not double-count cross-view tracks")
+})
