@@ -37,7 +37,10 @@ print(result$per_tank)
 ## Observational and experimental units
 
 For each recorded tank, one recording session and one externally
-verified event onset are required. The method rejects repeated-event
+verified event onset are required. Each tank must provide **one**
+camera-local view or an already reviewed/fused biological fish-track
+view; multiple unreconciled camera views are rejected to avoid
+silently counting the same fish more than once. The method rejects repeated-event
 designs, multiple recording sessions per tank, treatment switching
 and fewer than two independently allocated tanks in either arm.
 These restrictions protect a bounded between-tank intervention
