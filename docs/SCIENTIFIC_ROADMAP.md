@@ -257,3 +257,15 @@ This is neither full HMM emission estimation nor calibrated fish welfare
 classification. Nonrandom missingness, changing frame intervals,
 species-specific reference labels, uncertainty propagation, heldout
 multi-camera calibration, and tank-treatment effects remain open.
+
+## Wave 8F — synthetic independent-tank HMM parameter recovery
+
+Adds local-seeded, RNG-restoring simulations with known state paths,
+Gaussian emissions and latent transition matrices across multiple
+independent synthetic fish/tanks. Fits transition/initial probabilities
+on explicitly designated training tanks; audits heldout state confusion,
+state accuracy, per-step likelihood and matrix error on completely
+disjoint synthetic tanks. Ground-truth availability here is created
+by the simulator, not obtained by manual fish annotation. A positive
+simulation result does not certify real fish movement, multi-camera
+identity, underwater XYZ accuracy or welfare.

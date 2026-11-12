@@ -461,3 +461,20 @@ held-out likelihood are **not** validated welfare labels or
 measurement-uncertainty-aware treatment estimates. Transitions represent
 recorded observation steps, not continuous-time hazards.
 See `docs/HMM_TRANSITION_HOLDOUT.md`.
+
+## Wave 8F: independent-tank Gaussian HMM known-truth recovery
+
+`aqt_hmm_simulate_truth()` produces explicitly synthetic multi-tank fish
+recordings with seeded latent states, known Gaussian emissions, known
+sample-step transitions and optional missing fish observations. It
+preserves the caller's global RNG state. `aqt_hmm_recovery_audit()`
+fits fixed-emission HMM transitions on selected synthetic tanks and
+scores state/parameter recovery on entirely different tanks, reporting
+transition errors, heldout Viterbi accuracy, confusion and predictive
+log likelihood. The true latent state is revealed only for synthetic
+benchmark evaluation, not automatically supplied to fitting.
+
+**Known-truth software benchmarking is not real fish validation**:
+no inference about fish stress, species, positive welfare, underwater
+camera accuracy or measurement uncertainty is warranted.
+See `docs/HMM_KNOWN_TRUTH_RECOVERY.md`.
