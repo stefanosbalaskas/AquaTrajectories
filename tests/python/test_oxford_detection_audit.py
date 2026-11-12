@@ -105,6 +105,25 @@ class OriginalOxfordAgreement(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"image dimensions"):
                 mod.parsed_annotations(p)
 
+    def test_original_mixed_point_and_box_requires_whole_frame_exclusion(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)/"lisa.json"
+            obj={"files":[{"src":"F39_T92/f00339.jpg",
+                  "fdata":{"width":100,"height":100},
+                  "regions":[[10,10,20,20],[30,30]],"rdata":[{},{}]}]}
+            p.write_text(json.dumps(obj))
+            gt=mod.parsed_annotations(p)
+            self.assertEqual(gt["F39_T92/f00339.jpg"]["unsupported_annotation_regions"],1)
+            # Source model has no prediction on this frame.
+            pd={"F39_T92/f00339.jpg":{
+                 "sequence":"F39_T92","frame":339,"boxes":[],
+                 "image_width_px":100,"image_height_px":100}}
+            report=mod.score_sources(gt,pd,.5)
+            self.assertEqual(report["n_ambiguous_annotation_frames_excluded"],1)
+            self.assertEqual(report["ambiguous_frame_paths_excluded"],["F39_T92/f00339.jpg"])
+            self.assertEqual(report["pooled"]["frames"],0)
+            self.assertEqual(report["pooled"]["reference_boxes"],0)
+
 
 if __name__=="__main__":
     unittest.main()
