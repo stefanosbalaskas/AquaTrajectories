@@ -158,3 +158,48 @@ export function localAuditSummary(tracks,frames,events){
     ACI_device_controlled:false
   };
 }
+
+/** Explicitly OFFLINE ACI command simulation, no hardware outputs.
+ * Limits and approval reference must be externally specified; these do not
+ * certify biological appropriateness or substitute for institutional ethics.
+ */
+export function dryRunACI(events, options) {
+  if (!options || typeof options !== "object") throw new Error("Approved study limits required");
+  const {approval_reference, device_id, action_type, cooldown_s,
+         max_commands, duration_s, max_duration_s, intensity,
+         max_intensity, emergency_stop} = options;
+  if (!approval_reference?.trim() || !device_id?.trim() ||
+      !["simulated_light","simulated_feeder"].includes(action_type))
+    throw new Error("Named operator/study approval and simulated device required");
+  const params=[cooldown_s,max_commands,duration_s,max_duration_s,intensity,max_intensity];
+  if(params.some(v=>typeof v!=="number"||!Number.isFinite(v))||
+     cooldown_s<0||max_commands<0||!Number.isInteger(max_commands)||
+     duration_s<=0||max_duration_s<=0||duration_s>max_duration_s||
+     intensity<0||intensity>max_intensity||max_intensity<=0)
+    throw new Error("Device safety limits violated");
+  const commands=[],rejected=[];
+  if(emergency_stop===true) {
+    return {commands,rejected:events.map(e=>({event_id:e.event_id,
+      reason:"operator_emergency_stop"})),simulation_only:true,
+      hardware_device_contacted:false,biological_safety_certified:false};
+  }
+  if(emergency_stop!==false)throw new Error("Explicit emergency stop status required");
+  let last=-Infinity;
+  for(const e of [...events].sort((a,b)=>a.time_s-b.time_s)) {
+    if(e.event_type!=="aci_choice_request")continue;
+    if(!Number.isFinite(e.time_s))throw new Error("Invalid externally logged ACI time");
+    let reason="";
+    if(e.time_s<last+cooldown_s) reason="cooldown_active";
+    else if(commands.length>=max_commands) reason="maximum_command_count";
+    if(reason) rejected.push({event_id:e.event_id,reason});
+    else {
+      commands.push({event_id:e.event_id,time_s:e.time_s,
+        device_id,action_type,intensity,duration_s,
+        approval_reference,execution_status:"SIMULATED_ONLY"});
+      last=e.time_s;
+    }
+  }
+  return {commands,rejected,simulation_only:true,
+    hardware_device_contacted:false,biological_safety_certified:false,
+    randomization_or_tank_replication_verified:false};
+}
