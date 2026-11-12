@@ -120,6 +120,69 @@ aqt_3dzef_agreement_import <- function(directory) {
   } else if (any(frames$matched_count!=0))
     stop("Match table is empty but reported frame matches are not",
          call.=FALSE)
+  # Independently recompute the Python aggregate from the verified CSVs.
+  near <- function(actual,expected,label) {
+    if (!is.numeric(actual) || length(actual)!=1L ||
+        !is.finite(actual) || abs(actual-expected)>1e-8)
+      stop("Inconsistent 3D-ZeF summary metric: ",label,call.=FALSE)
+  }
+  near(meta$evaluated_frame_fraction,n/full,"evaluated_frame_fraction")
+  if (meta$n_predictions_inside_evaluation)
+    near(meta$match_precision,
+         meta$n_matches/meta$n_predictions_inside_evaluation,
+         "match_precision")
+  else if (!is.null(meta$match_precision))
+    stop("Undefined match precision must be null",call.=FALSE)
+  if (meta$n_truth_inside_evaluation)
+    near(meta$match_recall,
+         meta$n_matches/meta$n_truth_inside_evaluation,
+         "match_recall")
+  else if (!is.null(meta$match_recall))
+    stop("Undefined match recall must be null",call.=FALSE)
+  near(meta$false_positives_on_declared_empty_frames,
+       sum(frames$prediction_count[frames$truth_count==0]),
+       "false_positives_on_declared_empty_frames")
+  if (nrow(matches)) {
+    near(meta$matched_3d_euclidean_rmse_cm,
+         sqrt(mean(matches$euclidean_error_cm^2)),
+         "matched_3d_euclidean_rmse_cm")
+    near(meta$matched_3d_euclidean_mae_cm,
+         mean(matches$euclidean_error_cm),
+         "matched_3d_euclidean_mae_cm")
+    axes <- c("x","y","z")
+    bias <- unlist(meta$coordinate_bias_cm_xyz,use.names=FALSE)
+    axis_rmse <- unlist(meta$coordinate_rmse_cm_xyz,use.names=FALSE)
+    if (length(bias)!=3L || length(axis_rmse)!=3L ||
+        !is.numeric(bias) || !is.numeric(axis_rmse) ||
+        any(!is.finite(bias)) || any(!is.finite(axis_rmse)))
+      stop("Incomplete matched 3D-ZeF axis metrics",call.=FALSE)
+    for (i in seq_along(axes)) {
+      error <- matches[[paste0("pred_",axes[i],"_cm")]] -
+               matches[[paste0("true_",axes[i],"_cm")]]
+      near(bias[i],mean(error),paste0(axes[i],"_bias_cm"))
+      near(axis_rmse[i],sqrt(mean(error^2)),
+           paste0(axes[i],"_rmse_cm"))
+    }
+  } else if (!is.null(meta$matched_3d_euclidean_rmse_cm) ||
+             !is.null(meta$matched_3d_euclidean_mae_cm))
+    stop("Empty match set requires undefined 3D-ZeF error summaries",
+         call.=FALSE)
+  for (nm in c("IDTP","IDFP","IDFN","adjacent_identity_switches",
+               "comparable_adjacent_pairs"))
+    if (!is.numeric(meta[[nm]]) || length(meta[[nm]])!=1L ||
+        !is.finite(meta[[nm]]) || meta[[nm]]<0 ||
+        meta[[nm]]!=floor(meta[[nm]]))
+      stop("Invalid 3D-ZeF identity metric: ",nm,call.=FALSE)
+  if (meta$IDTP>meta$n_matches ||
+      meta$IDFP!=meta$n_predictions_inside_evaluation-meta$IDTP ||
+      meta$IDFN!=meta$n_truth_inside_evaluation-meta$IDTP ||
+      meta$adjacent_identity_switches>meta$comparable_adjacent_pairs)
+    stop("Inconsistent 3D-ZeF identity denominators",call.=FALSE)
+  denom <- 2*meta$IDTP+meta$IDFP+meta$IDFN
+  if (denom>0) near(meta$camera_local_3d_IDF1_like,
+                    2*meta$IDTP/denom,"camera_local_3d_IDF1_like")
+  else if (!is.null(meta$camera_local_3d_IDF1_like))
+    stop("Undefined IDF1-like metric must be null",call.=FALSE)
   structure(list(summary=meta,per_frame=frames,matches=matches,
                  software_integrity_verified=TRUE,
                  original_video_model_accuracy_verified=FALSE,
