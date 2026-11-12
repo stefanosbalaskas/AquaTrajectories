@@ -97,3 +97,5 @@ measurements and independent review.
 Synthetic known-geometry R tests use precisely surveyed virtual XYZ
 as a **software reference** and two simulated camera pulse clocks, never
 claiming those inputs came from real aquarium hardware.
+
+**Qualification note:** This protocol composes existing audited functions; the caller is responsible for collecting actual optical/hardware evidence. CI validates only software and synthetic known-truth fixtures.
