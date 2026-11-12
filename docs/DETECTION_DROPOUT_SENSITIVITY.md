@@ -74,3 +74,26 @@ No physical accuracy or causal treatment validity is implied.
 
 Umbrella scientific acceptance:
 https://github.com/stefanosbalaskas/AquaTrajectories/issues/51
+
+## Combined physical stereo validation protocol (priorities 3 + 4)
+
+Wave 13D also adds the native R export
+`aqt_multiview_holdout_protocol()`, composing the preexisting
+`aqt_sync_holdout_fit()`, `aqt_target_trial_table()` and
+`aqt_target_holdout_benchmark()` into one strict experiment-level
+qualification. It requires physically corresponding **training and
+heldout pulse IDs** as well as separately measured target assemblies
+and paired undistorted 2D image coordinates. Every physical trial must
+name camera/session scopes covered by the timing holdout.
+
+The output retains all holdout clock residuals, physical target errors,
+failed 3D reconstruction denominators and unit labels. A passing
+**software protocol** only verifies the supplied data contracts and
+mathematics; it cannot authenticate the external survey, hardware
+exposure pulses or independent calibration collection. Therefore all
+physical certification flags remain false pending genuine tank
+measurements and independent review.
+
+Synthetic known-geometry R tests use precisely surveyed virtual XYZ
+as a **software reference** and two simulated camera pulse clocks, never
+claiming those inputs came from real aquarium hardware.
