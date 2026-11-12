@@ -105,3 +105,24 @@ test_that("truth simulation and recovery require scientifically valid design", {
     x,training_tanks=sprintf("T%03d",1:4)),
     ">=2 distinct")
 })
+
+test_that("three-state synthetic data preserve state labels across tank holdout", {
+  P <- matrix(c(.88,.09,.03,
+                .08,.84,.08,
+                .03,.12,.85),nrow=3,byrow=TRUE)
+  x <- aqt_hmm_simulate_truth(
+    n_tanks=6,fish_per_tank=2,n_samples=60,
+    state_means=c(0,5,10),state_sds=c(.25,.25,.25),
+    transition=P,initial=c(.3,.4,.3),seed=71)
+  expect_true(all(x$truth_state %in% 1:3))
+  ans <- aqt_hmm_recovery_audit(
+    x,training_tanks=sprintf("T%03d",1:4),
+    max_iter=65,tol=1e-6)
+  expect_equal(dim(ans$heldout_confusion),c(3L,3L))
+  expect_equal(sum(ans$heldout_confusion),240)
+  expect_gt(ans$heldout_viterbi_truth_accuracy,.98)
+  expect_equal(rowSums(ans$fitted_transition),rep(1,3),
+               tolerance=1e-10)
+  expect_true(all(is.finite(ans$fitted_transition)))
+  expect_false(ans$biological_welfare_certified)
+})
