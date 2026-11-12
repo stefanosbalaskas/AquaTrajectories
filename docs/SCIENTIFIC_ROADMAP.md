@@ -204,3 +204,13 @@ optional AR(1) within-fish residuals through independently
 maintained nlme. Real-video/physical calibration and model
 coverage/power remain pending; sparse/irregular mixed functional
 models require separate validation.
+
+## Wave 9B — multimodal optical and fish-identity XYZ visualization
+
+Provides visible-by-scenario physical XYZ fish cloud samples,
+explicit missing/stale fish rejection, label assignment-change
+rates and descriptive marginal quantiles; base projected scatter
+and optional rgl XYZ scatter. The full cloud retains multimodal
+identity alternatives. No calibrated uncertainty ellipsoid,
+real-video overlay, joint statistical confidence model or
+independent underwater metrology claim is made.

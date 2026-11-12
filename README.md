@@ -386,3 +386,17 @@ residual structure. It is a bounded model, not a missing-data
 solution, fish welfare classifier, causal estimator or qualified
 EyeTrajectories native R port. Details:
 `docs/FUNCTIONAL_LONGITUDINAL_NLME.md`.
+
+## Wave 9B: multimodal 3D fish position uncertainty clouds
+
+`aqt_joint_scene_cloud()` extracts all observed physical XYZ positions
+from coherent joint optical/identity scenarios at a declared recording
+frame and reports how many scenarios show each fish label.
+`aqt_plot_joint_scene_cloud()` and optional
+`aqt_plot_joint_scene_cloud3d()` display the full label-specific cloud
+in physical XY/XZ/YZ and XYZ without imposing a Gaussian ellipsoid.
+
+These are descriptive conditional sensitivity visualizations,
+**not** scientifically calibrated 3D confidence regions or proof
+of biological fish identity. Details:
+`docs/JOINT_UNCERTAINTY_SCENE_CLOUD.md`.
