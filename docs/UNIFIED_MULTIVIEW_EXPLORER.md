@@ -77,3 +77,24 @@ or a certified physical ACI controller. The browser has no
 hardware commands, no network uploads and no animal
 intervention authority. External human usability/accessibility
 research remains unperformed. Issue #51 stays open.
+
+## Physically consistent uncertainty visualization contract
+
+The original `stereo_audit.json` output is now a separate
+optional local file selector. **It is required to visualize any
+non-null empirical uncertainty radius**. The source includes
+`source_3d_units` (`cm` or `m`), original 3D row counts and
+explicit biological/physical scientific FALSE flags. The reader
+checks the exact 3D CSV row count and rejects unexpected scientific
+certifications or out-of-scope sources.
+
+The uncertainty report from Wave15B must give the **same
+original XYZ units** as the 3D source audit. If the units are
+absent or differ, the viewer refuses the radius instead of
+drawing misleading scales. Correct source-relative image pixels
+are mapped into the contained video element with letterbox
+offset compensation; this avoids shifted fish overlays when
+original camera sensor aspect ratio differs from a 16:9 preview.
+
+This is UI/data integrity and not actual independently
+certified physical 3D calibration accuracy.
