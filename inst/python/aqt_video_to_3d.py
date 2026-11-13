@@ -14,6 +14,7 @@ or asserts biological/scientific certification.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -121,11 +122,16 @@ def validated_config(config,mode):
         raise ValueError("Require positive integer temporal support for crossview IDs")
     return config
 
-def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.executable):
+def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.executable,
+            empirical_source=None,events_source=None):
     original=Path(config_path)
     cfg=validated_config(json.loads(original.read_text(encoding="utf-8")),mode)
     out=Path(output)
     if out.exists():raise FileExistsError("Never overwrite original 3D fish analysis")
+    if empirical_source is not None and not Path(empirical_source).is_file():
+        raise FileNotFoundError("Actual joint empirical source truth/residual CSV absent")
+    if events_source is not None and not Path(events_source).is_file():
+        raise FileNotFoundError("Actual fish intervention events source CSV absent")
     out.parent.mkdir(parents=True,exist_ok=True)
     here=Path(__file__).resolve()
     repo=here.parents[2]
@@ -186,14 +192,70 @@ def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.exec
             report.get("biological_identity_certified") is not False or
             report.get("underwater_physical_xyz_accuracy_certified") is not False):
             raise ValueError("Unqualified 3D native output or scientific claims")
-        (temp/"evidence_sha256.json").write_text(json.dumps({
+        # Optional original event source and independently collected,
+        # heldout tank measurement residuals are NEVER fabricated from
+        # predictions. The caller must supply them explicitly.
+        optional={}
+        if events_source is not None:
+            with Path(events_source).open(newline="",encoding="utf-8-sig") as fh:
+                reader=csv.DictReader(fh)
+                if reader.fieldnames!=["event_id","time_s","event_type"]:
+                    raise ValueError("Expected original event_id,time_s,event_type source")
+                seen=set()
+                for row in reader:
+                    if not row["event_id"] or row["event_id"] in seen or (
+                        not row["event_type"]):
+                        raise ValueError("Duplicate or incomplete external fish event")
+                    seen.add(row["event_id"])
+                    try:t=float(row["time_s"])
+                    except (ValueError,TypeError) as e:
+                        raise ValueError("Non-numeric original source event time") from e
+                    if not math.isfinite(t):
+                        raise ValueError("Nonfinite original source event time")
+            shutil.copyfile(events_source,temp/"events.csv")
+            optional["events_source_sha256"]=source_hash(events_source)
+            optional["events_rows"]=len(seen)
+            optional["externally_verified_intervention_times"]=False
+        if empirical_source is not None:
+            module=repo/"inst/python/aqt_joint_empirical_uncertainty.py"
+            if not module.is_file():
+                raise FileNotFoundError(
+                    "Joint empirical calibration module unavailable; merge Wave15B")
+            empirical_out=temp/"joint_empirical_calibration.json"
+            subprocess.run([python,str(module),
+                            "--empirical-source-csv",str(empirical_source),
+                            "--out",str(empirical_out)],
+                           cwd=repo,check=True,timeout=600)
+            from_source=json.loads(empirical_out.read_text())
+            if (from_source.get("schema")!="aqt_empirical_joint_fish_uncertainty_v1" or
+                from_source.get("original_physical_XYZ_independent_survey_authenticated") is not False or
+                from_source.get("source_fish_ID_ground_truth_independently_adjudicated") is not False):
+                raise ValueError("Empirical source uncertainty claims are not qualified")
+            optional["joint_empirical_source_csv_sha256"]=source_hash(empirical_source)
+            optional["joint_empirical_report_sha256"]=source_hash(empirical_out)
+            optional["empirical_joint_source_data_supplied"]=True
+            optional["empirical_joint_source_accuracy_independently_certified"]=False
+        else:
+            optional["empirical_joint_source_data_supplied"]=False
+        report["optional_external_evidence"]=optional
+        result.write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
+        derivatives=[
+            "source_frames.csv","source_2d_tracks.csv","fish_3d_tracks.csv",
+            "pairwise_3d_hypotheses.csv","crossview_links.csv",
+            "rejected_multiview_3d.csv","stereo_audit.json"]
+        evidence={
             "source_config_sha256":source_hash(original),
             "engine_manifest_sha256":source_hash(engine_path),
-            "stereo_audit_sha256":source_hash(result),
+            "derived_evidence_file_sha256":{
+                filename:source_hash(temp/filename)
+                for filename in derivatives},
             "source_video_or_bundle_certification":"unverified_external",
             "fish_identity_accuracy_certified":False,
-            "physical_xyz_accuracy_certified":False},
-            indent=2,sort_keys=True)+"\n")
+            "physical_xyz_accuracy_certified":False,
+            "physical_ACI_device_contacted":False,
+            "optional_original_external_evidence":optional}
+        (temp/"evidence_sha256.json").write_text(
+            json.dumps(evidence,indent=2,sort_keys=True)+"\n")
         os.replace(temp,out)
         return report
     finally:
@@ -205,8 +267,14 @@ def main(argv=None):
     p.add_argument("--output-dir",required=True,type=Path)
     p.add_argument("--mode",choices=("prepared","infer"),default="prepared")
     p.add_argument("--rscript",default="Rscript")
+    p.add_argument("--empirical-source-csv",type=Path,default=None,
+       help="Original heldout-tank measured error/XYZ rows; optional, never synthetic")
+    p.add_argument("--events-csv",type=Path,default=None,
+       help="Original event_id,time_s,event_type source; no timecode inference")
     a=p.parse_args(argv)
-    result=execute(a.config,a.output_dir,a.mode,rscript=a.rscript)
+    result=execute(a.config,a.output_dir,a.mode,rscript=a.rscript,
+                   empirical_source=a.empirical_source_csv,
+                   events_source=a.events_csv)
     print(json.dumps({"status":result["status"],
         "n_stereo_observations":result["n_3d_rows"],
         "n_auto_linked_pairs":result["n_provisional_pair_ids"],
