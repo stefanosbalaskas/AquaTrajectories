@@ -1,0 +1,82 @@
+name: Wave 14I - real Fraunhofer training and Datumaro source split audit
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_fraunhofer_train_split_audit.py"
+      - "tests/python/test_fraunhofer_train_split_audit.py"
+      - "docs/FRAUNHOFER_TRAIN_DATUMARO_SOURCE_SPLIT.md"
+      - ".github/workflows/fraunhofer-training-source-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_fraunhofer_train_split_audit.py"
+      - "tests/python/test_fraunhofer_train_split_audit.py"
+      - ".github/workflows/fraunhofer-training-source-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  original-fish-training-source-independence-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Original source leakage and zip-safety contracts
+        run: |
+          python -m py_compile inst/python/aqt_fraunhofer_train_split_audit.py
+          python -m unittest discover -s tests/python -p "test_fraunhofer_train_split_audit.py" -v
+      - name: Download original full A B Datumaro and independent training YOLO source archives
+        shell: bash
+        run: |
+          # HHI issuer chain fails CA verification on Linux runners.
+          # --insecure is an explicit SOURCE INSPECTION LIMITATION:
+          # do NOT equate recorded SHA256 with independently certified peer.
+          BASE="https://cvg.hhi.fraunhofer.de/FishTrackingData"
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-filesize 3500000000 --max-time 660 \
+            "$BASE/video_a/datumaro_a.zip" \
+            -o "$RUNNER_TEMP/fraunhofer_datumaro_a.zip"
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-filesize 3500000000 --max-time 660 \
+            "$BASE/video_b/datumaro_b.zip" \
+            -o "$RUNNER_TEMP/fraunhofer_datumaro_b.zip"
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-filesize 3500000000 --max-time 660 \
+            "$BASE/training_yolo_ultralytics.zip" \
+            -o "$RUNNER_TEMP/fraunhofer_training_yolo.zip"
+      - name: Exact pixel-byte train/test leakage, original Datumaro annotation/track attribute provenance
+        shell: bash
+        run: |
+          python inst/python/aqt_fraunhofer_train_split_audit.py \
+            --datumaro-a "$RUNNER_TEMP/fraunhofer_datumaro_a.zip" \
+            --datumaro-b "$RUNNER_TEMP/fraunhofer_datumaro_b.zip" \
+            --training-yolo "$RUNNER_TEMP/fraunhofer_training_yolo.zip" \
+            --out "$RUNNER_TEMP/fraunhofer_real_source_split_audit.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"fraunhofer_real_source_split_audit.json"
+          r=json.loads(p.read_text())
+          assert r["schema"]=="aqt_wave14i_hhi_source_split_audit_v1"
+          assert len(r["sources"])==3
+          for role,meta in r["sources"].items():
+              assert meta["archive_member_counts"]["image_files"]>0
+              assert meta["archive_member_counts"]["annotation_or_config_files"]>0
+              assert not meta["original_source_tls_peer_verified"]
+              print("ORIGINAL source",role,meta["original_archive_sha256"],
+                    "image_count",meta["archive_member_counts"]["image_files"])
+          assert r["verified_no_exact_file_duplicates_between_train_and_evaluation"],(
+              "SOURCE LEAKAGE: training includes EXACT SAME ORIGINAL SOURCE IMAGE BYTES")
+          assert not r["video_holdout_not_temporally_correlated_verified"]
+          assert not r["detector_weights_trained_by_AquaTrajectories"]
+          print("Exact identical image-byte overlap check PASSED; independent cohorts remain UNVERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wave14i-original-fraunhofer-datumaro-training-split-source-evidence
+          path: ${{ runner.temp }}/fraunhofer_real_source_split_audit.json
