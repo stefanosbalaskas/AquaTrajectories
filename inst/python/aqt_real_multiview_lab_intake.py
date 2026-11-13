@@ -271,7 +271,10 @@ def main(argv=None):
     p.add_argument("--video-root",type=Path,default=None)
     p.add_argument("--out",type=Path,required=True)
     a=p.parse_args(argv)
-    if a.out.exists():raise FileExistsError("Never overwrite original lab intake evidence")
+    out_markers=a.out.with_name(a.out.stem+"_R_markers.csv")
+    out_targets=a.out.with_name(a.out.stem+"_R_targets.csv")
+    if any(p.exists() for p in (a.out,out_markers,out_targets)):
+        raise FileExistsError("Never overwrite original lab intake evidence or R handoff tables")
     sources={"videos":a.videos,"pulses":a.pulses,"targets":a.targets,
              "events":a.events}
     result=qualify(source_table(a.videos,VIDEO_COLUMNS),
@@ -283,6 +286,23 @@ def main(argv=None):
     result["source_CSV_sha256"]={name:file_sha256(path)
                                   for name,path in sources.items()}
     a.out.parent.mkdir(parents=True,exist_ok=True)
+    with out_markers.open("w",newline="",encoding="utf-8") as f:
+        columns=["session_id","camera_id","marker_id","time_s"]
+        w=csv.DictWriter(f,fieldnames=columns)
+        w.writeheader()
+        w.writerows(result["R_aqt_sync_holdout_fit_markers"])
+    with out_targets.open("w",newline="",encoding="utf-8") as f:
+        columns=TARGET_COLUMNS[:15]
+        w=csv.DictWriter(f,fieldnames=columns)
+        w.writeheader()
+        w.writerows(result["R_aqt_target_trial_table_targets"])
+    result["R_handoff_csv_sha256"]={
+        out_markers.name:file_sha256(out_markers),
+        out_targets.name:file_sha256(out_targets)}
+    result["R_handoff_paths"]={
+        "aqt_sync_holdout_fit_markers":out_markers.name,
+        "aqt_target_trial_table_targets":out_targets.name}
+    result["real_video_codec_stream_decode_verified"]=False
     a.out.write_text(json.dumps(result,sort_keys=True,indent=2)+"\n")
     print(json.dumps({key:result[key] for key in (
         "source_camera_count","n_source_sessions","n_raw_original_pulse_rows",
