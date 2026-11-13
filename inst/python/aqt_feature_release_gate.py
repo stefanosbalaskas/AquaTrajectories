@@ -36,7 +36,7 @@ FEATURES={
    "claims":"automatic geometric candidate identity; independent biological re-ID pending"},
  "automatic_original_video_to_refractive_3d":{
    "files":["inst/python/aqt_video_to_3d.py",
-            "inst/exec/aqt_video_to_3d_native.R",
+            "inst/scripts/aqt_video_to_3d_native.R",
             "tests/python/fixture_stereo_bundles.py",
             "tests/python/test_video_to_3d.py"],
    "tests":["video_cli_contract","native_2d_to_3d_roundtrip"],
@@ -196,7 +196,7 @@ def audit(repo,strict=False,run_tests=True):
         if all((repo/p).is_file() for p in [
             "inst/python/aqt_video_to_3d.py",
             "tests/python/fixture_stereo_bundles.py",
-            "inst/exec/aqt_video_to_3d_native.R",
+            "inst/scripts/aqt_video_to_3d_native.R",
             "R/automatic-crossview-refractive.R"]):
             tests["native_2d_to_3d_roundtrip"]=_native_roundtrip(repo)
         else:
