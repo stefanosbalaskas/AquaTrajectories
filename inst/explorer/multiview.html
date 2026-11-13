@@ -56,6 +56,7 @@ footer{padding:20px;text-align:center;color:#9eb7ca}
 <label>Original camera-frame clocks <input id="framesFile" type="file" accept=".csv"></label>
 <label>Camera-local 2D fish trajectories <input id="tracksFile" type="file" accept=".csv"></label>
 <label>Reconstructed 3D fish tracks <input id="xyzFile" type="file" accept=".csv"></label>
+<label>Original 3D source provenance/units <input id="stereoAuditFile" type="file" accept=".json"></label>
 <label>Provisional cross-camera links <input id="linksFile" type="file" accept=".csv"></label>
 <label>Experiment events (optional) <input id="eventsFile" type="file" accept=".csv"></label>
 <label>Empirical joint uncertainty (optional) <input id="uncertaintyFile" type="file" accept=".json"></label>
@@ -113,12 +114,12 @@ footer{padding:20px;text-align:center;color:#9eb7ca}
 import {parseCSV,normalizeTracks,normalizeSceneTracks,
         normalizeCameraLinks,validateMultiviewFrames,
         normalizeEvents,cameraClockAt,masterSourcePTSAt,
-        project3D,sceneSegments,eventsAt,validateEmpiricalUncertainty,
-        multiviewAudit} from "./multiview-core.mjs";
+        project3D,sceneSegments,eventsAt,validate3DSourceAudit,
+        validateEmpiricalUncertainty,multiviewAudit} from "./multiview-core.mjs";
 const $=x=>document.getElementById(x);
 const canvas=$("scene3d"),g=canvas.getContext("2d");
 let state={frames:[],tracks:[],xyz:[],links:[],events:[],
-           uncertainty:null,notes:[],videos:new Map(),
+           uncertainty:null,stereoAudit:null,notes:[],videos:new Map(),
            cameras:[],minTime:0,maxTime:0,audit:null,renderedSession:""};
 const n=(v,d=3)=>Number(v).toFixed(d);
 const read=async(id,required)=> {
@@ -227,8 +228,13 @@ function drawVideoCamera(camera,time,session){
     p.camera_id===camera&&p.observed&&
     Math.abs(p.time_s-frame.time_s)<=tolerance);
   for(const p of observed){
-    const x=p.x/frame.width_px*overlay.width;
-    const y=p.y/frame.height_px*overlay.height;
+    // Align original fish pixels with video's contained/letterboxed aspect.
+    const scale=Math.min(overlay.width/frame.width_px,
+                         overlay.height/frame.height_px);
+    const offsetX=(overlay.width-frame.width_px*scale)/2;
+    const offsetY=(overlay.height-frame.height_px*scale)/2;
+    const x=offsetX+p.x*scale;
+    const y=offsetY+p.y*scale;
     ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);
     ctx.lineWidth=3;ctx.strokeStyle=color(p.track_id);ctx.stroke();
     ctx.fillStyle="#fff";ctx.font="bold 15px sans-serif";
@@ -312,15 +318,21 @@ async function load(){
   const linksText=await read("linksFile",false);
   const eventsText=await read("eventsFile",false);
   const uncertaintyText=await read("uncertaintyFile",false);
+  const stereoText=await read("stereoAuditFile",false);
+  const sourceScene=xyzText?parseCSV(xyzText):[];
+  const scene=sourceScene.length?normalizeSceneTracks(sourceScene):[];
+  const originalAudit=validate3DSourceAudit(
+    stereoText?JSON.parse(stereoText):null,scene.length);
+  const empirical=uncertaintyText?
+    validateEmpiricalUncertainty(JSON.parse(uncertaintyText),
+                                 originalAudit?.xyz_units):null;
   const next={
     frames:validateMultiviewFrames(parseCSV(sourceFrames)),
     tracks:normalizeTracks(parseCSV(sourceTracks)),
-    xyz:xyzText?(parseCSV(xyzText).length?
-      normalizeSceneTracks(parseCSV(xyzText)):[]):[],
+    xyz:scene,stereoAudit:originalAudit,
     links:linksText?normalizeCameraLinks(parseCSV(linksText)):[],
     events:eventsText?normalizeEvents(parseCSV(eventsText)):[],
-    uncertainty:uncertaintyText?
-      validateEmpiricalUncertainty(JSON.parse(uncertaintyText)):null};
+    uncertainty:empirical};
   next.audit=multiviewAudit(next.tracks,next.xyz,next.frames,next.links,
                            next.events,next.uncertainty);
   releaseVideos();
