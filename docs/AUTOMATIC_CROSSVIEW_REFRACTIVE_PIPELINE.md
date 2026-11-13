@@ -38,3 +38,35 @@ separately measured XYZ as external validation requirements.
 - Cross-view fish association should eventually include appearance, anatomy, trajectory priors and validated probabilistic calibration beyond this geometry-first baseline.
 
 See scientific gates [#46](https://github.com/stefanosbalaskas/AquaTrajectories/issues/46) and [#51](https://github.com/stefanosbalaskas/AquaTrajectories/issues/51). Passing software CI must not automatically certify external biological fish identities.
+
+## Integrated source pipeline optional uncertainty and events
+
+`inst/python/aqt_video_to_3d.py` now supports:
+- `--mode infer`: 2–6 original user-supplied videos, frozen fish-specific
+  YOLO weights and original input video/model SHA-256 → exact PyAV
+  decoded PTS & ByteTrack source bundles → native R auto crossview
+  fish association/3D source output.
+- `--mode prepared`: accept independently SHA-verified previously
+  tracked video bundles to reproduce the R geometry without rerunning
+  the computationally expensive detector.
+- `--events-csv /data/original_events.csv`: optional original
+  `event_id,time_s,event_type`, validated and copied with its
+  unchanged SHA-256 into the atomic result bundle; event-source
+  timing has **not** been externally certified.
+- `--empirical-source-csv /data/real_joint_error.csv`: optional
+  original tank-heldout source truth/ID/calibration residual rows for
+  Wave15B's actual empirical joint uncertainty module. It generates
+  `joint_empirical_calibration.json` and adds source SHA and
+  independent-accuracy FALSE qualifiers to the same atomic
+  video→3D output; if the independent external original error source
+  or Wave15B module is missing it fails explicitly, never invents
+  uncertainty or silently defaults to a confident prior.
+
+3D results are separated into `pairwise_3d_hypotheses.csv` with
+unaltered source camera contributions, `fish_3d_tracks.csv` with
+globally reference-anchored provisional fish tracks after checking
+multi-camera disagreements, `rejected_multiview_3d.csv` recording
+inconsistent source hypotheses, and complete original 2D frames,
+tracks and camera link records. Every derived output is SHA-256
+tracked in `evidence_sha256.json`. The browser in Wave15C
+automatically accepts these file layouts when selected locally.
