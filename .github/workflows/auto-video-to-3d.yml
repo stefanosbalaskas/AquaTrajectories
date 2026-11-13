@@ -94,6 +94,30 @@ jobs:
           assert report["underwater_physical_xyz_accuracy_certified"] is False
           print("Three original source camera bundles -> globally stable provisional fish IDs -> measured XYZ software test PASSED")
           PY
+      - name: No fish detected on any camera must yield audited empty 3D (no invented XYZ)
+        run: |
+          python tests/python/fixture_stereo_bundles.py \
+            "$RUNNER_TEMP/aqt_empty_camera_pair" --no-fish
+          python inst/python/aqt_video_to_3d.py \
+            --config "$RUNNER_TEMP/aqt_empty_camera_pair/synthetic_video_3d_config.json" \
+            --mode prepared \
+            --output-dir "$RUNNER_TEMP/aqt_empty_3d"
+          python - <<'PY'
+          import csv,json,os,pathlib
+          out=pathlib.Path(os.environ["RUNNER_TEMP"])/"aqt_empty_3d"
+          report=json.loads((out/"stereo_audit.json").read_text())
+          assert report["source_frame_count"]==6,report
+          assert report["source_2d_track_rows"]==0,report
+          assert report["n_provisional_pair_ids"]==0,report
+          assert report["n_3d_rows"]==0,report
+          assert report["n_global_reference_anchored_fish"]==0,report
+          assert report["biological_identity_certified"] is False
+          assert report["underwater_physical_xyz_accuracy_certified"] is False
+          for path in ("fish_3d_tracks.csv","crossview_links.csv"):
+              with (out/path).open(newline="") as fh:
+                  assert list(csv.DictReader(fh))==[],path
+          print("Actual zero-fish original camera bundle -> auditable empty 3D software test PASSED")
+          PY
       - uses: actions/upload-artifact@v4
         if: success()
         with:
