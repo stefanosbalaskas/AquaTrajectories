@@ -1,0 +1,50 @@
+name: Wave 15C - interactive unified offline multiview 3D researcher explorer
+
+on:
+  pull_request:
+    paths:
+      - "inst/explorer/index.html"
+      - "inst/explorer/multiview.html"
+      - "inst/explorer/multiview-core.mjs"
+      - "tests/js/test-multiview-explorer.mjs"
+      - "docs/UNIFIED_MULTIVIEW_EXPLORER.md"
+      - ".github/workflows/unified-multiview-explorer.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/explorer/**"
+      - "tests/js/**"
+      - ".github/workflows/unified-multiview-explorer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  pure-local-multiview-source-clocks-and-3d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Browser module syntax and original camera clock/3D scenarios
+        run: |
+          node --check inst/explorer/core.mjs
+          node --check inst/explorer/multiview-core.mjs
+          node --test tests/js/test-explorer-core.mjs tests/js/test-multiview-explorer.mjs
+      - name: Serve complete original offline multiview browser
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory inst/explorer \
+            >/tmp/aqt-multiview-server.log 2>&1 &
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            if curl --fail --silent \
+              http://127.0.0.1:8765/multiview.html -o /tmp/aqt-multiview.html; then break; fi
+            sleep 1
+          done
+          grep -F 'AquaTrajectories — Unified Multiview Research Explorer' /tmp/aqt-multiview.html
+          grep -F 'multiview.html' inst/explorer/index.html
+          curl --fail --silent http://127.0.0.1:8765/multiview-core.mjs \
+            -o /tmp/aqt-multiview-source.mjs
+          node --check /tmp/aqt-multiview-source.mjs
+          echo "Offline multi-camera researcher browser deployed, no device or remote server"
