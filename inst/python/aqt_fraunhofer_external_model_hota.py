@@ -30,6 +30,28 @@ ORIG_FIRST=43450
 ORIG_LAST=43550
 W,H=2448,2048
 
+def _numpy_json_scalar(value):
+    """Permit only finite scalar/array NumPy metrics, without hiding errors."""
+    import numpy as np
+    if isinstance(value,np.integer):
+        return int(value)
+    if isinstance(value,np.floating):
+        number=float(value)
+        if not math.isfinite(number):
+            raise ValueError("Nonfinite floating point scientific metric")
+        return number
+    if isinstance(value,np.bool_):
+        return bool(value)
+    if isinstance(value,np.ndarray):
+        return value.tolist()
+    raise TypeError(f"Unexpected scientific JSON evidence type: {type(value).__name__}")
+
+
+def _dump_evidence(value):
+    return json.dumps(value,sort_keys=True,indent=2,
+                      default=_numpy_json_scalar,allow_nan=False)
+
+
 def source_archive(path):
     if metric.digest(path)!=ORIGINAL_A_SHA:
         raise ValueError("Source archive hash differs from frozen independently observed source")
@@ -229,7 +251,7 @@ def evaluate_frozen_model(archive,model_dir,out):
         "physical_underwater_3d_or_multicam_accuracy_certified":False,
         "fish_welfare_validated":False
     }
-    (out/"report.json").write_text(json.dumps(status,sort_keys=True,indent=2)+"\n")
+    (out/"report.json").write_text(_dump_evidence(status)+"\n")
     return status
 
 def main(argv=None):
@@ -239,14 +261,13 @@ def main(argv=None):
     ap.add_argument("--out",type=Path,required=True)
     a=ap.parse_args(argv)
     data=evaluate_frozen_model(a.source_archive,a.oxford_frozen_model_dir,a.out)
-    print(json.dumps({
+    print(_dump_evidence({
         x:data[x] for x in (
             "n_real_original_source_images_inferred",
             "n_model_generated_fish_boxes_score_ge_0_25",
             "n_model_bytetrack_observations",
             "official_trackeval_model_generated_tracks",
-            "detection_score_against_published_source_MOT_GT")
-    },indent=2))
+            "detection_score_against_published_source_MOT_GT")}))
     return 0
 if __name__=="__main__":
     raise SystemExit(main())
