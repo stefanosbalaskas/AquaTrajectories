@@ -1,0 +1,100 @@
+name: Wave 15E - six feature engineering release qualification and independent science block
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_feature_release_gate.py"
+      - "tests/python/test_feature_release_gate.py"
+      - "docs/ENGINEERING_FEATURE_RELEASE_GATES.md"
+      - ".github/workflows/complete-feature-release.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/automatic-crossview-refractive.R"
+      - "inst/python/aqt_video_to_3d.py"
+      - "inst/python/aqt_joint_empirical_uncertainty.py"
+      - "inst/python/aqt_aci_physical_controller.py"
+      - "inst/explorer/multiview.html"
+      - "inst/python/aqt_feature_release_gate.py"
+      - ".github/workflows/complete-feature-release.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source_feature_evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+      - name: Release gate cannot be bypassed by source-file inventory or false science claims
+        run: |
+          python -m py_compile inst/python/aqt_feature_release_gate.py
+          python -m unittest discover -s tests/python -p "test_feature_release_gate.py" -v
+      - name: Explicit scientific release must FAIL even if software tests pass
+        run: |
+          python - <<'PY'
+          import subprocess,sys
+          cmd=[sys.executable,"inst/python/aqt_feature_release_gate.py",
+               "--mode","scientific_release","--no-tests"]
+          p=subprocess.run(cmd)
+          assert p.returncode==2,("Scientific release was not explicitly rejected",p.returncode)
+          print("SCIENTIFIC RELEASE NOT APPROVED: correct fail-closed behaviour")
+          PY
+      - name: Source-provenanced features inventory
+        run: |
+          python inst/python/aqt_feature_release_gate.py \
+            --mode inventory --no-tests \
+            --report "$RUNNER_TEMP/feature_qualification_inventory.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"feature_qualification_inventory.json"
+          x=json.loads(p.read_text())
+          assert x["n_required_software_features"]==6
+          assert x["n_qualified_software_features"]==0,(
+              "Unexecuted test evidence must NEVER mark a software feature qualified")
+          assert x["scientific_release_permitted"] is False
+          print("Source-only feature inventory qualified no features (tests intentionally not run)")
+          PY
+      - name: Full feature engineering release only if all six source modules exist
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"feature_qualification_inventory.json"
+          x=json.loads(p.read_text())
+          with (pathlib.Path(os.environ["RUNNER_TEMP"])/"all_sources_present.txt").open("w") as f:
+              f.write("true" if not x["missing_software_source_files"] else "false")
+          print("ALL SIX feature sources available:",not x["missing_software_source_files"])
+          PY
+          if [ "$(cat "$RUNNER_TEMP/all_sources_present.txt")" != "true" ]; then
+            echo "Software dependencies not all merged; no feature release claimed."
+            exit 0
+          fi
+          python inst/python/aqt_feature_release_gate.py \
+            --mode feature_release \
+            --report "$RUNNER_TEMP/engineering_feature_release.json" \
+            --archive "$RUNNER_TEMP/AquaTrajectories_engineering_source.tar.gz"
+          test -s "$RUNNER_TEMP/AquaTrajectories_engineering_source.tar.gz"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wave15e-feature-release-source-evidence
+          path: |
+            ${{ runner.temp }}/feature_qualification_inventory.json
+            ${{ runner.temp }}/engineering_feature_release.json
+            ${{ runner.temp }}/AquaTrajectories_engineering_source.tar.gz
