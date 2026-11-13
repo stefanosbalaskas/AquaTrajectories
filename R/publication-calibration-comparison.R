@@ -20,13 +20,13 @@ aqt_plot_calibration_comparison <- function(
   units <- match.arg(units)
   required <- c("method","target_id",
       "truth_x","truth_y","truth_z","estimate_x","estimate_y","estimate_z")
+  if (!is.logical(require_holdout) || length(require_holdout)!=1L ||
+      is.na(require_holdout))
+    stop("require_holdout must be TRUE or FALSE",call.=FALSE)
   if (require_holdout) required <- c(required,"partition")
   x <- .aqt_pub_data(data,required,"Calibration comparison")
   methods <- .aqt_pub_scope(x,"method")
   ids <- .aqt_pub_scope(x,"target_id")
-  if (!is.logical(require_holdout) || length(require_holdout)!=1L ||
-      is.na(require_holdout))
-    stop("require_holdout must be TRUE or FALSE",call.=FALSE)
   if (require_holdout) {
     parts <- .aqt_pub_scope(x,"partition")
     if (!all(parts %in% c("fit","holdout")))
