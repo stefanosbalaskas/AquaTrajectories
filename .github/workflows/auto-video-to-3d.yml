@@ -68,6 +68,32 @@ jobs:
           assert all(row["observed"].upper()=="TRUE" for row in rows)
           print("Actual native 2D fish bundle -> automatic IDs -> refractive 3D integration PASSED; synthetic only")
           PY
+      - name: Three original synthetic cameras to globally consistent native fish identities and XYZ
+        run: |
+          python tests/python/fixture_stereo_bundles.py \
+            "$RUNNER_TEMP/aqt_three_cameras" --three-cameras
+          python inst/python/aqt_video_to_3d.py \
+            --config "$RUNNER_TEMP/aqt_three_cameras/synthetic_video_3d_config.json" \
+            --mode prepared \
+            --output-dir "$RUNNER_TEMP/aqt_three_camera_fused_3d"
+          python - <<'PY'
+          import csv,json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"aqt_three_camera_fused_3d"
+          report=json.loads((root/"stereo_audit.json").read_text())
+          assert len(report["original_camera_records"])==3,report
+          assert report["n_original_pairwise_3d_hypotheses"]==12,report
+          assert report["n_3d_rows"]==6,report
+          assert report["n_global_reference_anchored_fish"]==2,report
+          assert report["n_rejected_incompatible_3d_source_observations"]==0,report
+          with (root/"fish_3d_tracks.csv").open(newline="") as f:
+              fish=list(csv.DictReader(f))
+          assert len(fish)==6
+          assert all(int(x["n_contributing_secondary_views"])==2 for x in fish)
+          assert max(abs(float(x["z"])-5) for x in fish)<1e-5
+          assert report["biological_identity_certified"] is False
+          assert report["underwater_physical_xyz_accuracy_certified"] is False
+          print("Three original source camera bundles -> globally stable provisional fish IDs -> measured XYZ software test PASSED")
+          PY
       - uses: actions/upload-artifact@v4
         if: success()
         with:
