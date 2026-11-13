@@ -400,7 +400,8 @@ aqt_multiview_global_fuse <- function(
   }
   if (length(unique(units))>1L ||
       length(unique(primary))>1L ||
-      any(names(pairwise_results)==primary[1L]))
+      (length(primary)>0L &&
+       any(names(pairwise_results)==primary[[1L]])))
     stop("All source camera pairs must share reference camera and world units",
          call.=FALSE)
   empty <- data.frame(session_id=character(),camera_id=character(),
