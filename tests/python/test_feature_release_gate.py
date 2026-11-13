@@ -104,9 +104,13 @@ class ScientificEngineeringGate(unittest.TestCase):
             self.assertEqual(sha,m.hash_file(archive))
             with tarfile.open(archive) as t:
                 names=t.getnames()
-            self.assertTrue(all(x.startswith("AquaTrajectories/") for x in names))
+            self.assertTrue(all(x.startswith("aquaTrajectories/") for x in names))
             self.assertFalse(any("secret" in name or name.endswith(".mp4")
                                  for name in names))
+            self.assertTrue(any(x.startswith("aquaTrajectories/R/")
+                                for x in names))
+            self.assertTrue(any(x.startswith("aquaTrajectories/man/")
+                                for x in names))
             with self.assertRaisesRegex(FileExistsError,"overwrite"):
                 m.make_archive(root,archive,report)
 
