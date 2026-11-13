@@ -54,10 +54,11 @@ test_that("calibration panels exclude fitting targets and score XYZ in units",{
 
 test_that("occupancy uses tank replication, not number of fish frames",{
   d <- expand.grid(scenario=c("feed","control"),
-                   tank_id=c("T01","T02"),time_s=0:4,
+                   replicate=1:2,time_s=0:4,
                    KEEP.OUT.ATTRS=FALSE)
-  d$area_fraction <- ifelse(d$tank_id=="T01",.2,.6)
-  d_extra <- d[d$tank_id=="T01" & d$time_s==2,,drop=FALSE]
+  d$tank_id <- paste(d$scenario,d$replicate,sep="_")
+  d$area_fraction <- ifelse(d$replicate==1L,.2,.6)
+  d_extra <- d[d$replicate==1L & d$time_s==2,,drop=FALSE]
   x <- rbind(d,d_extra,d_extra,d_extra)
   f <- tempfile(fileext=".pdf")
   grDevices::pdf(f,width=11,height=9)
@@ -72,7 +73,7 @@ test_that("occupancy uses tank replication, not number of fish frames",{
   unlink(f)
   x$area_fraction[1] <- 2
   expect_error(aqt_plot_occupancy_timeseries(x),"between 0 and 1")
-  d$tank_id[d$scenario=="control"] <- "T03"
+  d$tank_id <- paste0("T",d$replicate)
   expect_error(aqt_plot_occupancy_timeseries(d),"multiple scenarios")
 })
 
