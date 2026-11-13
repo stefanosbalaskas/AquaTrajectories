@@ -42,7 +42,11 @@ class ScientificEngineeringGate(unittest.TestCase):
             fake={"status":"passed","returncode":0,"stdout_tail":"","stderr_tail":""}
             good={"status":"passed","synthetic_3d_xyz_software_verified":True,
                   "original_physical_xyz_accuracy_verified":False}
-            with patch.object(m,"_run",return_value=fake),patch.object(
+            def qualified(cmd,repo,timeout=180):
+                if "--mode" in cmd and "scientific_release" in cmd:
+                    return {"status":"failed","returncode":2}
+                return fake
+            with patch.object(m,"_run",side_effect=qualified),patch.object(
                 m,"_native_roundtrip",return_value=good):
                 report=m.audit(root,run_tests=True,strict=True)
             self.assertEqual(report["n_qualified_software_features"],6)
