@@ -30,14 +30,14 @@ test_that("calibration panels exclude fitting targets and score XYZ in units",{
     partition=rep(c("fit","holdout","holdout","holdout"),2L),
     truth_x=rep(c(0,1,2,3),2L),truth_y=rep(c(0,1,1,1),2L),
     truth_z=rep(c(1,1,2,3),2L),
-    estimate_x=rep(c(0,1.1,2.1,3.1),2L),
+    estimate_x=rep(c(0,1.05,2.1,3.15),2L),
     estimate_y=rep(c(0,1,1,1),2L),
     estimate_z=rep(c(1,1,2,3),2L))
   f <- tempfile(fileext=".pdf");grDevices::pdf(f,width=12,height=9)
   tryCatch({
     z <- aqt_plot_calibration_comparison(d,units="cm")
     expect_equal(z$n_targets,c(3L,3L))
-    expect_equal(z$rmse_3d,c(.1,.1),tolerance=1e-10)
+    expect_equal(z$rmse_3d,rep(sqrt(mean(c(.05,.10,.15)^2)),2),tolerance=1e-10)
     expect_true(attr(z,"fit_targets_excluded"))
     expect_false(attr(z,"independent_physical_survey_verified"))
   },finally=grDevices::dev.off())
