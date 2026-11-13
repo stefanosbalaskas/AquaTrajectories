@@ -204,11 +204,11 @@ aqt_plot_trajectory_storyboard3d <- function(
     py <- proj(x[1L],mean(y),z[1L])
     pz <- proj(x[2L],y[2L],mean(z))
     graphics::text(px[1L,1L],px[1L,2L]-.075,
-                   paste0("X (",units,")"),cex=.66)
+                   paste0("X: ",format(diff(x),digits=4), " ",units),cex=.66)
     graphics::text(py[1L,1L]-.07,py[1L,2L],
-                   paste0("Y (",units,")"),cex=.66)
+                   paste0("Y: ",format(diff(y),digits=4), " ",units),cex=.66)
     graphics::text(pz[1L,1L]+.085,pz[1L,2L],
-                   paste0("Z (",units,")"),cex=.66)
+                   paste0("Z: ",format(diff(z),digits=4), " ",units),cex=.66)
   }
 
   oldpar <- graphics::par(no.readonly=TRUE)
