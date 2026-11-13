@@ -1,0 +1,111 @@
+name: Wave 14H - real external model detections two tracker official metrics and failure strata
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_external_fish_comparative_robustness.py"
+      - "tests/python/test_external_fish_comparative_robustness.py"
+      - "docs/FRAUNHOFER_REAL_MODEL_TRACKER_COMPARISON.md"
+      - ".github/workflows/external-fish-tracker-comparison.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_external_fish_comparative_robustness.py"
+      - "tests/python/test_external_fish_comparative_robustness.py"
+      - ".github/workflows/external-fish-tracker-comparison.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-verified-two-tracker-model-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Freeze numerical and original official tracking score runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.23.5" "scipy==1.10.1"
+          git clone "https://github.com/JonathonLuiten/TrackEval.git" \
+            "$RUNNER_TEMP/trackeval"
+          git -C "$RUNNER_TEMP/trackeval" checkout 12c8791b303e0a0b50f753af204249e622d0281a
+          test "$(git -C "$RUNNER_TEMP/trackeval" rev-parse HEAD)" = \
+            12c8791b303e0a0b50f753af204249e622d0281a
+          python -m pip install --no-deps --no-build-isolation -e "$RUNNER_TEMP/trackeval"
+      - name: Known-truth algorithm, provenance, source-label and density contracts
+        run: |
+          python -m py_compile inst/python/aqt_external_fish_comparative_robustness.py
+          python -m unittest discover -s tests/python -p "test_external_fish_comparative_robustness.py" -v
+          python -m unittest discover -s tests/python -p "test_official_fish_trackeval.py" -v
+      - name: Retrieve prior independently CI-qualified Wave 14G frozen model-generated source tracks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run list --repo stefanosbalaskas/AquaTrajectories \
+            --workflow fraunhofer-external-model-hota.yml \
+            --status success --limit 40 \
+            --json databaseId,headSha,event \
+            > "$RUNNER_TEMP/qualified_model_runs.json"
+          RUN=$(python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"qualified_model_runs.json"
+          rows=json.loads(p.read_text())
+          if not rows:
+              raise SystemExit("Missing SUCCESSFUL Wave14G source model evaluation. This wave must NOT certify unqualified output.")
+          print(rows[0]["databaseId"])
+          PY
+          )
+          echo "Reuse source-model qualification from GitHub Actions run $RUN"
+          gh run download "$RUN" --repo stefanosbalaskas/AquaTrajectories \
+            --name wave14g-real-ricefish-cross-domain-model-detection-and-trackeval \
+            --dir "$RUNNER_TEMP/model_generated"
+          test -f "$RUNNER_TEMP/model_generated/report.json"
+          test -f "$RUNNER_TEMP/model_generated/fish_model_detections.csv"
+          test -f "$RUNNER_TEMP/model_generated/fish_model_bytetrack.csv"
+          echo "$RUN" > "$RUNNER_TEMP/prior_source_run_id.txt"
+      - name: Acquire same original fish source ZIP, verified by known independent SHA-256
+        run: |
+          # Source HHI server has an incomplete TLS issuer chain. This
+          # is discovery source validation only and not proof of peer identity.
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            -o "$RUNNER_TEMP/original_hhi_a_mot.zip"
+          printf "%s  %s\n" \
+            18c39619b1f84ea774f16fedfac5911d92de86ab7da4aa03cf365b9b4be58ceb \
+            "$RUNNER_TEMP/original_hhi_a_mot.zip" | sha256sum -c -
+      - name: Compare BYTE vs HUNGARIAN on IDENTICAL real-model fish detections and quantify errors
+        run: |
+          python inst/python/aqt_external_fish_comparative_robustness.py \
+            --original-mot-archive "$RUNNER_TEMP/original_hhi_a_mot.zip" \
+            --model-csv "$RUNNER_TEMP/model_generated/fish_model_detections.csv" \
+            --byte-csv "$RUNNER_TEMP/model_generated/fish_model_bytetrack.csv" \
+            --model-report "$RUNNER_TEMP/model_generated/report.json" \
+            --out "$RUNNER_TEMP/external_fish_model_comparative_audit.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"external_fish_model_comparative_audit.json"
+          r=json.loads(p.read_text())
+          assert r["model_generated_predictions_not_detection_oracle"] is True
+          assert r["fish_identity_input_to_trackers"] is False
+          assert r["n_source_GT_boxes"]==9214
+          assert r["n_original_model_generated_boxes"]>=0
+          assert r["source_detection_failure_strata"]["independently_adjudicated_fish_occlusion_labels"] is False
+          assert sum(x["GT"] for x in r["source_detection_failure_strata"]["density_strata"].values())==9214
+          assert 0<=r["Hungarian_same_model_predictions"]["HOTA"]<=1
+          assert 0<=r["ByteTrack_original_model_predictions"]["HOTA"]<=1
+          assert r["Blinded_independent_source_GT_adjudication"] is False
+          print("Original same-model fish alternative tracker and overlap/density error audit PASSED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14h-fraunhofer-two-trackers-same-inferred-fish-boxes
+          path: |
+            ${{ runner.temp }}/external_fish_model_comparative_audit.json
+            ${{ runner.temp }}/prior_source_run_id.txt
