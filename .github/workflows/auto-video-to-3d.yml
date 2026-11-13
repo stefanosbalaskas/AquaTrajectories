@@ -57,6 +57,8 @@ jobs:
           report=json.loads((out/"stereo_audit.json").read_text())
           assert report["n_3d_rows"]==6,report
           assert report["n_provisional_pair_ids"]==2,report
+          assert report["n_global_reference_anchored_fish"]==2,report
+          assert report["n_rejected_incompatible_3d_source_observations"]==0,report
           assert report["biological_identity_certified"] is False
           assert report["underwater_physical_xyz_accuracy_certified"] is False
           with (out/"fish_3d_tracks.csv").open(newline="") as fh:
