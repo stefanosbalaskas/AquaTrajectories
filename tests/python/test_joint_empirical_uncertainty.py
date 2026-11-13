@@ -46,7 +46,7 @@ class JointFishEmpiricalUncertainty(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             p=Path(td)/"source.csv"
             to_csv(p,reference_rows())
-            data=m.calibrate(m.read_source(p),alpha=.05,n_draws=40,seed=17)
+            data=m.calibrate(m.read_source(p),alpha=.05,n_draws=40,seed=17,xyz_units="cm")
             self.assertEqual(data["n_original_train_tanks"],25)
             self.assertEqual(data["n_original_holdout_tanks"],5)
             self.assertEqual(data["finite_sample_order_statistic_rank"],25)
@@ -66,7 +66,7 @@ class JointFishEmpiricalUncertainty(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             p=Path(td)/"source.csv"
             to_csv(p,reference_rows(with_failure=True))
-            out=m.calibrate(m.read_source(p),n_draws=20)
+            out=m.calibrate(m.read_source(p),n_draws=20,xyz_units="cm")
             self.assertIsNone(out["finite_sample_group_max_radial_radius"])
             self.assertFalse(out["finite_sample_unconditional_joint_interval_available"])
             self.assertIsNone(out["holdout_all_frame_tank_coverage_fraction"])
@@ -101,12 +101,23 @@ class JointFishEmpiricalUncertainty(unittest.TestCase):
             to_csv(p,rows)
             self.assertFalse(m.read_source(p)[0]["detected"])
 
+    def test_physical_units_are_required_not_inferred_from_source_coordinates(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/"source.csv"
+            to_csv(path,reference_rows())
+            with self.assertRaisesRegex(ValueError,"units cm or m"):
+                m.calibrate(m.read_source(path),n_draws=20)
+            estimate=m.calibrate(m.read_source(path),n_draws=20,
+                                 xyz_units="m")
+            self.assertEqual(estimate["radius_units"],"m")
+            self.assertFalse(estimate["original_physical_XYZ_independent_survey_authenticated"])
+
     def test_cli_reports_sha_and_does_not_overwrite(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);source=root/"original_empirical.csv";output=root/"report.json"
             to_csv(source,reference_rows())
             argv=["--empirical-source-csv",str(source),
-                  "--draws","20","--out",str(output)]
+                  "--draws","20","--xyz-units","cm","--out",str(output)]
             self.assertEqual(m.main(argv),0)
             r=json.loads(output.read_text())
             self.assertEqual(r["original_source_csv_sha256"],m.sha256(source))
