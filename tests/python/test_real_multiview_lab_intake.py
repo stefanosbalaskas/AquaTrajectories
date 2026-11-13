@@ -4,6 +4,8 @@ All fixture camera pulses, tank xyz and video bytes are SYNTHETIC
 known-truth software tests, not actual fish aquarium evidence.
 """
 import hashlib
+import csv
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -106,6 +108,46 @@ class MultiviewPhysicalCaptureIntake(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"byte SHA differs"):
                 m.qualify(v,p,t,e,[f"pulse_{i}" for i in range(4)],
                           ["pulse_4","pulse_5"],video_root=root)
+
+
+    def test_complete_lab_CSV_handoff_has_exact_R_input_columns(self):
+        v,p,t,e=fixtures()
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            sources=[
+                ("videos.csv",m.VIDEO_COLUMNS,v),
+                ("pulses.csv",m.PULSE_COLUMNS,p),
+                ("targets.csv",m.TARGET_COLUMNS,t),
+                ("events.csv",m.EVENT_COLUMNS,e)]
+            for name,columns,rows in sources:
+                with (root/name).open("w",newline="") as fh:
+                    writer=csv.DictWriter(fh,fieldnames=columns)
+                    writer.writeheader();writer.writerows(rows)
+            args=[
+                "--videos",str(root/"videos.csv"),
+                "--pulses",str(root/"pulses.csv"),
+                "--targets",str(root/"targets.csv"),
+                "--events",str(root/"events.csv"),
+                "--training-pulses","pulse_0,pulse_1,pulse_2,pulse_3",
+                "--heldout-pulses","pulse_4,pulse_5",
+                "--out",str(root/"intake.json")]
+            self.assertEqual(m.main(args),0)
+            report=json.loads((root/"intake.json").read_text())
+            pulse=root/"intake_R_markers.csv"
+            target=root/"intake_R_targets.csv"
+            self.assertEqual(report["R_handoff_csv_sha256"][pulse.name],
+                             m.file_sha256(pulse))
+            self.assertEqual(report["R_handoff_csv_sha256"][target.name],
+                             m.file_sha256(target))
+            with pulse.open(newline="") as fh:
+                self.assertEqual(csv.DictReader(fh).fieldnames,
+                                 ["session_id","camera_id","marker_id","time_s"])
+            with target.open(newline="") as fh:
+                self.assertEqual(csv.DictReader(fh).fieldnames,m.TARGET_COLUMNS[:15])
+            self.assertFalse(report["real_video_codec_stream_decode_verified"])
+            self.assertFalse(report["physical_XYZ_calibration_error_measured_by_AquaTrajectories"])
+            with self.assertRaisesRegex(FileExistsError,"overwrite"):
+                m.main(args)
 
 if __name__=="__main__":
     unittest.main()
