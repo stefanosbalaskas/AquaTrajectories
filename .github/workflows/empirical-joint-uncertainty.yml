@@ -1,0 +1,45 @@
+name: Wave 15B - tank-blocked empirical joint fish uncertainty and finite-sample coverage
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_joint_empirical_uncertainty.py"
+      - "tests/python/test_joint_empirical_uncertainty.py"
+      - "docs/EMPIRICAL_JOINT_UNCERTAINTY.md"
+      - ".github/workflows/empirical-joint-uncertainty.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_joint_empirical_uncertainty.py"
+      - "tests/python/test_joint_empirical_uncertainty.py"
+      - ".github/workflows/empirical-joint-uncertainty.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  empirical-correlated-tank-block-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Empirical source residual, physical holdout and pseudoreplication contracts
+        run: |
+          python -m py_compile inst/python/aqt_joint_empirical_uncertainty.py
+          python -m unittest discover -s tests/python -p "test_joint_empirical_uncertainty.py" -v
+      - name: Scientific provenance is always external to code
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path("inst/python/aqt_joint_empirical_uncertainty.py").read_text()
+          for field in ("independent_tank_partition_contract_verified",
+                        "original_physical_XYZ_independent_survey_authenticated",
+                        "source_fish_ID_ground_truth_independently_adjudicated",
+                        "external_empirical_accuracy_scientifically_certified",
+                        "holdout_all_frame_tank_coverage_fraction"):
+              assert field in s
+          print("Correlated empirical measurement model and tank-heldout coverage contracts present; no physical animal accuracy certified")
+          PY
