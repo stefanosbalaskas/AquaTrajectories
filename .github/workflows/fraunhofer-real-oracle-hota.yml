@@ -1,0 +1,120 @@
+name: Wave 14D - real crowded fish oracle association HOTA IDF1
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_fraunhofer_oracle_bytetrack_hota.py"
+      - "tests/python/test_fraunhofer_oracle_bytetrack_hota.py"
+      - "docs/FRAUNHOFER_ORACLE_HOTA_IDF1.md"
+      - ".github/workflows/fraunhofer-real-oracle-hota.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_fraunhofer_oracle_bytetrack_hota.py"
+      - "tests/python/test_fraunhofer_oracle_bytetrack_hota.py"
+      - ".github/workflows/fraunhofer-real-oracle-hota.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  original-ricefish-oracle-identities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install real tracker plus exact official TrackEval
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.23.5" "scipy==1.10.1" \
+             "supervision==0.26.1"
+          git clone "https://github.com/JonathonLuiten/TrackEval.git" \
+            "$RUNNER_TEMP/official_trackeval"
+          git -C "$RUNNER_TEMP/official_trackeval" checkout \
+            12c8791b303e0a0b50f753af204249e622d0281a
+          test "$(git -C "$RUNNER_TEMP/official_trackeval" rev-parse HEAD)" = \
+            12c8791b303e0a0b50f753af204249e622d0281a
+          python -m pip install --no-deps --no-build-isolation -e \
+            "$RUNNER_TEMP/official_trackeval"
+      - name: Test real source separation and two independent association algorithms
+        run: |
+          python -m py_compile inst/python/aqt_fraunhofer_oracle_bytetrack_hota.py
+          python -m unittest discover -s tests/python -p "test_fraunhofer_oracle_bytetrack_hota.py" -v
+          python -m unittest discover -s tests/python -p "test_official_fish_trackeval.py" -v
+      - name: Acquire original Fraunhofer A and B fish MOT source archives
+        shell: bash
+        run: |
+          # TLS of original host not trusted by system CA. -k ONLY to
+          # investigate real original source annotations; do not certify
+          # source authenticity or prediction-blind independent accuracy.
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            -o "$RUNNER_TEMP/fraunhofer_mot_a.zip"
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_b/mot_b.zip" \
+            -o "$RUNNER_TEMP/fraunhofer_mot_b.zip"
+      - name: Actual fish identities vs ByteTrack and IoU Hungarian on both source GT-box sequences
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          expected={
+            "fraunhofer_mot_a.zip":"18c39619b1f84ea774f16fedfac5911d92de86ab7da4aa03cf365b9b4be58ceb",
+            "fraunhofer_mot_b.zip":"29b1396397b5ba74450cc1388a0be94b2920de1c45530b8e2d3b184fd07adb9d"}
+          for filename,want in expected.items():
+              h=hashlib.sha256()
+              with (root/filename).open("rb") as f:
+                  for part in iter(lambda:f.read(1<<20),b""):
+                      h.update(part)
+              assert h.hexdigest()==want,(filename,h.hexdigest())
+              print("Exact source archive SHA256 verified against prior independent CI:",filename)
+          PY
+          python inst/python/aqt_fraunhofer_oracle_bytetrack_hota.py \
+            --archive "$RUNNER_TEMP/fraunhofer_mot_a.zip" \
+            --source-url "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            --sequence A --frames 101 --width 2448 --height 2048 \
+            --out "$RUNNER_TEMP/fraunhofer_ricefish_A_oracle_metrics.json"
+          python inst/python/aqt_fraunhofer_oracle_bytetrack_hota.py \
+            --archive "$RUNNER_TEMP/fraunhofer_mot_b.zip" \
+            --source-url "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_b/mot_b.zip" \
+            --sequence B --frames 101 --width 2448 --height 2048 \
+            --out "$RUNNER_TEMP/fraunhofer_ricefish_B_oracle_metrics.json"
+          python - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          for seq in ("A","B"):
+              out=json.loads((root/f"fraunhofer_ricefish_{seq}_oracle_metrics.json").read_text())
+              assert out["declared_original_frame_count"]==101
+              expected={"A":{"boxes":9214,"ids":260,"first":43450,"last":43550},
+                        "B":{"boxes":1969,"ids":45,"first":13654,"last":13754}}[seq]
+              assert out["original_source_box_count"]==expected["boxes"],out
+              assert out["real_id_count"]==expected["ids"],out
+              assert out["published_source"]["original_source_first_frame"]==expected["first"],out
+              assert out["published_source"]["original_source_last_frame"]==expected["last"],out
+              assert out["published_source"]["original_image_frame_coverage_verified"]
+              assert out["actual_real_fish_annotations_scored"] is True
+              assert out["tracking_identity_under_oracle_detections_only"] is True
+              assert out["independent_model_based_detection_accuracy_certified"] is False
+              assert out["source_original_tls_peer_verified"] is False
+              for name,metrics in out["metrics"].items():
+                  assert metrics["official_metric_implementation"]=="JonathonLuiten/TrackEval"
+                  assert 0<=metrics["HOTA"]<=1 and 0<=metrics["IDF1"]<=1
+                  assert metrics["n_frames_including_declared_empty"]==101
+                  print("REAL SOURCE DETECTION ORACLE",seq,name,
+                        "HOTA",metrics["HOTA"],"IDF1",metrics["IDF1"],
+                        "IDSW",metrics["IDSW"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14d-actual-fraunhofer-oracle-fish-identity-metrics
+          path: |
+            ${{ runner.temp }}/fraunhofer_ricefish_A_oracle_metrics.json
+            ${{ runner.temp }}/fraunhofer_ricefish_B_oracle_metrics.json
