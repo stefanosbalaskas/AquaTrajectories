@@ -86,8 +86,13 @@ def hash_file(path):
 def _run(cmd,repo,timeout=180):
     start=time.monotonic()
     try:
+        # Windows may default to a legacy codepage (e.g. Greek cp1253),
+        # while R/Python/Node child processes print UTF-8 diagnostics.
+        # Decode explicitly and fail closed on the subprocess *exit status*;
+        # undecodable diagnostic bytes must never crash the release gate.
         proc=subprocess.run(cmd,cwd=repo,stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,text=True,
+                            encoding="utf-8",errors="replace",
                             timeout=timeout,check=False)
         status="passed" if proc.returncode==0 else "failed"
         return {
