@@ -98,6 +98,15 @@ class Video3DOrchestration(unittest.TestCase):
                 engine=json.loads(Path(cmd[2]).read_text())
                 self.assertEqual(len(engine["cameras"]),2)
                 self.assertFalse(engine["physical_underwater_accuracy_certified"])
+                # The native engine must publish all six derived CSV files;
+                # the mock simulates them, while actual R integration CI
+                # checks original known XYZ and real CSV schemas separately.
+                for filename in (
+                   "source_frames.csv","source_2d_tracks.csv",
+                   "fish_3d_tracks.csv","pairwise_3d_hypotheses.csv",
+                   "crossview_links.csv","rejected_multiview_3d.csv"):
+                    (Path(cmd[3])/filename).write_text(
+                        "synthetic_mocked_source_header\\n")
                 (Path(cmd[3])/"stereo_audit.json").write_text(json.dumps({
                   "schema_version":"1.0","input_config_sha256":
                       engine["input_config_sha256"],
