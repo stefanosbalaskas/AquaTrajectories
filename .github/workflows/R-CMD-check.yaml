@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   r-cmd-check:
@@ -27,16 +27,12 @@ jobs:
           extra-packages: any::roxygen2, any::rcmdcheck
       - name: Generate R documentation
         run: Rscript -e 'roxygen2::roxygenise()'
-      - name: Persist generated package documentation
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+      - name: Verify tracked documentation is synchronized (never push bot commits)
         shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add NAMESPACE man
-          if ! git diff --cached --quiet; then
-            git commit -m "Synchronize roxygen documentation"
-            git push origin HEAD:${{ github.head_ref }}
+          if ! git diff --exit-code -- NAMESPACE man; then
+            echo "::error::Generated R NAMESPACE/man drift. Run roxygen2::roxygenise() locally and commit the reviewed changes."
+            exit 1
           fi
       - name: Test R package
         run: Rscript -e 'rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "warning")'
