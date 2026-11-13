@@ -10,6 +10,26 @@ Automatic assignment is **a geometrical hypothesis**, not independently certifie
 
 This wave upgrades the native software API from **reviewer-selected matches only** to **automatic cross-camera assignment plus refractive 3D reconstruction**, while retaining all existing reviewer-mediated functions for adjudication. Synthetic two-fish test geometry checks exact XYZ, one-to-one timestamps, hard candidate caps, abstention on symmetrical ties, and non-overlapping timestamps returning NULL.
 
+## Global three-or-more-camera reference-anchored fish fusion
+
+`aqt_multiview_global_fuse()` now reconciles provisional links from
+the same reference camera across **multiple independently named secondary
+camera streams**. It groups 3D hypotheses by exact original source
+reference-fish identity and timestamp, checks minimum distinct camera
+view count and **rejects incompatible refractively reconstructed XYZ**
+instead of averaging disagreement into plausible fish positions.
+Accepted 3D rows receive a single stable `GLOBAL_REF_<session>_<id>`
+provisional identity and a ray-separation-weighted XYZ estimate.
+The separately retained `pairwise_3d_hypotheses.csv` preserves
+each actual source secondary-camera triangulation; the unified
+`fish_3d_tracks.csv` contains at most one global XYZ per reference
+fish frame, and `rejected_multiview_3d.csv` records incompatible
+cross-view source reconstructions.
+
+This resolves global N-view **geometric integration** while leaving
+physical source camera synchronization, biological ID identity and
+separately measured XYZ as external validation requirements.
+
 ## Limits before feature/research release
 
 - Camera models, undistorted source pixels, actual camera-video PTS and any physical clock alignment are **supplied**; this module does not train a detector or estimate camera intrinsics.
