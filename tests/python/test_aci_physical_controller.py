@@ -1,5 +1,7 @@
 """Fail-closed physical fish-device control API; NO actual hardware actuated."""
 from pathlib import Path
+import json
+import tempfile
 import sys
 import unittest
 
@@ -96,6 +98,33 @@ class PhysicalACIFailClosed(unittest.TestCase):
         self.assertFalse(bridge.output_on)
         self.assertEqual(len(bridge.commands),1)
         self.assertEqual(c.count,0)
+
+    def test_original_aci_event_replay_prevention_and_offline_simulation_cli(self):
+        p=safety();bridge=m.SimulatedBridge(p)
+        ticker=[100.]
+        c=m.ACIController(p,bridge,clock=lambda:ticker[0])
+        c.arm("RESEARCHER1")
+        self.assertEqual(c.process(event(100.,"E1"))["status"],"simulated")
+        ticker[0]=110.
+        self.assertEqual(c.process(event(110.,"E1"))["reason"],
+                         "duplicate_original_event_replay")
+        self.assertEqual(len(bridge.commands),1)
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            profile=root/"profile.json";profile.write_text(json.dumps(safety()))
+            events=root/"events.jsonl"
+            events.write_text("\n".join(json.dumps(event(t,uid))
+                for t,uid in ((100.,"E1"),(102.,"E2"),(110.,"E3")))+"\n")
+            out=root/"evidence.json"
+            self.assertEqual(m.main(["--profile",str(profile),
+                "--mode","simulation","--operator-id","RESEARCHER1",
+                "--events-jsonl",str(events),"--out",str(out)]),0)
+            evidence=json.loads(out.read_text())
+            self.assertEqual(evidence["n_commands_accepted"],2)
+            self.assertEqual(evidence["n_commands_rejected"],1)
+            self.assertEqual(evidence["mode"],"simulation")
+            self.assertFalse(evidence["physical_hardware_e_stop_independently_tested"])
+            self.assertFalse(evidence["terminated_by_fault"])
 
     def test_safety_profile_rejects_invalid_limits_and_bad_hardware_mode(self):
         p=safety()
