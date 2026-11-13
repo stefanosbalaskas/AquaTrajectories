@@ -157,3 +157,19 @@ test_that("global 3D view count and source ID authenticity fail closed",{
   expect_error(aqt_multiview_global_fuse(list(SIDE=bad2)),
                "reused by a secondary camera")
 })
+
+# Real recordings can have no confidently tracked fish; this must be
+# an audited empty outcome, never an NA condition or fabricated position.
+test_that("all camera pairs without detectable fish return an empty 3D result", {
+  none <- structure(list(tracks_3d=NULL),
+                    class="aqt_auto_refractive_pipeline")
+  fused <- aqt_multiview_global_fuse(
+    list(SIDE=none,DIAGONAL=none),min_views=2L)
+  expect_s3_class(fused,"aqt_multiview_global_fusion")
+  expect_null(fused$tracks_3d)
+  expect_equal(nrow(fused$per_observation),0L)
+  expect_equal(nrow(fused$rejected),0L)
+  expect_identical(fused$n_distinct_reference_fish,0L)
+  expect_false(fused$independently_verified_biological_identity)
+  expect_false(fused$independent_physical_XYZ_accuracy_certified)
+})
