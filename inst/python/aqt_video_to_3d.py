@@ -135,7 +135,7 @@ def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.exec
     out.parent.mkdir(parents=True,exist_ok=True)
     here=Path(__file__).resolve()
     repo=here.parents[2]
-    native=repo/"inst/exec/aqt_video_to_3d_native.R"
+    native=repo/"inst/scripts/aqt_video_to_3d_native.R"
     if not native.is_file():raise FileNotFoundError("Native 3D R engine missing")
     temp=Path(tempfile.mkdtemp(prefix=".aqt-3d-",dir=out.parent))
     try:
@@ -182,7 +182,7 @@ def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.exec
         engine_path.write_text(json.dumps(engine,indent=2,sort_keys=True)+"\n")
         # The R bridge sees verified bundle files, not user-controlled R code.
         subprocess.run([rscript,str(native),str(engine_path),str(temp)],
-                       check=True,timeout=1800)
+                       check=True,timeout=1800,cwd=repo)
         result=temp/"stereo_audit.json"
         if not result.is_file():
             raise RuntimeError("Native 3D engine produced no audited output")
