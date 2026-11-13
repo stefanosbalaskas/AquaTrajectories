@@ -182,6 +182,9 @@ def measured_underwater_targets(rows,scopes):
         g=groups.setdefault(row["trial_id"],[])
         g.append(row)
         clean.append({k:row[k] for k in TARGET_COLUMNS[:15]})
+    all_units={row["units"] for row in rows}
+    if len(all_units)!=1:
+        raise ValueError("Mixed cm/m physical target units must not be passed into one R benchmark")
     for trial,subset in groups.items():
         single=(subset[0]["tank_id"],subset[0]["session_id"],
                 subset[0]["camera_a_id"],subset[0]["camera_b_id"],subset[0]["units"])
@@ -200,7 +203,8 @@ def measured_underwater_targets(rows,scopes):
         for z in (fit,test):
             if len({float(r["truth_z"]) for r in z})<2:
                 raise ValueError("True underwater depth variation absent")
-        coords=[(r["truth_x"],r["truth_y"],r["truth_z"]) for r in subset]
+        coords=[tuple(float(r[col]) for col in ("truth_x","truth_y","truth_z"))
+                for r in subset]
         if len(set(coords))!=len(coords):
             raise ValueError("Repeated physical XYZ truth coordinate")
     return clean,groups
@@ -240,6 +244,7 @@ def qualify(videos,pulses,targets,events,training,holdout,video_root=None):
         "n_disjoint_heldout_pulse_IDs":len(holdout),
         "pulse_measurement_types":sorted(kinds),
         "source_hardware_exposure_pulses_alone":kinds=={"hardware_exposure_pulse"},
+        "source_target_units":next(iter({r["units"] for r in targets})),
         "n_real_recorded_target_rows":len(target_rows),
         "n_target_trials":len(groups),
         "n_disjoint_heldout_target_rows":sum(
