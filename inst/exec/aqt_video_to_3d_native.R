@@ -109,8 +109,11 @@ support <- numeric_scalar(cfg$min_support,"min_support",1)
 margin <- numeric_scalar(cfg$ambiguity_margin,"ambiguity_margin",0)
 primary <- names(models)[1L]
 pairs <- list();xyz_list <- list();links_list <- list()
+pairwise_results <- list()
 for (camera_b in names(models)[-1L]) {
   if (!nrow(tracks_list[[primary]]) || !nrow(tracks_list[[camera_b]])) {
+    pairwise_results[[camera_b]] <- structure(
+      list(tracks_3d=NULL),class="aqt_auto_refractive_pipeline")
     pairs[[length(pairs)+1L]] <- list(camera_a=primary,camera_b=camera_b,
       n_candidates=0L,n_auto_source_links=0L,n_3d_rows=0L,
       status="no_source_fish_detections",external_identity_certified=FALSE)
@@ -120,6 +123,7 @@ for (camera_b in names(models)[-1L]) {
     tracks_list[[camera_b]],models[[primary]],models[[camera_b]],
     max_skew_s=max_skew,max_ray_separation=max_ray,
     min_support=support,ambiguity_margin=margin)
+  pairwise_results[[camera_b]] <- result
   pairs[[length(pairs)+1L]] <- list(
     camera_a=primary,camera_b=camera_b,
     n_candidates=nrow(result$candidates),
@@ -129,14 +133,18 @@ for (camera_b in names(models)[-1L]) {
     status=result$status,external_identity_certified=FALSE)
   if (!is.null(result$tracks_3d)) {
     xyz <- as.data.frame(result$tracks_3d)
-    # With >2 views each reference-to-other pair has a separate 3D track
-    # identity. Do NOT claim a physically global N-camera biological ID.
+    # Source pairwise XYZ remains available for independent audit.
+    # Global reference-anchored identity is constructed only by
+    # aqt_multiview_global_fuse with 3D consistency and view support.
     xyz$track_id <- paste(camera_b,xyz$track_id,sep="_")
     xyz$source_camera_b <- camera_b
     xyz_list[[length(xyz_list)+1L]] <- xyz
     links <- result$association$links
     links$camera_a <- primary;links$camera_b <- camera_b
-    links$fish_id <- paste(camera_b,links$fish_id,sep="_")
+    links$pairwise_fish_id <- as.character(links$fish_id)
+    links$fish_id <- paste0("GLOBAL_REF_",
+      gsub("[^A-Za-z0-9_-]","_",links$session_id),"_",
+      gsub("[^A-Za-z0-9_-]","_",links$id_a))
     links_list[[length(links_list)+1L]] <- links
   }
 }
@@ -146,17 +154,22 @@ utils::write.csv(all_frames,file.path(out,"source_frames.csv"),
 all_tracks <- do.call(rbind,lapply(tracks_list,as.data.frame))
 utils::write.csv(all_tracks,file.path(out,"source_2d_tracks.csv"),
                  row.names=FALSE,na="")
-if (length(xyz_list)) {
-  xyz <- do.call(rbind,xyz_list)
-} else {
-  xyz <- data.frame(session_id=character(),camera_id=character(),
+pairwise_xyz <- if(length(xyz_list))do.call(rbind,xyz_list)
+                else data.frame(session_id=character(),camera_id=character(),
     track_id=character(),time_s=numeric(),x=numeric(),y=numeric(),
     z=numeric(),observed=logical(),source_camera_a=character(),
     source_camera_b=character(),source_id_a=character(),
     source_id_b=character(),ray_separation=numeric(),
     time_skew_s=numeric(),stringsAsFactors=FALSE)
-}
+utils::write.csv(pairwise_xyz,file.path(out,"pairwise_3d_hypotheses.csv"),
+                 row.names=FALSE,na="")
+global <- aqt_multiview_global_fuse(
+  pairwise_results,min_views=2L,max_disagreement=max_ray)
+xyz <- if(!is.null(global$tracks_3d))
+  as.data.frame(global$tracks_3d) else global$per_observation
 utils::write.csv(xyz,file.path(out,"fish_3d_tracks.csv"),
+                 row.names=FALSE,na="")
+utils::write.csv(global$rejected,file.path(out,"rejected_multiview_3d.csv"),
                  row.names=FALSE,na="")
 if (length(links_list)) {
   links <- do.call(rbind,links_list)
@@ -182,6 +195,9 @@ report <- list(
   pairwise_camera_results=pairs,
   n_provisional_pair_ids=nrow(links),
   n_3d_rows=nrow(xyz),
+  n_original_pairwise_3d_hypotheses=nrow(pairwise_xyz),
+  n_global_reference_anchored_fish=global$n_distinct_reference_fish,
+  n_rejected_incompatible_3d_source_observations=nrow(global$rejected),
   source_3d_units=models[[primary]]$units,
   multi_view_global_reidentification_certified=FALSE,
   hardware_camera_exposure_sync_certified=FALSE,
