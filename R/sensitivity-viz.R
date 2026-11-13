@@ -77,7 +77,7 @@ aqt_plot_ensemble3d <- function(ensemble,session_id,camera_id,track_id,
   idx <- idx[order(x$time_s[idx])]
   n <- min(as.integer(n_draws),dim(ensemble$positions)[3L])
   rgl::plot3d(x$x[idx],x$y[idx],x$z[idx],
-              type="l",color="#111111",lwd=3,
+              type="l",col="#111111",lwd=3,
               xlab=paste0("X (",attr(x,"aqt_units"),")"),
               ylab=paste0("Y (",attr(x,"aqt_units"),")"),
               zlab=paste0("Z (",attr(x,"aqt_units"),")"))
