@@ -125,7 +125,21 @@ export function eventsAt(events,seconds,window_s=.15) {
   return events.filter(e=>Math.abs(e.time_s-seconds)<=window_s);
 }
 
-export function validateEmpiricalUncertainty(report) {
+export function validate3DSourceAudit(report,observed3DCount){
+  if(report==null)return null;
+  if(!report||report.schema_version!=="1.0"||
+     !["cm","m"].includes(report.source_3d_units)||
+     !Number.isInteger(report.n_3d_rows)||report.n_3d_rows!==observed3DCount||
+     report.biological_identity_certified!==false||
+     report.underwater_physical_xyz_accuracy_certified!==false)
+    throw new Error("3D source origin, physical units, or provisional identity audit mismatched");
+  return {xyz_units:report.source_3d_units,
+    n_3d_rows:report.n_3d_rows,
+    original_source_scientifically_certified:false,
+    video_camera_hardware_sync_certified:false};
+}
+
+export function validateEmpiricalUncertainty(report,expectedUnits=null) {
   if(report==null)return {available:false,radius:null,
     calibrated_from_source:false,independent_XYZ_verified:false};
   if(!report||report.schema!=="aqt_empirical_joint_fish_uncertainty_v1")
@@ -133,6 +147,10 @@ export function validateEmpiricalUncertainty(report) {
   const radius=report.finite_sample_group_max_radial_radius;
   if(radius!==null&&(!Number.isFinite(radius)||radius<0))
     throw new Error("Invalid source empirical uncertainty radius");
+  if(radius!==null&&(!["cm","m"].includes(expectedUnits)||
+     !["cm","m"].includes(report.radius_units)||
+     report.radius_units!==expectedUnits))
+    throw new Error("Missing or mismatched physically declared source XYZ/uncertainty units");
   const shape={
     available:radius!==null,
     radius:radius??null,
