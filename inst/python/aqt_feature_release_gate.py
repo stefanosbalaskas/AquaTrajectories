@@ -126,7 +126,7 @@ def _checks(repo):
       "scientific_release_still_blocked":[py,
           "inst/python/aqt_scientific_release_gate.py",
           "--manifest","inst/evidence/scientific-validation-gates.json",
-          "--mode","engineering_registry"]}
+          "--mode","scientific_release"]}
 
 def _native_roundtrip(repo):
     with tempfile.TemporaryDirectory(prefix="aqt-gate-stereo-") as td:
@@ -183,6 +183,16 @@ def audit(repo,strict=False,run_tests=True):
                 tests[name]={"status":"blocked","reason":"Required feature source files missing"}
                 continue
             tests[name]=_run(cmd,repo,240)
+            if name=="scientific_release_still_blocked":
+                # A mandatory rejection (exit 2) is the PASS condition.
+                # An accidental exit 0 is a critical scientific-release bug.
+                check=tests[name]
+                if check.get("returncode")==2:
+                    check["status"]="passed"
+                    check["scientific_release_is_fail_closed"]=True
+                else:
+                    check["status"]="failed"
+                    check["scientific_release_is_fail_closed"]=False
         if all((repo/p).is_file() for p in [
             "inst/python/aqt_video_to_3d.py",
             "tests/python/fixture_stereo_bundles.py",
