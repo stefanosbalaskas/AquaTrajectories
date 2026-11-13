@@ -2,7 +2,7 @@
  * Browser-selected original video files only; no server, telemetry, hardware
  * access or fabricated 3D, hardware synchronization or animal-welfare truth.
  */
-import {normalizeTracks,normalizeFrames,normalizeEvents,project3D}
+import {parseCSV,normalizeTracks,normalizeFrames,normalizeEvents,project3D}
   from "./core.mjs";
 
 export function validateMultiviewFrames(raw) {
@@ -189,4 +189,4 @@ export function multiviewAudit(tracks,scene,frames,links,events,uncertainty) {
     actual_animal_welfare_validated:false};
 }
 
-export {normalizeTracks,normalizeFrames,normalizeEvents,project3D};
+export {parseCSV,normalizeTracks,normalizeFrames,normalizeEvents,project3D};
