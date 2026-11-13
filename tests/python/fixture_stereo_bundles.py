@@ -13,12 +13,14 @@ import sys
 def _sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
-def fixtures(directory,three_cameras=False):
+def fixtures(directory,three_cameras=False,no_fish=False):
     root=Path(directory)
     root.mkdir(parents=True,exist_ok=True)
     session="synthetic_session"
     source=[]
     cameras=[("TOP","top",0.,0.),("SIDE","side",1.,0.)]
+    if three_cameras and no_fish:
+        raise ValueError("Use separate 3-camera and empty-tank software fixtures")
     if three_cameras:
         cameras.append(("DIAG","diag",0.,1.))
     for camera_id,prefix,cx,cy in cameras:
@@ -33,7 +35,8 @@ def fixtures(directory,three_cameras=False):
         for frame in range(3):
             t=frame*.1
             frames.append([session,camera_id,frame,format(t,".17g"),1920,1080])
-            for track,xyz in ((1,(.2,0,5)),(2,(.4,1,5))):
+            for track,xyz in (() if no_fish else
+                              ((1,(.2,0,5)),(2,(.4,1,5)))):
                 x,y,z=xyz
                 u=960+(x-cx)/z*100
                 v=540+(y-cy)/z*100
@@ -92,6 +95,8 @@ def fixtures(directory,three_cameras=False):
 
 if __name__=="__main__":
     if len(sys.argv) not in (2,3) or (
-        len(sys.argv)==3 and sys.argv[2]!="--three-cameras"):
-        raise SystemExit("Usage: fixture_stereo_bundles.py OUT [--three-cameras]")
-    print(fixtures(sys.argv[1],three_cameras=(len(sys.argv)==3)))
+        len(sys.argv)==3 and sys.argv[2] not in ("--three-cameras","--no-fish")):
+        raise SystemExit("Usage: fixture_stereo_bundles.py OUT [--three-cameras|--no-fish]")
+    mode=sys.argv[2] if len(sys.argv)==3 else None
+    print(fixtures(sys.argv[1],three_cameras=(mode=="--three-cameras"),
+                   no_fish=(mode=="--no-fish")))
