@@ -136,7 +136,7 @@ aqt_plot_trajectory_storyboard3d <- function(
     t <- times_s[k]
     used <- which(segments$end_s<=t)
     before <- which(d$time_s<=t)
-    latest <- if (length(before)) tail(before,1L) else NA_integer_
+    latest <- if (length(before)) utils::tail(before,1L) else NA_integer_
     current <- length(latest)==1L && !is.na(latest) &&
       good[latest] && t-d$time_s[latest]<=max_age_s
     last_segment <- if (current)
@@ -240,7 +240,7 @@ aqt_plot_trajectory_storyboard3d <- function(
     }
     last <- which(d$time_s<=t)
     if (length(last)) {
-      i <- tail(last,1L)
+      i <- utils::tail(last,1L)
       if (good[i] && t-d$time_s[i]<=max_age_s)
         graphics::points(full_xy[i,1L],full_xy[i,2L],
                          pch=16,cex=.75,col="#153B87")
