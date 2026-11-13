@@ -1,0 +1,56 @@
+name: Wave 16 - publication visualization suite
+
+on:
+  pull_request:
+    paths:
+      - "R/publication-*.R"
+      - "tests/testthat/test-publication-visualization-suite.R"
+      - "man/aqt_plot_calibration_comparison.Rd"
+      - "man/aqt_plot_feeding_states.Rd"
+      - "man/aqt_plot_heading_rose.Rd"
+      - "man/aqt_plot_occupancy_timeseries.Rd"
+      - "man/aqt_plot_speed_response.Rd"
+      - "inst/examples/publication_visualization_gallery.Rmd"
+      - ".github/workflows/publication-visualization-suite.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/publication-*.R"
+      - "tests/testthat/test-publication-visualization-suite.R"
+      - "inst/examples/publication_visualization_gallery.Rmd"
+      - ".github/workflows/publication-visualization-suite.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  five-scientific-figure-families:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+          extra-packages: any::testthat, any::rcmdcheck, any::rmarkdown, any::knitr
+      - name: Five public visualization APIs must be present
+        run: |
+          Rscript -e 'x <- getNamespaceExports("aquaTrajectories"); stopifnot(all(c("aqt_plot_feeding_states","aqt_plot_calibration_comparison","aqt_plot_occupancy_timeseries","aqt_plot_speed_response","aqt_plot_heading_rose") %in% x))'
+      - name: Test five figure families and scientific input guards
+        env:
+          RGL_USE_NULL: "TRUE"
+        run: |
+          Rscript -e 'testthat::test_local(filter="publication-visualization-suite",reporter="summary",stop_on_failure=TRUE)'
+      - name: Full built-source R CMD check (no warnings or errors)
+        env:
+          RGL_USE_NULL: "TRUE"
+        run: |
+          Rscript -e 'x<-rcmdcheck::rcmdcheck(args=c("--no-manual"),error_on="never"); print(x); if(length(x$errors)||length(x$warnings)||length(x$notes))quit(save="no",status=1L)'
+      - name: Render all five figures in synthetic gallery
+        env:
+          RGL_USE_NULL: "TRUE"
+        run: |
+          Rscript -e 'rmarkdown::render("inst/examples/publication_visualization_gallery.Rmd",output_dir=Sys.getenv("RUNNER_TEMP"),quiet=FALSE)'

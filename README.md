@@ -4,6 +4,26 @@ Development-stage native R package for aquatic animal 2D/3D trajectories, moveme
 
 **Not an independently scientifically validated release.** Provisional automatic cross-camera association and a refraction-aware video-to-3D software bridge exist, but independently verified biological identities, calibrated underwater XYZ accuracy, welfare evidence, physical actuator safety, and joint uncertainty coverage are not certified.
 
+## Publication visualization suite (five figure families)
+
+The development branch adds five static, publication-oriented R plotters:
+
+- `aqt_plot_feeding_states()`: descriptive four-panel feeding-index and supplied phase labels
+- `aqt_plot_calibration_comparison()`: held-out 3D target error histograms and spatial error maps
+- `aqt_plot_occupancy_timeseries()`: tank-equal-weight occupied-area trajectories and descriptive SD/SE bands
+- `aqt_plot_speed_response()`: intervention-aligned speed series and paired-tank epoch summaries
+- `aqt_plot_heading_rose()`: circular XY movement headings with optional preloaded source-frame rasters
+
+All five use **base R graphics**, can be exported to vector PDF or 300-dpi TIFF,
+and return invisible summaries suitable for independent statistical analysis.
+They are deliberately descriptive: generated plots do not constitute
+independent validation of feeding behaviour, real underwater metrology,
+experimental randomization, biological welfare, or fish identity.
+
+Reproducible input and gallery examples:
+[Publication visualization guide](docs/PUBLICATION_VISUALIZATION_SUITE.md)
+and `inst/examples/publication_visualization_gallery.Rmd`.
+
 ## Publication-style 3D fish trajectory storyboard
 
 A new static four-panel visual reproduces the essentials of cumulative
