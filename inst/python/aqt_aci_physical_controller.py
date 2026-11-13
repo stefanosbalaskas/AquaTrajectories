@@ -185,6 +185,7 @@ class ACIController:
         self.last_command_at=-math.inf
         self.history=[]
         self.evidence=[]
+        self.seen_event_ids=set()
     def _check_status(self):
         state=self.bridge.status()
         if (state.get("protocol")!=PROTOCOL or
@@ -223,6 +224,12 @@ class ACIController:
             return self._reject(event,"controller_unarmed_or_estop")
         if not isinstance(event,dict) or event.get("event_type")!="aci_choice_request":
             return self._reject(event,"not_approved_aci_action")
+        eid=event.get("event_id")
+        if not isinstance(eid,str) or not ID.fullmatch(eid):
+            return self._reject(event,"missing_or_invalid_original_event_id")
+        if eid in self.seen_event_ids:
+            return self._reject(event,"duplicate_original_event_replay")
+        self.seen_event_ids.add(eid)
         if (event.get("session_id")!=self.profile["session_id"] or
             event.get("tank_id")!=self.profile["tank_id"]):
             return self._reject(event,"source_tank_or_session_mismatch")
@@ -329,16 +336,33 @@ def main(argv=None):
         if not a.events_jsonl:
             raise ValueError("Simulation requires original replay JSONL events")
         stream=a.events_jsonl.open()
-    controller=ACIController(profile,bridge,mode=a.mode)
+    simulated_clock=[0.]
+    controller=ACIController(profile,bridge,
+       clock=(lambda:simulated_clock[0]) if a.mode=="simulation" else time.monotonic,
+       mode=a.mode)
+    fault=None
     try:
         controller.arm(a.operator_id)
         for line in stream:
             if not line.strip():continue
+            if len(line)>4000:raise ValueError("Oversized source fish event stream message")
             source=json.loads(line)
+            if a.mode=="simulation":
+                t=source.get("observed_at_monotonic_s")
+                if (type(t) not in (int,float) or not math.isfinite(t) or
+                    t<simulated_clock[0]):
+                    raise ValueError("Source replay timestamps must be increasing")
+                simulated_clock[0]=float(t)
             controller.process(source)
+    except BaseException as e:
+        fault={"type":type(e).__name__,
+               "reason":"physical_device_or_source_failure_fail_closed"}
     finally:
         controller.emergency_stop()
-        controller.close()
+        try:controller.close()
+        except BaseException:
+            fault={"type":"SafeOffFailure",
+                   "reason":"unable_to_confirm_physical_off_device_manual_isolation_required"}
         if stream is not sys.stdin:stream.close()
     data={"schema":"aqt_aci_device_telemetry_v1",
           "source_safety_profile_sha256":hashlib.sha256(a.profile.read_bytes()).hexdigest(),
@@ -346,12 +370,16 @@ def main(argv=None):
           "n_commands_rejected":sum(x["status"]=="rejected"
                                      for x in controller.evidence),
           "source_event_logs":controller.evidence,
+          "terminated_by_fault":fault is not None,
+          "fault":fault,
           "physical_hardware_e_stop_independently_tested":False,
           "animal_welfare_or_ethics_externally_certified":False,
           "independent_physical_actuator_feedback_verified":False,
           "device_left_software_unarmed":True}
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(data,indent=2,sort_keys=True)+"\n")
+    if fault is not None:
+        raise RuntimeError("ACI stopped fail-closed; audit persisted: "+str(a.out))
     print(json.dumps({"mode":a.mode,"accepted":controller.count,
                       "external_hardware_certified":False}))
     return 0
