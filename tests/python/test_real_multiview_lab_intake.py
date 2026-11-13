@@ -91,6 +91,20 @@ class MultiviewPhysicalCaptureIntake(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"distinct independent heldout"):
             m.qualify(v,p,t,e,[f"pulse_{i}" for i in range(4)],["pulse_3","pulse_4"])
 
+    def test_do_not_mix_physical_world_units_or_equivalent_surveyed_coordinates(self):
+        v,p,t,e=fixtures()
+        t[-1]["units"]="m"
+        with self.assertRaisesRegex(ValueError,"Mixed cm/m"):
+            m.qualify(v,p,t,e,[f"pulse_{i}" for i in range(4)],
+                      ["pulse_4","pulse_5"])
+        v,p,t,e=fixtures()
+        t[1]["truth_x"]=str(float(t[0]["truth_x"]))
+        t[1]["truth_y"]=str(float(t[0]["truth_y"]))
+        t[1]["truth_z"]=str(float(t[0]["truth_z"]))
+        with self.assertRaisesRegex(ValueError,"Repeated physical XYZ"):
+            m.qualify(v,p,t,e,[f"pulse_{i}" for i in range(4)],
+                      ["pulse_4","pulse_5"])
+
     def test_actual_video_bytes_can_be_hashed_but_not_autocertified(self):
         v,p,t,e=fixtures()
         with tempfile.TemporaryDirectory() as td:
