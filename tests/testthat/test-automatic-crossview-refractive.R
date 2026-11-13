@@ -88,3 +88,72 @@ test_that("missing observations do not produce fabricated stereo positions",{
   expect_equal(result$status,"no_unambiguous_crossview_track_pairs")
   expect_false(result$fish_biological_identity_certified)
 })
+
+# Three independent source-camera estimates, same original reference fish ID,
+# and disagreement rejection are synthetic software-only geometry.
+.multiview_pair_fixture <- function(camera,x_shift=0) {
+  d <- data.frame(
+    session_id="S1",camera_id="REFRACTIVE3D",
+    track_id=paste0("pair_",camera),
+    time_s=c(.002,.102,.202),x=c(.2,.3,.4)+x_shift,
+    y=0,z=5,observed=TRUE,
+    source_camera_a="TOP",source_camera_b=camera,
+    source_id_a="original_top_fish_1",
+    source_id_b=paste0("local_",camera,"_77"),
+    source_time_a_s=c(0,.1,.2),
+    source_time_b_s=c(.004,.104,.204),
+    time_skew_s=.004,ray_separation=.001)
+  z <- aqt_tracks(d,units="cm",coordinate_system="tank")
+  structure(list(tracks_3d=z,association=list(links=data.frame())),
+            class="aqt_auto_refractive_pipeline")
+}
+
+test_that("global 3-camera fish identity anchored on original reference ID",{
+  estimate <- aqt_multiview_global_fuse(
+    list(SIDE=.multiview_pair_fixture("SIDE"),
+         DIAGONAL=.multiview_pair_fixture("DIAGONAL",.002)),
+    min_views=3,max_disagreement=.1)
+  expect_s3_class(estimate,"aqt_multiview_global_fusion")
+  expect_s3_class(estimate$tracks_3d,"aqt_tracks")
+  expect_equal(nrow(estimate$tracks_3d),3)
+  expect_equal(length(unique(estimate$tracks_3d$track_id)),1)
+  expect_equal(estimate$matched_camera_count,3)
+  expect_equal(estimate$tracks_3d$n_contributing_secondary_views,c(2L,2L,2L))
+  expect_equal(estimate$tracks_3d$time_s,c(0,.1,.2))
+  expect_true(max(estimate$tracks_3d$max_3d_disagreement)<.002)
+  expect_false(estimate$independently_verified_biological_identity)
+  expect_false(estimate$independent_physical_XYZ_accuracy_certified)
+  expect_true(attr(estimate$tracks_3d,"aqt_auto_fish_id_provisional"))
+})
+
+test_that("conflicting stereo pair estimates are withheld, not merged",{
+  estimate <- aqt_multiview_global_fuse(
+    list(SIDE=.multiview_pair_fixture("SIDE"),
+         DIAGONAL=.multiview_pair_fixture("DIAGONAL",5)),
+    min_views=3,max_disagreement=.1)
+  expect_null(estimate$tracks_3d)
+  expect_equal(nrow(estimate$rejected),3)
+  expect_true(all(estimate$rejected$reason==
+                  "incompatible_refractive_xyz_across_cameras"))
+  expect_false(estimate$independently_verified_biological_identity)
+})
+
+test_that("global 3D view count and source ID authenticity fail closed",{
+  expect_error(aqt_multiview_global_fuse(
+      list(SIDE=.multiview_pair_fixture("SIDE")),min_views=3),
+      "view support")
+  bad <- .multiview_pair_fixture("SIDE")
+  bad$tracks_3d$source_camera_b <- "OTHER"
+  expect_error(aqt_multiview_global_fuse(list(SIDE=bad)),
+               "camera pair")
+  good <- .multiview_pair_fixture("SIDE")
+  # Duplicate use of a reference fish/time in one secondary camera.
+  bad2 <- good
+  raw <- as.data.frame(good$tracks_3d)
+  raw2 <- raw[1,,drop=FALSE]
+  raw2$track_id <- "another_3d_link"
+  bad2$tracks_3d <- aqt_tracks(rbind(raw,raw2),units="cm",
+                               coordinate_system="tank")
+  expect_error(aqt_multiview_global_fuse(list(SIDE=bad2)),
+               "reused by a secondary camera")
+})
