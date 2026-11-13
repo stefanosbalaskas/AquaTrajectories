@@ -1,0 +1,91 @@
+name: Wave 14G - original Fraunhofer 101-frame ricefish cross-domain frozen model tracking
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_fraunhofer_external_model_hota.py"
+      - "tests/python/test_fraunhofer_external_model_hota.py"
+      - "docs/FRAUNHOFER_EXTERNAL_FISH_MODEL_METRICS.md"
+      - ".github/workflows/fraunhofer-external-model-hota.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_fraunhofer_external_model_hota.py"
+      - "tests/python/test_fraunhofer_external_model_hota.py"
+      - ".github/workflows/fraunhofer-external-model-hota.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  original-ricefish-cross-domain-video-detection-and-tracking:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Exact original official TrackEval, TensorFlow, ByteTrack runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "tensorflow-cpu==2.16.2" "Pillow>=10,<12" \
+            "supervision==0.26.1" "numpy==1.23.5" "scipy==1.10.1"
+          git clone "https://github.com/JonathonLuiten/TrackEval.git" "$RUNNER_TEMP/trackeval"
+          git -C "$RUNNER_TEMP/trackeval" checkout 12c8791b303e0a0b50f753af204249e622d0281a
+          test "$(git -C "$RUNNER_TEMP/trackeval" rev-parse HEAD)" = \
+            12c8791b303e0a0b50f753af204249e622d0281a
+          python -m pip install --no-deps --no-build-isolation -e "$RUNNER_TEMP/trackeval"
+      - name: Contracts for original source, identity separation and fail-closed scientific flags
+        run: |
+          python -m py_compile inst/python/aqt_fraunhofer_external_model_hota.py
+          python -m unittest discover -s tests/python -p "test_fraunhofer_external_model_hota.py" -v
+          python -m unittest discover -s tests/python -p "test_official_fish_trackeval.py" -v
+      - name: Download original real ricefish source JPEGs and original Oxford fish-trained frozen model
+        run: |
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            --output "$RUNNER_TEMP/fraunhofer_A_101_real_images_and_labels.zip"
+          mkdir -p "$RUNNER_TEMP/original_frozen_oxford_model/variables"
+          BASE="https://raw.githubusercontent.com/ox-vgg/fish-tank-obstacles/0d57a17148f750ed7c327ba5d36ce587d3b7dcfe/data/models/detect/d2-fish/v2/saved_model"
+          curl -fLsS --retry 3 --max-time 180 "$BASE/saved_model.pb" \
+            -o "$RUNNER_TEMP/original_frozen_oxford_model/saved_model.pb"
+          curl -fLsS --retry 3 --max-time 180 "$BASE/variables/variables.index" \
+            -o "$RUNNER_TEMP/original_frozen_oxford_model/variables/variables.index"
+          curl -fLsS --retry 3 --max-time 240 "$BASE/variables/variables.data-00000-of-00001" \
+            -o "$RUNNER_TEMP/original_frozen_oxford_model/variables/variables.data-00000-of-00001"
+      - name: Actual source A all 101 original image pixels to frozen fish detector and ByteTrack; official HOTA
+        run: |
+          python inst/python/aqt_fraunhofer_external_model_hota.py \
+            --source-archive "$RUNNER_TEMP/fraunhofer_A_101_real_images_and_labels.zip" \
+            --oxford-frozen-model-dir "$RUNNER_TEMP/original_frozen_oxford_model" \
+            --out "$RUNNER_TEMP/fraunhofer_cross_domain_evidence"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"fraunhofer_cross_domain_evidence/report.json"
+          r=json.loads(p.read_text())
+          assert r["n_real_original_source_images_inferred"]==101,r
+          assert r["n_reference_fish_boxes"]==9214,r
+          assert r["n_source_gt_IDs"]==260,r
+          assert r["source_original_frame_start"]==43450,r
+          assert len(r["source_original_image_sha256"])==101,r
+          assert 0<=r["official_trackeval_model_generated_tracks"]["HOTA"]<=1
+          assert 0<=r["official_trackeval_model_generated_tracks"]["IDF1"]<=1
+          assert not r["original_fish_IDs_visible_to_model_or_tracker"]
+          assert not r["source_ground_truth_blinded_independently_reviewed"]
+          assert not r["physical_underwater_3d_or_multicam_accuracy_certified"]
+          assert not r["original_fraunhofer_host_TLS_peer_auth_verified"]
+          print("REAL MODEL-BASED EXTERNAL FISH DOMAIN SHIFT EVIDENCE")
+          print("HOTA",r["official_trackeval_model_generated_tracks"]["HOTA"],
+                "IDF1",r["official_trackeval_model_generated_tracks"]["IDF1"],
+                "DetectorF1_0.5",r["detection_score_against_published_source_MOT_GT"]["0.5"]["F1"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14g-real-ricefish-cross-domain-model-detection-and-trackeval
+          path: |
+            ${{ runner.temp }}/fraunhofer_cross_domain_evidence/report.json
+            ${{ runner.temp }}/fraunhofer_cross_domain_evidence/fish_model_detections.csv
+            ${{ runner.temp }}/fraunhofer_cross_domain_evidence/fish_model_bytetrack.csv
