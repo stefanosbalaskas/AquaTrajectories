@@ -1,0 +1,125 @@
+name: Wave 15A - actual automatic source bundle to native refractive 3D integration
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_video_to_3d.py"
+      - "inst/scripts/aqt_video_to_3d_native.R"
+      - "tests/python/test_video_to_3d.py"
+      - "tests/python/fixture_stereo_bundles.py"
+      - "R/automatic-crossview-refractive.R"
+      - ".github/workflows/auto-video-to-3d.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_video_to_3d.py"
+      - "inst/scripts/aqt_video_to_3d_native.R"
+      - "tests/python/test_video_to_3d.py"
+      - "R/automatic-crossview-refractive.R"
+      - ".github/workflows/auto-video-to-3d.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  real-code-video-bundle-to-r-refractive-stereo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+      - name: Python original-video integrity and atomic native 3D command contracts
+        run: |
+          python -m py_compile inst/python/aqt_video_to_3d.py
+          python -m unittest discover -s tests/python -p "test_video_to_3d.py" -v
+      - name: Exact R native camera pairing and optical triangulation contracts
+        run: |
+          Rscript -e "pkgload::load_all('.', quiet=TRUE);testthat::test_file('tests/testthat/test-automatic-crossview-refractive.R')"
+      - name: Genuine CLI to native R integration on synthetic known XYZ and verified source bundle hashes
+        run: |
+          python tests/python/fixture_stereo_bundles.py "$RUNNER_TEMP/aqt_e2e_synthetic"
+          python inst/python/aqt_video_to_3d.py \
+            --config "$RUNNER_TEMP/aqt_e2e_synthetic/synthetic_video_3d_config.json" \
+            --mode prepared \
+            --output-dir "$RUNNER_TEMP/aqt_e2e_3d_output"
+          python - <<'PY'
+          import csv,json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          out=root/"aqt_e2e_3d_output"
+          report=json.loads((out/"stereo_audit.json").read_text())
+          assert report["n_3d_rows"]==6,report
+          assert report["n_provisional_pair_ids"]==2,report
+          assert report["n_global_reference_anchored_fish"]==2,report
+          assert report["n_rejected_incompatible_3d_source_observations"]==0,report
+          assert report["biological_identity_certified"] is False
+          assert report["underwater_physical_xyz_accuracy_certified"] is False
+          with (out/"fish_3d_tracks.csv").open(newline="") as fh:
+              rows=list(csv.DictReader(fh))
+          assert len(rows)==6
+          assert max(abs(float(row["z"])-5.) for row in rows)<1e-5,rows
+          assert all(row["observed"].upper()=="TRUE" for row in rows)
+          print("Actual native 2D fish bundle -> automatic IDs -> refractive 3D integration PASSED; synthetic only")
+          PY
+      - name: Three original synthetic cameras to globally consistent native fish identities and XYZ
+        run: |
+          python tests/python/fixture_stereo_bundles.py \
+            "$RUNNER_TEMP/aqt_three_cameras" --three-cameras
+          python inst/python/aqt_video_to_3d.py \
+            --config "$RUNNER_TEMP/aqt_three_cameras/synthetic_video_3d_config.json" \
+            --mode prepared \
+            --output-dir "$RUNNER_TEMP/aqt_three_camera_fused_3d"
+          python - <<'PY'
+          import csv,json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"aqt_three_camera_fused_3d"
+          report=json.loads((root/"stereo_audit.json").read_text())
+          assert len(report["original_camera_records"])==3,report
+          assert report["n_original_pairwise_3d_hypotheses"]==12,report
+          assert report["n_3d_rows"]==6,report
+          assert report["n_global_reference_anchored_fish"]==2,report
+          assert report["n_rejected_incompatible_3d_source_observations"]==0,report
+          with (root/"fish_3d_tracks.csv").open(newline="") as f:
+              fish=list(csv.DictReader(f))
+          assert len(fish)==6
+          assert all(int(x["n_contributing_secondary_views"])==2 for x in fish)
+          assert max(abs(float(x["z"])-5) for x in fish)<1e-5
+          assert report["biological_identity_certified"] is False
+          assert report["underwater_physical_xyz_accuracy_certified"] is False
+          print("Three original source camera bundles -> globally stable provisional fish IDs -> measured XYZ software test PASSED")
+          PY
+      - name: No fish detected on any camera must yield audited empty 3D (no invented XYZ)
+        run: |
+          python tests/python/fixture_stereo_bundles.py \
+            "$RUNNER_TEMP/aqt_empty_camera_pair" --no-fish
+          python inst/python/aqt_video_to_3d.py \
+            --config "$RUNNER_TEMP/aqt_empty_camera_pair/synthetic_video_3d_config.json" \
+            --mode prepared \
+            --output-dir "$RUNNER_TEMP/aqt_empty_3d"
+          python - <<'PY'
+          import csv,json,os,pathlib
+          out=pathlib.Path(os.environ["RUNNER_TEMP"])/"aqt_empty_3d"
+          report=json.loads((out/"stereo_audit.json").read_text())
+          assert report["source_frame_count"]==6,report
+          assert report["source_2d_track_rows"]==0,report
+          assert report["n_provisional_pair_ids"]==0,report
+          assert report["n_3d_rows"]==0,report
+          assert report["n_global_reference_anchored_fish"]==0,report
+          assert report["biological_identity_certified"] is False
+          assert report["underwater_physical_xyz_accuracy_certified"] is False
+          for path in ("fish_3d_tracks.csv","crossview_links.csv"):
+              with (out/path).open(newline="") as fh:
+                  assert list(csv.DictReader(fh))==[],path
+          print("Actual zero-fish original camera bundle -> auditable empty 3D software test PASSED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave15a-synthetic-hash-verified-video-to-refractive-3d-evidence
+          path: ${{ runner.temp }}/aqt_e2e_3d_output/
