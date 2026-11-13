@@ -224,6 +224,7 @@ def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.exec
             empirical_out=temp/"joint_empirical_calibration.json"
             subprocess.run([python,str(module),
                             "--empirical-source-csv",str(empirical_source),
+                            "--xyz-units",cfg["cameras"][0]["calibration"]["units"],
                             "--out",str(empirical_out)],
                            cwd=repo,check=True,timeout=600)
             from_source=json.loads(empirical_out.read_text())
@@ -231,6 +232,9 @@ def execute(config_path,output,mode="prepared",rscript="Rscript",python=sys.exec
                 from_source.get("original_physical_XYZ_independent_survey_authenticated") is not False or
                 from_source.get("source_fish_ID_ground_truth_independently_adjudicated") is not False):
                 raise ValueError("Empirical source uncertainty claims are not qualified")
+            if from_source.get("radius_units")!=cfg["cameras"][0]["calibration"]["units"]:
+                raise ValueError("Original empirical source units conflict with the 3D camera model")
+            optional["joint_empirical_source_xyz_units"]=from_source["radius_units"]
             optional["joint_empirical_source_csv_sha256"]=source_hash(empirical_source)
             optional["joint_empirical_report_sha256"]=source_hash(empirical_out)
             optional["empirical_joint_source_data_supplied"]=True
