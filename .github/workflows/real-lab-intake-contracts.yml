@@ -1,0 +1,48 @@
+name: Wave 14J - raw physical stereo lab intake and ACI experiment evidence contracts
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_real_multiview_lab_intake.py"
+      - "tests/python/test_real_multiview_lab_intake.py"
+      - "docs/REAL_FISH_TANK_LAB_CAPTURE_PROTOCOL.md"
+      - ".github/workflows/real-lab-intake-contracts.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_real_multiview_lab_intake.py"
+      - "tests/python/test_real_multiview_lab_intake.py"
+      - ".github/workflows/real-lab-intake-contracts.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  real-lab-source-contract-not-independent-physical-certification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Strict original video hashes, physical camera pulse and disjoint XYZ target contracts
+        run: |
+          python -m py_compile inst/python/aqt_real_multiview_lab_intake.py
+          python -m unittest discover -s tests/python -p "test_real_multiview_lab_intake.py" -v
+      - name: Report actual scientific acceptance remains pending external tank and device experiments
+        run: |
+          python - <<'PY'
+          import pathlib
+          source=pathlib.Path("inst/python/aqt_real_multiview_lab_intake.py").read_text()
+          for key in (
+              "physical_XYZ_calibration_error_measured_by_AquaTrajectories",
+              "physical_Hardware_pulse_correspondence_independently_verified",
+              "real_fish_cross_view_ID_accuracy_certified",
+              "biological_welfare_or_intervention_effect_validated",
+              "physical_ACI_actuator_emergency_stop_tested",
+              "real_video_codec_stream_decode_verified"):
+              assert key in source,key
+          print("AquaTrajectories physical-laboratory intake data contracts PASSED.")
+          print("No actual independent cameras, real XYZ, physical ACI device, or welfare outcomes were certified.")
+          PY
