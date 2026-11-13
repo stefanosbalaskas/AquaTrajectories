@@ -325,3 +325,157 @@ aqt_auto_refractive_pipeline <- function(
     fish_biological_identity_certified=FALSE),
     class="aqt_auto_refractive_pipeline")
 }
+
+#' Fuse provisional cross-view fish tracks across three or more cameras
+#'
+#' Treat one camera as the identity anchor. A track pair for each other
+#' camera may contribute an independent refractively triangulated XYZ
+#' estimate at the *same original reference-camera source timestamp*.
+#' Stable reference-camera ID and timestamp are the only fusion keys;
+#' other-view track ID equality is never assumed. Conflicting 3D estimates
+#' beyond max_disagreement are rejected instead of averaged into invented
+#' plausible fish positions. Numeric weighted XYZ uses inverse ray
+#' separation as a diagnostic estimator, not an empirical precision.
+#'
+#' @param pairwise_results Named list of aqt_auto_refractive_pipeline outputs,
+#'   keyed by distinct secondary source camera IDs. Each must use the same
+#'   reference camera and world units.
+#' @param min_views Required distinct camera count per fused XYZ (>=2).
+#' @param max_disagreement Max allowed maximum distance between each
+#'   candidate XYZ and weighted fused XYZ, in original physical units.
+#' @return aqt_multiview_global_fusion containing global provisional aqt_tracks
+#'   or NULL, detailed source view support, rejected hypothesis rows and
+#'   original 3D pairwise hypotheses; no independently verified fish IDs.
+#' @export
+aqt_multiview_global_fuse <- function(
+    pairwise_results,min_views=2L,max_disagreement=.5) {
+  if (!is.list(pairwise_results) || !length(pairwise_results) ||
+      is.null(names(pairwise_results)) ||
+      anyNA(names(pairwise_results)) ||
+      any(!nzchar(names(pairwise_results))) ||
+      anyDuplicated(names(pairwise_results)) ||
+      !all(vapply(pairwise_results,inherits,logical(1L),
+                  what="aqt_auto_refractive_pipeline")))
+    stop("Expected named distinct-camera automatic stereo pipeline results",
+         call.=FALSE)
+  if (!is.numeric(min_views) || length(min_views)!=1L ||
+      !is.finite(min_views) || min_views<2L ||
+      min_views!=floor(min_views) ||
+      min_views>length(pairwise_results)+1L ||
+      !is.numeric(max_disagreement) ||
+      length(max_disagreement)!=1L ||
+      !is.finite(max_disagreement) || max_disagreement<0)
+    stop("Invalid physical 3D consistency or independent view support gate",
+         call.=FALSE)
+  full <- list();units <- character();primary <- character()
+  for (camera in names(pairwise_results)) {
+    z <- pairwise_results[[camera]]
+    if (is.null(z$tracks_3d)) next
+    aqt_tracks_validate(z$tracks_3d)
+    d <- as.data.frame(z$tracks_3d)
+    required <- c("session_id","source_camera_a","source_camera_b",
+                  "source_id_a","source_id_b","source_time_a_s",
+                  "time_s","x","y","z","observed","ray_separation")
+    if (!all(required %in% names(d)))
+      stop("Missing original paired camera/source/time provenance",
+           call.=FALSE)
+    if (!identical(attr(z$tracks_3d,"aqt_dimension"),3L) ||
+        !identical(attr(z$tracks_3d,"aqt_coordinate_system"),"tank") ||
+        !all(d$source_camera_b==camera) ||
+        anyNA(d$source_camera_a) ||
+        length(unique(d$source_camera_a))!=1L)
+      stop("Original source 3D camera pair does not match declared view",
+           call.=FALSE)
+    units <- c(units,attr(z$tracks_3d,"aqt_units"))
+    primary <- c(primary,unique(d$source_camera_a))
+    if (any(!is.finite(d$source_time_a_s)) ||
+        any(!is.finite(d$ray_separation[d$observed])) ||
+        any(d$ray_separation[d$observed]<0))
+      stop("Invalid original clock and underwater ray diagnostics",
+           call.=FALSE)
+    valid <- d$observed & is.finite(d$x) &
+                 is.finite(d$y) & is.finite(d$z)
+    d <- d[valid,required,drop=FALSE]
+    if (nrow(d)) full[[camera]] <- d
+  }
+  if (length(unique(units))>1L ||
+      length(unique(primary))>1L ||
+      any(names(pairwise_results)==primary[1L]))
+    stop("All source camera pairs must share reference camera and world units",
+         call.=FALSE)
+  empty <- data.frame(session_id=character(),camera_id=character(),
+      track_id=character(),time_s=numeric(),x=numeric(),y=numeric(),
+      z=numeric(),observed=logical(),source_camera_a=character(),
+      source_id_a=character(),n_contributing_secondary_views=integer(),
+      max_3d_disagreement=numeric(),weighted_ray_separation=numeric(),
+      stringsAsFactors=FALSE)
+  rejected <- data.frame(session_id=character(),source_id_a=character(),
+      source_time_a_s=numeric(),n_views=integer(),
+      maximum_disagreement=numeric(),reason=character())
+  if (!length(full))
+    return(structure(list(tracks_3d=NULL,per_observation=empty,
+       rejected=rejected,n_distinct_reference_fish=0L,
+       matched_camera_count=0L,
+       independently_verified_biological_identity=FALSE,
+       independent_physical_XYZ_accuracy_certified=FALSE,
+       global_fish_source="provisional_reference_camera_identity"),
+       class="aqt_multiview_global_fusion"))
+  d <- do.call(rbind,full)
+  key <- paste(d$session_id,d$source_id_a,
+     sprintf("%.17g",d$source_time_a_s),sep="\r")
+  viewkey <- paste(key,d$source_camera_b,sep="\r")
+  if (anyDuplicated(viewkey))
+    stop("One source reference fish frame reused by a secondary camera",
+         call.=FALSE)
+  groups <- split(seq_len(nrow(d)),key)
+  outputs <- list();rejects <- list()
+  for (idx in groups) {
+    z <- d[idx,,drop=FALSE]
+    views <- length(unique(z$source_camera_b))+1L
+    if (views<min_views) next
+    pos <- as.matrix(z[,c("x","y","z"),drop=FALSE])
+    weights <- 1/pmax(z$ray_separation,1e-6)
+    means <- colSums(pos*weights)/sum(weights)
+    errs <- sqrt(rowSums(sweep(pos,2,means,"-")^2))
+    spread <- max(errs)
+    if (spread>max_disagreement) {
+      rejects[[length(rejects)+1L]] <- data.frame(
+        session_id=z$session_id[1L],
+        source_id_a=z$source_id_a[1L],
+        source_time_a_s=z$source_time_a_s[1L],
+        n_views=views,maximum_disagreement=spread,
+        reason="incompatible_refractive_xyz_across_cameras",
+        stringsAsFactors=FALSE)
+      next
+    }
+    fish <- paste0("GLOBAL_REF_",
+      gsub("[^A-Za-z0-9_-]","_",z$session_id[1L]),"_",
+      gsub("[^A-Za-z0-9_-]","_",z$source_id_a[1L]))
+    outputs[[length(outputs)+1L]] <- data.frame(
+      session_id=z$session_id[1L],camera_id="MULTIVIEW3D",
+      track_id=fish,time_s=z$source_time_a_s[1L],
+      x=means[1L],y=means[2L],z=means[3L],
+      observed=TRUE,source_camera_a=z$source_camera_a[1L],
+      source_id_a=z$source_id_a[1L],
+      n_contributing_secondary_views=length(idx),
+      max_3d_disagreement=spread,
+      weighted_ray_separation=sum(weights*z$ray_separation)/sum(weights),
+      stringsAsFactors=FALSE)
+  }
+  detail <- if(length(outputs))do.call(rbind,outputs) else empty
+  dropped <- if(length(rejects))do.call(rbind,rejects) else rejected
+  rownames(detail)<-NULL;rownames(dropped)<-NULL
+  world <- if(nrow(detail))aqt_tracks(detail,units=units[1L],
+                                      coordinate_system="tank") else NULL
+  if(!is.null(world))
+    attr(world,"aqt_auto_fish_id_provisional") <- TRUE
+  structure(list(tracks_3d=world,per_observation=detail,rejected=dropped,
+    n_distinct_reference_fish=length(unique(detail$track_id)),
+    matched_camera_count=length(full)+1L,
+    source_ref_camera=unique(primary),
+    source_xyz_units=unique(units),
+    independently_verified_biological_identity=FALSE,
+    independent_physical_XYZ_accuracy_certified=FALSE,
+    global_fish_source="provisional_reference_camera_identity"),
+    class="aqt_multiview_global_fusion")
+}
