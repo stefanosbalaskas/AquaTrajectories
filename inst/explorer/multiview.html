@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AquaTrajectories — Unified Multiview Research Explorer</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  background:#0c1320;color:#e6edf8}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh}
+header{padding:19px clamp(14px,3vw,42px);background:#142133;border-bottom:1px solid #37506a}
+h1{font-size:1.35rem;margin:0 0 5px}
+h2{font-size:1.05rem;margin:0 0 11px}
+h3{font-size:.88rem;margin:8px 0}
+p{line-height:1.45}
+small,.muted{color:#b0c4d9}
+main{max-width:1530px;margin:auto;padding:15px clamp(14px,3vw,30px)}
+section{border:1px solid #344c62;border-radius:12px;margin:12px 0;
+  padding:17px;background:#121e2d}
+input,button,select,textarea{font:inherit;color:inherit;background:#17283a;
+  border:1px solid #526a85;border-radius:7px;padding:8px}
+input[type=file]{max-width:100%}
+button{cursor:pointer;background:#204064;font-weight:600}
+button:hover{background:#2a527d}
+button:focus-visible,input:focus-visible{outline:2px solid #8fcafb}
+label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;min-width:145px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+table{border-collapse:collapse;width:100%}
+td,th{padding:7px;border-bottom:1px solid #365069;text-align:left;font-size:.85rem}
+#videoGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px}
+.videoCard{border:1px solid #3b5871;border-radius:10px;overflow:hidden;background:#0a1420;padding:10px}
+.videoCanvas{position:relative;width:100%;aspect-ratio:16/9}
+.videoCanvas video,.videoCanvas canvas{position:absolute;inset:0;width:100%;height:100%}
+.videoCanvas canvas{pointer-events:none}
+.scene{display:block;width:100%;max-height:480px;background:#091422;border-radius:9px;border:1px solid #33536e}
+#clock{width:100%}
+#status{white-space:pre-wrap;overflow-wrap:anywhere;background:#0b1624;border-radius:8px;padding:12px;min-height:60px;font-size:.8rem}
+#notesList{font-size:.83rem}
+.warn{color:#ffd695}.ok{color:#a1e5d2}
+footer{padding:20px;text-align:center;color:#9eb7ca}
+.badge{display:inline-block;background:#243d52;border-radius:6px;font-size:.8rem;padding:4px 8px}
+#frameMessage{font-size:.85rem;color:#ffd695}
+</style>
+</head>
+<body>
+<header>
+<h1>AquaTrajectories — Unified Multiview Research Explorer</h1>
+<small>Original camera-video synchronization, 2D tracking, reconstructed 3D, research events and joint uncertainty. Local source files only; no device control.</small>
+</header>
+<main>
+<section>
+<h2>1. Load original research outputs</h2>
+<p class="muted">Select the CSV exports from the automatic video→3D runner. Video files stay local to this browser; no files are uploaded.</p>
+<div class="controls">
+<label>Original camera-frame clocks <input id="framesFile" type="file" accept=".csv"></label>
+<label>Camera-local 2D fish trajectories <input id="tracksFile" type="file" accept=".csv"></label>
+<label>Reconstructed 3D fish tracks <input id="xyzFile" type="file" accept=".csv"></label>
+<label>Provisional cross-camera links <input id="linksFile" type="file" accept=".csv"></label>
+<label>Experiment events (optional) <input id="eventsFile" type="file" accept=".csv"></label>
+<label>Empirical joint uncertainty (optional) <input id="uncertaintyFile" type="file" accept=".json"></label>
+<button id="load" type="button">Load source records</button>
+</div>
+<p class="muted">Accepted filenames include <code>source_frames.csv</code>, <code>source_2d_tracks.csv</code>, <code>fish_3d_tracks.csv</code> and <code>crossview_links.csv</code>. Original physical accuracy and identity validity are never inferred from low model residuals.</p>
+</section>
+<section>
+<h2>2. Shared camera timeline and original video files</h2>
+<div class="controls">
+<label>Source session <select id="session"></select></label>
+<label>Clock master camera <select id="master"></select></label>
+<label>Maximum frame alignment difference (s)
+<input id="tolerance" type="number" min=".001" max="2" step=".005" value=".04"></label>
+<button id="playAll" type="button">Play available videos</button>
+<button id="pauseAll" type="button">Pause</button>
+<label>2D fish labels <input id="show2d" type="checkbox" checked></label>
+</div>
+<label>Unified research time — <span id="clockLabel">No data</span>
+<input id="clock" type="range" min="0" max="1" step=".001" value="0"></label>
+<div id="videoGrid"></div>
+<p id="frameMessage">Original decoded frame presentation times must be supplied to align source video streams. Matching timecodes do not prove synchronized shutters.</p>
+</section>
+<section>
+<h2>3. Unified 3D fish trajectories and uncertainty</h2>
+<div class="controls">
+<label>Yaw (degrees) <input id="yaw" type="range" min="-180" max="180" value="20"></label>
+<label>Pitch (degrees) <input id="pitch" type="range" min="-80" max="80" value="15"></label>
+<label>Max gap for path segments (s)
+<input id="gap" type="number" min=".001" step=".05" value=".3"></label>
+<label>3D history window (s) <input id="history" type="number" min=".01" step="1" value="4"></label>
+<label>Show empirical radius <input id="showUncertainty" type="checkbox" checked></label>
+</div>
+<canvas id="scene3d" class="scene" width="1120" height="500" role="img" aria-label="3D projected fish positions, temporal trajectories, and optional conditional empirical uncertainty radius"></canvas>
+<p id="uncertaintyStatus" class="muted">No independently calibrated physical 3D uncertainty loaded.</p>
+</section>
+<section>
+<h2>4. Original interventions and reviewer notes</h2>
+<p id="eventStatus" class="muted">No event record loaded.</p>
+<div class="controls">
+<label style="flex:1">Review note <input id="note" type="text" maxlength="500" placeholder="Observed tracking error, shadow, fish crossing or source event"></label>
+<button id="addNote" type="button">Mark current time</button>
+<button id="exportNotes" type="button">Export local review notes JSON</button>
+</div>
+<div id="notesList"></div>
+</section>
+<section>
+<h2>5. Scientific evidence, original data and safety</h2>
+<pre id="status">Load source clock and original fish tracks to begin.</pre>
+<p class="warn">Camera/video play is local and read-only. Cross-camera fish IDs are provisional model associations. No physical ACI device can be actuated from this page. Hardware synchronization, independently surveyed XYZ, uncertainty coverage, ethics approval and fish welfare remain separate scientific acceptance criteria.</p>
+</section>
+</main>
+<footer>Offline AquaTrajectories multiview explorer. Local server: <code>python -m http.server 8765 --directory inst/explorer</code> then open <code>http://localhost:8765/multiview.html</code>.</footer>
+<script type="module">
+import {parseCSV,normalizeTracks,normalizeSceneTracks,
+        normalizeCameraLinks,validateMultiviewFrames,
+        normalizeEvents,cameraClockAt,masterSourcePTSAt,
+        project3D,sceneSegments,eventsAt,validateEmpiricalUncertainty,
+        multiviewAudit} from "./multiview-core.mjs";
+const $=x=>document.getElementById(x);
+const canvas=$("scene3d"),g=canvas.getContext("2d");
+let state={frames:[],tracks:[],xyz:[],links:[],events:[],
+           uncertainty:null,notes:[],videos:new Map(),
+           cameras:[],maxTime:0,audit:null,renderedSession:""};
+const n=(v,d=3)=>Number(v).toFixed(d);
+const read=async(id,required)=> {
+  const file=$(id).files?.[0];
+  if(!file){if(required)throw new Error("Select "+id+" to load original data");return null;}
+  if(file.size>50_000_000)throw new Error("Oversized source research file: "+id);
+  return file.text();
+};
+const color=id=>{
+  let h=0;for(let i=0;i<id.length;i++)h=(h*33+id.charCodeAt(i))>>>0;
+  return "hsl("+(h%360)+" 86% 65%)";
+};
+function selectedSession(){return $("session").value;}
+function clock(){return Number($("clock").value);}
+function setClock(t){$("clock").value=String(Math.min(state.maxTime,Math.max(0,t)));draw();}
+function camerasInSession(session){
+  return [...new Set(state.tracks.filter(x=>x.session_id===session)
+                                    .map(x=>x.camera_id))].sort();
+}
+function setScopes(){
+  const sessions=[...new Set(state.frames.map(x=>x.session_id))].sort();
+  $("session").replaceChildren(...sessions.map(x=>new Option(x,x)));
+  setCameraScope();
+}
+function releaseVideos(){
+  for(const item of state.videos.values()){
+    item.video.pause();
+    if(item.objectURL)URL.revokeObjectURL(item.objectURL);
+  }
+  state.videos.clear();
+}
+function setCameraScope(){
+  releaseVideos();
+  const session=selectedSession();
+  state.cameras=camerasInSession(session);
+  $("master").replaceChildren(...state.cameras.map(x=>new Option(x,x)));
+  const container=$("videoGrid");
+  container.replaceChildren();
+  for(const camera of state.cameras){
+    const card=document.createElement("article");
+    card.className="videoCard";
+    const name=document.createElement("h3");
+    name.textContent="Camera "+camera;
+    const label=document.createElement("label");
+    label.textContent="Original "+camera+" recording";
+    const input=document.createElement("input");
+    input.type="file";input.accept="video/*,.mp4,.mov,.avi,.mkv";
+    const box=document.createElement("div");
+    box.className="videoCanvas";
+    const video=document.createElement("video");
+    video.controls=true;video.preload="metadata";video.playsInline=true;
+    const overlay=document.createElement("canvas");
+    overlay.width=840;overlay.height=472;
+    box.append(video,overlay);
+    const sourceMsg=document.createElement("p");
+    sourceMsg.className="muted";sourceMsg.textContent="Original video not selected.";
+    label.append(input);
+    card.append(name,label,box,sourceMsg);
+    container.append(card);
+    state.videos.set(camera,{video,overlay,ctx:overlay.getContext("2d"),
+                              objectURL:null,message:sourceMsg});
+    input.addEventListener("change",()=>{
+      const item=state.videos.get(camera);
+      if(item.objectURL)URL.revokeObjectURL(item.objectURL);
+      item.video.pause();
+      item.objectURL=input.files?.[0]?URL.createObjectURL(input.files[0]):null;
+      item.video.src=item.objectURL??"";
+      item.message.textContent=item.objectURL?
+        "Selected original camera video; source clock is still externally declared.":
+        "Original video not selected.";
+      draw();
+    });
+    video.addEventListener("timeupdate",()=>{
+      if($("master").value!==camera||video.paused)return;
+      const f=masterSourcePTSAt(state.frames,video.currentTime,session,camera,
+                                Number($("tolerance").value));
+      if(f)setClock(f.time_s);
+    });
+  }
+  const timestamps=state.frames.filter(x=>x.session_id===session).map(x=>x.time_s);
+  state.maxTime=Math.max(...timestamps,1);
+  $("clock").max=String(state.maxTime);
+  setClock(Math.min(...timestamps,0));
+}
+function drawVideoCamera(camera,time,session){
+  const item=state.videos.get(camera);
+  if(!item)return;
+  const {ctx,overlay,video,message}=item;
+  ctx.clearRect(0,0,overlay.width,overlay.height);
+  const tolerance=Number($("tolerance").value);
+  const frame=cameraClockAt(state.frames,time,session,camera,tolerance);
+  if(!frame){message.textContent="No source frame within the allowed clock tolerance.";
+            return;}
+  const target=frame.raw_time_s;
+  if(item.objectURL&&Number.isFinite(target)&&
+     Math.abs(video.currentTime-target)>.12&&!video.seeking){
+    try{video.currentTime=target;}catch(_e){/* source video not yet seekable */}
+  }
+  message.textContent="Original frame "+frame.frame_id+
+    " · decoded source PTS "+n(frame.raw_time_s)+"s"+
+    " · alignment discrepancy "+n(frame.alignment_residual_s,4)+"s";
+  if(!$("show2d").checked)return;
+  const observed=state.tracks.filter(p=>p.session_id===session&&
+    p.camera_id===camera&&p.observed&&
+    Math.abs(p.time_s-frame.time_s)<=tolerance);
+  for(const p of observed){
+    const x=p.x/frame.width_px*overlay.width;
+    const y=p.y/frame.height_px*overlay.height;
+    ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);
+    ctx.lineWidth=3;ctx.strokeStyle=color(p.track_id);ctx.stroke();
+    ctx.fillStyle="#fff";ctx.font="bold 15px sans-serif";
+    ctx.fillText(p.track_id,x+10,y-9);
+  }
+}
+function render3D(time,session){
+  g.clearRect(0,0,canvas.width,canvas.height);
+  g.fillStyle="#091422";g.fillRect(0,0,canvas.width,canvas.height);
+  const xyz=state.xyz.filter(x=>x.session_id===session);
+  const gap=Number($("gap").value),history=Number($("history").value);
+  if(!Number.isFinite(gap)||gap<=0||!Number.isFinite(history)||history<=0)
+    return;
+  const paths=sceneSegments(xyz,session,gap);
+  const yaw=Number($("yaw").value)*Math.PI/180;
+  const pitch=Number($("pitch").value)*Math.PI/180;
+  const points=xyz.map(x=>project3D(x,yaw,pitch));
+  const scaleWorld=Math.max(1,...points.map(p=>Math.max(Math.abs(p.x),Math.abs(p.y))));
+  const scale=.4*Math.min(canvas.width,canvas.height)/scaleWorld;
+  const xplot=p=>canvas.width/2+p.x*scale;
+  const yplot=p=>canvas.height/2-p.y*scale;
+  g.lineWidth=1;g.strokeStyle="#456078";
+  g.beginPath();g.moveTo(canvas.width/2,0);
+  g.lineTo(canvas.width/2,canvas.height);g.moveTo(0,canvas.height/2);
+  g.lineTo(canvas.width,canvas.height/2);g.stroke();
+  for(const path of paths){
+    const arr=path.points.filter(p=>p.time_s<=time&&p.time_s>=time-history);
+    if(!arr.length)continue;
+    g.strokeStyle=color(path.fish_id);g.lineWidth=2.5;
+    g.beginPath();
+    arr.forEach((p,i)=>{
+      const pos=project3D(p,yaw,pitch);
+      if(i===0)g.moveTo(xplot(pos),yplot(pos));
+      else g.lineTo(xplot(pos),yplot(pos));
+    });g.stroke();
+  }
+  const shown=xyz.filter(p=>Math.abs(p.time_s-time)<=
+                                  Number($("tolerance").value));
+  const radius=state.uncertainty?.radius;
+  for(const p of shown) {
+    const pos=project3D(p,yaw,pitch);
+    const x=xplot(pos),y=yplot(pos);
+    if($("showUncertainty").checked&&Number.isFinite(radius)){
+      g.beginPath();g.arc(x,y,radius*scale,0,Math.PI*2);
+      g.fillStyle="rgba(95,179,255,.13)";g.fill();
+      g.strokeStyle="#aacdff";g.lineWidth=1;g.stroke();
+    }
+    g.beginPath();g.arc(x,y,6,0,Math.PI*2);
+    g.fillStyle=color(p.track_id);g.fill();
+    g.fillStyle="#f7fcff";g.font="14px sans-serif";
+    g.fillText(p.track_id,x+10,y-9);
+  }
+  if(!shown.length){
+    g.fillStyle="#9db1c5";g.font="16px sans-serif";
+    g.fillText("No source reconstructed 3D fish within frame tolerance",20,32);
+  }
+  $("uncertaintyStatus").textContent=state.uncertainty?.available?
+    "Empirical joint radial estimate: "+n(radius)+" "+
+     state.uncertainty.radius_units+". "+
+     "Independent physical XYZ calibration/animal IDs: "+
+     (state.uncertainty.independent_XYZ_verified&&
+      state.uncertainty.biological_ID_verified?"declared verified":"NOT verified")+
+     ". This visualization is not physical accuracy certification.":
+    "No eligible empirical uncertainty radius loaded. 3D positions are conditional on source camera calibration.";
+}
+function draw(){
+  if(!state.frames.length)return;
+  const session=selectedSession(),time=clock();
+  $("clockLabel").textContent=n(time)+"s (user-supplied camera time alignment)";
+  for(const camera of state.cameras)drawVideoCamera(camera,time,session);
+  render3D(time,session);
+  const ev=eventsAt(state.events,time,Number($("tolerance").value));
+  $("eventStatus").textContent=ev.length?
+    ev.map(x=>x.event_type+" — "+x.event_id+" @ "+n(x.time_s)+"s").join(" | "):
+    "No externally logged intervention within this source time window.";
+}
+async function load(){
+  const sourceFrames=await read("framesFile",true);
+  const sourceTracks=await read("tracksFile",true);
+  const xyzText=await read("xyzFile",false);
+  const linksText=await read("linksFile",false);
+  const eventsText=await read("eventsFile",false);
+  const uncertaintyText=await read("uncertaintyFile",false);
+  const next={
+    frames:validateMultiviewFrames(parseCSV(sourceFrames)),
+    tracks:normalizeTracks(parseCSV(sourceTracks)),
+    xyz:xyzText?normalizeSceneTracks(parseCSV(xyzText)):[],
+    links:linksText?normalizeCameraLinks(parseCSV(linksText)):[],
+    events:eventsText?normalizeEvents(parseCSV(eventsText)):[],
+    uncertainty:uncertaintyText?
+      validateEmpiricalUncertainty(JSON.parse(uncertaintyText)):null};
+  next.audit=multiviewAudit(next.tracks,next.xyz,next.frames,next.links,
+                           next.events,next.uncertainty);
+  releaseVideos();
+  state={...state,...next,notes:[],videos:new Map()};
+  setScopes();
+  $("status").textContent=JSON.stringify(next.audit,null,2);
+  $("notesList").replaceChildren();
+}
+$("load").addEventListener("click",async()=>{
+  try{await load();}catch(e){$("status").textContent="Rejected source data: "+e.message;}
+});
+$("session").addEventListener("change",setCameraScope);
+$("clock").addEventListener("input",draw);
+for(const id of ["tolerance","yaw","pitch","gap","history",
+                 "show2d","showUncertainty"])$(id).addEventListener("input",draw);
+$("playAll").addEventListener("click",async()=>{
+  for(const item of state.videos.values())if(item.objectURL){
+    try{await item.video.play();}catch(_e){item.message.textContent="Browser blocked playback; use original video controls.";}
+  }
+});
+$("pauseAll").addEventListener("click",()=>{
+  for(const item of state.videos.values())item.video.pause();
+});
+$("addNote").addEventListener("click",()=>{
+  if(!state.frames.length)return;
+  const note=$("note").value.trim();
+  if(!note)return;
+  const item={session_id:selectedSession(),time_s:clock(),text:note,
+    source:"LOCAL_REVIEWER_DRAFT",biological_identity_certified:false};
+  state.notes.push(item);
+  const p=document.createElement("p");p.textContent=
+    item.session_id+" @ "+n(item.time_s)+"s: "+note;
+  $("notesList").append(p);$("note").value="";
+});
+$("exportNotes").addEventListener("click",()=>{
+  const payload=JSON.stringify({schema:"aqt_local_multiview_reviewer_notes",
+    notes:state.notes,scientifically_verified:false},null,2);
+  const url=URL.createObjectURL(new Blob([payload],{type:"application/json"}));
+  const a=document.createElement("a");a.href=url;a.download="aqt_multiview_review_notes.json";
+  a.click();URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
