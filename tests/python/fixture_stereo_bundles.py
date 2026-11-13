@@ -13,12 +13,15 @@ import sys
 def _sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
-def fixtures(directory):
+def fixtures(directory,three_cameras=False):
     root=Path(directory)
     root.mkdir(parents=True,exist_ok=True)
     session="synthetic_session"
     source=[]
-    for camera_id,prefix,cx in (("TOP","top",0.),("SIDE","side",1.)):
+    cameras=[("TOP","top",0.,0.),("SIDE","side",1.,0.)]
+    if three_cameras:
+        cameras.append(("DIAG","diag",0.,1.))
+    for camera_id,prefix,cx,cy in cameras:
         folder=root/prefix;folder.mkdir()
         names={"frames":f"{prefix}.frames.csv",
                "mot":f"{prefix}.mot.txt",
@@ -33,7 +36,7 @@ def fixtures(directory):
             for track,xyz in ((1,(.2,0,5)),(2,(.4,1,5))):
                 x,y,z=xyz
                 u=960+(x-cx)/z*100
-                v=540+y/z*100
+                v=540+(y-cy)/z*100
                 ident=track if camera_id=="TOP" else track+100
                 mot.append([frame+1,ident,u-1,v-1,2,2,.99,-1,-1,-1])
                 classes.append([frame,ident,0])
@@ -69,7 +72,7 @@ def fixtures(directory):
             "model":"single_interface","units":"cm",
             "K":[[100.,0.,960.],[0.,100.,540.],[0.,0.,1.]],
             "R_c2w":[[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]],
-            "center":[cx,0.,0.],
+            "center":[cx,cy,0.],
             "plane_point":[0.,0.,1.],
             "plane_normal":[0.,0.,1.],
             "n_before":1.,"n_after":1.}
@@ -88,4 +91,7 @@ def fixtures(directory):
     return destination
 
 if __name__=="__main__":
-    print(fixtures(sys.argv[1]))
+    if len(sys.argv) not in (2,3) or (
+        len(sys.argv)==3 and sys.argv[2]!="--three-cameras"):
+        raise SystemExit("Usage: fixture_stereo_bundles.py OUT [--three-cameras]")
+    print(fixtures(sys.argv[1],three_cameras=(len(sys.argv)==3)))
