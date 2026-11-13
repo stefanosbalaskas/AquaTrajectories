@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {parseCSV,normalizeTracks,normalizeSceneTracks,
         normalizeCameraLinks,validateMultiviewFrames,normalizeEvents,
         cameraClockAt,masterSourcePTSAt,sceneSegments,eventsAt,
-        validateEmpiricalUncertainty,multiviewAudit}
+        validate3DSourceAudit,validateEmpiricalUncertainty,multiviewAudit}
   from "../../inst/explorer/multiview-core.mjs";
 
 const sourceFrames=parseCSV(
@@ -71,12 +71,29 @@ test("joint uncertainty source radius visible without invented physical validati
     original_physical_XYZ_independent_survey_authenticated:false,
     source_fish_ID_ground_truth_independently_adjudicated:false
   };
-  const v=validateEmpiricalUncertainty(source);
+  const v=validateEmpiricalUncertainty(source,"cm");
   assert.equal(v.radius,.25);
   assert.equal(v.independent_XYZ_verified,false);
   assert.equal(v.biological_ID_verified,false);
+  assert.throws(()=>validateEmpiricalUncertainty(source,"m"),
+                /mismatched physically declared/);
+  assert.throws(()=>validateEmpiricalUncertainty(source),
+                /mismatched physically declared/);
+  const audit=validate3DSourceAudit({
+    schema_version:"1.0",source_3d_units:"cm",n_3d_rows:3,
+    biological_identity_certified:false,
+    underwater_physical_xyz_accuracy_certified:false},3);
+  assert.equal(audit.xyz_units,"cm");
+  assert.throws(()=>validate3DSourceAudit({
+    schema_version:"1.0",source_3d_units:"m",n_3d_rows:5,
+    biological_identity_certified:false,
+    underwater_physical_xyz_accuracy_certified:false},3),/audit mismatched/);
+  assert.throws(()=>validate3DSourceAudit({
+    schema_version:"1.0",source_3d_units:"cm",n_3d_rows:3,
+    biological_identity_certified:true,
+    underwater_physical_xyz_accuracy_certified:true},3),/audit mismatched/);
   assert.throws(()=>validateEmpiricalUncertainty({
-    ...source,finite_sample_group_max_radial_radius:null}),
+    ...source,finite_sample_group_max_radial_radius:null},"cm"),
     /inconsistent/);
 });
 
