@@ -196,8 +196,8 @@ aqt_plot_trajectory_storyboard3d <- function(
       drawline(c(x[2L],y[1L],zf),c(x[2L],y[2L],zf),pale)
     }
     for (a in seq_len(7L)) for (b in seq.int(a+1L,8L)) {
-      pa <- as.numeric(boxpoints[a,c("x","y","z")])
-      pb <- as.numeric(boxpoints[b,c("x","y","z")])
+      pa <- as.numeric(unlist(boxpoints[a,c("x","y","z")],use.names=FALSE))
+      pb <- as.numeric(unlist(boxpoints[b,c("x","y","z")],use.names=FALSE))
       if (sum(pa!=pb)==1L)drawline(pa,pb,"#B7BEC6",1)
     }
     px <- proj(mean(x),y[1L],z[1L])
