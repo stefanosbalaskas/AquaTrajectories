@@ -17,15 +17,14 @@ aqt_plot_occupancy_timeseries(
 \item{time_bin_s}{Bin width in seconds; zero or negative not allowed.}
 
 \item{band}{One of sd, se, or none; only shown where at least two
-  distinct tank units contribute to a time bin.}
+distinct tank units contribute to a time bin.}
 
 \item{periods}{Optional start_s/end_s/label table of known experimental
-  periods, displayed as shaded regions; not inferred from behaviour.}
+periods, displayed as shaded regions; not inferred from behaviour.}
 }
 \value{
 Invisibly a tank-equal-weight summary by scenario and time bin,
   with n_tanks and descriptive SD/SE.
-@export
 }
 \description{
 The supplied area_fraction is averaged within tank and time bins BEFORE

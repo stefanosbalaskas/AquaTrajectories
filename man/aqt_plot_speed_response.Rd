@@ -17,26 +17,25 @@ aqt_plot_speed_response(
 }
 \arguments{
 \item{data}{Kinematic data.frame with tank_id,time_s,speed, or an
-  aqt_tracks object with a known tank identifier column.}
+aqt_tracks object with a known tank identifier column.}
 
 \item{event_time_s}{Known intervention onset in time_s units.}
 
 \item{baseline_s, response_s}{Two intervals relative to event_time_s,
-  e.g. c(-30,0) and c(0,30). Intervals must not overlap.}
+e.g. c(-30,0) and c(0,30). Intervals must not overlap.}
 
 \item{speed_unit}{Explicit speed units (e.g. cm/s); for an aqt_tracks
-  object can be inferred from its declared spatial units.}
+object can be inferred from its declared spatial units.}
 
 \item{tank_col}{Name of independent experimental-unit identifier.}
 
 \item{time_bin_s}{Time bin width in seconds.}
 
 \item{max_gap_s}{Maximum allowed observed step when deriving speed from
-  aqt_tracks. No interpolation across a lost observation.}
+aqt_tracks. No interpolation across a lost observation.}
 }
 \value{
 Invisibly a list of time_bin, per_tank_epoch and summary tables.
-@export
 }
 \description{
 Panel A plots mean speed across independent tank units after averaging

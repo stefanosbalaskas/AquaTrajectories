@@ -18,17 +18,29 @@ aqt_plot_trajectory_storyboard3d(
 }
 \arguments{
 \item{tracks}{Validated 3D aqt_tracks in physical tank units (cm or m).}
-\item{times_s}{Four strictly increasing timestamps. NULL uses four equally spaced times across the observed trajectory duration.}
-\item{session_id, camera_id, track_id}{Optional identifiers selecting one fish scope. Required if input contains multiple scopes.}
+
+\item{times_s}{Four strictly increasing timestamps. NULL uses four
+equally spaced times across the observed trajectory duration.}
+
+\item{session_id, camera_id, track_id}{Optional identifiers selecting one
+fish scope. Required if input contains multiple scopes.}
+
 \item{recent_s}{Width (seconds) of each of the two recency bands.}
-\item{max_gap_s}{Largest allowed consecutive observed sampling interval; Inf permits any gap without an explicit missing row.}
-\item{max_age_s}{Largest allowed age of the last observed position for showing the current fish head and reporting its latest speed.}
-\item{tank_limits}{Optional list(x=c(min,max),y=c(min,max),z=c(min,max)) in the same physical units as tracks. Without it, visible bounds are inferred from supplied observed XYZ, not independently measured.}
+
+\item{max_gap_s}{Largest allowed consecutive observed sampling interval;
+Inf permits any gap without an explicit missing row.}
+
+\item{max_age_s}{Largest allowed age of the last observed position
+for showing the current fish head and reporting its latest speed.}
+
+\item{tank_limits}{Optional list(x=c(min,max),y=c(min,max),z=c(min,max))
+in the same physical units as tracks. Without it, visible bounds are
+inferred from supplied observed XYZ, not independently measured.}
 }
 \value{
 Invisibly, a four-row data frame with audited per-frame observed
-distance, latest valid speed, current-observation status, and counts.
-Draws a four-panel static figure on the active base graphics device.
+  distance, latest valid speed, current-observation status, and counts.
+  Draws a four-panel static figure on the active base graphics device.
 }
 \description{
 Produces a static 2 x 2 axonometric projection of a single observed

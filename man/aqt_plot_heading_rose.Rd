@@ -29,14 +29,13 @@ aqt_plot_heading_rose(
 \item{weight_col}{Optional nonnegative observation-weight column.}
 
 \item{frame_rasters}{Optional named list of preloaded raster images, with
-  names matching conditions. Supplied images are not generated or altered.}
+names matching conditions. Supplied images are not generated or altered.}
 
 \item{fill}{Fill colour for rose diagram sectors.}
 }
 \value{
 Invisibly a table of bin centers, counts, proportions and
   descriptive circular statistics.
-@export
 }
 \description{
 Uses supplied heading_rad values from aqt_kinematics() or another

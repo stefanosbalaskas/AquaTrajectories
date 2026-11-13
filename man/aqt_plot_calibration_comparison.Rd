@@ -12,18 +12,17 @@ aqt_plot_calibration_comparison(
 }
 \arguments{
 \item{data}{Data.frame containing method,target_id,partition and six
-  truth/prediction XYZ coordinates in explicitly stated units.}
+truth/prediction XYZ coordinates in explicitly stated units.}
 
 \item{units}{Either cm or m; must match supplied physical coordinates.}
 
 \item{require_holdout}{Require explicit partition==holdout (default TRUE).
-  Rows marked fit are never scored; overlapping target IDs between
-  fit and holdout in the same method cause an error.}
+Rows marked fit are never scored; overlapping target IDs between
+fit and holdout in the same method cause an error.}
 }
 \value{
 Invisibly a per-method error summary. Source measurements and
   external survey accuracy are not automatically certified.
-@export
 }
 \description{
 Two-column publication panel per method: nonnegative Euclidean XYZ
