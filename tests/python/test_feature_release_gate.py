@@ -24,6 +24,25 @@ def source_repo(root,all_files=False):
     return root
 
 class ScientificEngineeringGate(unittest.TestCase):
+    def test_windows_legacy_codepage_cannot_crash_subprocess_evidence(self):
+        # On Greek Windows cp1253, byte 0x9f is not decodable by the
+        # subprocess default text codec. Valid UTF-8 output must also survive.
+        for exit_code in (0, 7):
+            with self.subTest(exit_code=exit_code):
+                child = (
+                    "import sys; "
+                    "sys.stdout.buffer.write(bytes([0xe2,0x9c,0x93,0x9f])); "
+                    "sys.stderr.buffer.write(bytes([0x9f])); "
+                    f"sys.exit({exit_code})"
+                )
+                outcome = m._run([sys.executable, "-c", child], ROOT, 20)
+                self.assertEqual(outcome["returncode"], exit_code)
+                self.assertEqual(outcome["status"],
+                                 "passed" if exit_code == 0 else "failed")
+                self.assertIn("\u2713", outcome["stdout_tail"])
+                self.assertIn("\ufffd", outcome["stdout_tail"])
+                self.assertIn("\ufffd", outcome["stderr_tail"])
+
     def test_all_required_features_incomplete_when_source_or_tests_missing(self):
         with tempfile.TemporaryDirectory() as td:
             root=source_repo(Path(td))
