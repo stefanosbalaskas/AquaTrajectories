@@ -3,7 +3,7 @@ on:
   pull_request:
     paths:
       - "inst/python/aqt_video_to_3d.py"
-      - "inst/exec/aqt_video_to_3d_native.R"
+      - "inst/scripts/aqt_video_to_3d_native.R"
       - "tests/python/test_video_to_3d.py"
       - "tests/python/fixture_stereo_bundles.py"
       - "R/automatic-crossview-refractive.R"
@@ -12,7 +12,7 @@ on:
     branches: [main]
     paths:
       - "inst/python/aqt_video_to_3d.py"
-      - "inst/exec/aqt_video_to_3d_native.R"
+      - "inst/scripts/aqt_video_to_3d_native.R"
       - "tests/python/test_video_to_3d.py"
       - "R/automatic-crossview-refractive.R"
       - ".github/workflows/auto-video-to-3d.yml"
