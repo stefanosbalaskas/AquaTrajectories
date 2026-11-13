@@ -247,25 +247,71 @@ def audit(repo,strict=False,run_tests=True):
         "source_training_test_data_included":False,
         "original_video_weights_or_personal_metadata_included":False}
 
+def _dist_source_files(repo):
+    """Whitelisted COMPLETE installable R+Python/JS source, never input assets.
+
+    Excludes experimental video, detector weights, raw fish recordings, cloud
+    credentials, binary images, data or hidden dot-files by construction.
+    """
+    repo=Path(repo).resolve()
+    selected=set()
+    roots={
+       "R":{".r"},
+       "man":{".rd"},
+       "inst":{".py",".r",".mjs",".html",".css",".json",".txt"},
+       "tests":{".py",".r",".mjs",".js",".json",".txt"}
+    }
+    for root,suffixes in roots.items():
+        folder=repo/root
+        if not folder.is_dir():continue
+        for path in folder.rglob("*"):
+            if path.is_dir():continue
+            rel=path.relative_to(repo)
+            if path.is_symlink() or (
+                not path.resolve().is_relative_to(repo)):
+                raise ValueError("Unsafe external source/symlink in package")
+            if any(z.startswith(".") or z in (
+                    "__pycache__","node_modules",".venv") for z in rel.parts):
+                continue
+            if path.suffix.lower() not in suffixes:
+                continue
+            if path.stat().st_size>5_000_000:
+                raise ValueError("Oversized embedded package source; inspect for bundled data")
+            selected.add(rel.as_posix())
+    for path in ("DESCRIPTION","NAMESPACE","LICENSE",
+                 "LICENSE.md",".Rbuildignore","README.md","NEWS.md"):
+        if (repo/path).is_file():selected.add(path)
+    return sorted(selected)
+
 def make_archive(repo,output,report):
     if not report["all_six_engineering_features_qualified"]:
         raise RuntimeError("Cannot archive unqualified AquaTrajectories software")
     if output.exists():raise FileExistsError("Refuse overwrite engineering release")
     repo=Path(repo).resolve()
-    allow=set(report["required_source_sha256"])
-    allow.update(("DESCRIPTION","NAMESPACE","LICENSE"))
-    # Source-only distribution, no data, video, model weights, GitHub
-    # secrets or source images. Native R package itself retains a
-    # separate R CMD check / licensing release process.
+    selected=_dist_source_files(repo)
+    required=set(report["required_source_sha256"])
+    if not required.issubset(selected):
+        raise RuntimeError("Feature source would be omitted from complete R/Python/JS package archive")
+    for path,original_digest in report["required_source_sha256"].items():
+        if hash_file(repo/path)!=original_digest:
+            raise ValueError("Feature source mutated after exact qualification")
+    # Include every core R/man file as well as JS/Python bridge and tests.
+    # This is a complete whitelisted *source tree*, not original research
+    # data or model weights. CRAN submission and hardware certification
+    # remain independent release decisions.
+    if not any(p.startswith("R/") for p in selected) or (
+        not any(p.startswith("man/") for p in selected)):
+        raise RuntimeError("Complete R package code and documentation not available")
     output.parent.mkdir(parents=True,exist_ok=True)
     with tarfile.open(output,"w:gz") as tar:
-        for path in sorted(allow):
+        for path in selected:
             source=repo/path
             if not source.is_file() or source.is_symlink() or (
                 not source.resolve().is_relative_to(repo)):
                 raise ValueError("Unsafe release source path")
-            tar.add(source,arcname="AquaTrajectories/"+path,recursive=False)
+            tar.add(source,arcname="aquaTrajectories/"+path,recursive=False)
     return hash_file(output)
+
 
 def main(argv=None):
     ap=argparse.ArgumentParser(description=__doc__)
