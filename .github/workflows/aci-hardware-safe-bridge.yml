@@ -1,0 +1,45 @@
+name: Wave 15D - fail-closed physical ACI serial bridge and welfare interlock contracts
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_aci_physical_controller.py"
+      - "tests/python/test_aci_physical_controller.py"
+      - "docs/ACI_PHYSICAL_DEVICE_PROTOCOL.md"
+      - ".github/workflows/aci-hardware-safe-bridge.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_aci_physical_controller.py"
+      - "tests/python/test_aci_physical_controller.py"
+      - ".github/workflows/aci-hardware-safe-bridge.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  simulated-device-firmware-fault-and-estop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Complete opt-in device serial interface syntax and simulated safety tests
+        run: |
+          python -m py_compile inst/python/aqt_aci_physical_controller.py
+          python -m unittest discover -s tests/python -p "test_aci_physical_controller.py" -v
+      - name: Prohibit any CI physical serial port or false independent welfare evidence
+        run: |
+          python - <<'PY'
+          import pathlib
+          s=pathlib.Path("inst/python/aqt_aci_physical_controller.py").read_text()
+          for item in ("physical_hardware_e_stop_independently_tested",
+                       "independent_physical_actuator_feedback_verified",
+                       "animal_welfare_or_ethics_externally_certified",
+                       "mode=a.mode","--arm-hardware",
+                       "hardware_watchdog_test_record_sha256"):
+              assert item in s
+          print("Safety-gated physical device adapter is code-tested ONLY with virtual devices; no animal actuator driven.")
+          PY
