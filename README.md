@@ -2,7 +2,29 @@
 
 Development-stage native R package for aquatic animal 2D/3D trajectories, movement metrics, event alignment, synchronization, and calibrated multiview geometry.
 
-**Not an independently validated release.** Fish detector training, cross-camera identity matching, aquatic refraction correction, physiological stress detection, and coverage-calibrated statistical inference are not implemented.
+**Not an independently scientifically validated release.** Provisional automatic cross-camera association and a refraction-aware video-to-3D software bridge exist, but independently verified biological identities, calibrated underwater XYZ accuracy, welfare evidence, physical actuator safety, and joint uncertainty coverage are not certified.
+
+## Publication-style 3D fish trajectory storyboard
+
+A new static four-panel visual reproduces the essentials of cumulative
+3D swimming-path figures: consistent physical tank axes, grey historical
+segments, light/dark blue recent motion, time labels, measured segment
+speed, and cumulative **observed** distance. It is an axonometric view
+of supplied physical XYZ, not a depth estimate from one camera.
+
+```r
+# xyz is a single-scope aqt_tracks with x/y/z in cm or m.
+pdf("fish_four_panels.pdf",width=11,height=8)
+diagnostics <- aqt_plot_trajectory_storyboard3d(
+  xyz, recent_s=2,max_gap_s=.1,
+  tank_limits=list(x=c(0,22),y=c(0,8),z=c(0,11)))
+dev.off()
+```
+
+These example tank bounds are not independently measured. See
+[the storyboard manual](docs/TRAJECTORY_3D_PUBLICATION_STORYBOARD.md).
+Three original optional rgl plot renderers have also been repaired;
+the added graphics tests need to pass before merge.
 
 ## First-wave example
 

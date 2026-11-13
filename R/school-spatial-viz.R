@@ -29,7 +29,7 @@ aqt_plot_school3d <- function(tracks,session_id,camera_id,time_s,
           d$time_s==time_s,,drop=FALSE]
   if (!nrow(d)) stop("No observed fish in requested 3D frame",call.=FALSE)
   colours <- grDevices::hcl.colors(nrow(d),"Dark 3")
-  rgl::plot3d(d$x,d$y,d$z,type="p",size=8,color=colours,
+  rgl::plot3d(d$x,d$y,d$z,type="p",size=8,col=colours,
               xlab=paste0("X (",attr(tracks,"aqt_units"),")"),
               ylab=paste0("Y (",attr(tracks,"aqt_units"),")"),
               zlab=paste0("Z (",attr(tracks,"aqt_units"),")"))
@@ -78,10 +78,19 @@ aqt_plot_voxel3d <- function(voxels) {
   bins <- pmin(16L,pmax(1L,as.integer(ceiling(q*16))))
   units <- attr(voxels,"aqt_units")
   if (is.null(units)) units <- "source units"
-  rgl::plot3d(d$x_mid,d$y_mid,d$z_mid,type="p",
-    color=pal[bins],size=3+20*sqrt(q),
+  # rgl::points3d() accepts a vector of colours but requires a SINGLE
+  # numeric point size per draw call. Group same-size voxels rather than
+  # passing a vector of sizes to plot3d() (which fails on Windows rgl).
+  # Render sizes at 0.01 resolution to avoid hundreds of graphics batches.
+  sizes <- round(3+20*sqrt(q),digits=2L)
+  rgl::plot3d(d$x_mid,d$y_mid,d$z_mid,type="n",
     xlab=paste0("X (",units,")"),ylab=paste0("Y (",units,")"),
     zlab=paste0("Z (",units,")"))
+  for (size in unique(sizes)) {
+    take <- which(sizes==size)
+    rgl::points3d(d$x_mid[take],d$y_mid[take],d$z_mid[take],
+                  color=pal[bins[take]],size=as.numeric(size))
+  }
   invisible(d)
 }
 
