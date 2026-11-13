@@ -268,8 +268,21 @@ def audit(repo,strict=False,run_tests=True):
     complete=all(e["engineering_feature_qualified"] for e in result.values())
     package_check={"status":"not_run"}
     if strict and complete:
-        package_check=_run(["R","CMD","check","--no-manual","."],
+        # R CMD check against a raw checkout can disagree with a real package
+        # distribution check (particularly on Windows). Build the package
+        # tarball first using rcmdcheck, as the separate R qualification CI
+        # does. Reject any NOTE as well as every WARNING or ERROR.
+        r_check=(
+          "x<-rcmdcheck::rcmdcheck(args=c('--no-manual'),error_on='never');"
+          "n<-c(errors=length(x$errors),warnings=length(x$warnings),"
+          "notes=length(x$notes));"
+          "cat('AQT_RELEASE_PACKAGE_CHECK ',"
+          "paste(names(n),n,sep='=',collapse=' '),'\\n');"
+          "if(any(n>0L))quit(save='no',status=1L)"
+        )
+        package_check=_run(["Rscript","--vanilla","-e",r_check],
                            repo,1200)
+        package_check["check_method"]="R CMD build and R CMD check via rcmdcheck; no errors/warnings/notes"
         complete=package_check["status"]=="passed"
     elif strict:package_check={"status":"blocked",
          "reason":"Feature source/tests do not all qualify; R CMD check not substitute"}
