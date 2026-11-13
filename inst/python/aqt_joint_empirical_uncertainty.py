@@ -147,7 +147,9 @@ def _vector(row):
     r=row["residual_xyz"] if row["residual_xyz"] is not None else (None,)*3
     return [*r,*[row[k] for k in RESIDUAL_FEATURES[3:]]]
 
-def calibrate(rows,alpha=.05,n_draws=2000,seed=713):
+def calibrate(rows,alpha=.05,n_draws=2000,seed=713,xyz_units=None):
+    if xyz_units not in ("cm","m"):
+        raise ValueError("Original physical truth XYZ units cm or m must be explicitly declared")
     if not 0<alpha<1 or type(n_draws) is not int or n_draws<10 or n_draws>100000:
         raise ValueError("Invalid alpha or Monte Carlo draws")
     if type(seed) is not int or seed<0 or seed>2147483647:
@@ -242,7 +244,8 @@ def calibrate(rows,alpha=.05,n_draws=2000,seed=713):
         "n_successful_train_tank_max_scores":len(finite_scores),
         "finite_sample_order_statistic_rank":rank,
         "finite_sample_group_max_radial_radius":radius,
-        "radius_units":"source_xyz_units_required_in_experiment_metadata",
+        "radius_units":xyz_units,
+        "original_xyz_physical_units_externally_declared":True,
         "finite_sample_unconditional_joint_interval_available":eligible,
         "holdout_all_frame_tank_coverage_fraction":(
             sum(v["all_source_observations_covered"] for v in hold_tanks)/
@@ -271,11 +274,13 @@ def main(argv=None):
     ap.add_argument("--alpha",type=float,default=.05)
     ap.add_argument("--draws",type=int,default=2000)
     ap.add_argument("--seed",type=int,default=713)
+    ap.add_argument("--xyz-units",choices=("cm","m"),required=True,
+                    help="Must equal actual externally surveyed physical XYZ units")
     ap.add_argument("--out",required=True,type=Path)
     args=ap.parse_args(argv)
     if args.out.exists():raise FileExistsError("Refusing overwrite independent original empirical evidence")
     data=calibrate(read_source(args.empirical_source_csv),args.alpha,
-                   args.draws,args.seed)
+                   args.draws,args.seed,args.xyz_units)
     data["original_source_csv_sha256"]=sha256(args.empirical_source_csv)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(data,indent=2,sort_keys=True,allow_nan=False)+"\n")
