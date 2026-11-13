@@ -67,12 +67,14 @@ class RealFishOracleContracts(unittest.TestCase):
             offset=43449
             with zipfile.ZipFile(path,"w") as z:
                 z.writestr("mot/gt/gt.txt",
-                    "".join(f"{f},1,10,10,8,8,1,1,1\n"
-                            for f in range(offset+1,offset+4)))
+                    "".join(f"{frame},{fish_id},{fish_id*20},10,8,8,1,1,1\n"
+                            for frame in range(offset+1,offset+4)
+                            for fish_id in range(1,5)))
                 for frame in range(offset+1,offset+4):
                     z.writestr(f"mot/img1/{frame:06d}.jpg",b"original image placeholder")
             gt,info=m.original_zip_gt(path,3)
-            self.assertEqual([x[0] for x in gt],[1,2,3])
+            self.assertEqual(sorted({x[0] for x in gt}),[1,2,3])
+            self.assertEqual(len(gt),12)
             self.assertEqual(info["original_source_first_frame"],43450)
             self.assertEqual(info["original_source_last_frame"],43452)
             self.assertTrue(info["original_image_frame_coverage_verified"])
