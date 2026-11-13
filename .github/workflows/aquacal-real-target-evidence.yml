@@ -1,0 +1,60 @@
+name: Wave 14F - original real 13-camera aquarium physical ChArUco evidence audit
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_aquacal_physical_target_audit.py"
+      - "tests/python/test_aquacal_physical_target_audit.py"
+      - "docs/AQUACAL_REAL_PHYSICAL_TARGET_EVIDENCE.md"
+      - ".github/workflows/aquacal-real-target-evidence.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_aquacal_physical_target_audit.py"
+      - "tests/python/test_aquacal_physical_target_audit.py"
+      - ".github/workflows/aquacal-real-target-evidence.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  real-underwater-physical-target-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Original source integrity and real target error arithmetic contracts
+        run: |
+          python -m py_compile inst/python/aqt_aquacal_physical_target_audit.py
+          python -m unittest discover -s tests/python -p "test_aquacal_physical_target_audit.py" -v
+      - name: Fetch immutable source-commit original aquarium 13-camera metrics
+        run: |
+          ROOT="https://raw.githubusercontent.com/McGrathLab/AquaCal/1ed009687ffe9d5e82f0ee8a613bc1355d455ecd/experiments/results"
+          curl --fail --location --show-error --retry 3 --max-time 90 \
+            "$ROOT/real_rig_metrics.json" -o "$RUNNER_TEMP/aquacal_real_rig_metrics.json"
+          curl --fail --location --show-error --retry 3 --max-time 90 \
+            "$ROOT/benchmark.json" -o "$RUNNER_TEMP/aquacal_benchmark.json"
+          python inst/python/aqt_aquacal_physical_target_audit.py \
+            --real-metrics "$RUNNER_TEMP/aquacal_real_rig_metrics.json" \
+            --benchmark "$RUNNER_TEMP/aquacal_benchmark.json" \
+            --out "$RUNNER_TEMP/original_real_underwater_3d_target_evidence.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"original_real_underwater_3d_target_evidence.json"
+          a=json.loads(p.read_text())
+          assert a["original_heldout_physical_length_comparisons"]==7762,a
+          assert a["original_calibration_camera_count"]==13
+          assert abs(a["source_reported_intercorner_RMSE_mm"]-0.628138596646187)<1e-9
+          assert abs(a["recomputed_error_moment_RMSE_mm"]-a["source_reported_intercorner_RMSE_mm"])<1e-8
+          assert not a["AquaTrajectories_own_XYZ_RMSE_measured"]
+          assert not a["independent_AquaTrajectories_metrology_certified"]
+          print("Real external aquarium physical target source validated only; own XYZ still unqualified")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: wave14f-original-real-aquarium-3d-target-source-evidence
+          path: ${{ runner.temp }}/original_real_underwater_3d_target_evidence.json
