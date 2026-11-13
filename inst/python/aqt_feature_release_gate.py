@@ -36,7 +36,7 @@ FEATURES={
    "claims":"automatic geometric candidate identity; independent biological re-ID pending"},
  "automatic_original_video_to_refractive_3d":{
    "files":["inst/python/aqt_video_to_3d.py",
-            "inst/exec/aqt_video_to_3d_native.R",
+            "inst/scripts/aqt_video_to_3d_native.R",
             "tests/python/fixture_stereo_bundles.py",
             "tests/python/test_video_to_3d.py"],
    "tests":["video_cli_contract","native_2d_to_3d_roundtrip"],
@@ -86,8 +86,13 @@ def hash_file(path):
 def _run(cmd,repo,timeout=180):
     start=time.monotonic()
     try:
+        # Windows may default to a legacy codepage (e.g. Greek cp1253),
+        # while R/Python/Node child processes print UTF-8 diagnostics.
+        # Decode explicitly and fail closed on the subprocess *exit status*;
+        # undecodable diagnostic bytes must never crash the release gate.
         proc=subprocess.run(cmd,cwd=repo,stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,text=True,
+                            encoding="utf-8",errors="replace",
                             timeout=timeout,check=False)
         status="passed" if proc.returncode==0 else "failed"
         return {
@@ -158,7 +163,50 @@ def _native_roundtrip(repo):
             if len(points)!=6 or max(abs(float(p["z"])-5)
                                       for p in points)>1e-5:
                 raise ValueError("Known synthetic 3D XYZ ground-truth recovery failed")
+            # Strict engineering acceptance must also exercise a three-camera
+            # reference-fish fusion and the legitimate zero-detection outcome.
+            # Neither synthetic case certifies real animal identity or hardware.
+            for case,flag,expected_views in (
+                ("three_cameras","--three-cameras",2),
+                ("zero_fish","--no-fish",0)):
+                source_case=Path(td)/case
+                generated=_run([sys.executable,
+                    "tests/python/fixture_stereo_bundles.py",
+                    str(source_case),flag],repo,90)
+                if generated["status"]!="passed":
+                    return {"status":"failed",
+                        "stage":"synthetic_"+case+"_source_fixture",
+                        "fixture":generated}
+                out_case=Path(td)/(case+"_output")
+                run_case=_run([sys.executable,
+                    "inst/python/aqt_video_to_3d.py",
+                    "--config",str(source_case/"synthetic_video_3d_config.json"),
+                    "--mode","prepared","--output-dir",str(out_case)],repo,360)
+                if run_case["status"]!="passed":
+                    return {"status":"failed",
+                        "stage":"native_"+case+"_integration",
+                        "runner":run_case}
+                case_audit=json.loads((out_case/"stereo_audit.json").read_text())
+                with (out_case/"fish_3d_tracks.csv").open(newline="") as fh:
+                    case_rows=list(csv.DictReader(fh))
+                if (case_audit["n_3d_rows"] != (0 if expected_views==0 else 6)
+                    or case_audit["n_global_reference_anchored_fish"] !=
+                        (0 if expected_views==0 else 2)
+                    or case_audit["biological_identity_certified"] is not False
+                    or case_audit["underwater_physical_xyz_accuracy_certified"] is not False
+                    or len(case_rows)!=(0 if expected_views==0 else 6)):
+                    raise ValueError("Native "+case+" failed 3D source and scientific fail-closed contracts")
+                if expected_views:
+                    if (any(int(p["n_contributing_secondary_views"])!=2
+                            for p in case_rows)
+                        or max(abs(float(p["z"])-5.) for p in case_rows)>1e-5):
+                        raise ValueError("Native three-camera global XYZ and fish IDs failed")
+                elif (case_audit["source_2d_track_rows"]!=0 or
+                      case_audit["n_provisional_pair_ids"]!=0):
+                    raise ValueError("Native no-fish input generated fabricated crossview ID")
             return {"status":"passed","synthetic_3d_xyz_software_verified":True,
+                    "synthetic_3camera_global_identity_verified":True,
+                    "empty_tank_software_missingness_verified":True,
                     "original_physical_xyz_accuracy_verified":False}
         except (ValueError,KeyError,FileNotFoundError,TypeError) as e:
             return {"status":"failed","reason":str(e),
@@ -196,7 +244,7 @@ def audit(repo,strict=False,run_tests=True):
         if all((repo/p).is_file() for p in [
             "inst/python/aqt_video_to_3d.py",
             "tests/python/fixture_stereo_bundles.py",
-            "inst/exec/aqt_video_to_3d_native.R",
+            "inst/scripts/aqt_video_to_3d_native.R",
             "R/automatic-crossview-refractive.R"]):
             tests["native_2d_to_3d_roundtrip"]=_native_roundtrip(repo)
         else:
@@ -220,8 +268,21 @@ def audit(repo,strict=False,run_tests=True):
     complete=all(e["engineering_feature_qualified"] for e in result.values())
     package_check={"status":"not_run"}
     if strict and complete:
-        package_check=_run(["R","CMD","check","--no-manual","."],
+        # R CMD check against a raw checkout can disagree with a real package
+        # distribution check (particularly on Windows). Build the package
+        # tarball first using rcmdcheck, as the separate R qualification CI
+        # does. Reject any NOTE as well as every WARNING or ERROR.
+        r_check=(
+          "x<-rcmdcheck::rcmdcheck(args=c('--no-manual'),error_on='never');"
+          "n<-c(errors=length(x$errors),warnings=length(x$warnings),"
+          "notes=length(x$notes));"
+          "cat('AQT_RELEASE_PACKAGE_CHECK ',"
+          "paste(names(n),n,sep='=',collapse=' '),'\\n');"
+          "if(any(n>0L))quit(save='no',status=1L)"
+        )
+        package_check=_run(["Rscript","--vanilla","-e",r_check],
                            repo,1200)
+        package_check["check_method"]="R CMD build and R CMD check via rcmdcheck; no errors/warnings/notes"
         complete=package_check["status"]=="passed"
     elif strict:package_check={"status":"blocked",
          "reason":"Feature source/tests do not all qualify; R CMD check not substitute"}

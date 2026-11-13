@@ -24,6 +24,48 @@ def source_repo(root,all_files=False):
     return root
 
 class ScientificEngineeringGate(unittest.TestCase):
+    def test_strict_package_check_uses_built_tarball_and_rejects_notes(self):
+        # The raw-source 'R CMD check .' differs from the standard
+        # build-then-check pipeline. Capture the actual command used.
+        with tempfile.TemporaryDirectory() as td:
+            root=source_repo(Path(td),all_files=True)
+            calls=[]
+            def fake_run(cmd,repo,timeout=180):
+                calls.append(cmd)
+                if "--mode" in cmd and "scientific_release" in cmd:
+                    return {"status":"failed","returncode":2}
+                return {"status":"passed","returncode":0}
+            with patch.object(m,"_run",side_effect=fake_run),patch.object(
+                m,"_native_roundtrip",return_value={"status":"passed"}):
+                report=m.audit(root,run_tests=True,strict=True)
+            checks=[x for x in calls if "rcmdcheck::rcmdcheck" in " ".join(x)]
+            self.assertEqual(len(checks),1)
+            self.assertEqual(checks[0][:3],["Rscript","--vanilla","-e"])
+            self.assertIn("--no-manual",checks[0][3])
+            self.assertIn("notes=length(x$notes)",checks[0][3])
+            self.assertIn("if(any(n>0L))",checks[0][3])
+            self.assertTrue(report["all_six_engineering_features_qualified"])
+            self.assertEqual(report["package_R_CMD_check"]["status"],"passed")
+
+    def test_windows_legacy_codepage_cannot_crash_subprocess_evidence(self):
+        # On Greek Windows cp1253, byte 0x9f is not decodable by the
+        # subprocess default text codec. Valid UTF-8 output must also survive.
+        for exit_code in (0, 7):
+            with self.subTest(exit_code=exit_code):
+                child = (
+                    "import sys; "
+                    "sys.stdout.buffer.write(bytes([0xe2,0x9c,0x93,0x9f])); "
+                    "sys.stderr.buffer.write(bytes([0x9f])); "
+                    f"sys.exit({exit_code})"
+                )
+                outcome = m._run([sys.executable, "-c", child], ROOT, 20)
+                self.assertEqual(outcome["returncode"], exit_code)
+                self.assertEqual(outcome["status"],
+                                 "passed" if exit_code == 0 else "failed")
+                self.assertIn("\u2713", outcome["stdout_tail"])
+                self.assertIn("\ufffd", outcome["stdout_tail"])
+                self.assertIn("\ufffd", outcome["stderr_tail"])
+
     def test_all_required_features_incomplete_when_source_or_tests_missing(self):
         with tempfile.TemporaryDirectory() as td:
             root=source_repo(Path(td))

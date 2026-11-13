@@ -40,6 +40,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: local::.
+          extra-packages: any::rcmdcheck
       - name: Release gate cannot be bypassed by source-file inventory or false science claims
         run: |
           python -m py_compile inst/python/aqt_feature_release_gate.py
