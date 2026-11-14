@@ -27,7 +27,7 @@ testthat::test_local(filter="csv-event-regressions")
 rcmdcheck::rcmdcheck(args="--no-manual",error_on="warning")
 \`\`\`
 
-The regression file tests ten cases:
+The regression file tests eleven cases:
 - 2D missing-z export/import parity with zero-padded scoped IDs;
 - complete 3D geometry and observed flags;
 - empty but valid image coordinates;
@@ -36,6 +36,7 @@ The regression file tests ten cases:
 - event time window without matching samples;
 - mixed absent and present sessions;
 - overlapping event windows;
+- an entirely empty event table with stable output types;
 - YOLO frame-indexed zero-padded track IDs;
 - idtracker.ai long-form zero-padded track IDs.
 
