@@ -27,7 +27,7 @@ testthat::test_local(filter="csv-event-regressions")
 rcmdcheck::rcmdcheck(args="--no-manual",error_on="warning")
 \`\`\`
 
-The regression file tests eleven cases:
+The regression file tests fourteen cases:
 - 2D missing-z export/import parity with zero-padded scoped IDs;
 - complete 3D geometry and observed flags;
 - empty but valid image coordinates;
