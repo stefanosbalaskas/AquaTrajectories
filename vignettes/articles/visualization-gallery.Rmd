@@ -46,7 +46,11 @@ For calibrated 3D tank positions, see [`aqt_plot_trajectory_storyboard3d()`](../
 ```{r synthetic-occupancy, fig.width=7.4, fig.height=5.4, fig.align='center'}
 set.seed(202613)
 xy <- cbind(rnorm(600, 0.45, 0.18), rnorm(600, 0.56, 0.16))
-xy <- pmin(1, pmax(0, xy))
+# Replace matrix contents in place: pmax()/pmin() with a scalar first
+# argument can drop the dimensions of its result.
+xy[] <- pmin(1, pmax(0, xy))
+stopifnot(is.matrix(xy), identical(dim(xy), c(600L, 2L)),
+          all(is.finite(xy)), all(xy >= 0 & xy <= 1))
 bins <- 15
 tab <- matrix(0, bins, bins)
 ii <- pmax(1, pmin(bins, floor(xy[, 1] * bins) + 1))
