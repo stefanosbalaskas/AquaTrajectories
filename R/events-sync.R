@@ -39,17 +39,31 @@ aqt_align_events <- function(tracks,events,window_s=c(-Inf,Inf)) {
   if (length(window_s)!=2L || anyNA(window_s) || window_s[1L]>window_s[2L])
     stop("Invalid relative time window",call.=FALSE)
   e <- aqt_event_table(events)
-  if (!nrow(e)) return(data.frame())
+  if (!nrow(e)) {
+    # Preserve a stable output schema even when there are no event records.
+    empty <- as.data.frame(tracks)[FALSE,,drop=FALSE]
+    empty$event_id <- character()
+    empty$event_start_s <- numeric()
+    empty$event_end_s <- numeric()
+    empty$relative_time_s <- numeric()
+    empty$phase <- character()
+    return(empty)
+  }
   parts <- lapply(seq_len(nrow(e)),function(i) {
     d <- as.data.frame(tracks)[as.character(tracks$session_id)==e$session_id[i],,drop=FALSE]
-    d$event_id <- e$event_id[i]
-    d$event_start_s <- e$start_s[i]
-    d$event_end_s <- e$end_s[i]
+    # Scalar assignment to a zero-row data.frame errors in base R. Events
+    # without matched observations are valid and must yield zero rows.
+    n <- nrow(d)
+    d$event_id <- rep(e$event_id[i],n)
+    d$event_start_s <- rep(e$start_s[i],n)
+    d$event_end_s <- rep(e$end_s[i],n)
     d$relative_time_s <- d$time_s-e$start_s[i]
     d <- d[d$relative_time_s>=window_s[1L] &
            d$relative_time_s<=window_s[2L],,drop=FALSE]
-    d$phase <- ifelse(d$time_s<e$start_s[i],"before",
-      ifelse(d$time_s<=e$end_s[i],"during","after"))
+    d$phase <- if (nrow(d)) {
+      ifelse(d$time_s<e$start_s[i],"before",
+        ifelse(d$time_s<=e$end_s[i],"during","after"))
+    } else character()
     d
   })
   out <- do.call(rbind,parts)
