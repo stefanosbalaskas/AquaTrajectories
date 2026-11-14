@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Original simulated aquatic trajectory explorer for illustrative teaching, not for interpreting real fish recordings.">
+  <title>Synthetic Trajectory Explorer | AquaTrajectories</title>
+  <link rel="stylesheet" href="synthetic-explorer.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to explorer</a>
+  <nav class="topbar" aria-label="Main site navigation">
+    <a class="brand" href="index.html"><span aria-hidden="true">◉</span> AquaTrajectories</a>
+    <div><a href="articles/visualization-gallery.html">Figure gallery</a><a href="reference/index.html">R reference</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories">GitHub</a></div>
+  </nav>
+  <main id="main">
+    <section class="intro">
+      <div class="eyebrow">Interactive teaching demonstration · synthetic data only</div>
+      <h1>Aquatic movement, from every angle.</h1>
+      <p>Explore a deterministic five-fish simulation in a conceptual 3D tank. Scrub time, play motion, change the projection, and inspect individual trajectories. No images or trajectories are taken from real fish, and displayed units are arbitrary.</p>
+    </section>
+    <section class="workspace" aria-label="Interactive synthetic trajectory explorer">
+      <aside class="controls">
+        <h2>Explorer controls</h2>
+        <fieldset class="views" aria-label="Projection view">
+          <legend>Projection</legend>
+          <label><input type="radio" name="view" value="iso" checked> Isometric 3D</label>
+          <label><input type="radio" name="view" value="xy"> Top XY</label>
+          <label><input type="radio" name="view" value="xz"> Side XZ</label>
+          <label><input type="radio" name="view" value="yz"> Front YZ</label>
+        </fieldset>
+        <fieldset class="fishfilters" aria-label="Fish tracks">
+          <legend>Visible simulated tracks</legend>
+          <div id="fishfilters"></div>
+        </fieldset>
+        <label class="inputlabel" for="trail">Trail length: <output id="trailValue">60</output> frames</label>
+        <input id="trail" type="range" min="5" max="160" step="5" value="60" aria-label="Trail length in frames">
+        <label class="inputlabel" for="frame">Timeline: <output id="frameValue">0.0 s / 10.0 s</output></label>
+        <input id="frame" type="range" min="0" max="300" step="1" value="0" aria-label="Simulated recording time frame">
+        <div class="play"><button id="play" type="button">▶ Play</button><button id="reset" type="button">↺ Reset</button></div>
+        <p class="meta">300 equally spaced synthetic time steps at an illustrative 30 steps/second. This is not a video or hardware-synchronized recording.</p>
+      </aside>
+      <div class="stage">
+        <div class="stageheader"><strong id="viewTitle">Isometric 3D projection</strong><span id="status" aria-live="polite">Paused · frame 0</span></div>
+        <svg id="tank" viewBox="0 0 960 560" role="img" aria-labelledby="tankTitle tankDesc">
+          <title id="tankTitle">Synthetic fish trajectories in an aquarium</title>
+          <desc id="tankDesc">Five invented tracks with selectable 3D, XY, XZ and YZ projections. No empirical observations.</desc>
+          <defs>
+            <linearGradient id="ocean" x2="0" y2="1"><stop stop-color="#102d46"/><stop offset="1" stop-color="#092338"/></linearGradient>
+          </defs>
+          <rect x="0" y="0" width="960" height="560" rx="18" fill="url(#ocean)"></rect>
+          <g id="grid" aria-hidden="true"></g>
+          <g id="paths"></g>
+          <g id="heads"></g>
+          <text x="22" y="38" fill="#8fc3d1" font-family="sans-serif" font-size="18">SIMULATED COORDINATES · ARBITRARY UNITS</text>
+        </svg>
+        <div class="legend" id="legend"></div>
+        <div class="methodnote"><strong>What you are seeing:</strong> original deterministic curves and simplified orthographic projections. Neither a real 3D reconstruction nor a validated biological fish simulator. Real studies must supply physical camera calibration, fish ID reference labels, actual timestamps and measured XYZ uncertainty.</div>
+      </div>
+    </section>
+    <section class="more">
+      <h2>Use the scientific software</h2>
+      <div class="links">
+        <a href="articles/multiview-3d.html">Real multiview and refraction pipeline</a>
+        <a href="articles/uncertainty.html">Conditional uncertainty</a>
+        <a href="articles/scientific-status.html">Scientific evidence limits</a>
+      </div>
+    </section>
+  </main>
+  <footer>© AquaTrajectories · MIT-licensed research software · this page is a client-side synthetic illustration.</footer>
+  <script src="synthetic-explorer.js" defer></script>
+</body>
+</html>

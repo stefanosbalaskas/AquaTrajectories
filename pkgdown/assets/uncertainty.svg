@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 1200 430" width="1200" height="430"><defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0a2539"/><stop offset="1" stop-color="#155976"/></linearGradient><linearGradient id="accent"><stop stop-color="#50dce0"/><stop offset="1" stop-color="#71aee8"/></linearGradient></defs><rect width="1200" height="430" fill="url(#bg)"/>
+<text x="38" y="46" font-family="Arial, sans-serif" font-size="23" font-weight="600" fill="#a4eef0">CONDITIONAL UNCERTAINTY IS NOT CERTIFIED COVERAGE</text>
+<path d="M92 360 L1128 360 M92 360 L92 98" stroke="#adc8db" stroke-width="3"/>
+<path d="M108 309 Q340 270 500 245 T800 220 T1120 170 L1120 290 Q790 312 500 295 T108 333Z" fill="#46c3d0" fill-opacity=".25"/>
+<path d="M108 321 Q340 286 500 268 T800 258 T1120 222" stroke="#8eeaf0" stroke-width="5" fill="none"/>
+<circle cx="180" cy="313" r="8" fill="#b1c1f3"/><circle cx="405" cy="297.4112000805987" r="8" fill="#b1c1f3"/><circle cx="630" cy="276.20584501801073" r="8" fill="#b1c1f3"/><circle cx="855" cy="266.12118485241757" r="8" fill="#b1c1f3"/><circle cx="1080" cy="239.63427081999566" r="8" fill="#b1c1f3"/>
+<text x="430" y="398" font-family="Arial, sans-serif" font-size="19" font-weight="600" fill="#c2dce8">Time or experimental epoch</text><text x="98" y="90" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#c2dce8">Outcome</text><text x="737" y="87" font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="#c1edf0">Pixel / identity / optics scenarios</text>
+<text x="744" y="124" font-family="Arial, sans-serif" font-size="16" font-weight="400" fill="#c4ddea">Uncertainty assumptions must be declared</text>
+</svg>

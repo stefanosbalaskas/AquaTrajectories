@@ -1,0 +1,241 @@
+---
+title: "Atlas of all 155 R functions"
+description: "A complete categorized, linked map to all public native R functions and their source-generated help manuals."
+---
+
+# Complete R function atlas
+
+Every public R function in the tagged v0.1.0 package is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
+
+**Coverage:** 155 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
+
+[Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
+
+## 1. Data models, import and export (11)
+
+Canonical track objects, synthetic examples and interoperable data formats.
+
+- [`aqt_export_csv()`](../reference/aqt_export_csv.html)
+- [`aqt_frame_manifest()`](../reference/aqt_frame_manifest.html)
+- [`aqt_import_csv()`](../reference/aqt_import_csv.html)
+- [`aqt_import_idtracker()`](../reference/aqt_import_idtracker.html)
+- [`aqt_import_mot()`](../reference/aqt_import_mot.html)
+- [`aqt_import_yolo()`](../reference/aqt_import_yolo.html)
+- [`aqt_mot_support_audit()`](../reference/aqt_mot_support_audit.html)
+- [`aqt_simulate_tracks()`](../reference/aqt_simulate_tracks.html)
+- [`aqt_tracks()`](../reference/aqt_tracks.html)
+- [`aqt_tracks_validate()`](../reference/aqt_tracks_validate.html)
+- [`aqt_video_bundle_import()`](../reference/aqt_video_bundle_import.html)
+
+## 2. Detection, tracking and annotation validation (16)
+
+Detector and identity metrics against explicitly defined reference annotations.
+
+- [`aqt_3dzef_agreement_import()`](../reference/aqt_3dzef_agreement_import.html)
+- [`aqt_annotation_frame_plan()`](../reference/aqt_annotation_frame_plan.html)
+- [`aqt_annotation_plan_audit()`](../reference/aqt_annotation_plan_audit.html)
+- [`aqt_apply_identity_corrections()`](../reference/aqt_apply_identity_corrections.html)
+- [`aqt_box_iou()`](../reference/aqt_box_iou.html)
+- [`aqt_detection_ap()`](../reference/aqt_detection_ap.html)
+- [`aqt_detection_boxes()`](../reference/aqt_detection_boxes.html)
+- [`aqt_detection_map()`](../reference/aqt_detection_map.html)
+- [`aqt_detection_match()`](../reference/aqt_detection_match.html)
+- [`aqt_detection_metrics()`](../reference/aqt_detection_metrics.html)
+- [`aqt_evaluation_frames()`](../reference/aqt_evaluation_frames.html)
+- [`aqt_track_qc()`](../reference/aqt_track_qc.html)
+- [`aqt_tracking_match()`](../reference/aqt_tracking_match.html)
+- [`aqt_tracking_metrics()`](../reference/aqt_tracking_metrics.html)
+- [`aqt_tracking_observations()`](../reference/aqt_tracking_observations.html)
+- [`aqt_video_bundle_benchmark()`](../reference/aqt_video_bundle_benchmark.html)
+
+## 3. Camera calibration, optics and synchronization (20)
+
+Projection rigs, camera-clock diagnostics, Brown distortion and refractive optics.
+
+- [`aqt_brown_camera()`](../reference/aqt_brown_camera.html)
+- [`aqt_brown_distort_pixels()`](../reference/aqt_brown_distort_pixels.html)
+- [`aqt_brown_undistort_pixels()`](../reference/aqt_brown_undistort_pixels.html)
+- [`aqt_brown_undistort_tracks()`](../reference/aqt_brown_undistort_tracks.html)
+- [`aqt_flatport_camera()`](../reference/aqt_flatport_camera.html)
+- [`aqt_flatport_rays()`](../reference/aqt_flatport_rays.html)
+- [`aqt_flatport_rays_distorted()`](../reference/aqt_flatport_rays_distorted.html)
+- [`aqt_flatport_refine_center()`](../reference/aqt_flatport_refine_center.html)
+- [`aqt_refractive_camera()`](../reference/aqt_refractive_camera.html)
+- [`aqt_refractive_landmark_qc()`](../reference/aqt_refractive_landmark_qc.html)
+- [`aqt_refractive_rays()`](../reference/aqt_refractive_rays.html)
+- [`aqt_rig_baseline()`](../reference/aqt_rig_baseline.html)
+- [`aqt_rig_new()`](../reference/aqt_rig_new.html)
+- [`aqt_rig_project()`](../reference/aqt_rig_project.html)
+- [`aqt_rig_validate()`](../reference/aqt_rig_validate.html)
+- [`aqt_scale_calibrate()`](../reference/aqt_scale_calibrate.html)
+- [`aqt_sync_apply()`](../reference/aqt_sync_apply.html)
+- [`aqt_sync_fit()`](../reference/aqt_sync_fit.html)
+- [`aqt_sync_holdout_apply()`](../reference/aqt_sync_holdout_apply.html)
+- [`aqt_sync_holdout_fit()`](../reference/aqt_sync_holdout_fit.html)
+
+## 4. 3D reconstruction and cross-camera association (14)
+
+Geometric fish association, abstentions, triangulation and reconstruction quality.
+
+- [`aqt_auto_refractive_pipeline()`](../reference/aqt_auto_refractive_pipeline.html)
+- [`aqt_candidate_rank()`](../reference/aqt_candidate_rank.html)
+- [`aqt_correspondences_from_review()`](../reference/aqt_correspondences_from_review.html)
+- [`aqt_crossview_auto_associate()`](../reference/aqt_crossview_auto_associate.html)
+- [`aqt_multiview_global_fuse()`](../reference/aqt_multiview_global_fuse.html)
+- [`aqt_multiview_holdout_protocol()`](../reference/aqt_multiview_holdout_protocol.html)
+- [`aqt_reconstruct_3d()`](../reference/aqt_reconstruct_3d.html)
+- [`aqt_reconstruction_quality()`](../reference/aqt_reconstruction_quality.html)
+- [`aqt_refractive_reconstruct_tracks()`](../reference/aqt_refractive_reconstruct_tracks.html)
+- [`aqt_refractive_track_quality()`](../reference/aqt_refractive_track_quality.html)
+- [`aqt_refractive_triangulate()`](../reference/aqt_refractive_triangulate.html)
+- [`aqt_refractive_view_candidates()`](../reference/aqt_refractive_view_candidates.html)
+- [`aqt_triangulate_pairs()`](../reference/aqt_triangulate_pairs.html)
+- [`aqt_view_candidates()`](../reference/aqt_view_candidates.html)
+
+## 5. Movement, schooling and space (11)
+
+Kinematics, 2D/3D school geometry, occupancy and observed scene snapshots.
+
+- [`aqt_group_metrics()`](../reference/aqt_group_metrics.html)
+- [`aqt_group_pairwise_distances()`](../reference/aqt_group_pairwise_distances.html)
+- [`aqt_group_spatial_edges()`](../reference/aqt_group_spatial_edges.html)
+- [`aqt_group_spatial_summary()`](../reference/aqt_group_spatial_summary.html)
+- [`aqt_kinematics()`](../reference/aqt_kinematics.html)
+- [`aqt_path_summary()`](../reference/aqt_path_summary.html)
+- [`aqt_tank_scene_snapshot()`](../reference/aqt_tank_scene_snapshot.html)
+- [`aqt_tank_scene_storyboard()`](../reference/aqt_tank_scene_storyboard.html)
+- [`aqt_voxel_entropy()`](../reference/aqt_voxel_entropy.html)
+- [`aqt_voxel_occupancy()`](../reference/aqt_voxel_occupancy.html)
+- [`aqt_zone_occupancy()`](../reference/aqt_zone_occupancy.html)
+
+## 6. Events, tank replication and inference (5)
+
+Experimental-event alignment and independently replicated tank comparisons.
+
+- [`aqt_align_events()`](../reference/aqt_align_events.html)
+- [`aqt_design_audit()`](../reference/aqt_design_audit.html)
+- [`aqt_event_epoch_summary()`](../reference/aqt_event_epoch_summary.html)
+- [`aqt_event_table()`](../reference/aqt_event_table.html)
+- [`aqt_tank_event_contrast()`](../reference/aqt_tank_event_contrast.html)
+
+## 7. Functional and longitudinal trajectories (11)
+
+Functional curves, sparse and dense PCA and hierarchical longitudinal models.
+
+- [`aqt_functional_coverage()`](../reference/aqt_functional_coverage.html)
+- [`aqt_functional_event_grid()`](../reference/aqt_functional_event_grid.html)
+- [`aqt_functional_longitudinal_fit()`](../reference/aqt_functional_longitudinal_fit.html)
+- [`aqt_functional_longitudinal_prepare()`](../reference/aqt_functional_longitudinal_prepare.html)
+- [`aqt_functional_tank_contrast()`](../reference/aqt_functional_tank_contrast.html)
+- [`aqt_hierarchical_event_fit()`](../reference/aqt_hierarchical_event_fit.html)
+- [`aqt_hierarchical_event_prepare()`](../reference/aqt_hierarchical_event_prepare.html)
+- [`aqt_sparse_fpca_design_audit()`](../reference/aqt_sparse_fpca_design_audit.html)
+- [`aqt_sparse_fpca_fit()`](../reference/aqt_sparse_fpca_fit.html)
+- [`aqt_sparse_fpca_input()`](../reference/aqt_sparse_fpca_input.html)
+- [`aqt_trajectory_grid_pca()`](../reference/aqt_trajectory_grid_pca.html)
+
+## 8. Trajectory comparison and recurrence (3)
+
+Dynamic time warping and recurrence-based trajectory characterization.
+
+- [`aqt_trajectory_dtw()`](../reference/aqt_trajectory_dtw.html)
+- [`aqt_trajectory_dtw_matrix()`](../reference/aqt_trajectory_dtw_matrix.html)
+- [`aqt_trajectory_recurrence()`](../reference/aqt_trajectory_recurrence.html)
+
+## 9. Behavioural state transitions and HMMs (10)
+
+Descriptive changepoints and conditional Gaussian HMM decoding, training and evaluation.
+
+- [`aqt_changepoint_event_delay()`](../reference/aqt_changepoint_event_delay.html)
+- [`aqt_hmm_decode()`](../reference/aqt_hmm_decode.html)
+- [`aqt_hmm_event_tank_epochs()`](../reference/aqt_hmm_event_tank_epochs.html)
+- [`aqt_hmm_holdout_score()`](../reference/aqt_hmm_holdout_score.html)
+- [`aqt_hmm_recovery_audit()`](../reference/aqt_hmm_recovery_audit.html)
+- [`aqt_hmm_simulate_truth()`](../reference/aqt_hmm_simulate_truth.html)
+- [`aqt_hmm_state_summary()`](../reference/aqt_hmm_state_summary.html)
+- [`aqt_hmm_tank_event_contrast()`](../reference/aqt_hmm_tank_event_contrast.html)
+- [`aqt_hmm_transition_fit()`](../reference/aqt_hmm_transition_fit.html)
+- [`aqt_state_changepoint()`](../reference/aqt_state_changepoint.html)
+
+## 10. Measurement and identity uncertainty (20)
+
+Explicit conditional perturbations of pixels, paths, optical parameters, identities and outcomes.
+
+- [`aqt_detection_dropout_scenarios()`](../reference/aqt_detection_dropout_scenarios.html)
+- [`aqt_detection_event_sensitivity()`](../reference/aqt_detection_event_sensitivity.html)
+- [`aqt_ensemble_event_summary()`](../reference/aqt_ensemble_event_summary.html)
+- [`aqt_ensemble_path_summary()`](../reference/aqt_ensemble_path_summary.html)
+- [`aqt_ensemble_summarize()`](../reference/aqt_ensemble_summarize.html)
+- [`aqt_ensemble_tracks()`](../reference/aqt_ensemble_tracks.html)
+- [`aqt_identity_draw()`](../reference/aqt_identity_draw.html)
+- [`aqt_identity_event_sensitivity()`](../reference/aqt_identity_event_sensitivity.html)
+- [`aqt_identity_path_sensitivity()`](../reference/aqt_identity_path_sensitivity.html)
+- [`aqt_identity_switch_scenarios()`](../reference/aqt_identity_switch_scenarios.html)
+- [`aqt_identity_tank_sensitivity()`](../reference/aqt_identity_tank_sensitivity.html)
+- [`aqt_joint_event_sensitivity()`](../reference/aqt_joint_event_sensitivity.html)
+- [`aqt_joint_refractive_scenarios()`](../reference/aqt_joint_refractive_scenarios.html)
+- [`aqt_joint_scene_cloud()`](../reference/aqt_joint_scene_cloud.html)
+- [`aqt_joint_tank_sensitivity()`](../reference/aqt_joint_tank_sensitivity.html)
+- [`aqt_reconstruction_pixel_uncertainty()`](../reference/aqt_reconstruction_pixel_uncertainty.html)
+- [`aqt_stereo_pixel_mc()`](../reference/aqt_stereo_pixel_mc.html)
+- [`aqt_tracking_position_error_summary()`](../reference/aqt_tracking_position_error_summary.html)
+- [`aqt_tracking_position_errors()`](../reference/aqt_tracking_position_errors.html)
+- [`aqt_trajectory_ensemble()`](../reference/aqt_trajectory_ensemble.html)
+
+## 11. Physical 3D target benchmarking (4)
+
+Heldout physical XYZ targets, benchmark diagnostics and depth accuracy.
+
+- [`aqt_stereo_depth_audit()`](../reference/aqt_stereo_depth_audit.html)
+- [`aqt_stereo_landmark_benchmark()`](../reference/aqt_stereo_landmark_benchmark.html)
+- [`aqt_target_holdout_benchmark()`](../reference/aqt_target_holdout_benchmark.html)
+- [`aqt_target_trial_table()`](../reference/aqt_target_trial_table.html)
+
+## 12. Animal–Computer Interaction (6)
+
+Recorded ACI choice, fairness, latency and feedback-loop telemetry.
+
+- [`aqt_aci_access_inequality()`](../reference/aqt_aci_access_inequality.html)
+- [`aqt_aci_choice_log()`](../reference/aqt_aci_choice_log.html)
+- [`aqt_aci_choice_summary()`](../reference/aqt_aci_choice_summary.html)
+- [`aqt_aci_latency_summary()`](../reference/aqt_aci_latency_summary.html)
+- [`aqt_aci_loop_metrics()`](../reference/aqt_aci_loop_metrics.html)
+- [`aqt_aci_trials()`](../reference/aqt_aci_trials.html)
+
+## 13. Visualizations and publication figures (22)
+
+Static publication plots, trajectory storyboards and optional 3D views.
+
+- [`aqt_plot_calibration_comparison()`](../reference/aqt_plot_calibration_comparison.html)
+- [`aqt_plot_changepoints()`](../reference/aqt_plot_changepoints.html)
+- [`aqt_plot_ensemble2d()`](../reference/aqt_plot_ensemble2d.html)
+- [`aqt_plot_ensemble3d()`](../reference/aqt_plot_ensemble3d.html)
+- [`aqt_plot_feeding_states()`](../reference/aqt_plot_feeding_states.html)
+- [`aqt_plot_grid_pca()`](../reference/aqt_plot_grid_pca.html)
+- [`aqt_plot_heading_rose()`](../reference/aqt_plot_heading_rose.html)
+- [`aqt_plot_joint_scene_cloud()`](../reference/aqt_plot_joint_scene_cloud.html)
+- [`aqt_plot_joint_scene_cloud3d()`](../reference/aqt_plot_joint_scene_cloud3d.html)
+- [`aqt_plot_occupancy_timeseries()`](../reference/aqt_plot_occupancy_timeseries.html)
+- [`aqt_plot_path3d()`](../reference/aqt_plot_path3d.html)
+- [`aqt_plot_paths()`](../reference/aqt_plot_paths.html)
+- [`aqt_plot_reconstruction_qc()`](../reference/aqt_plot_reconstruction_qc.html)
+- [`aqt_plot_recurrence()`](../reference/aqt_plot_recurrence.html)
+- [`aqt_plot_school3d()`](../reference/aqt_plot_school3d.html)
+- [`aqt_plot_school_dynamics()`](../reference/aqt_plot_school_dynamics.html)
+- [`aqt_plot_speed_response()`](../reference/aqt_plot_speed_response.html)
+- [`aqt_plot_tank_changes()`](../reference/aqt_plot_tank_changes.html)
+- [`aqt_plot_tank_projection()`](../reference/aqt_plot_tank_projection.html)
+- [`aqt_plot_tank_scene3d()`](../reference/aqt_plot_tank_scene3d.html)
+- [`aqt_plot_trajectory_storyboard3d()`](../reference/aqt_plot_trajectory_storyboard3d.html)
+- [`aqt_plot_voxel3d()`](../reference/aqt_plot_voxel3d.html)
+
+## 14. Provenance and source traceability (2)
+
+Source data digest recording and verification.
+
+- [`aqt_provenance_new()`](../reference/aqt_provenance_new.html)
+- [`aqt_provenance_verify()`](../reference/aqt_provenance_verify.html)
+
+---
+
+**Note:** This index establishes software discoverability, not biological validity. When using functions for experimental conclusions, review the associated topic's measurement assumptions, source data, independent validation requirements and experimental unit.

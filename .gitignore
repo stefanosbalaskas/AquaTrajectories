@@ -1,0 +1,7 @@
+/site/
+/vignettes/**/*.html
+/vignettes/**/*.R
+/.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
