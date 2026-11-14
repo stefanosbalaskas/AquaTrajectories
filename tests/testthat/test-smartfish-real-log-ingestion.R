@@ -106,8 +106,13 @@ test_that("image-plane adapter does not convert raw depth into fake 3D z",{
   expect_equal(nrow(first),6L)
   no_border <- aqt_smartfish_tracks(x,drop_boundary=TRUE)
   expect_equal(nrow(no_border),4L)
+  # Both extreme-depth records already participate in a duplicated time;
+  # dropping all duplicates removes them before the depth filter applies.
   no_cutoff <- aqt_smartfish_tracks(x,drop_depth_cutoff=TRUE)
-  expect_equal(nrow(no_cutoff),4L)
+  expect_equal(nrow(no_cutoff),5L)
+  first_no_cutoff <- aqt_smartfish_tracks(
+    x,duplicate_policy="first",drop_depth_cutoff=TRUE)
+  expect_equal(nrow(first_no_cutoff),5L)
 })
 
 test_that("motion uses only within-ID time steps and gap-based censoring",{
