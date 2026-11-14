@@ -24,6 +24,13 @@ aqt_tracks <- function(data, units = "px", coordinate_system = "image") {
     if (!is.numeric(d[[nm]])) stop(nm, " must be numeric", call. = FALSE)
   if (!"z" %in% names(d)) d$z <- rep(NA_real_,nrow(d))
   if (!is.numeric(d$z)) stop("z must be numeric", call. = FALSE)
+  # The canonical numerical schema uses double-precision time and positions.
+  # read.csv() may infer integer for whole-number text even when the source
+  # was double, so normalize valid integer inputs before serialization checks.
+  # Restrict coercion to integer vectors: never mask malformed character data.
+  for (nm in c("time_s","x","y","z")) {
+    if (is.integer(d[[nm]])) d[[nm]] <- as.double(d[[nm]])
+  }
   if (any(!is.finite(d$time_s))) stop("time_s must be finite", call. = FALSE)
   if (any(is.infinite(d$x)) || any(is.infinite(d$y)) || any(is.infinite(d$z)))
     stop("Coordinates cannot be infinite", call. = FALSE)
