@@ -7,6 +7,10 @@ description: "Reproducible synthetic plots for movement trajectories, spatial di
 
 The figures here are **synthetic teaching demonstrations**. They do not use private fish recordings, claim real detector accuracy or represent measured animal welfare. The first figure is drawn directly by the package; subsequent figures illustrate publication-style visual grammar with transparent base R code.
 
+## Interactive synthetic trajectory explorer
+
+Open the [browser-based synthetic 3D/XY/XZ/YZ explorer](../synthetic-explorer.html). It lets you scrub through five fully invented paths, toggle individual fish and view three orthogonal projections plus a conceptual isometric projection. It is **not** a real GoPro or empirically calibrated 3D result.
+
 ## 1. Native fish trajectory plot
 
 ```{r native-paths, fig.width=9, fig.height=5.2, fig.align='center'}

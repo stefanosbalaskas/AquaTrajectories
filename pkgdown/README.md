@@ -5,7 +5,7 @@ This directory holds **website source**. The project's existing scientific proto
 - `pkgdown/index.md`: independent landing page (preserves GitHub README).
 - `_pkgdown.yml`: Bootstrap 5 theme, all 155 exported R functions in 14 curated categories, article routing.
 - `pkgdown/extra.css`: accessible navy/teal brand.
-- `pkgdown/assets/*.svg`: original illustrations; conceptual, not observations.
+- `pkgdown/assets/*.svg`: original illustrations; conceptual, not observations.\n- `pkgdown/assets/synthetic-explorer.*`: standalone browser-only invented fish paths and projections; never real observations.
 - `vignettes/articles/*.Rmd`: website-only articles, a 5-plot source-derived publication workbook, and runnable synthetic plots.
 - `site/`: generated output, not committed to version control.
 

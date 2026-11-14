@@ -30,3 +30,7 @@ image_paths <- file.path("pkgdown","assets",paste0(required_images,".svg"))
 if (any(!file.exists(image_paths))) stop("Missing website SVG visuals")
 if (!file.exists("pkgdown/index.md") || !file.exists("pkgdown/extra.css")) stop("Missing homepage or theme")
 message("PKGDOWN_ASSET_AUDIT_PASS: 8 SVGs, homepage, theme, and articles present")
+
+interactive_files <- file.path("pkgdown","assets",paste0("synthetic-explorer", c(".html",".css",".js")))
+if(any(!file.exists(interactive_files))) stop("Missing synthetic explorer assets")
+message("PKGDOWN_INTERACTIVE_ASSET_PASS")

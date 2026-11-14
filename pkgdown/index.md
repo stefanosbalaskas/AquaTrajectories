@@ -52,6 +52,12 @@ kin <- aqt_kinematics(x, max_gap_s = 0.1)
 
 This simulator produces **synthetic random walks**, not biologically calibrated fish movement.
 
+## Interactive synthetic trajectory explorer
+
+Explore five invented trajectories in synchronized 3D, top, side and front projections with a frame scrubber, playback and individual track toggles. This is a **browser-only teaching demonstration**, not the actual multiview research explorer or a real animal observation.
+
+<div class="aqt-cta"><a href="synthetic-explorer.html">Open interactive synthetic explorer</a></div>
+
 ## Five complete, runnable publication figures
 
 The [five-figure reproducible workbook](articles/five-figure-workbook.html) exercises actual native plotting functions with openly labeled **synthetic** data for feeding phases, physical XYZ error illustrations, replicated-tank occupancy, event-aligned speed, and heading roses. All five plots include source code and retain their scientific interpretation limits.
