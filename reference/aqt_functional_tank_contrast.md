@@ -1,0 +1,54 @@
+# Fit a tank-replicated functional treatment contrast with cluster bands
+
+A per-tank mean fish curve is computed FIRST, so each independent tank
+contributes one curve regardless of fish number or video frame rate.
+Tanks are then resampled WITHIN treatment arms. The simultaneous
+max-deviation band is an empirical tank-resampling sensitivity band;
+coverage is NOT certified by this method, and it does not include
+camera/identity measurement uncertainty or establish causality. All
+tanks must cover every requested time; use min_fish_fraction=1 (default)
+to forbid changing observed fish composition at grid points.
+
+## Usage
+
+``` r
+aqt_functional_tank_contrast(
+  grid,
+  treatment_levels = c("control", "treatment"),
+  min_fish_fraction = 1,
+  draws = 499L,
+  level = 0.95,
+  seed = 1L
+)
+```
+
+## Arguments
+
+- grid:
+
+  Output of aqt_functional_event_grid containing tank and treatment.
+
+- treatment_levels:
+
+  Exactly control,treatment labels.
+
+- min_fish_fraction:
+
+  Required supported fish fraction at each tank/time.
+
+- draws:
+
+  Number of within-arm independent-tank resamples, \>=100.
+
+- level:
+
+  Central percentile mass.
+
+- seed:
+
+  Integer R seed, caller global RNG state preserved.
+
+## Value
+
+Per-tank means, time-varying contrasts, pointwise/simultaneous
+uncalibrated resampling bands, design audit and caveats.

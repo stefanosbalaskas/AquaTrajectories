@@ -1,0 +1,24 @@
+pandoc: '3.10'
+pkgdown: 2.2.1
+pkgdown_sha: ~
+articles:
+  articles/aci-workflows: aci-workflows.html
+  articles/aquaTrajectories: aquaTrajectories.html
+  articles/behavioural-models: behavioural-models.html
+  articles/experimental-design: experimental-design.html
+  articles/five-figure-workbook: five-figure-workbook.html
+  articles/function-atlas: function-atlas.html
+  articles/movement-and-schooling: movement-and-schooling.html
+  articles/multiview-3d: multiview-3d.html
+  articles/publication-figures: publication-figures.html
+  articles/research-datasets: research-datasets.html
+  articles/scientific-status: scientific-status.html
+  articles/uncertainty: uncertainty.html
+  articles/validation-and-benchmarks: validation-and-benchmarks.html
+  articles/video-tracking: video-tracking.html
+  articles/visualization-gallery: visualization-gallery.html
+  articles/workflows-atlas: workflows-atlas.html
+last_built: 2026-11-14T22:59Z
+urls:
+  reference: https://stefanosbalaskas.github.io/AquaTrajectories/reference
+  article: https://stefanosbalaskas.github.io/AquaTrajectories/articles

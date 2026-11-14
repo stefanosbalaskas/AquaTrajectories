@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 1200 420" width="1200" height="420"><defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0a2539"/><stop offset="1" stop-color="#155976"/></linearGradient><linearGradient id="accent"><stop stop-color="#50dce0"/><stop offset="1" stop-color="#71aee8"/></linearGradient></defs><rect width="1200" height="420" fill="url(#bg)"/>
+<text x="42" y="46" font-family="Arial, sans-serif" font-size="24" font-weight="600" fill="#a3eaf0">OBSERVED MOVEMENT ≠ INFERRED WELFARE</text>
+<path d="M90 342 H1110 M90 342 V96" stroke="#a6c5d6" stroke-width="3"/>
+<path d="M95 262 C170 262 180 226 245 233 S335 312 420 282 S527 154 590 190 S720 235 780 159 S915 241 986 180 S1050 207 1100 170" fill="none" stroke="#73e2df" stroke-width="5"/>
+<circle cx="140" cy="265" r="7" fill="#e5faf7"/><circle cx="310" cy="276" r="7" fill="#e5faf7"/><circle cx="495" cy="230" r="7" fill="#e5faf7"/><circle cx="640" cy="198" r="7" fill="#e5faf7"/><circle cx="830" cy="184" r="7" fill="#e5faf7"/><circle cx="1010" cy="187" r="7" fill="#e5faf7"/>
+<rect x="115" y="111" width="256" height="53" rx="9" fill="#244c63"/><rect x="408" y="111" width="255" height="53" rx="9" fill="#34566e"/><rect x="703" y="111" width="365" height="53" rx="9" fill="#2b586c"/>
+<text x="139" y="144" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#fff">Kinematics</text><text x="429" y="144" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#fff">Changepoints / HMM</text><text x="724" y="144" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#fff">Functional + tank models</text>
+<text x="415" y="388" font-family="Arial, sans-serif" font-size="17" font-weight="600" fill="#ccdee7">Observed time</text><text x="95" y="82" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ccdee7">Measure</text>
+</svg>
