@@ -1,0 +1,22 @@
+# Fail closed when a public function lacks a categorized reference entry.
+stopifnot(file.exists("NAMESPACE"), file.exists("_pkgdown.yml"))
+if (!requireNamespace("yaml", quietly = TRUE)) stop("Install package 'yaml'")
+ns <- readLines("NAMESPACE", warn = FALSE)
+api <- sub("^export\\(([^)]*)\\)$", "\\1", grep("^export\\(", ns, value = TRUE))
+cfg <- yaml::read_yaml("_pkgdown.yml")
+grouped <- unlist(lapply(cfg$reference, function(x) x$contents %||% character()), use.names = FALSE)
+"%||%" <- function(x, y) if (is.null(x)) y else x
+if (length(api) != 155L) stop("Expected 155 exported functions; actual: ", length(api))
+if (anyDuplicated(grouped)) stop("Duplicate function assignments: ", paste(unique(grouped[duplicated(grouped)]), collapse=", "))
+if (!setequal(api, grouped)) {
+  stop("Missing functions: ", paste(setdiff(api, grouped), collapse=", "),
+       "; extra entries: ", paste(setdiff(grouped, api), collapse=", "))
+}
+missing_rd <- api[!file.exists(file.path("man", paste0(api, ".Rd")))]
+if (length(missing_rd)) stop("Missing Rd files: ", paste(missing_rd,collapse=", "))
+article_names <- unlist(lapply(cfg$articles, function(x) x$contents), use.names = FALSE)
+article_files <- file.path("vignettes", "articles", paste0(article_names, ".Rmd"))
+if (anyDuplicated(article_names) || any(!file.exists(article_files))) stop("Articles missing or duplicated")
+message("PKGDOWN_REFERENCE_AUDIT_PASS: ", length(api), " exports; ",
+        sum(vapply(cfg$reference, function(x) !is.null(x$contents), logical(1))),
+        " distinct groups; ", length(article_names), " articles")

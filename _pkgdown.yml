@@ -1,0 +1,239 @@
+url: https://stefanosbalaskas.github.io/AquaTrajectories/
+destination: site
+title: AquaTrajectories — aquatic movement science
+template:
+  bootstrap: 5
+  bootswatch: flatly
+  light-switch: true
+  bslib:
+    primary: "#147F97"
+    secondary: "#39566E"
+    base_font: {google: "Source Sans 3"}
+    heading_font: {google: "Manrope"}
+    code_font: {google: "JetBrains Mono"}
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github, lightswitch]
+reference:
+  - title: "Data models, import and export"
+    desc: "Canonical track objects, synthetic examples and interoperable data formats."
+  - contents:
+      - aqt_export_csv
+      - aqt_frame_manifest
+      - aqt_import_csv
+      - aqt_import_idtracker
+      - aqt_import_mot
+      - aqt_import_yolo
+      - aqt_mot_support_audit
+      - aqt_simulate_tracks
+      - aqt_tracks
+      - aqt_tracks_validate
+      - aqt_video_bundle_import
+  - title: "Detection, tracking and annotation validation"
+    desc: "Detector and identity metrics against explicitly defined reference annotations."
+  - contents:
+      - aqt_3dzef_agreement_import
+      - aqt_annotation_frame_plan
+      - aqt_annotation_plan_audit
+      - aqt_apply_identity_corrections
+      - aqt_box_iou
+      - aqt_detection_ap
+      - aqt_detection_boxes
+      - aqt_detection_map
+      - aqt_detection_match
+      - aqt_detection_metrics
+      - aqt_evaluation_frames
+      - aqt_track_qc
+      - aqt_tracking_match
+      - aqt_tracking_metrics
+      - aqt_tracking_observations
+      - aqt_video_bundle_benchmark
+  - title: "Camera calibration, optics and synchronization"
+    desc: "Projection rigs, camera-clock diagnostics, Brown distortion and refractive optics."
+  - contents:
+      - aqt_brown_camera
+      - aqt_brown_distort_pixels
+      - aqt_brown_undistort_pixels
+      - aqt_brown_undistort_tracks
+      - aqt_flatport_camera
+      - aqt_flatport_rays
+      - aqt_flatport_rays_distorted
+      - aqt_flatport_refine_center
+      - aqt_refractive_camera
+      - aqt_refractive_landmark_qc
+      - aqt_refractive_rays
+      - aqt_rig_baseline
+      - aqt_rig_new
+      - aqt_rig_project
+      - aqt_rig_validate
+      - aqt_scale_calibrate
+      - aqt_sync_apply
+      - aqt_sync_fit
+      - aqt_sync_holdout_apply
+      - aqt_sync_holdout_fit
+  - title: "3D reconstruction and cross-camera association"
+    desc: "Geometric fish association, abstentions, triangulation and reconstruction quality."
+  - contents:
+      - aqt_auto_refractive_pipeline
+      - aqt_candidate_rank
+      - aqt_correspondences_from_review
+      - aqt_crossview_auto_associate
+      - aqt_multiview_global_fuse
+      - aqt_multiview_holdout_protocol
+      - aqt_reconstruct_3d
+      - aqt_reconstruction_quality
+      - aqt_refractive_reconstruct_tracks
+      - aqt_refractive_track_quality
+      - aqt_refractive_triangulate
+      - aqt_refractive_view_candidates
+      - aqt_triangulate_pairs
+      - aqt_view_candidates
+  - title: "Movement, schooling and space"
+    desc: "Kinematics, 2D/3D school geometry, occupancy and observed scene snapshots."
+  - contents:
+      - aqt_group_metrics
+      - aqt_group_pairwise_distances
+      - aqt_group_spatial_edges
+      - aqt_group_spatial_summary
+      - aqt_kinematics
+      - aqt_path_summary
+      - aqt_tank_scene_snapshot
+      - aqt_tank_scene_storyboard
+      - aqt_voxel_entropy
+      - aqt_voxel_occupancy
+      - aqt_zone_occupancy
+  - title: "Events, tank replication and inference"
+    desc: "Experimental-event alignment and independently replicated tank comparisons."
+  - contents:
+      - aqt_align_events
+      - aqt_design_audit
+      - aqt_event_epoch_summary
+      - aqt_event_table
+      - aqt_tank_event_contrast
+  - title: "Functional and longitudinal trajectories"
+    desc: "Functional curves, sparse and dense PCA and hierarchical longitudinal models."
+  - contents:
+      - aqt_functional_coverage
+      - aqt_functional_event_grid
+      - aqt_functional_longitudinal_fit
+      - aqt_functional_longitudinal_prepare
+      - aqt_functional_tank_contrast
+      - aqt_hierarchical_event_fit
+      - aqt_hierarchical_event_prepare
+      - aqt_sparse_fpca_design_audit
+      - aqt_sparse_fpca_fit
+      - aqt_sparse_fpca_input
+      - aqt_trajectory_grid_pca
+  - title: "Trajectory comparison and recurrence"
+    desc: "Dynamic time warping and recurrence-based trajectory characterization."
+  - contents:
+      - aqt_trajectory_dtw
+      - aqt_trajectory_dtw_matrix
+      - aqt_trajectory_recurrence
+  - title: "Behavioural state transitions and HMMs"
+    desc: "Descriptive changepoints and conditional Gaussian HMM decoding, training and evaluation."
+  - contents:
+      - aqt_changepoint_event_delay
+      - aqt_hmm_decode
+      - aqt_hmm_event_tank_epochs
+      - aqt_hmm_holdout_score
+      - aqt_hmm_recovery_audit
+      - aqt_hmm_simulate_truth
+      - aqt_hmm_state_summary
+      - aqt_hmm_tank_event_contrast
+      - aqt_hmm_transition_fit
+      - aqt_state_changepoint
+  - title: "Measurement and identity uncertainty"
+    desc: "Explicit conditional perturbations of pixels, paths, optical parameters, identities and outcomes."
+  - contents:
+      - aqt_detection_dropout_scenarios
+      - aqt_detection_event_sensitivity
+      - aqt_ensemble_event_summary
+      - aqt_ensemble_path_summary
+      - aqt_ensemble_summarize
+      - aqt_ensemble_tracks
+      - aqt_identity_draw
+      - aqt_identity_event_sensitivity
+      - aqt_identity_path_sensitivity
+      - aqt_identity_switch_scenarios
+      - aqt_identity_tank_sensitivity
+      - aqt_joint_event_sensitivity
+      - aqt_joint_refractive_scenarios
+      - aqt_joint_scene_cloud
+      - aqt_joint_tank_sensitivity
+      - aqt_reconstruction_pixel_uncertainty
+      - aqt_stereo_pixel_mc
+      - aqt_tracking_position_error_summary
+      - aqt_tracking_position_errors
+      - aqt_trajectory_ensemble
+  - title: "Physical 3D target benchmarking"
+    desc: "Heldout physical XYZ targets, benchmark diagnostics and depth accuracy."
+  - contents:
+      - aqt_stereo_depth_audit
+      - aqt_stereo_landmark_benchmark
+      - aqt_target_holdout_benchmark
+      - aqt_target_trial_table
+  - title: "Animal–Computer Interaction"
+    desc: "Recorded ACI choice, fairness, latency and feedback-loop telemetry."
+  - contents:
+      - aqt_aci_access_inequality
+      - aqt_aci_choice_log
+      - aqt_aci_choice_summary
+      - aqt_aci_latency_summary
+      - aqt_aci_loop_metrics
+      - aqt_aci_trials
+  - title: "Visualizations and publication figures"
+    desc: "Static publication plots, trajectory storyboards and optional 3D views."
+  - contents:
+      - aqt_plot_calibration_comparison
+      - aqt_plot_changepoints
+      - aqt_plot_ensemble2d
+      - aqt_plot_ensemble3d
+      - aqt_plot_feeding_states
+      - aqt_plot_grid_pca
+      - aqt_plot_heading_rose
+      - aqt_plot_joint_scene_cloud
+      - aqt_plot_joint_scene_cloud3d
+      - aqt_plot_occupancy_timeseries
+      - aqt_plot_path3d
+      - aqt_plot_paths
+      - aqt_plot_reconstruction_qc
+      - aqt_plot_recurrence
+      - aqt_plot_school3d
+      - aqt_plot_school_dynamics
+      - aqt_plot_speed_response
+      - aqt_plot_tank_changes
+      - aqt_plot_tank_projection
+      - aqt_plot_tank_scene3d
+      - aqt_plot_trajectory_storyboard3d
+      - aqt_plot_voxel3d
+  - title: "Provenance and source traceability"
+    desc: "Source data digest recording and verification."
+  - contents:
+      - aqt_provenance_new
+      - aqt_provenance_verify
+articles:
+  - title: "Start here"
+    contents:
+      - aquaTrajectories
+      - workflows-atlas
+      - function-atlas
+  - title: "From pixels to trajectories"
+    contents:
+      - video-tracking
+      - multiview-3d
+      - validation-and-benchmarks
+  - title: "Scientific analysis"
+    contents:
+      - movement-and-schooling
+      - experimental-design
+      - behavioural-models
+      - uncertainty
+  - title: "Figures and research workflows"
+    contents:
+      - visualization-gallery
+      - publication-figures
+      - research-datasets
+      - aci-workflows
+      - scientific-status

@@ -1,0 +1,96 @@
+name: AquaTrajectories research documentation website
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_pkgdown.yml"
+      - "pkgdown/**"
+      - "vignettes/**"
+      - "NAMESPACE"
+      - "man/**"
+      - "DESCRIPTION"
+      - "NEWS.md"
+      - ".github/workflows/pkgdown-research-portal.yml"
+      - "scripts/check_pkgdown_reference.R"
+  pull_request:
+    branches: [main]
+    paths:
+      - "_pkgdown.yml"
+      - "pkgdown/**"
+      - "vignettes/**"
+      - "NAMESPACE"
+      - "man/**"
+      - "DESCRIPTION"
+      - "NEWS.md"
+      - ".github/workflows/pkgdown-research-portal.yml"
+      - "scripts/check_pkgdown_reference.R"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pkgdown-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::pkgdown
+            any::rmarkdown
+            any::knitr
+          extra-packages: any::yaml
+          needs: website
+      - name: Audit all exported R functions and article pages
+        run: Rscript scripts/check_pkgdown_reference.R
+      - name: Build independent static site (never overwrite scientific docs/)
+        run: Rscript -e 'pkgdown::build_site(examples=FALSE, preview=FALSE, quiet=FALSE)'
+      - name: Verify build output
+        run: |
+          test -s site/index.html
+          test -s site/reference/index.html
+          test -s site/articles/index.html
+          test -s site/reference/aqt_auto_refractive_pipeline.html
+          test -s site/reference/aqt_plot_paths.html
+          test -s site/articles/function-atlas.html
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquatrajectories-pkgdown-preview
+          path: site/
+          if-no-files-found: error
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: aquatrajectories-pkgdown-preview
+          path: site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
