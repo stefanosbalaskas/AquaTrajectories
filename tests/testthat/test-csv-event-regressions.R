@@ -129,3 +129,29 @@ test_that("event alignment keeps overlapping events separate",{
   expect_equal(out$relative_time_s,c(0,1,0,1))
   expect_equal(out$signal,c(8,9,9,10))
 })
+
+
+test_that("YOLO CSV import keeps zero-padded exported fish identifiers", {
+  path <- tempfile(fileext=".csv")
+  on.exit(unlink(path),add=TRUE)
+  writeLines(c("fish_id,frame,x_px,y_px",
+               "00017,0,3,4",
+               "00017,1,5,6"),path)
+  x <- aqt_import_yolo(path,session_id="S",camera_id="TOP",
+                       fps=10,frame_origin=0)
+  expect_identical(x$track_id,c("00017","00017"))
+  expect_equal(x$time_s,c(0,.1))
+  expect_equal(x$x,c(3,5))
+})
+
+test_that("idtracker long-format CSV keeps zero-padded track identifiers", {
+  path <- tempfile(fileext=".csv")
+  on.exit(unlink(path),add=TRUE)
+  writeLines(c("track_id,time_s,x,y",
+               "0009,0,1,2",
+               "0009,1,2,3"),path)
+  x <- aqt_import_idtracker(path,session_id="S",camera_id="SIDE")
+  expect_identical(x$track_id,c("0009","0009"))
+  expect_equal(x$time_s,c(0,1))
+  expect_equal(x$y,c(2,3))
+})
