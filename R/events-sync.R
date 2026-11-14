@@ -42,9 +42,12 @@ aqt_align_events <- function(tracks,events,window_s=c(-Inf,Inf)) {
   if (!nrow(e)) return(data.frame())
   parts <- lapply(seq_len(nrow(e)),function(i) {
     d <- as.data.frame(tracks)[as.character(tracks$session_id)==e$session_id[i],,drop=FALSE]
-    d$event_id <- e$event_id[i]
-    d$event_start_s <- e$start_s[i]
-    d$event_end_s <- e$end_s[i]
+    # Scalar assignment to a zero-row data.frame errors in base R. Events
+    # without matched observations are valid and must yield zero rows.
+    n <- nrow(d)
+    d$event_id <- rep(e$event_id[i],n)
+    d$event_start_s <- rep(e$start_s[i],n)
+    d$event_end_s <- rep(e$end_s[i],n)
     d$relative_time_s <- d$time_s-e$start_s[i]
     d <- d[d$relative_time_s>=window_s[1L] &
            d$relative_time_s<=window_s[2L],,drop=FALSE]
