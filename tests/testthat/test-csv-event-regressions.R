@@ -172,3 +172,58 @@ test_that("empty events retain predictable zero-row output schema",{
   expect_type(out$relative_time_s,"double")
   expect_type(out$phase,"character")
 })
+
+
+test_that("whole-number double 2D coordinates survive strict CSV round-trip", {
+  # Synthetic reproduction of read.csv() guessing integer from 10, 20, 30.
+  original <- aqt_tracks(data.frame(
+    session_id="S1",camera_id="TOP",track_id="0001",
+    time_s=c(0,1,2),x=c(10,20,30),y=c(15,25,35)))
+  expect_type(original$time_s,"double")
+  expect_type(original$x,"double")
+  expect_type(original$y,"double")
+  expect_type(original$z,"double")
+  tmp <- tempfile(fileext=".csv")
+  on.exit(unlink(tmp),add=TRUE)
+  aqt_export_csv(original,tmp)
+  loaded <- aqt_import_csv(tmp)
+  expect_identical(loaded$time_s,original$time_s)
+  expect_identical(loaded$x,original$x)
+  expect_identical(loaded$y,original$y)
+  expect_identical(loaded$z,original$z)
+  expect_identical(loaded$track_id,original$track_id)
+  expect_identical(as.data.frame(loaded),as.data.frame(original))
+})
+
+test_that("integer-input coordinates are canonicalized to double", {
+  original <- aqt_tracks(data.frame(
+    session_id="S2",camera_id="SIDE",track_id="0003",
+    time_s=0:2,x=10:12,y=20:22))
+  for (column in c("time_s","x","y","z")) {
+    expect_type(original[[column]],"double")
+  }
+  tmp <- tempfile(fileext=".csv")
+  on.exit(unlink(tmp),add=TRUE)
+  aqt_export_csv(original,tmp)
+  loaded <- aqt_import_csv(tmp)
+  expect_identical(as.data.frame(loaded),as.data.frame(original))
+  expect_equal(aqt_kinematics(loaded)$speed[2],sqrt(2))
+})
+
+test_that("mixed fractional and whole-number 3D coordinates preserve identity", {
+  original <- aqt_tracks(data.frame(
+    session_id="0005",camera_id="03",track_id="0012",
+    time_s=c(0,1,2),x=c(1,2,3),
+    y=c(0.25,1.5,2.75),z=c(5,7,9)),
+    units="cm",coordinate_system="tank")
+  path <- tempfile(fileext=".csv")
+  on.exit(unlink(path),add=TRUE)
+  aqt_export_csv(original,path)
+  reloaded <- aqt_import_csv(path,units="cm",coordinate_system="tank")
+  expect_identical(reloaded$x,original$x)
+  expect_identical(reloaded$y,original$y)
+  expect_identical(reloaded$z,original$z)
+  expect_identical(reloaded$time_s,original$time_s)
+  expect_identical(reloaded$track_id,original$track_id)
+  expect_identical(attr(reloaded,"aqt_dimension"),3L)
+})
