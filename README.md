@@ -1,8 +1,98 @@
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/stefanosbalaskas/AquaTrajectories/gh-pages/hero-science.svg" alt="AquaTrajectories aquatic movement research, fish paths, multiview reconstruction and scientific data exploration" width="100%">
+
 # AquaTrajectories
 
-**v0.1.0 release candidate — engineering software preview.** Native R package for aquatic animal 2D/3D trajectories, movement metrics, event alignment, synchronization, and calibrated multiview geometry. See [release checklist](docs/RELEASE_CANDIDATE_0_1_0.md) and [version notes](NEWS.md). This is not an independently validated fish-welfare, underwater-metrology, or hardware-control product.
+**Aquatic movement science · From video observations to reproducible research**
 
-**Not an independently scientifically validated release.** Provisional automatic cross-camera association and a refraction-aware video-to-3D software bridge exist, but independently verified biological identities, calibrated underwater XYZ accuracy, welfare evidence, physical actuator safety, and joint uncertainty coverage are not certified.
+An open-source **R + Python research toolkit** for fish and other aquatic-animal trajectories: timestamp-faithful video tracking interfaces, 2D/3D reconstruction, camera geometry, movement and schooling metrics, behavioural modelling, conditional uncertainty analysis and scientific visualization.
+
+[![R](https://img.shields.io/badge/R-%E2%89%A5%204.1.0-276DC3?logo=r&logoColor=white)](DESCRIPTION)
+[![Engineering preview](https://img.shields.io/badge/engineering%20preview-v0.1.0-167D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases)
+[![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
+[![Public API](https://img.shields.io/badge/exported%20R%20functions-155-147F97)](NAMESPACE)
+[![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
+
+**[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
+
+</div>
+
+> [!IMPORTANT]
+> **Engineering preview, not scientific certification.** Implemented software and synthetic checks do **not** establish independently verified fish identities, real-video accuracy across species, physically calibrated underwater XYZ accuracy, biological welfare or stress states, empirically validated joint uncertainty, or safe hardware actuation. The video runner requires **externally supplied fish-trained weights**; multiview workflows require measured calibration, clock evidence and justified correspondences. Read the [scientific roadmap](docs/SCIENTIFIC_ROADMAP.md) and [release audit](docs/RELEASE_CANDIDATE_0_1_0.md).
+
+> [!NOTE]
+> The research website was successfully built locally and its static files pushed to the **[gh-pages publishing branch](https://github.com/stefanosbalaskas/AquaTrajectories/tree/gh-pages)**. Public website links will begin serving once GitHub Pages completes its queued deployment. The R source and scientific protocols are already accessible here.
+
+## Explore the toolkit
+
+| Research workflow | Included analysis and interfaces | Research guide |
+| :--- | :--- | :--- |
+| **Video to observations** | Native fish-track objects, PyAV/YOLO/ByteTrack runner contract, original frame PTS, imports, provenance and annotation plans | [Video integration](docs/PYAV_YOLO_BYTETRACK_RUNNER.md) · [Tracker formats](docs/MOT_FRAME_PTS_INGESTION.md) |
+| **Multiview and underwater 3D** | Stereo rig and clock checks, refraction-aware reconstruction and reviewable cross-camera geometric hypotheses | [Refractive tracks](docs/REFRACTIVE_TRACK_RECONSTRUCTION.md) · [Flat-port optics](docs/FLATPORT_CAMERA_GEOMETRY.md) |
+| **Movement and fish schools** | Paths, kinematics, school distances and geometry, voxel occupancy and tank views | [School geometry](docs/SCHOOL_SPATIAL_METHODS.md) |
+| **Events and behavioural models** | Event alignment, independently tank-replicated analysis, functional curves, changepoints and conditional HMMs | [Event inference](docs/EVENT_INFERENCE_CONTRACT.md) · [Functional curves](docs/FUNCTIONAL_EVENT_TANK_CURVES.md) |
+| **Scientific validation** | Detection and identity metrics, independently reviewed fish annotations, surveyed XYZ targets and explicit uncertainty scenarios | [Validation contract](docs/VALIDATION_CONTRACT.md) · [Underwater benchmarks](docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md) |
+| **Visualization and ACI** | Publication figure families, 3D storyboard views, synthetic browser explorer and descriptive animal–computer interaction telemetry | [Figure guide](docs/PUBLICATION_VISUALIZATION_SUITE.md) · [ACI measurements](docs/ACI_CLOSED_LOOP_TELEMETRY.md) |
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/stefanosbalaskas/AquaTrajectories/gh-pages/workflow.svg" alt="Illustrated fish-research workflow from video through reconstruction and analysis to independently validated findings" width="94%">
+</p>
+
+### The research documentation portal
+
+The pkgdown site includes **155 exported R functions** in **14 scientific reference categories**, **16 research articles**, eight original scientific illustrations, and a **browser-only five-fish synthetic explorer** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
+
+**[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
+
+## Quick start
+
+Install this development-stage package from GitHub (it is not advertised as a CRAN release):
+
+~~~r
+install.packages("remotes")
+remotes::install_github("stefanosbalaskas/AquaTrajectories")
+
+library(aquaTrajectories)
+
+# Synthetic random walks for demonstrating APIs, NOT observed fish.
+set.seed(42)
+tracks <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
+
+aqt_plot_paths(tracks)
+movement <- aqt_kinematics(tracks, max_gap_s = 0.1)
+school <- aqt_group_metrics(tracks, max_gap_s = 0.1)
+~~~
+
+For real footage, independently validate detection weights, original video timestamps, camera geometry and fish identity annotations before interpreting movement, depth or treatment effects.
+
+## Research readiness at a glance
+
+| Scope | Current meaning |
+| :--- | :--- |
+| **Public R API** | 155 exported functions with reference documentation and automated coverage audit |
+| **Visualizations** | Five publication figure families, descriptive 2D/3D plotting, tank storyboards and explicitly synthetic demonstrations |
+| **Video ingestion** | Optional runner and native R import/benchmark contracts; model training and real-video detector accuracy are not supplied or certified |
+| **Multiview reconstruction** | Calibrated-geometry and refraction-aware algorithms; independent underwater XYZ accuracy and reliable biological ID recovery remain unverified |
+| **Movement, HMMs and ACI** | Bounded movement/behaviour analyses and observed device telemetry; not an automatic fish-welfare classifier or a certified hardware-control product |
+| **Uncertainty** | Explicit scenario-based sensitivity methods; no blanket claim of empirically calibrated joint confidence coverage |
+
+**Scientific safeguards:** camera-local track IDs are not permanent fish identities; image-only tracking does not observe physical depth; missing frames must not be silently interpolated; and independent tanks, not individual video frames, define experimental replication.
+
+## Research materials
+
+**[Release notes](NEWS.md)** · **[Scientific roadmap](docs/SCIENTIFIC_ROADMAP.md)** · **[Release evidence](docs/RELEASE_CANDIDATE_0_1_0.md)** · **[Public dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)** · **[Issues](https://github.com/stefanosbalaskas/AquaTrajectories/issues)**
+
+This **MIT-licensed research software** repository excludes private animal videos, private annotations, proprietary detector weights, access credentials and third-party datasets unless explicitly distributable under their own licenses.
+
+---
+
+## Detailed methods and engineering history
+
+The complete wave-by-wave technical record below is preserved from the original README. These are implementation notes with explicit conditions and limitations, **not** a claim that all independent empirical validation milestones have been satisfied.
+
+<details>
+<summary><strong>Expand the full technical record and module examples</strong></summary>
 
 ## Publication visualization suite (five figure families)
 
@@ -637,3 +727,6 @@ still require external verification. See
 Two read-only Python tools inspect real external data structures: inst/python/aqt_probe_recording.py uses FFprobe MP4 streams and actual GPMF KLV header inspection, while inst/python/aqt_ros_stereo_audit.py validates FishSizing stereo ROS K/D/R/P YAML and decimal-comma manual fish length CSV. Tiny unmodified published left/right stereo calibration YAML fixtures are attributed and tested with optional PyYAML.
 
 The source-separated dataset audit, download links, eligibility, known limits and proposed real validation pipelines are in docs/REAL_DATASET_STRUCTURE_AUDIT.md. Original GoPro HERO5 raw GPMF and published FishSizing YAML/CSV/JSON data structures were directly examined. No actual GoPro fish-video performance or underwater XYZ accuracy is certified.
+
+
+</details>
