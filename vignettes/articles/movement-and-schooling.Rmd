@@ -1,0 +1,45 @@
+---
+title: "Movement, social geometry and spatial occupancy"
+description: "Guide to gap-safe swimming metrics, school structure, trajectory comparison and observation-based occupancy."
+---
+
+# Movement and school geometry
+
+Fish trajectories contain an ordered sequence of **observed** positions. A path's measured length is therefore a *supported observed distance*, not necessarily the animal's true distance traveled through occlusions.
+
+## Core movement analysis
+
+```r
+library(aquaTrajectories)
+set.seed(34)
+tracks <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
+kin <- aqt_kinematics(tracks, max_gap_s = 0.1)
+paths <- aqt_path_summary(tracks, max_gap_s = 0.1)
+school <- aqt_group_metrics(tracks, max_gap_s = 0.1)
+aqt_plot_paths(tracks)
+```
+
+The simulated paths above are not real fish. In actual video analysis, annotate skipped frames, variable PTS and long support gaps explicitly.
+
+## Spatial group metrics
+
+- [`aqt_group_pairwise_distances()`](../reference/aqt_group_pairwise_distances.html): simultaneous observed pairwise fish positions.
+- [`aqt_group_spatial_summary()`](../reference/aqt_group_spatial_summary.html): geometry and group spatial spread.
+- [`aqt_group_spatial_edges()`](../reference/aqt_group_spatial_edges.html): threshold-defined proximity networks, **not** inferred friendships or dominance.
+- [`aqt_zone_occupancy()`](../reference/aqt_zone_occupancy.html): user-defined observed 2D zones.
+- [`aqt_voxel_occupancy()`](../reference/aqt_voxel_occupancy.html): observed 3D voxel occupancy, when physical XYZ is valid.
+- [`aqt_voxel_entropy()`](../reference/aqt_voxel_entropy.html): conditional occupancy entropy over declared cells.
+
+## Path shape and recurrence
+
+[`aqt_trajectory_dtw()`](../reference/aqt_trajectory_dtw.html) and [`aqt_trajectory_dtw_matrix()`](../reference/aqt_trajectory_dtw_matrix.html) compute time-warped distances under declared assumptions. [`aqt_trajectory_recurrence()`](../reference/aqt_trajectory_recurrence.html) quantifies observed-position recurrence with radius and temporal exclusion rules.
+
+Dense-grid principal components appear in [`aqt_trajectory_grid_pca()`](../reference/aqt_trajectory_grid_pca.html). Irregular sparse sampling is a separate estimation problem handled in [`aqt_sparse_fpca_fit()`](../reference/aqt_sparse_fpca_fit.html) where `fdapace` is available.
+
+## Visual displays
+
+Find [`aqt_plot_paths()`](../reference/aqt_plot_paths.html), [`aqt_plot_school_dynamics()`](../reference/aqt_plot_school_dynamics.html), [`aqt_plot_school3d()`](../reference/aqt_plot_school3d.html) and [`aqt_plot_voxel3d()`](../reference/aqt_plot_voxel3d.html) in the visualization reference.
+
+Proximity alone is not evidence of leadership, preference, stress or positive welfare.
+
+See [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SCHOOL_SPATIAL_METHODS.md) and [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FUNCTIONAL_TRAJECTORY_METHODS.md).

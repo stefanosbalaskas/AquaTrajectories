@@ -4,8 +4,8 @@ if (!requireNamespace("yaml", quietly = TRUE)) stop("Install package 'yaml'")
 ns <- readLines("NAMESPACE", warn = FALSE)
 api <- sub("^export\\(([^)]*)\\)$", "\\1", grep("^export\\(", ns, value = TRUE))
 cfg <- yaml::read_yaml("_pkgdown.yml")
-grouped <- unlist(lapply(cfg$reference, function(x) x$contents %||% character()), use.names = FALSE)
 "%||%" <- function(x, y) if (is.null(x)) y else x
+grouped <- unlist(lapply(cfg$reference, function(x) x$contents %||% character()), use.names = FALSE)
 if (length(api) != 155L) stop("Expected 155 exported functions; actual: ", length(api))
 if (anyDuplicated(grouped)) stop("Duplicate function assignments: ", paste(unique(grouped[duplicated(grouped)]), collapse=", "))
 if (!setequal(api, grouped)) {
@@ -17,6 +17,9 @@ if (length(missing_rd)) stop("Missing Rd files: ", paste(missing_rd,collapse=", 
 article_names <- unlist(lapply(cfg$articles, function(x) x$contents), use.names = FALSE)
 article_files <- file.path("vignettes", "articles", paste0(article_names, ".Rmd"))
 if (anyDuplicated(article_names) || any(!file.exists(article_files))) stop("Articles missing or duplicated")
+atlas <- paste(readLines("vignettes/articles/function-atlas.Rmd",warn=FALSE),collapse="\\n")
+missing_atlas <- api[!vapply(api, function(f) grepl(paste0("../reference/", f, ".html"),atlas,fixed=TRUE),logical(1))]
+if(length(missing_atlas)) stop("Function atlas missing links: ",paste(missing_atlas,collapse=", "))
 message("PKGDOWN_REFERENCE_AUDIT_PASS: ", length(api), " exports; ",
         sum(vapply(cfg$reference, function(x) !is.null(x$contents), logical(1))),
         " distinct groups; ", length(article_names), " articles")

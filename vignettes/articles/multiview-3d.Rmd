@@ -1,0 +1,49 @@
+---
+title: "Multiview fish trajectories and underwater refraction"
+description: "Follow correspondence, stereo camera geometry, flat-port optics and independent physical XYZ metrology."
+---
+
+# Multiview reconstruction and physical geometry
+
+Adding a second camera can provide 3D information **only when the physical mapping and correspondence problem is supported**. Two uncalibrated fish videos do not magically provide measured depth.
+
+<figure class="aqt-figure"><img src="../multiview.svg" alt="Two schematic cameras observing fish through an aquatic interface." loading="lazy"></figure>
+
+<p class="aqt-figure-caption">Conceptual illustration; the straight lines do not assert the measured ray bending of any actual GoPro setup.</p>
+
+## Step 1 — Synchronize observation times
+
+Camera timestamps can differ due to drift and offset. [`aqt_sync_holdout_fit()`](../reference/aqt_sync_holdout_fit.html) estimates a supported affine timing model against independently matched events and holds out markers for checking. [`aqt_sync_holdout_apply()`](../reference/aqt_sync_holdout_apply.html) preserves source time stamps and rejects unsupported extrapolation.
+
+Fitted timestamp agreement is not automatically hardware exposure synchronization.
+
+## Step 2 — Declare and test the camera model
+
+| Camera condition | Methods | Scientific warning |
+|---|---|---|
+| Idealized air-only projection | [`aqt_rig_new()`](../reference/aqt_rig_new.html), [`aqt_rig_project()`](../reference/aqt_rig_project.html) | Inappropriate for uncorrected underwater refraction |
+| Single flat air/water interface | [`aqt_refractive_camera()`](../reference/aqt_refractive_camera.html), [`aqt_refractive_rays()`](../reference/aqt_refractive_rays.html) | One interface only |
+| Parallel glass slab, air–glass–water | [`aqt_flatport_camera()`](../reference/aqt_flatport_camera.html), [`aqt_flatport_rays()`](../reference/aqt_flatport_rays.html) | Requires measured glass and optical parameters |
+| Perspective radial/tangential distortion | [`aqt_brown_camera()`](../reference/aqt_brown_camera.html), [`aqt_brown_undistort_pixels()`](../reference/aqt_brown_undistort_pixels.html) | Not a universal fisheye correction |
+
+The *actual physical* tank coordinate system, lens intrinsics/extrinsics, medium indices, glass thickness and port configuration must be supplied. No function independently certifies their accuracy just because the code runs.
+
+## Step 3 — Match fish between camera views
+
+[`aqt_view_candidates()`](../reference/aqt_view_candidates.html) and [`aqt_candidate_rank()`](../reference/aqt_candidate_rank.html) help examine possible paired observations. [`aqt_refractive_view_candidates()`](../reference/aqt_refractive_view_candidates.html) generates physically based candidate rays; [`aqt_crossview_auto_associate()`](../reference/aqt_crossview_auto_associate.html) produces **provisional, abstention-capable** track links.
+
+[`aqt_auto_refractive_pipeline()`](../reference/aqt_auto_refractive_pipeline.html) combines candidate association with supported refractive reconstruction. The output is not guaranteed to be a permanent individual fish ID; source IDs and abstentions must be reported.
+
+## Step 4 — Reconstruct and audit XYZ
+
+[`aqt_reconstruct_3d()`](../reference/aqt_reconstruct_3d.html) handles externally known pinhole correspondences where appropriate; [`aqt_refractive_reconstruct_tracks()`](../reference/aqt_refractive_reconstruct_tracks.html) handles declared refractive geometry and reviewed pairs. [`aqt_reconstruction_quality()`](../reference/aqt_reconstruction_quality.html) and [`aqt_refractive_track_quality()`](../reference/aqt_refractive_track_quality.html) summarize supported diagnostic quantities.
+
+## Step 5 — Validate against measured targets
+
+Held-out measured target positions are the critical external anchor. [`aqt_target_trial_table()`](../reference/aqt_target_trial_table.html), [`aqt_target_holdout_benchmark()`](../reference/aqt_target_holdout_benchmark.html), [`aqt_stereo_landmark_benchmark()`](../reference/aqt_stereo_landmark_benchmark.html) and [`aqt_stereo_depth_audit()`](../reference/aqt_stereo_depth_audit.html) support quality evaluation when true surveyed XYZ coordinates are available.
+
+A low reprojection error can coexist with a wrong fish identity or wrong physical camera model.
+
+### Go deeper
+
+[source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/AUTOMATIC_CROSSVIEW_REFRACTIVE_PIPELINE.md) · [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FLATPORT_CAMERA_GEOMETRY.md) · [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md) · [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/CAMERA_CLOCK_HOLDOUT.md).

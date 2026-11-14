@@ -1,0 +1,57 @@
+---
+title: "Scientific validation status and research limitations"
+description: "Precisely distinguish AquaTrajectories v0.1.0 engineering qualification from independently accepted fish and underwater measurement evidence."
+---
+
+# Scientific status of v0.1.0
+
+**This is an engineering-qualified software preview, not an independently certified fish-welfare or underwater physical metrology system.**
+
+The release includes tested R/Python/JavaScript contracts, synthetic integration tests, and a fail-closed scientific gate. Those are stronger than untested proof-of-concept scripts but are **not** substitutes for independent measurement validation.
+
+<figure class="aqt-figure"><img src="../validation.svg" alt="A conceptual progression from engineering checks to independent scientific certification." loading="lazy"></figure>
+
+<p class="aqt-figure-caption">The last four stages are outstanding evidence requirements, not asserted passes.</p>
+
+## What the engineering release establishes
+
+- A documented public R API containing **155 exported functions**.
+- Native R software components for video outputs, trajectories, optics, movement, statistical utilities and figures.
+- Python video integration contracts and local JavaScript exploratory interfaces.
+- Tested conditional simulation and uncertainty scenarios with explicit assumptions.
+- Whole-package release qualification, including source, tests and synthetic integration evidence.
+
+The v0.1.0 release was tagged at commit `f63885411d55df764e452846758756114b90423a`. The qualified release-candidate tree matched the source merged to `main`. This website is being developed **after** that tag on a separate branch.
+
+## Outstanding empirical gates
+
+1. **Biological identity:** externally reviewed long-term multi-fish identity labels; occlusion and cross-view ID switches.
+2. **Detection:** independent model and dataset holdout with species, shadow, density and recording variations.
+3. **Physical XYZ:** independently surveyed reference targets in water, correct glass/lens parameters, depth and length accuracy.
+4. **Clock accuracy:** independently recorded physical synchronization markers and heldout exposure evidence.
+5. **Joint uncertainty:** observed pixel/ID/calibration distributions and independent real holdout interval coverage.
+6. **Behavioural interpretation:** validated biological reference labels rather than speculative HMM state names.
+7. **Experimental inference:** appropriate randomization and independent tank-level replication.
+8. **Real ACI:** ethical approval, operator procedures, measured actuator latency and physical hard stops.
+9. **External replication:** independent scientific testing, permission to use external benchmarks, and peer-reviewed evidence.
+
+## How to describe findings accurately
+
+| Supported wording | Wording that would overclaim |
+|---|---|
+| “A 2D/3D trajectory software pipeline was executed.” | “All fish were correctly identified.” |
+| “The reconstruction produced XYZ given external calibration.” | “Underwater accuracy was validated.” |
+| “The HMM assigned probabilistic latent states.” | “Fish stress was detected.” |
+| “Conditional measurement scenarios changed outputs.” | “The stated intervals have measured 95% coverage.” |
+| “Software tests passed.” | “The complete biological system is validated.” |
+| “A simulator exercised ACI control contracts.” | “The physical animal device is safe.” |
+
+## Reproducible qualification sources
+
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SCIENTIFIC_RELEASE_READINESS.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/ENGINEERING_FEATURE_RELEASE_GATES.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/RELEASE_CANDIDATE_0_1_0.md)
+
+See also the [published GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.0) and the [source methods library](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs).
+
+The release is open-source research software. It is not a medical, animal-welfare diagnostic or independently safety-certified controller.

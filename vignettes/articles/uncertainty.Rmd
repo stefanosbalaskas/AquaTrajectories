@@ -1,0 +1,40 @@
+---
+title: "Uncertainty propagation and sensitivity analysis"
+description: "Understand conditional pixel, camera, identity and trajectory perturbations without calling hypothetical intervals calibrated confidence regions."
+---
+
+# Uncertainty-aware aquatic trajectories
+
+Uncertainty may originate in detector localization, tracking gaps, camera clocks, optics, fish identity assignments, and experimental sampling. The package makes several of these sources **explicitly perturbable**, but their distributions require independent evidence.
+
+<figure class="aqt-figure"><img src="../uncertainty.svg" alt="A conceptual outcome curve with a widening conditional sensitivity band." loading="lazy"></figure>
+
+<p class="aqt-figure-caption">Illustrative assumed scenarios; the band is not an empirically certified confidence interval.</p>
+
+## Sources that should not be collapsed indiscriminately
+
+| Source | Available utilities | Caution |
+|---|---|---|
+| Image pixel locations | [`aqt_stereo_pixel_mc()`](../reference/aqt_stereo_pixel_mc.html), [`aqt_reconstruction_pixel_uncertainty()`](../reference/aqt_reconstruction_pixel_uncertainty.html) | Requires assumed pixel error law |
+| Coherent trajectory errors | [`aqt_trajectory_ensemble()`](../reference/aqt_trajectory_ensemble.html), [`aqt_ensemble_path_summary()`](../reference/aqt_ensemble_path_summary.html) | Scenario SD is not automatically a confidence interval |
+| Fish track ID switches | [`aqt_identity_switch_scenarios()`](../reference/aqt_identity_switch_scenarios.html), [`aqt_identity_tank_sensitivity()`](../reference/aqt_identity_tank_sensitivity.html) | Specified switch probabilities are not empirically calibrated |
+| Optical parameters and correspondence | [`aqt_joint_refractive_scenarios()`](../reference/aqt_joint_refractive_scenarios.html), [`aqt_joint_event_sensitivity()`](../reference/aqt_joint_event_sensitivity.html) | Depends on supplied camera and identity perturbations |
+| Experimental tank sampling | [`aqt_tank_event_contrast()`](../reference/aqt_tank_event_contrast.html), [`aqt_joint_tank_sensitivity()`](../reference/aqt_joint_tank_sensitivity.html) | Keep external measurement error distinct from tank resampling |
+| Detector dropout | [`aqt_detection_dropout_scenarios()`](../reference/aqt_detection_dropout_scenarios.html), [`aqt_detection_event_sensitivity()`](../reference/aqt_detection_event_sensitivity.html) | Performance depends on dropout model validity |
+
+## A defensible reporting sequence
+
+1. Declare *which errors are measured* and which are only hypothetical.
+2. Preserve original source pixels and camera timestamps.
+3. Sample coherent scenarios rather than independently jittering every point when errors are correlated.
+4. Recalculate movement, state and event outcomes under each scenario.
+5. Report scenario ranges and assumptions separately from experimental sampling uncertainty.
+6. With independently measured holdout truth, assess bias and coverage before claiming calibrated intervals.
+
+## Visual audit
+
+Use [`aqt_plot_ensemble2d()`](../reference/aqt_plot_ensemble2d.html), [`aqt_plot_ensemble3d()`](../reference/aqt_plot_ensemble3d.html), [`aqt_plot_joint_scene_cloud()`](../reference/aqt_plot_joint_scene_cloud.html) and [`aqt_plot_joint_scene_cloud3d()`](../reference/aqt_plot_joint_scene_cloud3d.html) for uncertainty overlays, always labeling them as **conditional sensitivity** absent external calibration.
+
+The package intentionally does not treat these hypothetical clouds as verified biological identity probabilities or physically calibrated XYZ confidence regions.
+
+**Source protocols:** [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/TRAJECTORY_UNCERTAINTY.md), [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/IDENTITY_SCENARIOS.md), [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/JOINT_REFRACTIVE_SENSITIVITY.md) and [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/EMPIRICAL_JOINT_UNCERTAINTY.md).
