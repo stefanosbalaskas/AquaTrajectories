@@ -1,0 +1,122 @@
+name: Release candidate - full engineering and scientific-safeguard gate
+
+on:
+  pull_request:
+    paths:
+      - "DESCRIPTION"
+      - "NAMESPACE"
+      - "NEWS.md"
+      - "R/**"
+      - "man/**"
+      - "inst/**"
+      - "tests/**"
+      - "docs/RELEASE_CANDIDATE_0_1_0.md"
+      - ".github/workflows/release-candidate-full-gate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "DESCRIPTION"
+      - "NEWS.md"
+      - "R/**"
+      - "tests/**"
+      - ".github/workflows/release-candidate-full-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-candidate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact source commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Print exact source identity
+        run: |
+          git rev-parse HEAD
+          git status --porcelain
+          grep '^Version:' DESCRIPTION
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+          extra-packages: any::roxygen2, any::rcmdcheck, any::pkgload, any::testthat
+
+      - name: Documentation generation must not change NAMESPACE/manual pages
+        shell: bash
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+
+      - name: Built whole-package R CMD check with zero E/W/N
+        shell: bash
+        run: |
+          Rscript --vanilla -e 'x<-rcmdcheck::rcmdcheck(args=c("--no-manual"),error_on="never");cat("R errors:",length(x$errors),"warnings:",length(x$warnings),"notes:",length(x$notes),"\n");if(length(x$errors)+length(x$warnings)+length(x$notes))quit(save="no",status=1L)'
+
+      - name: Python all-source compilation and complete synthetic contracts
+        shell: bash
+        run: |
+          python -m compileall -q inst/python tests/python
+          python -m unittest discover -s tests/python -p "test_*.py" -v
+
+      - name: Node explorer source syntax and all synthetic tests
+        shell: bash
+        run: |
+          node --check inst/explorer/core.mjs
+          node --check inst/explorer/multiview-core.mjs
+          node --test tests/js/test-explorer-core.mjs tests/js/test-multiview-explorer.mjs
+
+      - name: Isolated Python-to-R real-import contract with mock-only sources
+        shell: bash
+        run: |
+          R CMD INSTALL .
+          python tests/python/generate_video_bundle_fixture.py "$RUNNER_TEMP/aqt-release-mock-bundle"
+          Rscript --vanilla tests/integration/video_bundle_roundtrip.R "$RUNNER_TEMP/aqt-release-mock-bundle"
+
+      - name: All six engineering features with actual 2D/3D and ACI simulator tests
+        shell: bash
+        run: |
+          python inst/python/aqt_feature_release_gate.py \
+            --mode feature_release \
+            --report "$RUNNER_TEMP/aqt-feature-release.json" \
+            --archive "$RUNNER_TEMP/AquaTrajectories_engineering_source.tar.gz"
+          test -s "$RUNNER_TEMP/AquaTrajectories_engineering_source.tar.gz"
+
+      - name: Scientific certification remains explicitly blocked
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess,sys
+          p=subprocess.run([
+              sys.executable,"inst/python/aqt_feature_release_gate.py",
+              "--mode","scientific_release","--no-tests"])
+          if p.returncode != 2:
+              raise SystemExit("Scientific release did not fail closed with exit 2")
+          print("SCIENTIFIC_RELEASE_BLOCKED_AS_REQUIRED")
+          PY
+
+      - name: Upload engineering-only source and exact-run evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqt-full-package-release-candidate-evidence
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/aqt-feature-release.json
+            ${{ runner.temp }}/AquaTrajectories_engineering_source.tar.gz
