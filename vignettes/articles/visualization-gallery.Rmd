@@ -43,7 +43,6 @@ For calibrated 3D tank positions, see [`aqt_plot_trajectory_storyboard3d()`](../
 set.seed(202613)
 xy <- cbind(rnorm(600, 0.45, 0.18), rnorm(600, 0.56, 0.16))
 xy <- pmin(1, pmax(0, xy))
-h <- graphics::hist2d <- NULL
 bins <- 15
 tab <- matrix(0, bins, bins)
 ii <- pmax(1, pmin(bins, floor(xy[, 1] * bins) + 1))
