@@ -155,3 +155,20 @@ test_that("idtracker long-format CSV keeps zero-padded track identifiers", {
   expect_equal(x$time_s,c(0,1))
   expect_equal(x$y,c(2,3))
 })
+
+
+test_that("empty events retain predictable zero-row output schema",{
+  d <- data.frame(session_id="S1",time_s=c(0,1),x=c(2,3))
+  events <- data.frame(
+    session_id=character(),event_id=character(),
+    start_s=numeric(),end_s=numeric())
+  out <- aqt_align_events(d,events)
+  expect_equal(nrow(out),0L)
+  expect_true(all(c(names(d),"event_id","event_start_s",
+                    "event_end_s","relative_time_s","phase")
+                  %in% names(out)))
+  expect_type(out$event_id,"character")
+  expect_type(out$event_start_s,"double")
+  expect_type(out$relative_time_s,"double")
+  expect_type(out$phase,"character")
+})
