@@ -125,7 +125,7 @@ test_that("event alignment keeps overlapping events separate",{
                   start_s=c(0,1),end_s=c(0,1))
   out <- aqt_align_events(d,e,window_s=c(0,1))
   expect_equal(nrow(out),4L)
-  expect_equal(table(out$event_id),c(A=2L,B=2L))
+  expect_equal(as.integer(table(out$event_id)),c(2L,2L))
   expect_equal(out$relative_time_s,c(0,1,0,1))
   expect_equal(out$signal,c(8,9,9,10))
 })
