@@ -64,15 +64,9 @@ print.aqt_tracks <- function(x, ...) {
 }
 
 #' Import a canonical long-format CSV
-#'
-#' Preserves scoped identifiers as character strings, including leading zeros.
-#' Entirely missing optional/position coordinate columns remain numeric,
-#' so files written by aqt_export_csv() can be imported without hand editing.
-#' Nonmissing malformed coordinates are not silently converted to missing.
 #' @param path CSV file path.
 #' @param units Coordinate units.
 #' @param coordinate_system image or tank.
-#' @return An aqt_tracks object, with original scoped identifiers intact.
 #' @export
 aqt_import_csv <- function(path, units="px", coordinate_system="image") {
   # Reading only column names first avoids numeric type guessing on fish IDs.
