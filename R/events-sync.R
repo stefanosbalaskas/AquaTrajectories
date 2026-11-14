@@ -51,8 +51,10 @@ aqt_align_events <- function(tracks,events,window_s=c(-Inf,Inf)) {
     d$relative_time_s <- d$time_s-e$start_s[i]
     d <- d[d$relative_time_s>=window_s[1L] &
            d$relative_time_s<=window_s[2L],,drop=FALSE]
-    d$phase <- ifelse(d$time_s<e$start_s[i],"before",
-      ifelse(d$time_s<=e$end_s[i],"during","after"))
+    d$phase <- if (nrow(d)) {
+      ifelse(d$time_s<e$start_s[i],"before",
+        ifelse(d$time_s<=e$end_s[i],"during","after"))
+    } else character()
     d
   })
   out <- do.call(rbind,parts)
