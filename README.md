@@ -1,6 +1,6 @@
 # AquaTrajectories
 
-Development-stage native R package for aquatic animal 2D/3D trajectories, movement metrics, event alignment, synchronization, and calibrated multiview geometry.
+**v0.1.0 release candidate — engineering software preview.** Native R package for aquatic animal 2D/3D trajectories, movement metrics, event alignment, synchronization, and calibrated multiview geometry. See [release checklist](docs/RELEASE_CANDIDATE_0_1_0.md) and [version notes](NEWS.md). This is not an independently validated fish-welfare, underwater-metrology, or hardware-control product.
 
 **Not an independently scientifically validated release.** Provisional automatic cross-camera association and a refraction-aware video-to-3D software bridge exist, but independently verified biological identities, calibrated underwater XYZ accuracy, welfare evidence, physical actuator safety, and joint uncertainty coverage are not certified.
 
