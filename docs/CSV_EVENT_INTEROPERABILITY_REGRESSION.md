@@ -27,7 +27,7 @@ testthat::test_local(filter="csv-event-regressions")
 rcmdcheck::rcmdcheck(args="--no-manual",error_on="warning")
 \`\`\`
 
-The regression file tests eleven cases:
+The regression file tests fourteen cases:
 - 2D missing-z export/import parity with zero-padded scoped IDs;
 - complete 3D geometry and observed flags;
 - empty but valid image coordinates;
@@ -39,6 +39,19 @@ The regression file tests eleven cases:
 - an entirely empty event table with stable output types;
 - YOLO frame-indexed zero-padded track IDs;
 - idtracker.ai long-form zero-padded track IDs.
+
+## Whole-number coordinate storage regression (follow-up)
+
+A subsequent strict identity check using **synthetic** image coordinates
+`x=c(10,20,30)`, `y=c(15,25,35)`, and `time_s=c(0,1,2)` exposed
+another CSV edge case: base R may infer integer storage from whole-number
+CSV text even when the originating vectors were double. Canonical
+`aqt_tracks()` now normalizes valid integer time/coordinate inputs to
+double precision. This makes the in-memory schema consistent across direct
+construction and CSV import without changing numeric values. New synthetic
+tests assert `identical()` parity for whole-number 2D and mixed 3D
+coordinates, time, and scoped IDs. This is data-type stability, not a
+measurement accuracy claim.
 
 ## Boundaries
 
