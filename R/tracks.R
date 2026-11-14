@@ -64,12 +64,33 @@ print.aqt_tracks <- function(x, ...) {
 }
 
 #' Import a canonical long-format CSV
+#'
+#' Preserves scoped identifiers as character strings, including leading zeros.
+#' Entirely missing optional/position coordinate columns remain numeric,
+#' so files written by aqt_export_csv() can be imported without hand editing.
+#' Nonmissing malformed coordinates are not silently converted to missing.
 #' @param path CSV file path.
 #' @param units Coordinate units.
 #' @param coordinate_system image or tank.
+#' @return An aqt_tracks object, with original scoped identifiers intact.
 #' @export
 aqt_import_csv <- function(path, units="px", coordinate_system="image") {
-  aqt_tracks(utils::read.csv(path,stringsAsFactors=FALSE),units,coordinate_system)
+  # Reading only column names first avoids numeric type guessing on fish IDs.
+  column_names <- names(utils::read.csv(path,nrows=0L,
+                                         stringsAsFactors=FALSE))
+  classes <- stats::setNames(rep(NA_character_,length(column_names)),
+                             column_names)
+  ids <- intersect(c("session_id","camera_id","track_id"),column_names)
+  classes[ids] <- "character"
+  d <- utils::read.csv(path,stringsAsFactors=FALSE,colClasses=classes)
+  # All-blank numeric columns are inferred by read.csv as logical NA.
+  # Only repair that narrow, lossless case; leave malformed values to the
+  # existing aqt_tracks() schema validator.
+  for (nm in intersect(c("x","y","z"),names(d))) {
+    if (is.logical(d[[nm]]) && all(is.na(d[[nm]])))
+      d[[nm]] <- rep(NA_real_,nrow(d))
+  }
+  aqt_tracks(d,units,coordinate_system)
 }
 
 #' Import explicitly exported YOLO/Ultralytics long-format tracks
