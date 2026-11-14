@@ -216,25 +216,25 @@ reference:
 articles:
   - title: "Start here"
     contents:
-      - aquaTrajectories
-      - workflows-atlas
-      - function-atlas
+      - articles/aquaTrajectories
+      - articles/workflows-atlas
+      - articles/function-atlas
   - title: "From pixels to trajectories"
     contents:
-      - video-tracking
-      - multiview-3d
-      - validation-and-benchmarks
+      - articles/video-tracking
+      - articles/multiview-3d
+      - articles/validation-and-benchmarks
   - title: "Scientific analysis"
     contents:
-      - movement-and-schooling
-      - experimental-design
-      - behavioural-models
-      - uncertainty
+      - articles/movement-and-schooling
+      - articles/experimental-design
+      - articles/behavioural-models
+      - articles/uncertainty
   - title: "Figures and research workflows"
     contents:
-      - visualization-gallery
-      - five-figure-workbook
-      - publication-figures
-      - research-datasets
-      - aci-workflows
-      - scientific-status
+      - articles/visualization-gallery
+      - articles/five-figure-workbook
+      - articles/publication-figures
+      - articles/research-datasets
+      - articles/aci-workflows
+      - articles/scientific-status

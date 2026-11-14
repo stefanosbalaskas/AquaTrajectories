@@ -60,6 +60,8 @@ jobs:
         run: node --check pkgdown/assets/synthetic-explorer.js
       - name: Audit all exported R functions and article pages
         run: Rscript scripts/check_pkgdown_reference.R
+      - name: Validate pkgdown article indexing before whole-site build
+        run: Rscript -e 'pkgdown::build_articles_index(pkg=".")'
       - name: Build independent static site (never overwrite scientific docs/)
         run: Rscript -e 'pkgdown::build_site(examples=FALSE, preview=FALSE, quiet=FALSE)'
       - name: Verify build output

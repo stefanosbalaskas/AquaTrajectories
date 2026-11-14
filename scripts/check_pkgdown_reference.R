@@ -15,8 +15,23 @@ if (!setequal(api, grouped)) {
 missing_rd <- api[!file.exists(file.path("man", paste0(api, ".Rd")))]
 if (length(missing_rd)) stop("Missing Rd files: ", paste(missing_rd,collapse=", "))
 article_names <- unlist(lapply(cfg$articles, function(x) x$contents), use.names = FALSE)
-article_files <- file.path("vignettes", "articles", paste0(article_names, ".Rmd"))
-if (anyDuplicated(article_names) || any(!file.exists(article_files))) stop("Articles missing or duplicated")
+# pkgdown 2.2 indexes vignettes/articles/name.Rmd as "articles/name",
+# even though the rendered website URL remains articles/name.html.
+if (any(!grepl("^articles/[A-Za-z0-9_-]+$", article_names))) {
+  stop("pkgdown article IDs must include their path under vignettes/: ", paste(article_names, collapse=", "))
+}
+article_files <- file.path("vignettes", paste0(article_names, ".Rmd"))
+if (anyDuplicated(article_names) || any(!file.exists(article_files))) {
+  stop("Articles missing or duplicated: ", paste(article_files[!file.exists(article_files)], collapse=", "))
+}
+# Prevent a listing that looks complete but pkgdown cannot index.
+discovered <- list.files("vignettes/articles", pattern="\\.Rmd$", full.names=FALSE)
+discovered_ids <- paste0("articles/", sub("\\.Rmd$", "", discovered))
+if (!setequal(discovered_ids, article_names)) {
+  stop("Mismatch between article registry and files. Unlisted: ",
+       paste(setdiff(discovered_ids, article_names),collapse=", "),
+       "; not found: ", paste(setdiff(article_names, discovered_ids), collapse=", "))
+}
 atlas <- paste(readLines("vignettes/articles/function-atlas.Rmd",warn=FALSE),collapse="\n")
 missing_atlas <- api[!vapply(api, function(f) grepl(paste0("../reference/", f, ".html"),atlas,fixed=TRUE),logical(1))]
 if(length(missing_atlas)) stop("Function atlas missing links: ",paste(missing_atlas,collapse=", "))
