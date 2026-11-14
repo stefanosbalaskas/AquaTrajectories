@@ -63,20 +63,25 @@ print.aqt_tracks <- function(x, ...) {
   invisible(x)
 }
 
+# Preserve identifier spelling (including leading zeros) across CSV adapters.
+# The first zero-row read determines column names without guessing ID types.
+.aqt_read_csv_preserving_ids <- function(path,id_columns) {
+  names_in_file <- names(utils::read.csv(path,nrows=0L,
+                                        stringsAsFactors=FALSE))
+  types <- stats::setNames(rep(NA_character_,length(names_in_file)),
+                           names_in_file)
+  types[intersect(id_columns,names_in_file)] <- "character"
+  utils::read.csv(path,stringsAsFactors=FALSE,colClasses=types)
+}
+
 #' Import a canonical long-format CSV
 #' @param path CSV file path.
 #' @param units Coordinate units.
 #' @param coordinate_system image or tank.
 #' @export
 aqt_import_csv <- function(path, units="px", coordinate_system="image") {
-  # Reading only column names first avoids numeric type guessing on fish IDs.
-  column_names <- names(utils::read.csv(path,nrows=0L,
-                                         stringsAsFactors=FALSE))
-  classes <- stats::setNames(rep(NA_character_,length(column_names)),
-                             column_names)
-  ids <- intersect(c("session_id","camera_id","track_id"),column_names)
-  classes[ids] <- "character"
-  d <- utils::read.csv(path,stringsAsFactors=FALSE,colClasses=classes)
+  d <- .aqt_read_csv_preserving_ids(path,
+    c("session_id","camera_id","track_id"))
   # All-blank numeric columns are inferred by read.csv as logical NA.
   # Only repair that narrow, lossless case; leave malformed values to the
   # existing aqt_tracks() schema validator.
@@ -95,7 +100,7 @@ aqt_import_csv <- function(path, units="px", coordinate_system="image") {
 #' @param frame_origin Index representing zero seconds.
 #' @export
 aqt_import_yolo <- function(path,session_id,camera_id,fps=NULL,frame_origin=0) {
-  d <- utils::read.csv(path,stringsAsFactors=FALSE)
+  d <- .aqt_read_csv_preserving_ids(path,c("track_id","fish_id"))
   id <- if ("track_id" %in% names(d)) "track_id" else if ("fish_id" %in% names(d)) "fish_id" else ""
   if (!nzchar(id) || !all(c("x_px","y_px") %in% names(d)))
     stop("Expected track_id/fish_id, x_px and y_px",call.=FALSE)
@@ -115,7 +120,7 @@ aqt_import_yolo <- function(path,session_id,camera_id,fps=NULL,frame_origin=0) {
 #' @param camera_id Camera identifier.
 #' @export
 aqt_import_idtracker <- function(path,session_id,camera_id) {
-  d <- utils::read.csv(path,stringsAsFactors=FALSE)
+  d <- .aqt_read_csv_preserving_ids(path,"track_id")
   if (!all(c("track_id","time_s","x","y") %in% names(d)))
     stop("Requires long-format track_id,time_s,x,y; reshape wide exports first",call.=FALSE)
   d$session_id<-session_id; d$camera_id<-camera_id
