@@ -233,6 +233,7 @@ articles:
   - title: "Figures and research workflows"
     contents:
       - visualization-gallery
+      - five-figure-workbook
       - publication-figures
       - research-datasets
       - aci-workflows

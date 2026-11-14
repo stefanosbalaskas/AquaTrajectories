@@ -65,6 +65,7 @@ jobs:
           test -s site/reference/aqt_auto_refractive_pipeline.html
           test -s site/reference/aqt_plot_paths.html
           test -s site/articles/function-atlas.html
+          test -s site/articles/five-figure-workbook.html
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4
         with:

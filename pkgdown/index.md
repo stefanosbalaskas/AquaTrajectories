@@ -52,6 +52,10 @@ kin <- aqt_kinematics(x, max_gap_s = 0.1)
 
 This simulator produces **synthetic random walks**, not biologically calibrated fish movement.
 
+## Five complete, runnable publication figures
+
+The [five-figure reproducible workbook](articles/five-figure-workbook.html) exercises actual native plotting functions with openly labeled **synthetic** data for feeding phases, physical XYZ error illustrations, replicated-tank occupancy, event-aligned speed, and heading roses. All five plots include source code and retain their scientific interpretation limits.
+
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)

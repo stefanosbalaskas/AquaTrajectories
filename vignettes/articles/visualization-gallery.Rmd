@@ -85,4 +85,4 @@ The following documented figure families have their **own required input tables*
 - [`aqt_plot_speed_response()`](../reference/aqt_plot_speed_response.html): declared speed units, event onsets and tank observations.
 - [`aqt_plot_heading_rose()`](../reference/aqt_plot_heading_rose.html): observed XY headings with optional supplied video raster frames.
 
-A full synthetic five-figure workbook is already present in the repository at [inst/examples/publication_visualization_gallery.Rmd](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/inst/examples/publication_visualization_gallery.Rmd). See the [publication figure guide](publication-figures.html).
+A full synthetic five-figure workbook is already present in the repository at [inst/examples/publication_visualization_gallery.Rmd](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/inst/examples/publication_visualization_gallery.Rmd). Run all five directly in the [website's five-figure workbook](five-figure-workbook.html). See the [publication figure guide](publication-figures.html).
