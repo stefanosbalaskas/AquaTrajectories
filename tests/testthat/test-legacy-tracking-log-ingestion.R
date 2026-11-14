@@ -1,7 +1,7 @@
-# Synthetic, public, non-fish-data fixtures for the archived smartFish
+# Synthetic, public, non-fish-data fixtures for the archived legacy tracking
 # 8-column header / 11-field observation export family.
 
-.aqt_smartfish_mock <- function(plain_header=FALSE) {
+.aqt_legacy_tracking_mock <- function(plain_header=FALSE) {
   h <- if (plain_header)
     "Fish_ID,Width,Height,Depth(cm),Time,Top_Left,Bottom_Right,Center_Point"
   else
@@ -19,11 +19,11 @@
   path
 }
 
-test_that("imports all source rows under eight-to-eleven smartFish schema",{
-  path <- .aqt_smartfish_mock()
+test_that("imports all source rows under eight-to-eleven legacy tracking schema",{
+  path <- .aqt_legacy_tracking_mock()
   on.exit(unlink(path),add=TRUE)
-  x <- aqt_import_smartfish_log(path,session_id="session-A")
-  expect_s3_class(x,"aqt_smartfish_log")
+  x <- aqt_import_tracking_log(path,session_id="session-A")
+  expect_s3_class(x,"aqt_tracking_log_export")
   expect_equal(nrow(x),7L)
   expect_equal(x$source_line,2:8)
   expect_identical(unique(x$camera_id),"unverified")
@@ -46,30 +46,30 @@ test_that("imports all source rows under eight-to-eleven smartFish schema",{
 })
 
 test_that("accepts alternative header and rejects truncated or invalid files",{
-  path <- .aqt_smartfish_mock(plain_header=TRUE)
+  path <- .aqt_legacy_tracking_mock(plain_header=TRUE)
   on.exit(unlink(path),add=TRUE)
-  x <- aqt_import_smartfish_log(path)
+  x <- aqt_import_tracking_log(path)
   expect_equal(nrow(x),7L)
-  expect_error(aqt_import_smartfish_log(path,
+  expect_error(aqt_import_tracking_log(path,
                image_size=c(1920,-1)),"image_size")
-  expect_error(aqt_import_smartfish_log(path,
+  expect_error(aqt_import_tracking_log(path,
                depth_threshold_cm=-1),"depth_threshold")
-  expect_error(aqt_import_smartfish_log(path,
+  expect_error(aqt_import_tracking_log(path,
                camera_id=" "),"nonblank")
   lines <- readLines(path)
   writeLines(lines[-length(lines)],path,useBytes=TRUE)
-  expect_equal(nrow(aqt_import_smartfish_log(path)),6L)
+  expect_equal(nrow(aqt_import_tracking_log(path)),6L)
   writeLines(c(lines,"1,2,3"),path,useBytes=TRUE)
-  expect_error(aqt_import_smartfish_log(path),"exactly 11")
+  expect_error(aqt_import_tracking_log(path),"exactly 11")
   writeLines(c("wrong,header,here",lines[-1L]),path,useBytes=TRUE)
-  expect_error(aqt_import_smartfish_log(path),"8-field header")
+  expect_error(aqt_import_tracking_log(path),"8-field header")
 })
 
 test_that("QC audit counts tracks, source clock restarts and flagged rows",{
-  path <- .aqt_smartfish_mock()
+  path <- .aqt_legacy_tracking_mock()
   on.exit(unlink(path),add=TRUE)
-  x <- aqt_import_smartfish_log(path)
-  z <- aqt_smartfish_log_audit(x)
+  x <- aqt_import_tracking_log(path)
+  z <- aqt_tracking_log_audit(x)
   expect_equal(nrow(z),1L)
   expect_equal(z$n_observations,7L)
   expect_equal(z$n_track_ids,2L)
@@ -80,15 +80,15 @@ test_that("QC audit counts tracks, source clock restarts and flagged rows",{
   expect_equal(z$max_raw_depth_cm,900)
   expect_true(attr(z,"not_global_camera_timestamps"))
   expect_false(attr(z,"estimated_depth_is_validated_water_depth"))
-  expect_equal(nrow(aqt_smartfish_log_audit(list(x,x))),2L)
-  expect_error(aqt_smartfish_log_audit(list()),"one or more")
+  expect_equal(nrow(aqt_tracking_log_audit(list(x,x))),2L)
+  expect_error(aqt_tracking_log_audit(list()),"one or more")
 })
 
 test_that("image-plane adapter does not convert raw depth into fake 3D z",{
-  path <- .aqt_smartfish_mock()
+  path <- .aqt_legacy_tracking_mock()
   on.exit(unlink(path),add=TRUE)
-  x <- aqt_import_smartfish_log(path)
-  t <- aqt_smartfish_tracks(x)
+  x <- aqt_import_tracking_log(path)
+  t <- aqt_tracking_log_tracks(x)
   expect_s3_class(t,"aqt_tracks")
   expect_equal(nrow(t),5L)
   expect_equal(attr(t,"aqt_observations_filtered"),2L)
@@ -100,26 +100,26 @@ test_that("image-plane adapter does not convert raw depth into fake 3D z",{
   expect_false(attr(t,"aqt_physical_speed_certified"))
   expect_equal(unique(t$track_id),c("1","2"))
   expect_true(all(t$source_line %in% c(2L,5L,6L,7L,8L)))
-  expect_error(aqt_smartfish_tracks(x,duplicate_policy="error"),
+  expect_error(aqt_tracking_log_tracks(x,duplicate_policy="error"),
                "Duplicate source")
-  first <- aqt_smartfish_tracks(x,duplicate_policy="first")
+  first <- aqt_tracking_log_tracks(x,duplicate_policy="first")
   expect_equal(nrow(first),6L)
-  no_border <- aqt_smartfish_tracks(x,drop_boundary=TRUE)
+  no_border <- aqt_tracking_log_tracks(x,drop_boundary=TRUE)
   expect_equal(nrow(no_border),4L)
   # Both extreme-depth records already participate in a duplicated time;
   # dropping all duplicates removes them before the depth filter applies.
-  no_cutoff <- aqt_smartfish_tracks(x,drop_depth_cutoff=TRUE)
+  no_cutoff <- aqt_tracking_log_tracks(x,drop_depth_cutoff=TRUE)
   expect_equal(nrow(no_cutoff),5L)
-  first_no_cutoff <- aqt_smartfish_tracks(
+  first_no_cutoff <- aqt_tracking_log_tracks(
     x,duplicate_policy="first",drop_depth_cutoff=TRUE)
   expect_equal(nrow(first_no_cutoff),5L)
 })
 
 test_that("motion uses only within-ID time steps and gap-based censoring",{
-  path <- .aqt_smartfish_mock()
+  path <- .aqt_legacy_tracking_mock()
   on.exit(unlink(path),add=TRUE)
-  tracks <- aqt_smartfish_tracks(aqt_import_smartfish_log(path))
-  m <- aqt_smartfish_motion(tracks,max_gap_s=1)
+  tracks <- aqt_tracking_log_tracks(aqt_import_tracking_log(path))
+  m <- aqt_tracking_log_motion(tracks,max_gap_s=1)
   expect_equal(nrow(m),nrow(tracks))
   expect_equal(sum(m$valid_step),1L)
   step <- m[m$valid_step,,drop=FALSE]
@@ -132,19 +132,19 @@ test_that("motion uses only within-ID time steps and gap-based censoring",{
   expect_true(all(is.na(m$speed_px_s[!m$valid_step])))
   expect_identical(attr(m,"speed_unit"),"px/s_uncalibrated")
   expect_false(attr(m,"body_heading_estimated"))
-  m2 <- aqt_smartfish_motion(tracks,max_gap_s=2)
+  m2 <- aqt_tracking_log_motion(tracks,max_gap_s=2)
   expect_equal(sum(m2$valid_step),2L)
-  expect_error(aqt_smartfish_motion(tracks,max_gap_s=0),"max_gap")
-  expect_error(aqt_smartfish_motion(tracks,
+  expect_error(aqt_tracking_log_motion(tracks,max_gap_s=0),"max_gap")
+  expect_error(aqt_tracking_log_motion(tracks,
                min_displacement_px=-1),"min_displacement")
-  expect_error(aqt_smartfish_motion(data.frame()),"pixel tracks")
+  expect_error(aqt_tracking_log_motion(data.frame()),"pixel tracks")
 })
 
 test_that("legacy replay reproduces historical filtering without certifying speed",{
-  path <- .aqt_smartfish_mock()
+  path <- .aqt_legacy_tracking_mock()
   on.exit(unlink(path),add=TRUE)
-  x <- aqt_import_smartfish_log(path)
-  z <- aqt_smartfish_legacy_replay(
+  x <- aqt_import_tracking_log(path)
+  z <- aqt_tracking_legacy_replay(
     x,nominal_cm_per_px=.1,speed_limits=c(.01,100))
   expect_equal(z$summary$n_legacy_filtered,3L)
   expect_equal(sort(z$observations$nominal_speed),
@@ -153,18 +153,18 @@ test_that("legacy replay reproduces historical filtering without certifying spee
   expect_false(attr(z,"stereo_depth_cm_is_vertical_z_certified"))
   expect_equal(attr(z,"reconstruction_type"),
                "historical_2d_fixed_scale_not_calibrated_3d")
-  expect_error(aqt_smartfish_legacy_replay(x,
+  expect_error(aqt_tracking_legacy_replay(x,
                speed_limits=c(10,1)),"speed_limits")
-  expect_error(aqt_smartfish_legacy_replay(x,
+  expect_error(aqt_tracking_legacy_replay(x,
                nominal_cm_per_px=0),"nominal_cm_per_px")
-  expect_error(aqt_smartfish_legacy_replay(list()),"one or more")
+  expect_error(aqt_tracking_legacy_replay(list()),"one or more")
 })
 
-test_that("smartFish headings can be supplied directly to rose plotting",{
-  path <- .aqt_smartfish_mock()
+test_that("legacy tracking headings can be supplied directly to rose plotting",{
+  path <- .aqt_legacy_tracking_mock()
   on.exit(unlink(path),add=TRUE)
-  t <- aqt_smartfish_tracks(aqt_import_smartfish_log(path))
-  m <- aqt_smartfish_motion(t,max_gap_s=2)
+  t <- aqt_tracking_log_tracks(aqt_import_tracking_log(path))
+  m <- aqt_tracking_log_motion(t,max_gap_s=2)
   x <- m[is.finite(m$heading_rad),c("condition","heading_rad")]
   expect_true(nrow(x)>0L)
   out <- tempfile(fileext=".pdf")

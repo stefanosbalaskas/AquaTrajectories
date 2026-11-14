@@ -1,10 +1,10 @@
-# Wave 17: smartFish comma-split tracking exports.
+# Wave 17: legacy tracking comma-split tracking exports.
 # Private real fish logs are NOT bundled in the public package.
 # Source clock is per-ID relative, not a shared camera/video timestamp.
 # "Depth(cm)" remains an unverified distance-like measurement; it is
 # neither tank z nor physical water-column depth without a camera model.
 
-#' Import a smartFish stereo tracking-log export without losing observations
+#' Import a legacy tracking stereo tracking-log export without losing observations
 #'
 #' The header reports eight names but numeric observation rows contain eleven
 #' comma-delimited fields: the final three header fields are XY coordinate
@@ -20,9 +20,9 @@
 #'   based on supplied exports, not verified sensor geometry).
 #' @param depth_threshold_cm Descriptive source-analysis depth cutoff for
 #'   a flag, NOT a calibrated limit on actual water-column depth.
-#' @return aqt_smartfish_log with raw values, QC flags, hash/provenance.
+#' @return aqt_tracking_log_export with raw values, QC flags, hash/provenance.
 #' @export
-aqt_import_smartfish_log <- function(
+aqt_import_tracking_log <- function(
     path,session_id=NULL,camera_id="unverified",
     image_size=c(1920,1080),depth_threshold_cm=200) {
   if (!is.character(path) || length(path)!=1L || is.na(path) ||
@@ -46,7 +46,7 @@ aqt_import_smartfish_log <- function(
     path,sep=",",quote="",blank.lines.skip=FALSE)
   if (length(nfields)<2L || !identical(as.integer(nfields[1L]),8L) ||
       anyNA(nfields[-1L]) || any(nfields[-1L]!=11L))
-    stop("Expected original smartFish 8-field header and exactly 11",
+    stop("Expected original legacy tracking 8-field header and exactly 11",
          " numeric fields on every observation line",call.=FALSE)
   header <- strsplit(readLines(path,n=1L,warn=FALSE),",",
                      fixed=TRUE)[[1L]]
@@ -57,7 +57,7 @@ aqt_import_smartfish_log <- function(
       !identical(header,c("Fish_ID","Width","Height",
                           "Depth(cm)","Time","Top_Left","Bottom_Right",
                           "Center_Point")))
-    stop("Unrecognized smartFish tracking-log header",call.=FALSE)
+    stop("Unrecognized legacy tracking tracking-log header",call.=FALSE)
   cols <- c("fish_id","width_px","height_px","depth_raw_cm",
             "track_time_s","tl_x","tl_y","br_x","br_y",
             "center_x","center_y")
@@ -105,7 +105,7 @@ aqt_import_smartfish_log <- function(
     d$br_x>=image_size[1L]-1L | d$br_y>=image_size[2L]-1L
   d$qc_depth_at_or_above_cutoff <- d$depth_raw_cm>=depth_threshold_cm
   d$qc_depth_nonpositive <- d$depth_raw_cm<=0
-  class(d) <- c("aqt_smartfish_log","data.frame")
+  class(d) <- c("aqt_tracking_log_export","data.frame")
   attr(d,"aqt_source_sha256") <- digest::digest(
     path,algo="sha256",file=TRUE)
   attr(d,"aqt_clock_scope") <- "per_track_relative_not_global_PTS"
@@ -119,17 +119,17 @@ aqt_import_smartfish_log <- function(
   d
 }
 
-#' Audit original smartFish observations without deleting flagged rows
+#' Audit original legacy tracking observations without deleting flagged rows
 #'
-#' @param logs One aqt_smartfish_log or a nonempty list of them.
+#' @param logs One aqt_tracking_log_export or a nonempty list of them.
 #' @return Per-source-file counts, track fragmentation, clock resets,
 #'   boundaries, duplicate source times and estimated-depth flags.
 #' @export
-aqt_smartfish_log_audit <- function(logs) {
-  if (inherits(logs,"aqt_smartfish_log")) logs <- list(logs)
+aqt_tracking_log_audit <- function(logs) {
+  if (inherits(logs,"aqt_tracking_log_export")) logs <- list(logs)
   if (!is.list(logs) || !length(logs) ||
-      !all(vapply(logs,inherits,logical(1L),"aqt_smartfish_log")))
-    stop("logs must contain one or more aqt_smartfish_log objects",
+      !all(vapply(logs,inherits,logical(1L),"aqt_tracking_log_export")))
+    stop("logs must contain one or more aqt_tracking_log_export objects",
          call.=FALSE)
   out <- lapply(logs,function(x) {
     ids <- unique(x$fish_id)
@@ -161,7 +161,7 @@ aqt_smartfish_log_audit <- function(logs) {
   result
 }
 
-#' Create provisional image-plane tracks from smartFish source observations
+#' Create provisional image-plane tracks from legacy tracking source observations
 #'
 #' Duplicate track-local timestamps violate aqt_tracks uniqueness. The
 #' default drops *all* rows participating in any duplicate rather than
@@ -169,7 +169,7 @@ aqt_smartfish_log_audit <- function(logs) {
 #' QC flags remain visible on retained tracks unless explicitly excluded.
 #' No source depth is interpreted as XYZ z, nor is a global clock inferred.
 #'
-#' @param x One aqt_smartfish_log.
+#' @param x One aqt_tracking_log_export.
 #' @param duplicate_policy drop_all, first, or error.
 #' @param drop_bad_boxes Remove impossible/out-of-image boxes.
 #' @param drop_boundary Remove boxes touching an image border.
@@ -178,12 +178,12 @@ aqt_smartfish_log_audit <- function(logs) {
 #' @return aqt_tracks in pixels, with 2D image centres and raw-depth
 #'   auxiliary column plus unverified provenance attributes.
 #' @export
-aqt_smartfish_tracks <- function(
+aqt_tracking_log_tracks <- function(
     x,duplicate_policy=c("drop_all","first","error"),
     drop_bad_boxes=TRUE,drop_boundary=FALSE,
     drop_depth_cutoff=FALSE) {
-  if (!inherits(x,"aqt_smartfish_log"))
-    stop("Expected aqt_smartfish_log",call.=FALSE)
+  if (!inherits(x,"aqt_tracking_log_export"))
+    stop("Expected aqt_tracking_log_export",call.=FALSE)
   duplicate_policy <- match.arg(duplicate_policy)
   for (v in list(drop_bad_boxes,drop_boundary,drop_depth_cutoff))
     if(!is.logical(v) || length(v)!=1L || is.na(v))
@@ -207,7 +207,7 @@ aqt_smartfish_tracks <- function(
   if (!any(keep))
     stop("No tracking observations remain after QC filters",call.=FALSE)
   d <- x[keep,,drop=FALSE]
-  # Do not accidentally inherit the smartFish raw-data S3 class.
+  # Do not accidentally inherit the legacy tracking raw-data S3 class.
   d <- as.data.frame(d)
   d$track_id <- d$fish_id
   d$time_s <- d$track_time_s
@@ -228,26 +228,26 @@ aqt_smartfish_tracks <- function(
   tracks
 }
 
-#' Compute exploratory 2D movement steps for a smartFish import
+#' Compute exploratory 2D movement steps for a legacy tracking import
 #'
 #' Displacements are compared ONLY within scoped track IDs, not across
 #' cameras, presumed fish identities, or files. No gap interpolation
 #' occurs. Image-Y is downward; atan2(-dy,dx) is an XY planar heading,
 #' not anatomical fish orientation. All speeds are pixel/s.
 #'
-#' @param tracks Output of aqt_smartfish_tracks().
+#' @param tracks Output of aqt_tracking_log_tracks().
 #' @param max_gap_s Maximum interval for a valid adjacent movement step.
 #' @param min_displacement_px Minimum nonzero step length for a heading.
 #' @return Full row-aligned table of step length, pixel speed, dt,
 #'   circular heading, valid-step flag and filename condition.
 #' @export
-aqt_smartfish_motion <- function(
+aqt_tracking_log_motion <- function(
     tracks,max_gap_s=1,min_displacement_px=0) {
   if (!inherits(tracks,"aqt_tracks") ||
       !identical(attr(tracks,"aqt_clock_scope"),
                  "per_track_relative_not_global_PTS") ||
       !identical(attr(tracks,"aqt_units"),"px"))
-    stop("Expected uncalibrated smartFish pixel tracks",call.=FALSE)
+    stop("Expected uncalibrated legacy tracking pixel tracks",call.=FALSE)
   if (!is.numeric(max_gap_s) || length(max_gap_s)!=1L ||
       !is.finite(max_gap_s) || max_gap_s<=0)
     stop("max_gap_s must be positive and finite",call.=FALSE)
@@ -290,7 +290,7 @@ aqt_smartfish_motion <- function(
   result
 }
 
-#' Reproduce the historical fixed-scale smartFish speed calculation
+#' Reproduce the historical fixed-scale legacy tracking speed calculation
 #'
 #' This is for method auditing ONLY. The archived paper used 100/1920
 #' nominal cm per image pixel, filtered raw estimated camera depth <200,
@@ -298,20 +298,20 @@ aqt_smartfish_motion <- function(
 #' >0.05 and <10 on that nominal scale. This conversion is NOT corrected
 #' perspective/refraction physical velocity in cm/s.
 #'
-#' @param logs A log or list of imported smartFish logs.
+#' @param logs A log or list of imported legacy tracking logs.
 #' @param nominal_cm_per_px Historical fixed image scale, explicitly
 #'   supplied by analyst, default 100/1920 for SOURCE REPRODUCTION ONLY.
 #' @param depth_cutoff_cm Historical source depth threshold (default 200).
 #' @param speed_limits Exclusive nominal-speed range (default .05..10).
 #' @return list(summary,observations) with explicit uncalibrated flags.
 #' @export
-aqt_smartfish_legacy_replay <- function(
+aqt_tracking_legacy_replay <- function(
     logs,nominal_cm_per_px=100/1920,depth_cutoff_cm=200,
     speed_limits=c(.05,10)) {
-  if (inherits(logs,"aqt_smartfish_log")) logs <- list(logs)
+  if (inherits(logs,"aqt_tracking_log_export")) logs <- list(logs)
   if (!is.list(logs) || !length(logs) ||
-      !all(vapply(logs,inherits,logical(1L),"aqt_smartfish_log")))
-    stop("Expected one or more smartFish imports",call.=FALSE)
+      !all(vapply(logs,inherits,logical(1L),"aqt_tracking_log_export")))
+    stop("Expected one or more legacy tracking imports",call.=FALSE)
   if (!is.numeric(nominal_cm_per_px) ||
       length(nominal_cm_per_px)!=1L ||
       !is.finite(nominal_cm_per_px) || nominal_cm_per_px<=0)

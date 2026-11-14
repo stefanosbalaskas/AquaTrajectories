@@ -10,11 +10,11 @@ correctly describe this schema.
 
 | Function | Intent |
 |---|---|
-| `aqt_import_smartfish_log()` | Read every original record, validate 11-field payload and SHA-256 provenance |
-| `aqt_smartfish_log_audit()` | Report fragmentation, duplicate times, boundary contact and raw-distance cutoffs |
-| `aqt_smartfish_tracks()` | Convert a source into explicitly **provisional 2D** pixel tracks |
-| `aqt_smartfish_motion()` | Compute gap-limited **pixel/s** speeds and image-plane headings |
-| `aqt_smartfish_legacy_replay()` | Reproduce an original historical **fixed-scale image displacement** calculation |
+| `aqt_import_tracking_log()` | Read every original record, validate 11-field payload and SHA-256 provenance |
+| `aqt_tracking_log_audit()` | Report fragmentation, duplicate times, boundary contact and raw-distance cutoffs |
+| `aqt_tracking_log_tracks()` | Convert a source into explicitly **provisional 2D** pixel tracks |
+| `aqt_tracking_log_motion()` | Compute gap-limited **pixel/s** speeds and image-plane headings |
+| `aqt_tracking_legacy_replay()` | Reproduce an original historical **fixed-scale image displacement** calculation |
 
 These functions do **not** reconstruct new 3D fish trajectories, repair
 fish identities, validate water depth or infer aquarium treatment effects.
@@ -25,8 +25,8 @@ In an installed package, use the bundled private example:
 
 ```r
 library(aquaTrajectories)
-options(aqt.smartfish.data_dir="C:/private/fish_logs")
-source(system.file("examples/smartfish_private_audit.R",
+options(aqt.tracking.data_dir="C:/private/fish_logs")
+source(system.file("examples/legacy_tracking_private_audit.R",
                    package="aquaTrajectories",mustWork=TRUE))
 ```
 
@@ -40,22 +40,22 @@ test rows**, not third-party fish research data.
 
 ```r
 file <- "path/to/private/BEFORE_example_tracking_log.txt"
-x <- aqt_import_smartfish_log(file,session_id="S001",
+x <- aqt_import_tracking_log(file,session_id="S001",
   camera_id="unverified",image_size=c(1920,1080),
   depth_threshold_cm=200)
-qc <- aqt_smartfish_log_audit(x)
+qc <- aqt_tracking_log_audit(x)
 print(qc)
-t <- aqt_smartfish_tracks(x,
+t <- aqt_tracking_log_tracks(x,
   duplicate_policy="drop_all",drop_bad_boxes=TRUE,
   drop_boundary=FALSE)
-m <- aqt_smartfish_motion(t,max_gap_s=1,
+m <- aqt_tracking_log_motion(t,max_gap_s=1,
   min_displacement_px=2)
 heading <- subset(m,is.finite(heading_rad),
                   select=c(condition,heading_rad))
 if(nrow(heading))aqt_plot_heading_rose(heading,bins=16)
 ```
 
-No default filter in `aqt_import_smartfish_log` removes rows.
+No default filter in `aqt_import_tracking_log` removes rows.
 `source_line` permits traceability back to original CSV lines.
 Every import records a SHA-256 source hash.
 
@@ -64,7 +64,7 @@ Every import records a SHA-256 source hash.
 **The time field is relative to each algorithmic track**, often
 starting at zero for newly assigned IDs. These time values are not
 video presentation timestamps and cannot align independent fish
-tracks, cameras or feeding onset. `aqt_smartfish_tracks` therefore
+tracks, cameras or feeding onset. `aqt_tracking_log_tracks` therefore
 sets `aqt_clock_scope="per_track_relative_not_global_PTS"`.
 
 **Fish_ID values are model-assigned fragments**, not individually
@@ -108,7 +108,7 @@ historical fixed-scale computation; direct handoff to the
 `aqt_plot_heading_rose` visualization function.
 
 ```r
-testthat::test_local(filter="smartfish-real-log-ingestion")
+testthat::test_local(filter="legacy_tracking-real-log-ingestion")
 rcmdcheck::rcmdcheck(args="--no-manual",error_on="warning")
 ```
 
