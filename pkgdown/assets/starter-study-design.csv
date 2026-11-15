@@ -1,0 +1,6 @@
+session_id,tank_id,group_label,session_index,fish_count,planned_duration_s,event_protocol,independent_tank_replicates
+PLAN01,EXAMPLE_TANK,illustrative_condition,1,5,1200,illustrative_feeding,1
+PLAN02,EXAMPLE_TANK,illustrative_condition,2,5,1200,illustrative_feeding,1
+PLAN03,EXAMPLE_TANK,illustrative_condition,3,5,1200,illustrative_feeding,1
+PLAN04,EXAMPLE_TANK,illustrative_condition,4,5,1200,illustrative_feeding,1
+PLAN05,EXAMPLE_TANK,illustrative_condition,5,5,1200,illustrative_feeding,1
