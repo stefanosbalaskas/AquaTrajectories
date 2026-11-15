@@ -84,7 +84,11 @@ jobs:
 
   deploy:
     needs: build
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    # The live Pages source currently publishes from gh-pages/(root).
+    # Enable this job ONLY after switching Settings > Pages > Source to GitHub Actions
+    # and setting repository variable AQT_PAGES_ACTIONS_ENABLED=true.
+    # This prevents a merge from interfering with the existing live gh-pages site.
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.AQT_PAGES_ACTIONS_ENABLED == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
