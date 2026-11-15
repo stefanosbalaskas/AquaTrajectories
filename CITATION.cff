@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+title: "AquaTrajectories: Aquatic Animal Movement and Multiview Trajectories"
+type: software
+version: 0.1.1
+message: "If you use AquaTrajectories in research or teaching, please cite the software release you used."
+authors:
+  - family-names: Balaskas
+    given-names: Stefanos
+    affiliation: University of Patras
+    orcid: "https://orcid.org/0000-0003-2444-9796"
+license: MIT
+repository-code: "https://github.com/stefanosbalaskas/AquaTrajectories"
+url: "https://stefanosbalaskas.github.io/AquaTrajectories/"
+abstract: >-
+  AquaTrajectories is an open-source R and Python research-software toolkit
+  for aquatic animal 2D and 3D movement analysis, video-based fish-tracking
+  interfaces, multiview reconstruction, camera geometry, behavioural methods,
+  conditional uncertainty assessment and reproducible scientific visualization.
+  Version 0.1.1 is an engineering preview with documentation and citation
+  metadata. Independently verified fish identities, real-video detection
+  generalization, physical underwater XYZ accuracy, animal welfare inference,
+  and physical device safety have not been scientifically certified.
+keywords:
+  - aquatic animal movement
+  - fish tracking
+  - aquaculture
+  - three-dimensional trajectories
+  - camera calibration
+  - multiview reconstruction
+  - behavioural analysis
+  - research software

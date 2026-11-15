@@ -9,14 +9,20 @@
 An open-source **R + Python research toolkit** for fish and other aquatic-animal trajectories: timestamp-faithful video tracking interfaces, 2D/3D reconstruction, camera geometry, movement and schooling metrics, behavioural modelling, conditional uncertainty analysis and scientific visualization.
 
 [![R](https://img.shields.io/badge/R-%E2%89%A5%204.1.0-276DC3?logo=r&logoColor=white)](DESCRIPTION)
-[![Engineering preview](https://img.shields.io/badge/engineering%20preview-v0.1.0-167D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases)
+[![Engineering preview](https://img.shields.io/badge/engineering%20preview-v0.1.1-167D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases)
 [![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
 [![Public API](https://img.shields.io/badge/exported%20R%20functions-155-147F97)](NAMESPACE)
 [![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
 
-**[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
+**[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
 
 </div>
+
+> [!NOTE]
+> **Citable engineering preview (v0.1.1).** See [citation metadata](CITATION.cff),
+> the [GitHub software release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)
+> and the [Zenodo release guide](docs/ZENODO_RELEASE_GUIDE.md).
+> A Zenodo DOI will be linked here **only after Zenodo actually issues it**.
 
 > [!IMPORTANT]
 > **Engineering preview, not scientific certification.** Implemented software and synthetic checks do **not** establish independently verified fish identities, real-video accuracy across species, physically calibrated underwater XYZ accuracy, biological welfare or stress states, empirically validated joint uncertainty, or safe hardware actuation. The video runner requires **externally supplied fish-trained weights**; multiview workflows require measured calibration, clock evidence and justified correspondences. Read the [scientific roadmap](docs/SCIENTIFIC_ROADMAP.md) and [release audit](docs/RELEASE_CANDIDATE_0_1_0.md).

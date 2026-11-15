@@ -1,3 +1,29 @@
+# aquaTrajectories 0.1.1 (documentation and citation release)
+
+Documentation-focused engineering-preview update to the existing 0.1.0
+software. **No new independent empirical fish, underwater metrology,
+welfare or hardware-control validation is claimed.**
+
+- Publish the research website source with a guarded Pages Actions deployment;
+  the existing working `gh-pages` publishing branch remains intact.
+- Add the complete pkgdown reference for all 155 public R exports in 14 groups,
+  plus 16 scientific-methods articles and the interactive *synthetic*
+  2D/3D fish-trajectory research explorer.
+- Add reproducible scientific figure galleries, original SVG illustrations,
+  and website build and reference integrity tests.
+- Add root `CITATION.cff` metadata (creator, ORCID, license, scope and
+  software version) for GitHub's Cite menu and Zenodo archival.
+- Preserve the 0.1.0 scientific safeguards: engineering qualification is not
+  independent fish identity, ecological, welfare, underwater XYZ or physical
+  ACI safety certification.
+
+## Reproducibility and archival
+
+Source releases intentionally contain no private fish recordings, human
+annotation exports, proprietary model weights, secrets or private datasets.
+A Zenodo DOI, if issued after the GitHub release, identifies the archived
+software version and does not establish scientific validity.
+
 # aquaTrajectories 0.1.0 (release candidate; 2026-11-14)
 
 First versioned **engineering software** release candidate of AquaTrajectories.
@@ -49,9 +75,8 @@ original fish videos, detector weights, credentials and proprietary
 third-party datasets. Public benchmark datasets must be handled under
 their own licensing terms.
 
-## Candidate status
+## Historical publication status
 
-Version 0.1.0 is **not yet tagged or released**. This candidate needs
-a full exact-head qualification, manual review, and license/provenance
-check before any GitHub release/tag. The 2026-11-14 passing audit pertains
-to the parent source commit, not to this release-candidate commit.
+Version 0.1.0 was published as the AquaTrajectories Engineering Preview
+GitHub release on 2026-11-14. The source was engineering-qualified only,
+and no independent scientific accuracy certification was claimed.
