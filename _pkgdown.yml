@@ -217,17 +217,23 @@ articles:
   - title: "Start here"
     contents:
       - articles/aquaTrajectories
+      - articles/quickstart-five-minutes
       - articles/workflows-atlas
       - articles/function-atlas
+      - articles/capabilities-and-validation
+      - articles/research-evidence-dashboard
   - title: "From pixels to trajectories"
     contents:
       - articles/video-tracking
       - articles/multiview-3d
       - articles/validation-and-benchmarks
+      - articles/video-to-results
+      - articles/identity-occlusion-tutorial
   - title: "Scientific analysis"
     contents:
       - articles/movement-and-schooling
       - articles/experimental-design
+      - articles/experiment-starter-kit
       - articles/behavioural-models
       - articles/uncertainty
   - title: "Figures and research workflows"
