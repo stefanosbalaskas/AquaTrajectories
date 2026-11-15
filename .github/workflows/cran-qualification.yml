@@ -58,13 +58,18 @@ jobs:
           fi
           command -v tidy
           tidy -version
-      - name: Show manual-build toolchain versions
+      - name: Ensure full PDF manual toolchain is available
         shell: bash
         run: |
-          pandoc --version | head -n 1
-          command -v pdflatex
-          pdflatex --version | head -n 1
+          echo "Pandoc:"; pandoc --version | head -n 1
+          echo "pdfLaTeX:"; command -v pdflatex; pdflatex --version | head -n 1
+          if ! command -v makeindex >/dev/null 2>&1; then
+            echo "The minimal TinyTeX install lacks makeindex. Installing its TeX Live module."
+            command -v tlmgr
+            tlmgr install makeindex
+          fi
           command -v makeindex
+          echo "makeindex is available"
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
