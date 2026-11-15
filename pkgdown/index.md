@@ -1,10 +1,12 @@
 <section class="aqt-hero">
-<p class="aqt-eyebrow">Open-source research software · v0.1.0 engineering preview</p>
+<p class="aqt-eyebrow">Open-source research software · official v0.1.1 release</p>
 <h1>From fish videos to scientific trajectories</h1>
 <p>Analyze aquatic-animal movement with a connected R, Python and JavaScript toolkit: detections and track identities, synchronized multiview geometry, observed 2D/3D trajectories, behavioural analysis, uncertainty, and experimental workflows.</p>
-<div class="aqt-cta"><a href="articles/aquaTrajectories.html">Start exploring</a><a href="reference/index.html">Browse all 155 R functions</a></div>
-<div class="aqt-badges"><span>155 documented functions</span><span>2D + 3D</span><span>14 function families</span><span>Engineering-qualified preview</span></div>
+<div class="aqt-cta"><a href="articles/aquaTrajectories.html">Start exploring</a><a href="reference/index.html">Browse all 155 R functions</a><a href="https://doi.org/10.5281/zenodo.24262905">Cite v0.1.1 · Zenodo DOI</a></div>
+<div class="aqt-badges"><span>155 documented functions</span><span>2D + 3D</span><span>14 function families</span><span>v0.1.1 · Released &amp; archived</span></div>
 </section>
+
+<div class="aqt-note"><strong>Published software:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1">AquaTrajectories v0.1.1</a> is a public GitHub release, permanently archived as <a href="https://doi.org/10.5281/zenodo.24262905">10.5281/zenodo.24262905</a> on Zenodo. <a href="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg" alt="Zenodo DOI 10.5281/zenodo.24262905" loading="lazy"></a> CRAN qualification is in progress; this package is not yet published on CRAN.</div>
 
 <div class="aqt-note"><strong>Scientific status:</strong> this release is engineering-qualified, but biological identity, underwater metrology, fish welfare inference, empirical interval coverage and real actuator safety are **not independently certified**. See the <a href="articles/scientific-status.html">evidence and limitations</a>.</div>
 
@@ -40,9 +42,9 @@
 ## Reproducible first steps
 
 ```r
-# Install the preview from its public source repository
+# Install the official versioned GitHub release (not yet on CRAN)
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.0")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
 
 library(aquaTrajectories)
 x <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
@@ -65,6 +67,7 @@ The [five-figure reproducible workbook](articles/five-figure-workbook.html) exer
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
-- [v0.1.0 engineering preview](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.0)
+- [Official v0.1.1 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+- [Version-specific Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905)
 - [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/main/docs)
 - [Function documentation](reference/index.html) · [Publication figures](articles/publication-figures.html)
