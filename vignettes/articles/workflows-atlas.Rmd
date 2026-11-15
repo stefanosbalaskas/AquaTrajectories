@@ -98,4 +98,4 @@ Audit externally recorded action, detector, command and response timestamps and 
 | Multiple uncertain fish identities | F | Sensitivity distributions, not certified intervals |
 | ACI choice/actuator logs | H | Operator authorization, safety, external behavioural review |
 
-The [source protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs) provide further constraints and data schemas.
+The [source protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs) provide further constraints and data schemas.

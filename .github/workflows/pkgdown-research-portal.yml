@@ -12,6 +12,8 @@ on:
       - "NEWS.md"
       - ".github/workflows/pkgdown-research-portal.yml"
       - "scripts/check_pkgdown_reference.R"
+      - "scripts/check_site_research_portal.mjs"
+      - "scripts/test_synthetic_explorer.mjs"
   pull_request:
     branches: [main]
     paths:
@@ -56,8 +58,12 @@ jobs:
             any::knitr
           extra-packages: any::yaml
           needs: website
-      - name: Check original browser-based explorer JavaScript
-        run: node --check pkgdown/assets/synthetic-explorer.js
+      - name: Check browser JavaScript and research-site smoke test syntax
+        run: |
+          node --check pkgdown/assets/synthetic-explorer.js
+          node --check scripts/check_site_research_portal.mjs
+          node --check scripts/test_synthetic_explorer.mjs
+          node scripts/test_synthetic_explorer.mjs
       - name: Audit all exported R functions and article pages
         run: Rscript scripts/check_pkgdown_reference.R
       - name: Validate pkgdown article indexing before whole-site build
@@ -73,8 +79,15 @@ jobs:
           test -s site/reference/aqt_plot_paths.html
           test -s site/articles/function-atlas.html
           test -s site/articles/five-figure-workbook.html
+          test -s site/articles/quickstart-five-minutes.html
+          test -s site/articles/experiment-starter-kit.html
+          test -s site/articles/capabilities-and-validation.html
+          test -s site/articles/video-to-results.html
+          test -s site/articles/identity-occlusion-tutorial.html
+          test -s site/articles/research-evidence-dashboard.html
           test -s site/synthetic-explorer.html
           test -s site/synthetic-explorer.js
+          node scripts/check_site_research_portal.mjs
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4
         with:
@@ -108,3 +121,43 @@ jobs:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  publish-gh-pages:
+    # Current Pages source is gh-pages/(root), not the Actions deployment source.
+    # Only publish a site after successful build on a main-branch push. PRs
+    # produce preview artifacts only and cannot write to gh-pages.
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    concurrency:
+      group: aquatrajectories-gh-pages-publication
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: aquatrajectories-pkgdown-preview
+          path: site
+      - name: Publish the exact checked site to the existing gh-pages root
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin gh-pages
+          git worktree add --detach /tmp/aqt-website-publication origin/gh-pages
+          rsync -a --delete --exclude='.git' --exclude='.nojekyll' site/ /tmp/aqt-website-publication/
+          touch /tmp/aqt-website-publication/.nojekyll
+          cd /tmp/aqt-website-publication
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish checked AquaTrajectories research website at ${GITHUB_SHA}"
+            git push origin HEAD:gh-pages
+          else
+            echo "No website content changes to publish"
+          fi

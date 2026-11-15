@@ -17,7 +17,10 @@
   const $ = function (id) {return document.getElementById(id);};
   const grid = $("grid"), paths = $("paths"), heads = $("heads");
   const frameSlider = $("frame"), trailSlider = $("trail"), playButton = $("play");
+  const occlusionToggle = $("occlusion-demo"), idSwitchToggle = $("idswitch-demo");
   let frame = 0, projection = "iso", trail = 60, playing = false, last = 0;
+  const isMissing = (fish, time) =>
+    occlusionToggle.checked && fish === 0 && time >= 90 && time <= 125;
   const visible = new Array(count).fill(true);
   const pathNodes = [], headNodes = [], labels = [];
   function create(name, parent, attrs) {
@@ -67,21 +70,35 @@
   function render() {
     renderGrid();
     for(let i=0;i<count;i++) {
-      const pts=[],begin=Math.max(0,frame-trail);
+      let d="",segmentOpen=false;
+      const begin=Math.max(0,frame-trail);
       for(let t=begin;t<=frame;t++) {
-        const p=point(tracks[i][t]); pts.push(p[0].toFixed(2)+","+p[1].toFixed(2));
+        if(isMissing(i,t)) {segmentOpen=false;continue;}
+        const p=point(tracks[i][t]);
+        d+=(segmentOpen?" L":" M")+p[0].toFixed(2)+","+p[1].toFixed(2);
+        segmentOpen=true;
       }
-      pathNodes[i].setAttribute("points",pts.join(" "));
+      pathNodes[i].setAttribute("d",d.trim());
       const p=point(tracks[i][frame]);
       headNodes[i].setAttribute("cx",p[0]);headNodes[i].setAttribute("cy",p[1]);
       labels[i].setAttribute("x",p[0]+13);labels[i].setAttribute("y",p[1]-10);
-      const show=visible[i]?"":"none";
-      pathNodes[i].style.display=show;headNodes[i].style.display=show;labels[i].style.display=show;
+      const labelSwapped=idSwitchToggle.checked && frame>=126 && i<2;
+      labels[i].textContent="F"+(labelSwapped?(i===0?2:1):(i+1))+(labelSwapped?"?":"");
+      const show=visible[i]?"":"none",headShow=visible[i]&&!isMissing(i,frame)?"":"none";
+      pathNodes[i].style.display=show;headNodes[i].style.display=headShow;labels[i].style.display=headShow;
     }
     frameSlider.value=frame;
     $("frameValue").textContent=(frame/30).toFixed(1)+" s / 10.0 s";
     $("trailValue").textContent=String(trail);
     $("status").textContent=(playing?"Playing":"Paused")+" · frame "+frame;
+    const mode=[];
+    if(occlusionToggle.checked) {
+      mode.push(frame>=90&&frame<=125 ? "F1 missing from observed trajectory (frames 90–125); gap is not interpolated." : "F1 missing-observation interval is frames 90–125.");
+    }
+    if(idSwitchToggle.checked) {
+      mode.push(frame>=126 ? "F1 and F2 display labels exchanged after frame 125. Underlying synthetic paths did not switch fish." : "Label swap will be illustrated after frame 125.");
+    }
+    $("learningStatus").textContent=mode.length ? mode.join(" ") : "No teaching perturbations enabled. All plotted tracks are invented.";
     const titles={iso:"Isometric 3D projection",xy:"Top view · XY",xz:"Side view · XZ",yz:"Front view · YZ"};
     $("viewTitle").textContent=titles[projection];
     playButton.textContent=playing?"Ⅱ Pause":"▶ Play";
@@ -99,7 +116,7 @@
   }
   for(let i=0;i<count;i++) {
     const color=palette[i];
-    pathNodes.push(create("polyline",paths,{fill:"none",stroke:color,
+    pathNodes.push(create("path",paths,{fill:"none",stroke:color,
       "stroke-width":4,"stroke-linejoin":"round","stroke-linecap":"round",opacity:.85}));
     headNodes.push(create("circle",heads,{r:9,fill:color,stroke:"#edfaff","stroke-width":2}));
     labels.push(create("text",heads,{fill:color,"font-family":"Arial, sans-serif",
@@ -121,6 +138,8 @@
   document.querySelectorAll('input[name="view"]').forEach(function(radio) {
     radio.addEventListener("change",function(){if(radio.checked){projection=radio.value;render();}});
   });
+  occlusionToggle.addEventListener("change",render);
+  idSwitchToggle.addEventListener("change",render);
   frameSlider.addEventListener("input",function(){frame=Number(frameSlider.value);render();});
   trailSlider.addEventListener("input",function(){trail=Number(trailSlider.value);render();});
   playButton.addEventListener("click",function(){

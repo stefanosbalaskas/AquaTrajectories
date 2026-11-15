@@ -45,7 +45,7 @@ An open-source **R + Python research toolkit** for fish and other aquatic-animal
 
 ### The research documentation portal
 
-The pkgdown site includes **155 exported R functions** in **14 scientific reference categories**, **16 research articles**, eight original scientific illustrations, and a **browser-only five-fish synthetic explorer** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
+The pkgdown site includes **155 exported R functions** in **14 scientific reference categories**, **22 research articles**, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
 
 **[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
 

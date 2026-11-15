@@ -17,7 +17,7 @@ AquaTrajectories includes several distinct plotting families. They are not inter
 | Event-relative swimming speed | [`aqt_plot_speed_response()`](../reference/aqt_plot_speed_response.html) | Event clocks, speed observations and tank replicates |
 | 2D directional rose | [`aqt_plot_heading_rose()`](../reference/aqt_plot_heading_rose.html) | XY directional conventions and optional source-frame rasters |
 
-The [package visualization source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/PUBLICATION_VISUALIZATION_SUITE.md) documents expected fields, assumptions and file-export instructions.
+The [package visualization source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/PUBLICATION_VISUALIZATION_SUITE.md) documents expected fields, assumptions and file-export instructions.
 
 ## Export vector PDF or 300-dpi TIFF
 

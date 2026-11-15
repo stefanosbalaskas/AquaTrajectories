@@ -1,14 +1,29 @@
 <section class="aqt-hero">
 <p class="aqt-eyebrow">Open-source research software · official v0.1.1 release</p>
-<h1>From fish videos to scientific trajectories</h1>
-<p>Analyze aquatic-animal movement with a connected R, Python and JavaScript toolkit: detections and track identities, synchronized multiview geometry, observed 2D/3D trajectories, behavioural analysis, uncertainty, and experimental workflows.</p>
-<div class="aqt-cta"><a href="articles/aquaTrajectories.html">Start exploring</a><a href="reference/index.html">Browse all 155 R functions</a><a href="https://doi.org/10.5281/zenodo.24262905">Cite v0.1.1 · Zenodo DOI</a></div>
-<div class="aqt-badges"><span>155 documented functions</span><span>2D + 3D</span><span>14 function families</span><span>v0.1.1 · Released &amp; archived</span></div>
+<h1>From aquatic observations to reproducible movement science</h1>
+<p>Track, reconstruct, analyze and visualize aquatic-animal trajectories with R, Python and browser tools. Start with documented synthetic examples, then supply independent annotations, camera calibration and real recording metadata for scientific measurements.</p>
+<div class="aqt-cta"><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="articles/capabilities-and-validation.html">What is validated?</a><a href="articles/experiment-starter-kit.html">Download starter data</a></div>
+<div class="aqt-badges"><span>155 documented R functions</span><span>14 reference categories</span><span>Official GitHub release v0.1.1</span><span>Zenodo archived</span></div>
 </section>
 
 <div class="aqt-note"><strong>Published software:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1">AquaTrajectories v0.1.1</a> is a public GitHub release, permanently archived as <a href="https://doi.org/10.5281/zenodo.24262905">10.5281/zenodo.24262905</a> on Zenodo. <a href="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg" alt="Zenodo DOI 10.5281/zenodo.24262905" loading="lazy"></a> CRAN qualification is in progress; this package is not yet published on CRAN.</div>
 
 <div class="aqt-note"><strong>Scientific status:</strong> this release is engineering-qualified, but biological identity, underwater metrology, fish welfare inference, empirical interval coverage and real actuator safety are **not independently certified**. See the <a href="articles/scientific-status.html">evidence and limitations</a>.</div>
+
+
+## Choose your path
+
+<div class="aqt-cardgrid aqt-entrygrid">
+<a class="aqt-card" href="articles/quickstart-five-minutes.html"><div class="aqt-kicker">New to R</div><h3>Try a complete analysis</h3><p>Five minutes: synthetic tracks → movement → event alignment → CSV exports. Confirm expected row counts.</p></a>
+<a class="aqt-card" href="articles/video-to-results.html"><div class="aqt-kicker">Working with footage</div><h3>Plan video → results</h3><p>Original PTS, externally trained detector, reviewable IDs, camera geometry, explicit scientific gates.</p></a>
+<a class="aqt-card" href="articles/experiment-starter-kit.html"><div class="aqt-kicker">Planning an experiment</div><h3>Get the starter dataset</h3><p>Download labeled example CSVs for trajectories, event logs, synchronization, and annotation formats.</p></a>
+</div>
+
+<div class="aqt-statusbar" role="group" aria-label="Current release and scientific evidence">
+  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1">v0.1.1</a> · MIT-licensed source</span></div>
+  <div><strong>Citable</strong><span><a href="https://doi.org/10.5281/zenodo.24262905">Zenodo DOI</a> · <a href="AquaTrajectories-v0.1.1.bib" download>BibTeX</a></span></div>
+  <div><strong>Scientific validity</strong><span>Software contracts tested; <a href="articles/capabilities-and-validation.html">independent biological validation pending</a></span></div>
+</div>
 
 ## Discover the research workflows
 
@@ -33,10 +48,10 @@
 <p class="aqt-figure-caption">Original scientific illustration. The geometry is schematic, not a measurement from a real tank.</p>
 
 <div class="aqt-steps">
-<div class="aqt-step"><strong>Start</strong><a href="articles/aquaTrajectories.html">Installation and first analysis</a></div>
+<div class="aqt-step"><strong>Start</strong><a href="articles/quickstart-five-minutes.html">Five-minute reproducible analysis</a></div>
 <div class="aqt-step"><strong>Explore</strong><a href="articles/workflows-atlas.html">Complete workflow atlas</a></div>
 <div class="aqt-step"><strong>Reference</strong><a href="articles/function-atlas.html">155-function guided index</a></div>
-<div class="aqt-step"><strong>Research</strong><a href="articles/research-datasets.html">Datasets and evidence</a></div>
+<div class="aqt-step"><strong>Research</strong><a href="articles/research-evidence-dashboard.html">Evidence and validation status</a></div>
 </div>
 
 ## Reproducible first steps
@@ -56,9 +71,13 @@ This simulator produces **synthetic random walks**, not biologically calibrated 
 
 ## Interactive synthetic trajectory explorer
 
-Explore five invented trajectories in synchronized 3D, top, side and front projections with a frame scrubber, playback and individual track toggles. This is a **browser-only teaching demonstration**, not the actual multiview research explorer or a real animal observation.
+Explore five invented trajectories in 3D, top, side and front projections. New learning controls demonstrate camera-local occlusion and ID switching: the synthetic positions remain the same while the apparent labels can change. This is a **browser-only teaching illustration**, not a real synchronized multiview recording or a validated tracking benchmark.
 
-<div class="aqt-cta"><a href="synthetic-explorer.html">Open interactive synthetic explorer</a></div>
+<div class="aqt-cta"><a href="synthetic-explorer.html">Open interactive synthetic explorer</a><a href="articles/identity-occlusion-tutorial.html">Understand occlusions and track IDs</a></div>
+
+## Transparent evidence and reproducible figures
+
+Before interpreting biological results, consult the [capability and validation matrix](articles/capabilities-and-validation.html), the [research evidence dashboard](articles/research-evidence-dashboard.html), and the [experiment design starter kit](articles/experiment-starter-kit.html). The dashboard links to reproducible tests and original source-evidence contracts; it does not invent benchmark accuracies.
 
 ## Five complete, runnable publication figures
 
@@ -68,6 +87,6 @@ The [five-figure reproducible workbook](articles/five-figure-workbook.html) exer
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
 - [Official v0.1.1 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-- [Version-specific Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905)
+- [Version-specific Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Download BibTeX](AquaTrajectories-v0.1.1.bib)
 - [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/main/docs)
 - [Function documentation](reference/index.html) · [Publication figures](articles/publication-figures.html)

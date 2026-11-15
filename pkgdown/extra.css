@@ -35,3 +35,27 @@ h1,h2,h3{letter-spacing:-.028em}
 @media(prefers-reduced-motion:no-preference){.aqt-card{transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}}
 [data-bs-theme="dark"] .aqt-card{border-color:#31556a}
 [data-bs-theme="dark"] .aqt-note{background:rgba(44,158,177,.17)}
+
+/* Research-first website: clear user paths, responsive content and keyboard access */
+.aqt-statusbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#bfd9e3;border:1px solid #bfd9e3;border-radius:1rem;overflow:hidden;margin:1rem 0 2.1rem}
+.aqt-statusbar>div{display:flex;flex-direction:column;gap:.35rem;padding:1rem;background:var(--bs-body-bg,#fff)}
+.aqt-statusbar strong{font-size:.77rem;letter-spacing:.055em;text-transform:uppercase;color:#087a86}
+.aqt-statusbar span{font-size:.93rem;line-height:1.5}
+.aqt-entrygrid{margin-top:1.2rem}
+.aqt-entrygrid .aqt-card{border-top:4px solid #1197a5}
+.aqt-card:focus-visible,.aqt-cta a:focus-visible,.aqt-step a:focus-visible{outline:3px solid #cc9b12;outline-offset:4px}
+.aqt-table-wrap{max-width:100%;overflow-x:auto}
+.aqt-matrix{width:100%;border-collapse:collapse;font-size:.94rem}
+.aqt-matrix th,.aqt-matrix td{border-bottom:1px solid var(--bs-border-color,#c8dbe5);padding:.65rem .8rem;text-align:left;vertical-align:top}
+.aqt-matrix thead{background:rgba(30,130,150,.12)}
+.aqt-state{font-weight:700;white-space:nowrap}
+.aqt-state--available{color:#087967}.aqt-state--pending{color:#a66517}
+.aqt-download-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:1rem 0}
+.aqt-download-grid a{display:block;border:1px solid var(--bs-border-color,#bfd9e3);border-radius:.8rem;padding:.85rem 1rem;text-decoration:none;font-weight:700}
+.aqt-download-grid a:hover{background:rgba(14,140,157,.07)}
+@media(max-width:760px){.aqt-statusbar,.aqt-download-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.aqt-card{transition:none!important;transform:none!important}}
+[data-bs-theme="dark"] .aqt-statusbar{background:#31556a;border-color:#31556a}
+[data-bs-theme="dark"] .aqt-entrygrid .aqt-card{border-top-color:#4bcdd2}
+[data-bs-theme="dark"] .aqt-state--available{color:#72e5b6}
+[data-bs-theme="dark"] .aqt-state--pending{color:#ffc77e}

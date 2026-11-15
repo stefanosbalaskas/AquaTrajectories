@@ -25,3 +25,8 @@ footer{padding:25px max(20px,5vw);color:#9ab6c6;border-top:1px solid #20465c;fon
 @media(max-width:900px){.workspace{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px}.controls h2{grid-column:1/-1}.controls .meta{grid-column:1/-1}}
 @media(max-width:600px){.topbar{align-items:start;flex-direction:column}.controls{display:block}.stageheader{display:block}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.learning{border-top:1px solid #345768;padding-top:15px}
+.learning label{font-size:.84rem;line-height:1.4}
+.learningstatus{background:#0a3047;border:1px solid #387184;border-radius:12px;padding:11px 14px;color:#bfeafa;margin:10px 0 18px;line-height:1.4;font-size:.9rem;min-height:46px}
+@media(prefers-reduced-motion:reduce){.play button{transition:none!important}}
