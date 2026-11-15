@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="index.html">AquaTrajectories — aquatic movement science</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><section class="aqt-hero"><p class="aqt-eyebrow">
-Open-source research software · v0.1.0 engineering preview
+Open-source research software · official v0.1.1 release
 </p>
 <div class="page-header"><h1>
 From fish videos to scientific trajectories
@@ -70,12 +70,14 @@ From fish videos to scientific trajectories
 Analyze aquatic-animal movement with a connected R, Python and JavaScript toolkit: detections and track identities, synchronized multiview geometry, observed 2D/3D trajectories, behavioural analysis, uncertainty, and experimental workflows.
 </p>
 <div class="aqt-cta">
-<a href="articles/aquaTrajectories.html">Start exploring</a><a href="reference/index.html">Browse all 155 R functions</a>
+<a href="articles/aquaTrajectories.html">Start exploring</a><a href="reference/index.html">Browse all 155 R functions</a><a href="https://doi.org/10.5281/zenodo.24262905">Cite v0.1.1 · Zenodo DOI</a>
 </div>
 <div class="aqt-badges">
-<span>155 documented functions</span><span>2D + 3D</span><span>14 function families</span><span>Engineering-qualified preview</span>
+<span>155 documented functions</span><span>2D + 3D</span><span>14 function families</span><span>v0.1.1 · Released &amp; archived</span>
 </div>
 </section><div class="aqt-note">
+<strong>Official release:</strong> AquaTrajectories <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1">v0.1.1</a> is publicly released on GitHub and archived on Zenodo. Cite the version-specific <a href="https://doi.org/10.5281/zenodo.24262905">DOI: 10.5281/zenodo.24262905</a>. <a href="https://doi.org/10.5281/zenodo.24262905"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg" alt="Zenodo DOI badge for 10.5281/zenodo.24262905" loading="lazy"></a> CRAN submission is in preparation; the package is not yet available on CRAN.
+</div><div class="aqt-note">
 <strong>Scientific status:</strong> this release is engineering-qualified, but biological identity, underwater metrology, fish welfare inference, empirical interval coverage and real actuator safety are <strong>not independently certified</strong>. See the <a href="articles/scientific-status.html">evidence and limitations</a>.
 </div>
 <div class="section level2">
@@ -209,9 +211,9 @@ Original scientific illustration. The geometry is schematic, not a measurement f
 <h2 id="reproducible-first-steps">Reproducible first steps<a class="anchor" aria-label="anchor" href="#reproducible-first-steps"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install the preview from its public source repository</span></span>
+<code class="sourceCode R"><span><span class="co"># Install the official v0.1.1 GitHub release (not yet on CRAN)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"stefanosbalaskas/AquaTrajectories"</span>, ref <span class="op">=</span> <span class="st">"v0.1.0"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"stefanosbalaskas/AquaTrajectories"</span>, ref <span class="op">=</span> <span class="st">"v0.1.1"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stefanosbalaskas/AquaTrajectories" class="external-link">aquaTrajectories</a></span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/aqt_simulate_tracks.html">aqt_simulate_tracks</a></span><span class="op">(</span>n_fish <span class="op">=</span> <span class="fl">5</span>, n_frames <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
@@ -237,7 +239,8 @@ Original scientific illustration. The geometry is schematic, not a measurement f
 </h2>
 <ul>
 <li><a href="https://github.com/stefanosbalaskas/AquaTrajectories" class="external-link">GitHub source</a></li>
-<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.0" class="external-link">v0.1.0 engineering preview</a></li>
+<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1" class="external-link">v0.1.1 official release</a></li>
+<li><a href="https://doi.org/10.5281/zenodo.24262905" class="external-link">Zenodo DOI: 10.5281/zenodo.24262905</a></li>
 <li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/tree/main/docs" class="external-link">Scientific methods and validation protocols</a></li>
 <li>
 <a href="reference/index.html">Function documentation</a> · <a href="articles/publication-figures.html">Publication figures</a>
