@@ -19,6 +19,10 @@ Public fisheries datasets are valuable for **checking file structures and softwa
 
 The repository contains read-only data-structure probes and contracts. **Do not redistribute** original datasets or derive universal fish-accuracy claims without permissions and independent benchmarking.
 
+## Download worked schema examples
+
+The [research starter kit](experiment-starter-kit.html) provides an openly labeled synthetic trajectory sample, event log, two-camera marker times, independent-reference *formats* (invented values only), an empty surveyed-XYZ header and planned tank/session inventory. It is a **teaching fixture**, not benchmark ground truth.
+
 ## Recommended intake sequence
 
 1. Record external dataset source, original license and access date.
