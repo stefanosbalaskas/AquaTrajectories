@@ -1,0 +1,67 @@
+---
+title: "From GoPro fish video to reproducible R results"
+description: "A practical audit-led route from original GoPro files through fish-trained detection, camera-local tracking, annotation review, synchronization, refraction-aware 3D and movement analysis."
+---
+
+# Video-to-results: a researcher workflow
+
+**This is a protocol and integration walkthrough, not a one-command universal tracker.** The public source includes R interfaces, a Python runner contract and benchmark utilities. Working detection requires externally supplied fish-trained model weights, and empirical accuracy depends on original recordings and independently reviewed labels.
+
+## 1. Preserve the original recording
+
+Record camera ID, tank ID, species, date, FPS metadata, timebase, and original source path. Record a SHA-256 digest. Do **not** infer exact frame times solely from nominal FPS when original packet/frame PTS are available. Do not transcode originals for convenient tracking without retaining their originals and provenance.
+
+Use the documented [time-faithful video ingestion contracts](video-tracking.html). The optional runner implementation is [`inst/python/aqt_track_video.py`](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/python/aqt_track_video.py). Its runtime and arguments must be checked against that script; it does **not** download or supply an empirically validated universal fish detector.
+
+## 2. Make predictions, then independently inspect them
+
+Detector output answers *where are candidate fish boxes?*; within-video tracker output answers *which short local track appears continuous?*. Neither automatically proves a fish's permanent biological identity.
+
+| Required source | Example record | Why it matters |
+|---|---|---|
+| Evaluated frames | `session_id,camera_id,frame_id` | Establishes denominator even when no fish detected |
+| Human reference boxes | `session_id,camera_id,frame_id,class_id,xmin,ymin,xmax,ymax` | Independent F1/precision/recall evaluation |
+| Human review tracks | `session_id,camera_id,frame_id,track_id,x,y,class_id` | Identity-switch and tracking evaluation |
+| Source PTS manifest | Camera ID, frame ID, video timebase, observed timestamp | No invisible dropped-frame interpolation |
+| Detector metadata | Weight digest, training split, confidence threshold | Prevents model/source ambiguity |
+
+Download schema-compatible *illustrative files* from the [starter kit](experiment-starter-kit.html). A schema example is not a scored benchmark.
+
+## 3. Convert reviewed observations to canonical tracks
+
+Once timestamped fish coordinates and scoped identities have been reviewed, import a canonical long-format CSV:
+
+~~~r
+library(aquaTrajectories)
+tracks <- aqt_import_csv("reviewed_tracks.csv",
+                         units = "px",
+                         coordinate_system = "image")
+aqt_tracks_validate(tracks)
+qc <- aqt_track_qc(tracks, max_gap_s = 0.1)
+kin <- aqt_kinematics(tracks, max_gap_s = 0.1)
+~~~
+
+Change `max_gap_s` to reflect independently verified frame-time behavior. Coordinates in **px** are image measurements; their velocities are px/s, not centimeters per second.
+
+## 4. Decide whether reconstruction is scientifically supported
+
+For a single uncalibrated camera: stay in 2D. For multiview 3D, require measured camera intrinsics, distortion, underwater refraction parameters, clock alignment, and audited cross-camera identity correspondences. Review the [multiview guide](multiview-3d.html) and physical [XYZ target protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md).
+
+A trajectory with a numeric `z` column is not necessarily an independently accurate depth reconstruction.
+
+## 5. Align the experiment log and evaluate independently
+
+Use [event tables](../reference/aqt_event_table.html), observed tracking metrics, source-wise holdouts, and tank-level experimental units. Link the original reference labels and feature table, and separate detector training tanks from benchmark tanks.
+
+For statistical models, [events and independent tanks](experimental-design.html) precede [behavioural models](behavioural-models.html).
+
+## Outputs to archive with a paper
+
+- Software version/commit; model weights and their digest; R/Python environment.
+- Original recording identifiers, timestamp and camera calibration provenance.
+- Frame denominators, annotated benchmark protocol, F1/IDF1/HOTA as *measured* when available.
+- Canonical trajectories with explicit units, observed/missing flags and camera-scoped IDs.
+- Study design (randomized units, tanks, exposures and event logs).
+- Figures and analysis scripts; withheld or private data documented as not redistributed.
+
+**Do not report fish accuracy, fish welfare, true physical 3D, or causal treatment effects from a synthetic walkthrough.**
