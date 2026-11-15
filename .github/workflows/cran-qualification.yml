@@ -95,7 +95,7 @@ jobs:
         shell: bash
         run: |
           echo "Manual build diagnostics (if the runner retained them):"
-          find . -maxdepth 5 -type f \\( -name '*manual*.log' -o -name '*manual*.tex' -o -name '*.blg' -o -name '*.ilg' \\) -print || true
+          find . -maxdepth 5 -type f -name '*manual*' -print || true
           for f in aquaTrajectories.Rcheck/aquaTrajectories-manual.log aquaTrajectories-manual.log; do
             if [ -f "$f" ]; then
               echo "=== $f (last 120 lines) ==="
