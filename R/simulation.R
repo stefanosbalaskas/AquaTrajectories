@@ -7,6 +7,9 @@
 #' @param dimension Either 2 or 3.
 #' @param seed Random seed.
 #' @return Synthetic aqt_tracks in tank/cm units.
+#' @examples
+#' fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20, fps = 10)
+#' head(fish[, c("track_id", "time_s", "x", "y")])
 #' @export
 aqt_simulate_tracks <- function(n_fish=5L,n_frames=200L,fps=30,
                                 dimension=2L,seed=7L) {

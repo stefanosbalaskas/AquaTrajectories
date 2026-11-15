@@ -1,0 +1,81 @@
+name: CRAN candidate - source build and as-cran cross-platform qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "DESCRIPTION"
+      - "R/**"
+      - "man/**"
+      - "tests/**"
+      - "inst/**"
+      - "NEWS.md"
+      - "CITATION.cff"
+      - ".Rbuildignore"
+      - "cran-comments.md"
+      - ".github/workflows/cran-qualification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cran-qualification-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-as-cran:
+    name: R ${{ matrix.r }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            r: devel
+          - os: windows-latest
+            r: release
+          - os: macos-latest
+            r: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-tinytex@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::roxygen2
+          extra-packages: any::rcmdcheck
+      - name: Verify generated help pages are committed
+        shell: bash
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Build CRAN source archive
+        shell: bash
+        run: |
+          R CMD build .
+          test -s aquaTrajectories_0.1.2.tar.gz
+      - name: Check actual tarball under CRAN rules
+        shell: bash
+        run: |
+          R CMD check --as-cran aquaTrajectories_0.1.2.tar.gz
+          cat aquaTrajectories.Rcheck/00check.log
+          if ! grep -q '^Status: OK' aquaTrajectories.Rcheck/00check.log; then
+            echo "::error::R CMD check --as-cran is not completely clean; inspect the CRAN check log."
+            exit 1
+          fi
+      - name: Preserve exact source tarball and CRAN check evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaTrajectories-0.1.2-cran-${{ matrix.os }}-${{ matrix.r }}
+          path: |
+            aquaTrajectories_0.1.2.tar.gz
+            aquaTrajectories.Rcheck/00check.log
+          if-no-files-found: warn

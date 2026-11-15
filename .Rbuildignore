@@ -8,3 +8,4 @@
 ^site$
 ^scripts$
 ^CITATION\.cff$
+^cran-comments\.md$

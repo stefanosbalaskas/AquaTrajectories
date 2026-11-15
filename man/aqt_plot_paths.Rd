@@ -17,3 +17,7 @@ Invisibly NULL, creating a base graphics plot.
 \description{
 Plot 2D trajectories
 }
+\examples{
+fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20)
+aqt_plot_paths(fish)
+}

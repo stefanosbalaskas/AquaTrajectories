@@ -19,3 +19,8 @@ Data frame including dt_s, step_distance, vx/vy/vz, speed,
 No missing segment is bridged; derivatives are unsmoothed, so positional
 noise can strongly affect acceleration and turning estimates.
 }
+\examples{
+fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20, fps = 10)
+movement <- aqt_kinematics(fish, max_gap_s = 0.2)
+head(movement[, c("track_id", "time_s", "speed")])
+}

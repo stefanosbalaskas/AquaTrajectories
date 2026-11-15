@@ -29,3 +29,7 @@ Synthetic aqt_tracks in tank/cm units.
 \description{
 The random walks are testing fixtures and are NOT biologically calibrated.
 }
+\examples{
+fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20, fps = 10)
+head(fish[, c("track_id", "time_s", "x", "y")])
+}

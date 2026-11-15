@@ -4,6 +4,11 @@
 #' @param units Coordinate units: px, cm, or m.
 #' @param coordinate_system image or tank.
 #' @return An aqt_tracks object. IDs only apply within session and camera.
+#' @examples
+#' observations <- data.frame(session_id = "S1", camera_id = "top",
+#'                            track_id = "fish1", time_s = c(0, 1),
+#'                            x = c(10, 11), y = c(20, 20))
+#' aqt_tracks(observations, units = "cm", coordinate_system = "tank")
 #' @export
 aqt_tracks <- function(data, units = "px", coordinate_system = "image") {
   if (!is.data.frame(data)) stop("data must be a data.frame", call. = FALSE)

@@ -42,6 +42,9 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
 #' @param tracks Validated trajectories.
 #' @param ... Passed to graphics::plot.
 #' @return Invisibly NULL, creating a base graphics plot.
+#' @examples
+#' fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20)
+#' aqt_plot_paths(fish)
 #' @export
 aqt_plot_paths <- function(tracks,...) {
   aqt_tracks_validate(tracks)

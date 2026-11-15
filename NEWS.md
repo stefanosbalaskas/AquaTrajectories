@@ -1,3 +1,15 @@
+# aquaTrajectories 0.1.2 (CRAN submission candidate; not yet released)
+
+- Prepare the first CRAN submission from a new, distinct 0.1.2 source version;
+  the existing GitHub/Zenodo v0.1.1 archive remains unchanged.
+- Use a directly reachable academic maintainer email and ORCID metadata.
+- Add runnable, lightweight documented examples for central R functions.
+- Include a cross-platform CRAN qualification workflow building the actual
+  source tarball and checking it with `R CMD check --as-cran`.
+- Keep original scientific limitations: software unit tests and synthetic
+  examples are not independent validation of fish identity, XYZ metrology,
+  welfare conclusions, or ACI hardware safety.
+
 # aquaTrajectories 0.1.1 (documentation and citation release)
 
 Documentation-focused engineering-preview update to the existing 0.1.0
