@@ -13,6 +13,7 @@ on:
       - ".github/workflows/pkgdown-research-portal.yml"
       - "scripts/check_pkgdown_reference.R"
       - "scripts/check_site_research_portal.mjs"
+      - "scripts/test_synthetic_explorer.mjs"
   pull_request:
     branches: [main]
     paths:
@@ -61,6 +62,8 @@ jobs:
         run: |
           node --check pkgdown/assets/synthetic-explorer.js
           node --check scripts/check_site_research_portal.mjs
+          node --check scripts/test_synthetic_explorer.mjs
+          node scripts/test_synthetic_explorer.mjs
       - name: Audit all exported R functions and article pages
         run: Rscript scripts/check_pkgdown_reference.R
       - name: Validate pkgdown article indexing before whole-site build

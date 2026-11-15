@@ -20,7 +20,7 @@ source("scripts/check_pkgdown_reference.R")
 pkgdown::build_site(examples = FALSE)
 ```
 
-GitHub Actions builds a preview on PRs, and deploys from `main` only after GitHub Pages is configured to use **GitHub Actions** as its publishing source. Review the preview artifact and scientific limitation language before merging.
+GitHub Actions builds a preview artifact on PRs. On a successful `main` build, a separate guarded job copies the **exact smoke-tested site artifact** to the existing `gh-pages`/(root) branch, which is the current GitHub Pages publishing source. PRs never deploy. The alternative GitHub Actions Pages deployment job remains opt-in and disabled until its repository setting and Pages source are deliberately changed. Review the preview artifact and scientific limitation language before merging.
 
 Neither the website nor any generated figure is evidence of independently certified biological measurement, underwater calibration, or ACI hardware safety.
 
