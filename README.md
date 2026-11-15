@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/stefanosbalaskas/AquaTrajectories/gh-pages/hero-science.svg" alt="AquaTrajectories aquatic movement research, fish paths, multiview reconstruction and scientific data exploration" width="100%">
+<img src="man/figures/logo.png" alt="AquaTrajectories hexagonal package logo" width="220">
 
 # AquaTrajectories
 
