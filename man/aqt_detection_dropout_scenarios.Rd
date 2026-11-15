@@ -2,7 +2,10 @@
 \alias{aqt_detection_dropout_scenarios}
 \title{Simulate temporally correlated fish-detection misses as conditional sensitivity scenarios}
 \usage{
-aqt_detection_dropout_scenarios(tracks, p_missing, persistence = 0.5, draws = 100L, seed = 42L)
+aqt_detection_dropout_scenarios(
+  tracks, p_missing, persistence = 0.5,
+  draws = 100L, seed = 42L
+)
 }
 \arguments{
 \item{tracks}{Original validated \code{aqt_tracks} in 2D or 3D.}

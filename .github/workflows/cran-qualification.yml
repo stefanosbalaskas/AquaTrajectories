@@ -44,7 +44,28 @@ jobs:
         with:
           r-version: ${{ matrix.r }}
           use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-tinytex@v2
+      - name: Install current HTML Tidy for accurate CRAN HTML validation
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update -qq
+            sudo apt-get install -y tidy
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install tidy-html5
+          fi
+          command -v tidy
+          tidy -version
+      - name: Show manual-build toolchain versions
+        shell: bash
+        run: |
+          pandoc --version | head -n 1
+          command -v pdflatex
+          pdflatex --version | head -n 1
+          command -v makeindex
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
@@ -64,12 +85,23 @@ jobs:
       - name: Check actual tarball under CRAN rules
         shell: bash
         run: |
-          R CMD check --as-cran aquaTrajectories_0.1.2.tar.gz
+          # R may return a nonzero exit status for the expected first-submission
+          # NOTE; the audited check log is the authoritative result.
+          R CMD check --as-cran aquaTrajectories_0.1.2.tar.gz || true
           cat aquaTrajectories.Rcheck/00check.log
-          if ! grep -q '^Status: OK' aquaTrajectories.Rcheck/00check.log; then
-            echo "::error::R CMD check --as-cran is not completely clean; inspect the CRAN check log."
-            exit 1
-          fi
+          Rscript --vanilla scripts/cran_check_gate.R aquaTrajectories.Rcheck/00check.log
+      - name: Print PDF/LaTeX diagnostics when CRAN checks fail
+        if: failure()
+        shell: bash
+        run: |
+          echo "Manual build diagnostics (if the runner retained them):"
+          find . -maxdepth 5 -type f \\( -name '*manual*.log' -o -name '*manual*.tex' -o -name '*.blg' -o -name '*.ilg' \\) -print || true
+          for f in aquaTrajectories.Rcheck/aquaTrajectories-manual.log aquaTrajectories-manual.log; do
+            if [ -f "$f" ]; then
+              echo "=== $f (last 120 lines) ==="
+              tail -n 120 "$f"
+            fi
+          done
       - name: Preserve exact source tarball and CRAN check evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -78,4 +110,6 @@ jobs:
           path: |
             aquaTrajectories_0.1.2.tar.gz
             aquaTrajectories.Rcheck/00check.log
+            aquaTrajectories.Rcheck/aquaTrajectories-manual.tex
+            aquaTrajectories.Rcheck/aquaTrajectories-manual.log
           if-no-files-found: warn
