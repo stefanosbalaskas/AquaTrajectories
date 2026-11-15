@@ -40,11 +40,11 @@ The [research starter kit](experiment-starter-kit.html) provides an openly label
 
 ## Published project protocols
 
-- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/REAL_DATASET_STRUCTURE_AUDIT.md)
-- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/EXTERNAL_FISH_DATASET_INGESTION.md)
-- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/3D_ZEF_REAL_GO_PRO_BENCHMARK.md)
-- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FRAUNHOFER_REAL_MODEL_TRACKER_COMPARISON.md)
-- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md)
-- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/REAL_FISH_TANK_LAB_CAPTURE_PROTOCOL.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/REAL_DATASET_STRUCTURE_AUDIT.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/EXTERNAL_FISH_DATASET_INGESTION.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/3D_ZEF_REAL_GO_PRO_BENCHMARK.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FRAUNHOFER_REAL_MODEL_TRACKER_COMPARISON.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/REAL_FISH_TANK_LAB_CAPTURE_PROTOCOL.md)
 
 For the latest version-specific claims, inspect the tag's evidence files and source-linked test results before citing the software.
