@@ -1,0 +1,46 @@
+---
+title: "Datasets, provenance and real validation plans"
+description: "Find the source research dataset protocols and learn what fish-recording formats can and cannot prove."
+---
+
+# Dataset intake and provenance
+
+Public fisheries datasets are valuable for **checking file structures and software interoperability**. They do not automatically validate camera geometry, persistent fish identity, tracking generalization or animal welfare.
+
+## Data and benchmark entry points
+
+| Source / workstream | Why it is useful | Limitation to retain |
+|---|---|---|
+| Oxford video observations | Independent benchmark workflow and real frame/PTS structure | Source annotations may have model-assisted review |
+| Fraunhofer dense-fish aquarium | Tracking pressure, overlapping fish and MOT benchmark contracts | Independent identity reference and source rights must be checked |
+| 3D-ZeF multiview records | Real multi-camera structures and labeled tracks | Labels are not independent physical underwater XYZ surveys |
+| FishSizing stereo ROS examples | Stereo K/D/R/P calibration structures and length reference formats | Independent real calibrated length benchmark remains required |
+| GoPro raw recording with GPMF | Actual MP4 PTS and metadata parsing | Metadata alone does not establish synchronized exposure or lens correctness |
+
+The repository contains read-only data-structure probes and contracts. **Do not redistribute** original datasets or derive universal fish-accuracy claims without permissions and independent benchmarking.
+
+## Recommended intake sequence
+
+1. Record external dataset source, original license and access date.
+2. Record each file's SHA-256 and video recording identity.
+3. Inspect frame PTS and verify that files were not silently transcoded.
+4. Identify which annotations are manually adjudicated versus model-assisted.
+5. Separate the training, development and heldout evaluation units.
+6. Preserve camera ID, recording ID, tank ID, species label, timestamp and calibration provenance.
+7. Verify reference 3D physical measurements and coordinate units independently.
+8. Release only source-licensed benchmark outputs and appropriate summaries.
+
+## Relevant software interfaces
+
+[`aqt_provenance_new()`](../reference/aqt_provenance_new.html), [`aqt_provenance_verify()`](../reference/aqt_provenance_verify.html), [`aqt_3dzef_agreement_import()`](../reference/aqt_3dzef_agreement_import.html), [`aqt_video_bundle_benchmark()`](../reference/aqt_video_bundle_benchmark.html) and [`aqt_multiview_holdout_protocol()`](../reference/aqt_multiview_holdout_protocol.html).
+
+## Published project protocols
+
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/REAL_DATASET_STRUCTURE_AUDIT.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/EXTERNAL_FISH_DATASET_INGESTION.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/3D_ZEF_REAL_GO_PRO_BENCHMARK.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FRAUNHOFER_REAL_MODEL_TRACKER_COMPARISON.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md)
+- [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/REAL_FISH_TANK_LAB_CAPTURE_PROTOCOL.md)
+
+For the latest version-specific claims, inspect the tag's evidence files and source-linked test results before citing the software.

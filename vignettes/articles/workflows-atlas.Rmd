@@ -1,0 +1,101 @@
+---
+title: "End-to-end workflow atlas"
+description: "Choose a video, 3D, behavioural, benchmarking or ACI pipeline with inputs, outputs and qualification limits."
+---
+
+# Workflow atlas
+
+This atlas connects the existing R package, Python video runner, JavaScript explorer and scientific protocol documents. Each workflow is a **research process**, not a guarantee of externally validated accuracy.
+
+<figure class="aqt-figure"><img src="../workflow.svg" alt="Seven connected modules from acquisition to review." loading="lazy"></figure>
+
+<p class="aqt-figure-caption">Use the linked function reference for precise arguments and return values.</p>
+
+## Workflow A — A single-camera experiment
+
+**Inputs:** original video, frame presentation timestamps, known calibration or scale where applicable, fish-trained detector weights or independently generated tracks, treatment/event log.
+
+1. Inspect the source recording and clock metadata.
+2. Decode and track fish with the optional Python runner, or supply externally generated MOT/YOLO/idtracker.ai output.
+3. Validate the frame manifest and import the complete video bundle.
+4. Inspect missed detections, ID switches and frame coverage against independently annotated frames.
+5. Calculate gap-safe kinematics and event-relative summaries.
+6. Report the number of **independent tanks**, not just fish or frames.
+
+**Functions:** [`aqt_frame_manifest()`](../reference/aqt_frame_manifest.html), [`aqt_video_bundle_import()`](../reference/aqt_video_bundle_import.html), [`aqt_detection_metrics()`](../reference/aqt_detection_metrics.html), [`aqt_tracking_metrics()`](../reference/aqt_tracking_metrics.html), [`aqt_kinematics()`](../reference/aqt_kinematics.html), [`aqt_align_events()`](../reference/aqt_align_events.html).
+
+## Workflow B — Two synchronized cameras to 3D
+
+**Inputs:** two camera PTS timelines, independently estimated synchronization markers, camera intrinsics/extrinsics, lens and refraction parameters, image locations and fish correspondence hypotheses.
+
+1. Validate synchronized timing from independent holdout markers.
+2. Correct the declared lens distortion.
+3. Declare physical refractive geometry for air–water or air–glass–water rays.
+4. Generate provisional cross-view fish candidates; withhold ambiguous identities.
+5. Reconstruct only supported paired tracks, preserving source IDs and physical diagnostics.
+6. Test physical reconstruction against independent XYZ reference targets.
+
+**Functions:** [`aqt_sync_holdout_fit()`](../reference/aqt_sync_holdout_fit.html), [`aqt_brown_undistort_tracks()`](../reference/aqt_brown_undistort_tracks.html), [`aqt_flatport_camera()`](../reference/aqt_flatport_camera.html), [`aqt_crossview_auto_associate()`](../reference/aqt_crossview_auto_associate.html), [`aqt_auto_refractive_pipeline()`](../reference/aqt_auto_refractive_pipeline.html), [`aqt_target_holdout_benchmark()`](../reference/aqt_target_holdout_benchmark.html).
+
+<figure class="aqt-figure"><img src="../multiview.svg" alt="Conceptual dual camera geometry over an aquarium with fish and observation rays." loading="lazy"></figure>
+
+<p class="aqt-figure-caption">Illustrative only: camera positions and ray lines are not measured calibration values.</p>
+
+## Workflow C — Detector and tracking validation
+
+**Inputs:** locked predictions plus independent labels for sampled frames including empty frames.
+
+- Detection: precision, recall, F1, IoU, AP/mAP.
+- Identity: IDF1, identity switches and matched positional errors.
+- Sampling: documented frame inclusion probabilities and review completeness.
+- External trackers/official protocols: distinguish these from native approximate metrics.
+
+**Functions:** [`aqt_annotation_frame_plan()`](../reference/aqt_annotation_frame_plan.html), [`aqt_annotation_plan_audit()`](../reference/aqt_annotation_plan_audit.html), [`aqt_video_bundle_benchmark()`](../reference/aqt_video_bundle_benchmark.html).
+
+## Workflow D — Tank-replicated event analysis
+
+**Inputs:** logged onset times, treatment assignment by independently replicated tank, observed fish paths and specified windows.
+
+<figure class="aqt-figure"><img src="../tank-design.svg" alt="Three separate treatment A tanks and three treatment B tanks containing repeated fish observations." loading="lazy"></figure>
+
+<p class="aqt-figure-caption">Conceptual replication design; not an empirical study or prescribed sample size.</p>
+
+**Functions:** [`aqt_design_audit()`](../reference/aqt_design_audit.html), [`aqt_event_epoch_summary()`](../reference/aqt_event_epoch_summary.html), [`aqt_tank_event_contrast()`](../reference/aqt_tank_event_contrast.html), [`aqt_functional_tank_contrast()`](../reference/aqt_functional_tank_contrast.html).
+
+## Workflow E — Behavioural and functional trajectories
+
+**Inputs:** observed time series with gap handling and explicit support across fish/tanks.
+
+**Methods:** change-point summaries, conditional Gaussian HMMs, DTW/recurrence, sparse FPCA, within-fish longitudinal models.
+
+**Functions:** [`aqt_state_changepoint()`](../reference/aqt_state_changepoint.html), [`aqt_hmm_decode()`](../reference/aqt_hmm_decode.html), [`aqt_trajectory_dtw()`](../reference/aqt_trajectory_dtw.html), [`aqt_sparse_fpca_fit()`](../reference/aqt_sparse_fpca_fit.html), [`aqt_functional_longitudinal_fit()`](../reference/aqt_functional_longitudinal_fit.html).
+
+## Workflow F — Uncertainty sensitivity
+
+**Inputs:** externally assumed or independently estimated image, geometric, ID-switch and model errors.
+
+**Approach:** keep the observational record immutable, generate specified perturbation scenarios, rerun downstream quantities and report conditional sensitivity separately from tank-sampling uncertainty.
+
+**Functions:** [`aqt_trajectory_ensemble()`](../reference/aqt_trajectory_ensemble.html), [`aqt_identity_switch_scenarios()`](../reference/aqt_identity_switch_scenarios.html), [`aqt_joint_refractive_scenarios()`](../reference/aqt_joint_refractive_scenarios.html), [`aqt_joint_tank_sensitivity()`](../reference/aqt_joint_tank_sensitivity.html).
+
+## Workflow G — Publish research figures
+
+Export figure devices from base R, verify units and labels, and retain a provenance statement. See [publication figures](publication-figures.html) and the [figure gallery](visualization-gallery.html).
+
+## Workflow H — Animal–Computer Interaction
+
+Audit externally recorded action, detector, command and response timestamps and distinguish simulated logic from ethically reviewed physical hardware operation. See [ACI workflows](aci-workflows.html).
+
+## Which workflow should I start with?
+
+| Your dataset | Initial workflow | Next checkpoint |
+|---|---|---|
+| One GoPro, no annotations | A + C | Independently annotated evaluation frames |
+| Two cameras, known calibration | B | Clock and physical XYZ holdouts |
+| Tracking CSV only | A (from import) | Missing-frame and ID QC |
+| Five fish, several tanks, event log | D | Confirm independent experimental tank count |
+| Time-dependent state measurements | E | Observational gaps, state assumptions and tanks |
+| Multiple uncertain fish identities | F | Sensitivity distributions, not certified intervals |
+| ACI choice/actuator logs | H | Operator authorization, safety, external behavioural review |
+
+The [source protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs) provide further constraints and data schemas.

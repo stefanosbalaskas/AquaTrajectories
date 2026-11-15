@@ -2,3 +2,8 @@
 ^README\.md$
 ^docs$
 ^\.gitignore$
+^_pkgdown\.yml$
+^pkgdown$
+^vignettes$
+^site$
+^scripts$
