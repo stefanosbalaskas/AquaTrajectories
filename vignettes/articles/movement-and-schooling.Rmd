@@ -42,4 +42,4 @@ Find [`aqt_plot_paths()`](../reference/aqt_plot_paths.html), [`aqt_plot_school_d
 
 Proximity alone is not evidence of leadership, preference, stress or positive welfare.
 
-See [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SCHOOL_SPATIAL_METHODS.md) and [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FUNCTIONAL_TRAJECTORY_METHODS.md).
+See [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/SCHOOL_SPATIAL_METHODS.md) and [source protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FUNCTIONAL_TRAJECTORY_METHODS.md).
