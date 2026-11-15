@@ -1,0 +1,98 @@
+// Research website smoke test. Read-only and deterministic; no network access.
+import fs from "node:fs";
+import path from "node:path";
+import assert from "node:assert/strict";
+
+const site = path.resolve("site");
+const pages = [
+  "index.html",
+  "articles/aquaTrajectories.html",
+  "articles/quickstart-five-minutes.html",
+  "articles/capabilities-and-validation.html",
+  "articles/video-to-results.html",
+  "articles/experiment-starter-kit.html",
+  "articles/identity-occlusion-tutorial.html",
+  "articles/research-evidence-dashboard.html",
+  "synthetic-explorer.html"
+];
+const extras = [
+  "AquaTrajectories-research-starter-v1.zip",
+  "AquaTrajectories-v0.1.1.bib",
+  "starter-README.txt",
+  "starter-tracks.csv",
+  "starter-events.csv",
+  "starter-sync-markers.csv",
+  "starter-reference-boxes.csv",
+  "starter-reference-tracks.csv",
+  "starter-physical-xyz-targets.csv",
+  "starter-camera-inventory.csv",
+  "starter-study-design.csv",
+  "synthetic-explorer.js",
+  "synthetic-explorer.css"
+];
+const read = p => fs.readFileSync(path.join(site,p), "utf8");
+for(const f of [...pages,...extras]) {
+  assert.ok(fs.existsSync(path.join(site,f)), "Missing generated site resource: "+f);
+  assert.ok(fs.statSync(path.join(site,f)).size > 0,"Empty site resource: "+f);
+}
+const home=read("index.html");
+assert.match(home,/official v0\.1\.1 release/i);
+assert.match(home,/10\.5281\/zenodo\.24262905/i);
+assert.match(home,/quickstart-five-minutes/);
+assert.match(home,/experiment-starter-kit/);
+assert.match(home,/capabilities-and-validation/);
+const start=read("articles/aquaTrajectories.html");
+assert.match(start,/v0\.1\.1/);
+assert.doesNotMatch(start, /ref\s*=\s*(?:(?:<[^>]*>)*[\s"]*)?v0\.1\.0/, "Get-started guide still asks for old release");
+const demo=read("synthetic-explorer.html");
+for(const id of ["occlusion-demo","idswitch-demo","learningStatus","frame","fishfilters"]) {
+ assert.ok(demo.includes('id="'+id+'"'),"Missing accessible explorer feature: "+id);
+}
+assert.match(read("synthetic-explorer.js"),/isMissing/);
+assert.match(read("synthetic-explorer.js"),/segmentOpen/);
+const csv=read("starter-tracks.csv").trim().split(/\r?\n/);
+assert.equal(csv.length,61,"Expected 60 synthetic observations and a header");
+assert.ok(csv.some(x=>x.includes("fish03")&&x.includes("FALSE")), "Missing observation fixture absent");
+assert.ok(csv[0].includes("observed"));
+const xyz=read("starter-physical-xyz-targets.csv").trim().split(/\r?\n/);
+assert.equal(xyz.length,1, "XYZ target template must NOT fake surveyed coordinates");
+
+// Audit all locally linked documents and assets in the new generated pages.
+// Absolute external links, anchors, data URIs and mailto are deliberately out of scope.
+for(const page of pages) {
+ const html=read(page);
+ assert.match(html,/<h1[ >]/i, "Page lacks an H1: "+page);
+ const pageDir=path.posix.dirname(page);
+ for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+   const u=m[1].split(/[?#]/)[0];
+   if(!u||/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(u))continue;
+   const normalized=path.posix.normalize(path.posix.join(pageDir,decodeURIComponent(u)));
+   assert.ok(!normalized.startsWith("../"), "Unsafe relative link "+page+" -> "+u);
+   const p=path.join(site,normalized);
+   if(u.endsWith("/"))assert.ok(fs.existsSync(path.join(p,"index.html")), "Broken internal directory "+page+" -> "+u);
+   else assert.ok(fs.existsSync(p), "Broken internal file "+page+" -> "+u);
+ }
+}
+
+// Validate the actual downloadable, uncompressed ZIP central directory.
+// Prevents advertising an incomplete or corrupt research starter archive.
+const zipped=fs.readFileSync(path.join(site,"AquaTrajectories-research-starter-v1.zip"));
+const readU16=(i)=>zipped.readUInt16LE(i), readU32=(i)=>zipped.readUInt32LE(i);
+let tail=-1;for(let i=zipped.length-22;i>=Math.max(0,zipped.length-65557);i--){
+ if(readU32(i)===0x06054b50){tail=i;break}
+}
+assert.ok(tail>=0,"Missing ZIP end-of-directory");
+const nEntries=readU16(tail+10), directoryOffset=readU32(tail+16);
+assert.equal(nEntries,9,"Unexpected ZIP starter file count");
+let off=directoryOffset;const entries=new Set();
+for(let i=0;i<nEntries;i++){
+ assert.equal(readU32(off),0x02014b50,"Bad ZIP central directory");
+ assert.equal(readU16(off+10),0,"Non-store compressed ZIP entry");
+ const size=readU32(off+24),len=readU16(off+28),extra=readU16(off+30),comment=readU16(off+32);
+ const name=zipped.toString("utf8",off+46,off+46+len);
+ entries.add(name);
+ assert.ok(size>0,"Empty ZIP entry "+name);
+ off+=46+len+extra+comment;
+}
+assert.ok(entries.has("starter-tracks.csv")&&entries.has("starter-README.txt"));
+console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 9 core pages, 13 assets, 9 ZIP entries, internal links, release and synthetic guarantees");
