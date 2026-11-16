@@ -1,0 +1,61 @@
+name: Research methods manuscript and protocol reproducibility
+on:
+  pull_request:
+    paths:
+      - "research/publication/methods_v0.1.0/**"
+      - ".github/workflows/methods-protocol-qualification.yml"
+  push:
+    branches: [main]
+    paths:
+      - "research/publication/methods_v0.1.0/**"
+      - ".github/workflows/methods-protocol-qualification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproducible-protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Display immutable released software tag
+        shell: bash
+        run: |
+          git rev-parse v0.1.1^{commit}
+          test "$(git rev-parse v0.1.1^{commit})" = "43101800087a18d0942da4d03e21ea47099cb7a9"
+      - name: Check Python methods scripts
+        shell: bash
+        run: |
+          python --version
+          python -m compileall -q research/publication/methods_v0.1.0/scripts research/publication/methods_v0.1.0/tests
+          python -m unittest discover -s research/publication/methods_v0.1.0/tests -v
+      - name: Verify manuscript and header-only study data contracts
+        shell: bash
+        run: |
+          python research/publication/methods_v0.1.0/scripts/verify.py --mode protocol --report /tmp/aqt_methods_protocol.json
+      - name: Assert independent science release deliberately blocked
+        shell: bash
+        run: |
+          set +e
+          python research/publication/methods_v0.1.0/scripts/verify.py --mode evidence
+          code=$?
+          set -e
+          test "$code" -eq 2 || { echo "Expected BLOCKED independent evidence gate, got $code"; exit 1; }
+      - name: Build checked deterministic versioned bundle
+        shell: bash
+        run: |
+          python research/publication/methods_v0.1.0/scripts/build_bundle.py --output /tmp/AquaTrajectories_methods_v0.1.0_pinned_v0.1.1.zip
+          sha256sum /tmp/AquaTrajectories_methods_v0.1.0_pinned_v0.1.1.zip | tee /tmp/AQT_METHODS_SHA256.txt
+          unzip -t /tmp/AquaTrajectories_methods_v0.1.0_pinned_v0.1.1.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AquaTrajectories-methods-v0.1.0-protocol-only
+          path: |
+            /tmp/AquaTrajectories_methods_v0.1.0_pinned_v0.1.1.zip
+            /tmp/AQT_METHODS_SHA256.txt
+            /tmp/aqt_methods_protocol.json
+          if-no-files-found: error
