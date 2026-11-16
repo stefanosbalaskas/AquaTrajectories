@@ -50,6 +50,8 @@ const extras = [
   "experiment-protocol-builder.mjs",
   "scientific-teaching.css",
   "research-lab.css",
+  "native-v0.1.1-tracks.R",
+  "native-v0.1.1-kinematics.R",
   "research-geometry-core.mjs",
   "research-geometry.mjs",
   "research-webr.mjs",
@@ -181,6 +183,9 @@ assert.match(home,/research-multiview.html/);
 assert.match(home,/research-data-inspector.html/);
 assert.ok(read("research-webr.mjs").includes("https://webr.r-wasm.org/v0.6.1/webr.mjs"),"Pinned webR CDN import missing");
 assert.match(read("research-webr.mjs"),/PostMessage/);
+assert.match(read("research-webr.html"),/id="loadNative"/);
+assert.ok(read("native-v0.1.1-tracks.R").includes("aqt_tracks <- function"),"Archived R tracks source absent");
+assert.ok(read("native-v0.1.1-kinematics.R").includes("aqt_kinematics <- function"),"Archived R kinematics source absent");
 for(const name of ["research-multiview.mjs","research-inspector.mjs"]){
  const content=read(name);
  for(const forbidden of ["fetch(", "XMLHttpRequest", "sendBeacon"]) assert.ok(!content.includes(forbidden),"Local research module must not upload files: "+name);

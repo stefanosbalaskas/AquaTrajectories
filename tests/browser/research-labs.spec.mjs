@@ -79,7 +79,12 @@ test("webR: real interpreter executes an example after explicit consent",async({
  await page.locator("#initialize").click();
  await expect(page.locator("#runtimeStatus")).toContainText("initialized",{timeout:145_000});
  await page.locator("#run").click();
- await expect(page.locator("#rOutput")).toContainText("Synthetic",{timeout:60_000});
+ await expect(page.locator("#rOutput")).toContainText("invented",{timeout:60_000});
+ await expect(page.locator("#loadNative")).toBeEnabled();
+ await page.locator("#loadNative").click();
+ await expect(page.locator("#runtimeStatus")).toContainText("v0.1.1",{timeout:35_000});
+ await page.locator("#run").click();
+ await expect(page.locator("#rOutput")).toContainText("AQT_v0.1.1_NATIVE_SOURCE_SPEED",{timeout:60_000});
 });
 test("four labs: mobile layout has no horizontal overflow",async({page})=>{
  await page.setViewportSize({width:390,height:844});
