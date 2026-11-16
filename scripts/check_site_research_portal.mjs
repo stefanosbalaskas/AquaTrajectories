@@ -10,6 +10,11 @@ const pages = [
   "articles/quickstart-five-minutes.html",
   "articles/plan-your-experiment.html",
   "articles/scientific-teaching.html",
+  "articles/research-laboratory.html",
+  "research-geometry.html",
+  "research-webr.html",
+  "research-multiview.html",
+  "research-data-inspector.html",
   "scientific-tracking-lab.html",
   "math-workbench.html",
   "plot-playground.html",
@@ -43,6 +48,13 @@ const extras = [
   "plot-playground.mjs",
   "experiment-protocol-builder.mjs",
   "scientific-teaching.css",
+  "research-lab.css",
+  "research-geometry-core.mjs",
+  "research-geometry.mjs",
+  "research-webr.mjs",
+  "research-multiview.mjs",
+  "research-local-core.mjs",
+  "research-inspector.mjs",
   "synthetic-experiment-protocol.md",
   "synthetic-session-manifest.csv",
   "synthetic-explorer.css"
@@ -155,4 +167,21 @@ for(const mode of ["paths","ensemble","school"]){
 const exampleManifest=read("synthetic-session-manifest.csv").trim().split(/\r?\n/);
 assert.equal(exampleManifest.length,9,"Expected header plus eight blank-valued planning rows");
 assert.ok(exampleManifest[0].includes("source_sha256"));
+
+const researchPages=["research-geometry.html","research-webr.html","research-multiview.html","research-data-inspector.html"];
+for(const page of researchPages){
+ const html=read(page);
+ assert.match(html,/synthetic|source/i,"Research lab lacks a limitation label "+page);
+ assert.match(html,/type="module"/,"Research lab lacks executable client module "+page);
+}
+assert.match(home,/research-geometry.html/);
+assert.match(home,/research-webr.html/);
+assert.match(home,/research-multiview.html/);
+assert.match(home,/research-data-inspector.html/);
+assert.match(read("research-webr.mjs"),/v0\\.6\\.1\\/webr\\.mjs/);
+assert.match(read("research-webr.mjs"),/PostMessage/);
+for(const name of ["research-multiview.mjs","research-inspector.mjs"]){
+ const content=read(name);
+ assert.doesNotMatch(content,/fetch\\s*\\(|XMLHttpRequest|sendBeacon/,"User selected data cannot be uploaded: "+name);
+}
 console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 11 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");

@@ -13,7 +13,7 @@ template:
     code_font: {google: "JetBrains Mono"}
 navbar:
   structure:
-    left: [intro, labs, science, plan, reference, articles, news]
+    left: [intro, labs, science, research, plan, reference, articles, news]
     right: [search, github, lightswitch]
   components:
     labs:
@@ -22,6 +22,9 @@ navbar:
     science:
       text: "Scientific teaching"
       href: "articles/scientific-teaching.html"
+    research:
+      text: "Research lab"
+      href: "articles/research-laboratory.html"
     plan:
       text: "Plan an experiment"
       href: "articles/plan-your-experiment.html"
@@ -229,6 +232,7 @@ articles:
       - articles/aquaTrajectories
       - articles/quickstart-five-minutes
       - articles/scientific-teaching
+      - articles/research-laboratory
       - articles/plan-your-experiment
       - articles/workflows-atlas
       - articles/function-atlas

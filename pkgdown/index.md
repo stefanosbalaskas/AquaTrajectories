@@ -47,6 +47,19 @@
 
 The [experiment planning guide](articles/plan-your-experiment.html) provides separate paths for [one-camera 2D tracking](articles/plan-your-experiment.html#one-camera), [two-camera 3D research](articles/plan-your-experiment.html#two-cameras), and [existing recordings](articles/plan-your-experiment.html#existing-recordings). Camera count alone does not establish physically calibrated XYZ or biological identity.
 
+## Phase 3 — Research laboratory
+
+The four new <a href="articles/research-laboratory.html">research-laboratory tools</a> move beyond static teaching figures. They include an interactive physical **single-interface 3D reconstruction example**, an opt-in **webR/WebAssembly runtime for executing real base R** code, a **locally synchronized multiview evidence viewer**, and a **privacy-preserving trajectory CSV inspector**. No original research files are uploaded.
+
+<div class="aqt-cardgrid aqt-research-grid">
+<a class="aqt-card" href="research-geometry.html"><div class="aqt-kicker">3D Geometry</div><h3>Refracted-ray laboratory</h3><p>Adjust camera baseline, water index, fish depth and localization error. Rotate the scene and inspect geometric abstentions and synthetic XYZ error.</p></a>
+<a class="aqt-card" href="research-webr.html"><div class="aqt-kicker">Executable R</div><h3>Run R through webR</h3><p>On explicit request, initialize a pinned WebAssembly R runtime and execute four bounded base-R statistical demonstrations.</p></a>
+<a class="aqt-card" href="research-multiview.html"><div class="aqt-kicker">Multiview review</div><h3>Inspect synchronized sources</h3><p>Use local camera videos, timing manifests, 2D points, source XYZ and event markers without manufacturing measurements.</p></a>
+<a class="aqt-card" href="research-data-inspector.html"><div class="aqt-kicker">Local QC</div><h3>Inspect trajectory CSVs</h3><p>Check scoped identity/time duplicates, observed gaps, coordinate integrity and download a local quality report.</p></a>
+</div>
+
+These modules are research aids and synthetic teaching tools, **not** empirical fish-detection benchmarks, verified shutter synchronization, or underwater physical metrology. The webR page fetches its pinned interpreter from a public CDN only after you choose to initialize it.
+
 ## Scientific teaching: four interactive laboratories
 
 Explore deterministic examples that separate **what software computes** from **what real biological observations establish**. Each exercise runs locally in the browser, uses invented inputs, and links to the published v0.1.1 R documentation.
