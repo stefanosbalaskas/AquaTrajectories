@@ -55,7 +55,7 @@ const presets={
   ' y=as.vector(rbind(rep(0,length(angles)),sin(angles))))',
   'g <- aqt_group_metrics(aqt_tracks(d,units="cm",coordinate_system="tank"))',
   'print(g[g$time_s==1,c("n_visible","polarization")])'
- ].join("\\n"),
+ ].join("\n"),
  summary:({n,frames,seed})=>[
   "# Actual base R: fabricated multi-fish trajectory table",
   "set.seed("+seed+")",
