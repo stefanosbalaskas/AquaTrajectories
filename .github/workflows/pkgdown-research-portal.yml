@@ -76,6 +76,16 @@ jobs:
           node --check pkgdown/assets/plot-playground.mjs
           node --check pkgdown/assets/experiment-protocol-builder.mjs
           node scripts/test_scientific_teaching.mjs
+          node --check scripts/test_research_geometry.mjs
+          node --check scripts/test_research_local.mjs
+          node --check pkgdown/assets/research-geometry-core.mjs
+          node --check pkgdown/assets/research-geometry.mjs
+          node --check pkgdown/assets/research-webr.mjs
+          node --check pkgdown/assets/research-local-core.mjs
+          node --check pkgdown/assets/research-multiview.mjs
+          node --check pkgdown/assets/research-inspector.mjs
+          node scripts/test_research_geometry.mjs
+          node scripts/test_research_local.mjs
           node --check scripts/test_synthetic_explorer.mjs
           node --check scripts/test_synthetic_lab.mjs
           node scripts/test_synthetic_explorer.mjs
@@ -102,6 +112,11 @@ jobs:
           test -s site/articles/quickstart-five-minutes.html
           test -s site/articles/plan-your-experiment.html
           test -s site/articles/scientific-teaching.html
+          test -s site/articles/research-laboratory.html
+          test -s site/research-geometry.html
+          test -s site/research-webr.html
+          test -s site/research-multiview.html
+          test -s site/research-data-inspector.html
           test -s site/scientific-tracking-lab.html
           test -s site/math-workbench.html
           test -s site/plot-playground.html

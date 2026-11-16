@@ -1,0 +1,46 @@
+---
+title: "Research laboratory: geometry, executable R, multiview and local data"
+description: "Browser-based AquaTrajectories research methods: exact synthetic single-interface rays, curated webR calculations, source-clock multiview review, and local CSV quality checks."
+---
+
+# Research laboratory
+
+The laboratory contains four independent tools that run in your browser. Their purpose is to inspect the computational assumptions and source evidence relevant to AquaTrajectories v0.1.1. All synthetic scenes are labelled. No browser figure constitutes independently validated fish tracking, physical 3D accuracy or a biological endpoint.
+
+## 1. Underwater 3D geometry laboratory
+
+[Launch the interactive geometry lab](../research-geometry.html).
+
+The physically specified teaching system places two *above-surface* pinhole cameras over a single planar air–water interface, and a known synthetic 3D point in the water. The browser solves Snell's law for the idealized incident ray, transmits the ray through the interface after a controlled angular localization perturbation and computes the closest-point midpoint of two refracted water rays.
+
+The 3D scene rotates, shows ray separation and known-truth synthetic error, and abstains from invalid/near-parallel geometry. It **does not** reproduce the v0.1.1 glass-port model, GoPro camera intrinsics, optical distortion or external physical-survey benchmark. Use the [released refractive function manual](../reference/aqt_refractive_triangulate.html) for actual R arguments and [validation guidance](validation-and-benchmarks.html) for claims about measured XYZ.
+
+## 2. Executable R in the browser
+
+[Run the webR demonstration](../research-webr.html).
+
+The interface downloads the independently published **webR v0.6.1** WebAssembly R interpreter only when the user clicks Initialize. It explicitly uses GitHub Pages-compatible `PostMessage` worker communication; arbitrary R snippets are not accepted by the page. Curated bounded examples are executed using real *base R* for finite differences, directional polarization, affine clock transformation and synthetic trajectory summaries.
+
+The AquaTrajectories v0.1.1 R package is **not bundled or verified as WebAssembly-compatible**. Native R plotting/function execution remains documented in the [plot atlas](all-plot-functions.html). Interpreter download requires an external network request, although the computation is performed on the user's machine.
+
+## 3. Synchronized multiview evidence desk
+
+[Open the multiview reviewer](../research-multiview.html).
+
+Select original videos and source camera-frame CSV manifests. A research time is matched to each camera's explicitly supplied aligned clock and then mapped to the original raw PTS of the corresponding frame. Invalid/missing matches are reported. Any 2D overlay derives only from a supplied, scoped track row. Source-provided XYZ can be rotated and reviewed without interpolation over long gaps; it is never inferred from the videos.
+
+Source-file selection uses browser object URLs and in-memory parsing only. The manifest mapping is *not* independent verification of hardware exposure synchronization. Videos can be decoded or sought to nearby media frames depending on browser behaviour and the source file.
+
+For more comprehensive scientifically gated offline functionality, see the [repository's original unified multiview explorer](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/inst/explorer).
+
+## 4. Privacy-preserving local CSV inspector
+
+[Check a local trajectory CSV](../research-data-inspector.html).
+
+Load a canonical long-format table with session, camera, track, time, x and y columns; observed and z are optional. The inspector checks duplicate scoped timestamps, missing observed coordinates, invalid/missing time values, out-of-order row sequences and researcher-adjustable long gaps. A JSON summary can be downloaded. It neither uploads original research rows nor silently interpolates them.
+
+The inspector does not establish animal identity truth, calibrated measurement units, causal treatment effects or publication-ready inferential validity. Scientific research should still run the package's [track validation](../reference/aqt_tracks_validate.html) and QC functions.
+
+## Version, provenance and limitations
+
+The website uses synthetic demonstrations and links to the version-specific [AquaTrajectories v0.1.1 archive](https://doi.org/10.5281/zenodo.24262905). The research-lab JavaScript is independently versioned website source and is not an unannounced extension to the archived R API. The website CI exercises mathematical invariants, invalid source cases, clock mapping, CSV parsing, page generation and link checks; that qualification does not imply visual compatibility testing across all browsers or independent biological/scientific validation.

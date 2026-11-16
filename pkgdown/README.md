@@ -35,3 +35,7 @@ Main-branch website source adds visible lab/experiment routes, 22 direct plot-to
 ## Phase 2 scientific teaching (website only)
 
 Four static browser labs provide deterministic **synthetic** object detection/track-ID didactics, vector/school/clock mathematics, three adjustable SVG plotting previews plus version-pinned R code recipes, and downloadable planned experiment protocols/blank CSV manifests. The website does not claim official HOTA/IDF1, independent video performance, live animal welfare or physical XYZ calibration. Source files are in `pkgdown/assets`, connected from the home page and the new `vignettes/articles/scientific-teaching.Rmd`. Node teaching-core regression tests run in the pkgdown CI build before smoke testing.
+
+## Phase 3 research laboratory (website only)
+
+New `research-*.html` modules in pkgdown assets demonstrate single-interface above-water refracted rays, opt-in pinned webR v0.6.1 with GitHub Pages PostMessage worker, source-frame-matched local multiview video + XYZ inspection, and CSV-only on-device QC. The linked `research-laboratory.Rmd` discloses scientific boundaries. Pure numerical and CSV validation functions have deterministic Node regression tests. Browser workflows are not real-camera accuracy certifications, and the webR demo uses base R, not a verified AquaTrajectories WebAssembly package. No submitted research media is stored or uploaded.
