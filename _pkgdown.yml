@@ -13,8 +13,15 @@ template:
     code_font: {google: "JetBrains Mono"}
 navbar:
   structure:
-    left: [intro, reference, articles, news]
+    left: [intro, labs, plan, reference, articles, news]
     right: [search, github, lightswitch]
+  components:
+    labs:
+      text: "Interactive labs"
+      href: "synthetic-explorer.html"
+    plan:
+      text: "Plan an experiment"
+      href: "articles/plan-your-experiment.html"
 reference:
   - title: "Data models, import and export"
     desc: "Canonical track objects, synthetic examples and interoperable data formats."
@@ -218,6 +225,7 @@ articles:
     contents:
       - articles/aquaTrajectories
       - articles/quickstart-five-minutes
+      - articles/plan-your-experiment
       - articles/workflows-atlas
       - articles/function-atlas
       - articles/capabilities-and-validation

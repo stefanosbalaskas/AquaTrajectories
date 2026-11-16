@@ -2,7 +2,7 @@
 <p class="aqt-eyebrow">Open-source research software · official v0.1.1 release</p>
 <h1>From aquatic observations to reproducible movement science</h1>
 <p>Track, reconstruct, analyze and visualize aquatic-animal trajectories with R, Python and browser tools. Start with documented synthetic examples, then supply independent annotations, camera calibration and real recording metadata for scientific measurements.</p>
-<div class="aqt-cta"><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="articles/capabilities-and-validation.html">What is validated?</a><a href="articles/experiment-starter-kit.html">Download starter data</a></div>
+<div class="aqt-cta"><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
 <div class="aqt-badges"><span>155 documented R functions</span><span>14 reference categories</span><span>Official GitHub release v0.1.1</span><span>Zenodo archived</span></div>
 </section>
 
@@ -16,7 +16,8 @@
 <div class="aqt-cardgrid aqt-entrygrid">
 <a class="aqt-card" href="articles/quickstart-five-minutes.html"><div class="aqt-kicker">New to R</div><h3>Try a complete analysis</h3><p>Five minutes: synthetic tracks → movement → event alignment → CSV exports. Confirm expected row counts.</p></a>
 <a class="aqt-card" href="articles/video-to-results.html"><div class="aqt-kicker">Working with footage</div><h3>Plan video → results</h3><p>Original PTS, externally trained detector, reviewable IDs, camera geometry, explicit scientific gates.</p></a>
-<a class="aqt-card" href="articles/experiment-starter-kit.html"><div class="aqt-kicker">Planning an experiment</div><h3>Get the starter dataset</h3><p>Download labeled example CSVs for trajectories, event logs, synchronization, and annotation formats.</p></a>
+<a class="aqt-card" href="articles/plan-your-experiment.html"><div class="aqt-kicker">Planning an experiment</div><h3>Choose your recording setup</h3><p>One camera, two cameras, or existing footage: match the workflow to the evidence your study can support.</p></a>
+<a class="aqt-card" href="synthetic-explorer.html"><div class="aqt-kicker">Interactive laboratory</div><h3>Explore fish tracking visually</h3><p>Five invented tracks, two camera projections, occlusions, identity switches, event markers and exportable teaching outputs.</p></a>
 </div>
 
 <div class="aqt-statusbar" role="group" aria-label="Current release and scientific evidence">
@@ -41,6 +42,10 @@
 <a class="aqt-card" href="articles/aci-workflows.html"><div class="aqt-kicker">08 · Interact</div><h3>Animal–Computer Interaction</h3><p>Telemetry, choices, access inequality and bounded device-control research protocols.</p></a>
 <a class="aqt-card" href="articles/all-plot-functions.html"><div class="aqt-kicker">09 · Communicate</div><h3>All 22 plotting functions</h3><p>Demonstration figures, publication storyboards, 3D projections and reproducible graphics.</p></a>
 </div>
+
+## Choose your camera configuration
+
+The [experiment planning guide](articles/plan-your-experiment.html) provides separate paths for [one-camera 2D tracking](articles/plan-your-experiment.html#one-camera), [two-camera 3D research](articles/plan-your-experiment.html#two-cameras), and [existing recordings](articles/plan-your-experiment.html#existing-recordings). Camera count alone does not establish physically calibrated XYZ or biological identity.
 
 ## A visual laboratory
 
@@ -92,5 +97,5 @@ The [five-figure reproducible workbook](articles/five-figure-workbook.html) exer
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
 - [Official v0.1.1 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
 - [Version-specific Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Download BibTeX](AquaTrajectories-v0.1.1.bib)
-- [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/main/docs)
+- [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs)
 - [Function documentation](reference/index.html) · [Publication figures](articles/publication-figures.html)
