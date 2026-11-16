@@ -21,7 +21,9 @@ The 3D scene rotates, shows ray separation and known-truth synthetic error, and 
 
 The interface downloads the independently published **webR v0.6.1** WebAssembly R interpreter only when the user clicks Initialize. It explicitly uses GitHub Pages-compatible `PostMessage` worker communication; arbitrary R snippets are not accepted by the page. Curated bounded examples are executed using real *base R* for finite differences, directional polarization, affine clock transformation and synthetic trajectory summaries.
 
-The AquaTrajectories v0.1.1 R package is **not bundled or verified as WebAssembly-compatible**. Native R plotting/function execution remains documented in the [plot atlas](all-plot-functions.html). Interpreter download requires an external network request, although the computation is performed on the user's machine.
+An optional **actual v0.1.1 function-source subset** is now available in a separate on-demand mode. The browser can load byte-identical archived implementations of `aqt_tracks()`, `aqt_kinematics()` and `aqt_group_metrics()`, source them into webR and execute the real functions on a small synthetic example. This is **source-level execution**, not compilation or installation of the whole R package for WebAssembly. Native source hashes are checked against the released files in CI.
+
+The full AquaTrajectories v0.1.1 R package is **not bundled or verified as WebAssembly-compatible**. Native R plotting/function execution remains documented in the [plot atlas](all-plot-functions.html). Interpreter download requires an external network request, although the computation is performed on the user's machine.
 
 ## 3. Synchronized multiview evidence desk
 
@@ -40,6 +42,10 @@ For more comprehensive scientifically gated offline functionality, see the [repo
 Load a canonical long-format table with session, camera, track, time, x and y columns; observed and z are optional. The inspector checks duplicate scoped timestamps, missing observed coordinates, invalid/missing time values, out-of-order row sequences and researcher-adjustable long gaps. A JSON summary can be downloaded. It neither uploads original research rows nor silently interpolates them.
 
 The inspector does not establish animal identity truth, calibrated measurement units, causal treatment effects or publication-ready inferential validity. Scientific research should still run the package's [track validation](../reference/aqt_tracks_validate.html) and QC functions.
+
+## Real original-video records
+
+The [DIGI4ECO source-video walkthrough](real-fish-data-walkthrough.html) provides a licence-compliant local workflow for original video, source annotation boxes, precise timestamps and file hashes. Original labels are never presented as software predictions or independent physical XYZ targets.
 
 ## Version, provenance and limitations
 

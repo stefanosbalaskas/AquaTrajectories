@@ -1,0 +1,58 @@
+name: AquaTrajectories Website v2 independent qualification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "pkgdown/**"
+      - "vignettes/**"
+      - "scripts/**"
+      - "tests/browser/**"
+      - ".github/workflows/website-v2-qualification.yml"
+  push:
+    branches: [main]
+    paths:
+      - "pkgdown/**"
+      - "vignettes/**"
+      - "scripts/**"
+      - "tests/browser/**"
+      - ".github/workflows/website-v2-qualification.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: "website-v2-${{ github.ref }}"
+  cancel-in-progress: true
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+      - name: Assert browser native R source modules match archived release source
+        run: |
+          cmp R/tracks.R pkgdown/assets/native-v0.1.1-tracks.R
+          cmp R/kinematics.R pkgdown/assets/native-v0.1.1-kinematics.R
+      - name: Cross-language numerical parity against released native R API
+        run: |
+          node scripts/create_browser_parity_fixtures.mjs
+          Rscript scripts/verify_browser_r_parity.R
+      - name: Bounded private CSV parse and QC stress audit
+        run: node scripts/test_local_perf_budget.mjs
+      - name: Test real dataset converter using fictional CVAT fixtures
+        run: python3 scripts/test_convert_digi4eco_cvat.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aqt-browser-R-parity-evidence
+          path: site-qualification/parity/
+          if-no-files-found: warn

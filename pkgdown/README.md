@@ -39,3 +39,7 @@ Four static browser labs provide deterministic **synthetic** object detection/tr
 ## Phase 3 research laboratory (website only)
 
 New `research-*.html` modules in pkgdown assets demonstrate single-interface above-water refracted rays, opt-in pinned webR v0.6.1 with GitHub Pages PostMessage worker, source-frame-matched local multiview video + XYZ inspection, and CSV-only on-device QC. The linked `research-laboratory.Rmd` discloses scientific boundaries. Pure numerical and CSV validation functions have deterministic Node regression tests. Browser workflows are not real-camera accuracy certifications, and the webR demo uses base R, not a verified AquaTrajectories WebAssembly package. No submitted research media is stored or uploaded.
+
+## Website v2 independent qualification
+
+The site build now publishes to GitHub Pages only after its **exact build artifact** completes a separate Chromium Playwright gate testing interactive controls, original-source file privacy, WCAG axe-core rules, bounded local-CSV processing, mobile layout and opt-in real webR execution. Cross-language R/JavaScript numerical parity and CVAT converter fixture checks run in an additional independent workflow. The browser can source byte-identical v0.1.1 R functions (`aqt_tracks`, `aqt_kinematics`, `aqt_group_metrics`) on demand; no whole-package WebAssembly installation is claimed. Original DIGI4ECO videos must be downloaded and processed locally under CC BY 4.0 and are never committed to the website.

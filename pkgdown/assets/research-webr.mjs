@@ -2,7 +2,7 @@
  * External pinned CDN initiated only on explicit click; no research file access.
  */
 const $=id=>document.getElementById(id);
-let runtime=null,busy=false;
+let runtime=null,busy=false,nativeReady=false;
 const presets={
  speed:({n,frames,seed})=>[
   "# Actual R (base stats): synthetic finite differences",
@@ -37,6 +37,25 @@ const presets={
   "print(data.frame(last_raw=tail(raw_s,1),last_reference=tail(reference_s,1)))",
   "cat('No independent hardware synchronization markers were supplied.')"
  ].join("\n"),
+ native:({n})=>[
+  "# Byte-identical AquaTrajectories v0.1.1 R function source, NOT an installed package",
+  'source("/tmp/aqt-native-v011-tracks.R")',
+  'source("/tmp/aqt-native-v011-kinematics.R")',
+  'x <- aqt_tracks(data.frame(session_id=c("S","S"),camera_id=c("C","C"),',
+  ' track_id=c("f1","f1"),time_s=c(0,2),x=c(0,3),y=c(0,4)),',
+  ' units="cm",coordinate_system="tank")',
+  'k <- aqt_kinematics(x)',
+  'cat("AQT_v0.1.1_NATIVE_SOURCE_SPEED:", k$speed[2], "cm/s\\n")',
+  'stopifnot(abs(k$speed[2]-2.5)<1e-10)',
+  'angles <- seq(-40,40,length.out='+n+'L)*pi/180',
+  'd <- data.frame(session_id="S",camera_id="C",',
+  ' track_id=rep(paste0("f",seq_along(angles)),each=2),',
+  ' time_s=rep(c(0,1),times=length(angles)),',
+  ' x=as.vector(rbind(rep(0,length(angles)),cos(angles))),',
+  ' y=as.vector(rbind(rep(0,length(angles)),sin(angles))))',
+  'g <- aqt_group_metrics(aqt_tracks(d,units="cm",coordinate_system="tank"))',
+  'print(g[g$time_s==1,c("n_visible","polarization")])'
+ ].join("\n"),
  summary:({n,frames,seed})=>[
   "# Actual base R: fabricated multi-fish trajectory table",
   "set.seed("+seed+")",
@@ -63,15 +82,36 @@ $("initialize").addEventListener("click",async()=>{
    const {WebR,ChannelType}=await import("https://webr.r-wasm.org/v0.6.1/webr.mjs");
    const instance=new WebR({channelType:ChannelType.PostMessage,interactive:false});
    await instance.init();
-   runtime=instance;$("run").disabled=false;
+   runtime=instance;$("run").disabled=false;$("loadNative").disabled=false;
    $("runtimeStatus").textContent="webR initialized. Curated R code executes in this browser.";
  }catch(e){
    $("runtimeStatus").textContent="webR failed to initialize: "+String(e.message||e)+". Check CDN/browser support.";
    $("initialize").disabled=false;
  }finally{busy=false;}
 });
+$("loadNative").addEventListener("click",async()=>{
+ if(!runtime||busy||nativeReady)return;
+ busy=true;$("loadNative").disabled=true;$("runtimeStatus").textContent="Loading exact-source v0.1.1 R modules from this website…";
+ try{
+   const paths=[["native-v0.1.1-tracks.R","/tmp/aqt-native-v011-tracks.R"],
+                ["native-v0.1.1-kinematics.R","/tmp/aqt-native-v011-kinematics.R"]];
+   for(const [url,path] of paths){
+     const res=await fetch(url,{cache:"force-cache"});
+     if(!res.ok)throw Error("Tagged source asset unavailable: "+url);
+     const bytes=new Uint8Array(await res.arrayBuffer());
+     if(bytes.length<1000||bytes.length>20000)throw Error("Unexpected release-source module length");
+     await runtime.FS.writeFile(path,bytes);
+   }
+   nativeReady=true;$("preset").value="native";updateSource();
+   $("runtimeStatus").textContent="Byte-identical v0.1.1 track and kinematics R source loaded in browser virtual filesystem. Run the native-source preset to execute it.";
+ }catch(e){
+   $("runtimeStatus").textContent="Native source load failed: "+String(e.message||e);
+   $("loadNative").disabled=false;
+ }finally{busy=false;}
+});
 $("run").addEventListener("click",async()=>{
  if(!runtime||busy)return;
+ if($("preset").value==="native"&&!nativeReady){$("runtimeStatus").textContent="Initialize webR and load native v0.1.1 source before executing this preset.";return;}
  busy=true;$("run").disabled=true;$("rOutput").textContent="Executing actual R…";
  let shelter=null;
  try{

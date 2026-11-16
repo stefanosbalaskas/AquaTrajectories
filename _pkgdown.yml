@@ -233,6 +233,7 @@ articles:
       - articles/quickstart-five-minutes
       - articles/scientific-teaching
       - articles/research-laboratory
+      - articles/real-fish-data-walkthrough
       - articles/plan-your-experiment
       - articles/workflows-atlas
       - articles/function-atlas

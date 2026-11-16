@@ -25,3 +25,18 @@ input[type=file]{font:inherit;border:1px dashed #82a8b6;border-radius:.45rem;pad
 footer a{overflow-wrap:anywhere}
 @media(max-width:900px){.local-files{grid-template-columns:repeat(2,minmax(0,1fr))}.camera-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.local-files,.two-col,.research-layout{grid-template-columns:1fr}}
+
+/* Website v2: prevent long R source lines from determining mobile grid width.
+   The scrollable source pane stays within the available viewport. */
+.lab-layout > .panel,
+.research-layout > .panel,
+.panel.workspace,
+.panel.controls { min-width: 0; max-width: 100%; }
+.r-code, .protocol-preview {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
