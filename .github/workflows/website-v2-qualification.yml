@@ -43,6 +43,8 @@ jobs:
         run: |
           node scripts/create_browser_parity_fixtures.mjs
           Rscript scripts/verify_browser_r_parity.R
+      - name: Bounded private CSV parse and QC stress audit
+        run: node scripts/test_local_perf_budget.mjs
       - name: Test real dataset converter using fictional CVAT fixtures
         run: python3 scripts/test_convert_digi4eco_cvat.py
       - uses: actions/upload-artifact@v4
