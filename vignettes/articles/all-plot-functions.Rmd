@@ -1,0 +1,702 @@
+---
+title: "Every AquaTrajectories plotting function — visual atlas"
+description: "All 22 exported aqt_plot_* functions: native base-R example output, synthetic input projections for optional rgl plots, reproducible source code, and scientific limitations."
+---
+
+# Plot function atlas: all 22 visualizations
+
+**Coverage:** 22 / 22 exported `aqt_plot_*` functions from the published R API. **16 native base-R outputs are rendered through the actual functions below**; the **six optional `rgl` visualizations use explicitly labeled 2D projections of the same invented input**, because a headless static documentation build cannot faithfully substitute an interactive `rgl` scene. The documented native `rgl` call is provided for each.
+
+All plots use **invented synthetic coordinates, synthetic study designs, or synthetic plotting fixtures**, not real GoPro frames, biological feeding reference labels, physical surveyed underwater targets, or treatment effects. These examples are for software teaching. They cannot certify fish detection, calibrated XYZ accuracy, uncertainty coverage, animal welfare or causal inference.
+
+<div class="aqt-gallery-controls" role="group" aria-label="Filter plotting functions">
+<label for="aqtPlotSearch">Search a function or figure</label>
+<input id="aqtPlotSearch" type="search" placeholder="Search: trajectory, school, calibration..." autocomplete="off">
+<label for="aqtPlotCategory">Scientific category</label>
+<select id="aqtPlotCategory">
+<option value="all">All functions</option>
+<option value="3D scenes">3D scenes</option>
+<option value="Analysis">Analysis</option>
+<option value="Behaviour">Behaviour</option>
+<option value="Diagnostics">Diagnostics</option>
+<option value="Publication">Publication</option>
+<option value="Trajectories">Trajectories</option>
+<option value="Uncertainty">Uncertainty</option>
+</select>
+<label for="aqtPlotMode">Rendering type</label>
+<select id="aqtPlotMode"><option value="all">Native outputs and 3D previews</option><option value="native">Actual native plots (16)</option><option value="rgl">Optional rgl previews (6)</option></select>
+<strong id="aqtPlotCount" role="status" aria-live="polite">Showing 22 of 22</strong>
+<button id="aqtPlotReset" type="button">Clear filters</button>
+</div>
+
+<details class="aqt-gallery-index"><summary>Jump to a specific plotting function (22)</summary>
+<div class="aqt-gallery-links">
+<a href="#fig-plot-paths" data-gallery-shortcut="Trajectories">aqt_plot_paths()</a>
+<a href="#fig-plot-path3d" data-gallery-shortcut="3D scenes">aqt_plot_path3d()</a>
+<a href="#fig-plot-calibration-comparison" data-gallery-shortcut="Publication">aqt_plot_calibration_comparison()</a>
+<a href="#fig-plot-changepoints" data-gallery-shortcut="Behaviour">aqt_plot_changepoints()</a>
+<a href="#fig-plot-ensemble2d" data-gallery-shortcut="Uncertainty">aqt_plot_ensemble2d()</a>
+<a href="#fig-plot-ensemble3d" data-gallery-shortcut="3D scenes">aqt_plot_ensemble3d()</a>
+<a href="#fig-plot-feeding-states" data-gallery-shortcut="Publication">aqt_plot_feeding_states()</a>
+<a href="#fig-plot-grid-pca" data-gallery-shortcut="Analysis">aqt_plot_grid_pca()</a>
+<a href="#fig-plot-heading-rose" data-gallery-shortcut="Publication">aqt_plot_heading_rose()</a>
+<a href="#fig-plot-joint-scene-cloud" data-gallery-shortcut="Uncertainty">aqt_plot_joint_scene_cloud()</a>
+<a href="#fig-plot-joint-scene-cloud3d" data-gallery-shortcut="3D scenes">aqt_plot_joint_scene_cloud3d()</a>
+<a href="#fig-plot-occupancy-timeseries" data-gallery-shortcut="Publication">aqt_plot_occupancy_timeseries()</a>
+<a href="#fig-plot-reconstruction-qc" data-gallery-shortcut="Diagnostics">aqt_plot_reconstruction_qc()</a>
+<a href="#fig-plot-recurrence" data-gallery-shortcut="Analysis">aqt_plot_recurrence()</a>
+<a href="#fig-plot-school3d" data-gallery-shortcut="3D scenes">aqt_plot_school3d()</a>
+<a href="#fig-plot-school-dynamics" data-gallery-shortcut="Analysis">aqt_plot_school_dynamics()</a>
+<a href="#fig-plot-speed-response" data-gallery-shortcut="Publication">aqt_plot_speed_response()</a>
+<a href="#fig-plot-tank-changes" data-gallery-shortcut="Analysis">aqt_plot_tank_changes()</a>
+<a href="#fig-plot-tank-projection" data-gallery-shortcut="3D scenes">aqt_plot_tank_projection()</a>
+<a href="#fig-plot-tank-scene3d" data-gallery-shortcut="3D scenes">aqt_plot_tank_scene3d()</a>
+<a href="#fig-plot-trajectory-storyboard3d" data-gallery-shortcut="3D scenes">aqt_plot_trajectory_storyboard3d()</a>
+<a href="#fig-plot-voxel3d" data-gallery-shortcut="3D scenes">aqt_plot_voxel3d()</a>
+</div>
+</details>
+
+```{r gallery-setup, include=FALSE}
+
+knitr::opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE,
+  fig.width = 8.8, fig.height = 5.6, fig.align = "center",
+  fig.retina = 2, dev = "png", out.width = "100%"
+)
+library(aquaTrajectories)
+set.seed(20261116)
+toy2 <- aqt_simulate_tracks(n_fish = 5L, n_frames = 90L,
+                            fps = 10, dimension = 2L, seed = 11L)
+toy3 <- aqt_simulate_tracks(n_fish = 5L, n_frames = 90L,
+                            fps = 10, dimension = 3L, seed = 12L)
+one2 <- aqt_tracks(as.data.frame(toy2)[toy2$track_id == "fish1", ],
+                   units = "cm", coordinate_system = "tank")
+one3 <- aqt_tracks(as.data.frame(toy3)[toy3$track_id == "fish1", ],
+                   units = "cm", coordinate_system = "tank")
+ensemble2 <- aqt_trajectory_ensemble(one2, sigma = .14,
+                                     draws = 25L, seed = 44L)
+ensemble3 <- aqt_trajectory_ensemble(one3, sigma = .14,
+                                     draws = 25L, seed = 45L)
+group_summary <- aqt_group_spatial_summary(toy3)
+scene3 <- aqt_tank_scene_snapshot(toy3, frame_s = 5, tail_s = 2,
+                                  max_age_s = .11, max_gap_s = .11)
+voxel_breaks <- lapply(c("x", "y", "z"), function(n)
+  seq(floor(min(one3[[n]]) - .5), ceiling(max(one3[[n]]) + .5),
+      length.out = 9L))
+names(voxel_breaks) <- c("x", "y", "z")
+voxels <- aqt_voxel_occupancy(one3, breaks = voxel_breaks, by = "fish")
+recurrence <- aqt_trajectory_recurrence(one2, radius = .6,
+                                         store_matrix = TRUE)
+pca_fit <- aqt_trajectory_grid_pca(toy2, n_grid = 48L,
+                                   n_components = 2L, max_gap_s = .11)
+cp_t <- seq(0, 11.9, by = .1)
+cp_signal <- c(rnorm(40, .6, .08), rnorm(40, 1.5, .08),
+               rnorm(40, .9, .08))
+cp_fit <- aqt_state_changepoint(
+  data.frame(session_id = "S01", camera_id = "SIM", track_id = "fish1",
+             time_s = cp_t, speed = cp_signal),
+  penalty = 1.5, min_segment = 12L, max_gap_s = .11)
+qc_frame <- as.data.frame(toy3)
+qc_frame$reprojection_rmse_px <- pmax(.03, abs(rnorm(nrow(qc_frame), .6, .25)))
+qc_frame$time_skew_s <- runif(nrow(qc_frame), .001, .025)
+qc_tracks <- aqt_tracks(qc_frame, units = "cm", coordinate_system = "tank")
+tank_epoch <- expand.grid(tank_id = paste0("T", 1:8),
+                          epoch = c("baseline", "response"),
+                          KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+tank_epoch$treatment <- ifelse(as.integer(sub("T", "", tank_epoch$tank_id)) <= 4,
+                               "control", "treatment")
+tank_epoch$value <- .85 + .05*as.integer(sub("T", "", tank_epoch$tank_id)) +
+  ifelse(tank_epoch$epoch == "response", 
+         ifelse(tank_epoch$treatment == "treatment", .35, .05), 0) +
+  rnorm(nrow(tank_epoch), 0, .04)
+tank_fit <- aqt_tank_event_contrast(tank_epoch, draws = 120L, seed = 19L)
+feeding <- expand.grid(
+  scenario = c("Normal", "Reduced", "Overfed", "No feeding"),
+  time_min = seq(-10, 50, by = 2),
+  rep = seq_len(3), KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+feeding$fbi <- pmax(0, pmin(1, .3 +
+  c(Normal = .26, Reduced = .13, Overfed = .35, 'No feeding' = .02)[feeding$scenario] *
+  exp(-((feeding$time_min-9)/14)^2) + rnorm(nrow(feeding), sd = .05)))
+feeding$phase <- ifelse(feeding$time_min < 0, "pre",
+                        ifelse(feeding$time_min < 10, "onset",
+                               ifelse(feeding$time_min < 30, "later", "post")))
+headings <- data.frame(
+  condition = rep(c("Illustrative A", "Illustrative B"), each = 240L),
+  heading_rad = c(rnorm(240, .7, .4), rnorm(240, 3.0, .5)))
+occupancy <- expand.grid(
+  scenario = c("Illustrative baseline", "Illustrative event"),
+  tank_id = paste0("T", 1:5), time_s = seq(0, 1800, by = 60),
+  KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+occupancy$area_fraction <- pmax(0, pmin(1,
+  .32 + ifelse(occupancy$scenario == "Illustrative event", .12, 0) +
+  .06*sin(occupancy$time_s/450) + rnorm(nrow(occupancy), 0, .04)))
+speed_data <- expand.grid(tank_id = paste0("T", 1:6),
+                          time_s = seq(-30, 60, by = 1),
+                          KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+speed_data$speed <- pmax(.05, 1 + 
+  .04*as.integer(sub("T", "", speed_data$tank_id)) +
+  ifelse(speed_data$time_s >= 0, .3, 0) +
+  rnorm(nrow(speed_data), 0, .10))
+targets <- data.frame(
+  target_id = paste0("target", 1:40),
+  partition = rep(c("fit", "holdout"), c(10, 30)),
+  truth_x = runif(40, 0, 20), truth_y = runif(40, 0, 10),
+  truth_z = runif(40, 0, 10))
+calibration <- do.call(rbind, lapply(seq_along(c("Ray model", "Underwater model", "Air model")),
+  function(i) {
+    d <- targets; d$method <- c("Ray model", "Underwater model", "Air model")[i]
+    d$estimate_x <- d$truth_x + rnorm(nrow(d), sd = c(.05, .16, .35)[i])
+    d$estimate_y <- d$truth_y + rnorm(nrow(d), sd = c(.05, .16, .35)[i])
+    d$estimate_z <- d$truth_z + rnorm(nrow(d), sd = c(.05, .16, .35)[i])
+    d
+  }))
+# Plot-only conditional cloud fixture. These are invented scattered points,
+# not derived from physical calibrated uncertainty or fish-video observations.
+cloud_points <- do.call(rbind, lapply(seq_len(2L), function(f) {
+  data.frame(track_id = paste0("fish", f), draw = seq_len(70L),
+    x = rnorm(70L, f*1.6, .18), y = rnorm(70L, f*.6, .23),
+    z = rnorm(70L, f*1.3, .15))
+}))
+cloud_summary <- do.call(rbind, lapply(split(cloud_points, cloud_points$track_id),
+  function(d) data.frame(track_id = d$track_id[1L],
+    x_median = median(d$x), y_median = median(d$y), z_median = median(d$z))))
+cloud <- structure(list(points = cloud_points, summary = cloud_summary,
+                        frame_s = 5, n_draws = 70L, units = "cm"),
+                   class = "aqt_joint_scene_cloud")
+# A 2D axonometric preview is used ONLY for functions whose actual graphics
+# device is optional rgl; it is NOT a screenshot of that rgl output.
+gallery_project <- function(x, y, z) cbind(u = x - .62*y,
+                                            v = .29*x + .42*y + z)
+gallery_xyz_preview <- function(x, y, z, label, groups = NULL,
+                                type = "p", sizes = NULL) {
+  xy <- gallery_project(x, y, z)
+  if (is.null(groups)) groups <- rep("Synthetic", length(x))
+  cols <- grDevices::hcl.colors(length(unique(groups)), "Dark 3")
+  cc <- cols[match(groups, unique(groups))]
+  plot(xy[, 1L], xy[, 2L], type = "n", asp = 1,
+       xlab = "Projected X-Y (arbitrary)", ylab = "Projected height (arbitrary)",
+       main = paste(label, "- 2D input preview"))
+  for (g in unique(groups)) {
+    idx <- which(groups == g)
+    if (type == "l") lines(xy[idx, 1L], xy[idx, 2L],
+                           col = cc[idx[1L]], lwd = 2)
+    else points(xy[idx, 1L], xy[idx, 2L], pch = 16,
+                cex = if (is.null(sizes)) .8 else sizes[idx],
+                col = grDevices::adjustcolor(cc[idx[1L]], alpha.f = .65))
+  }
+  mtext("Projection of invented input only; NOT an rgl render",
+        side = 3, line = .1, cex = .68, col = "#9B3D36")
+}
+
+```
+
+<div class="aqt-plot-entry" data-category="Trajectories" data-mode="native" data-search="aqt_plot_paths trajectories 2d trajectory plot">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Trajectories</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-paths">aqt_plot_paths()</h2><p>2D trajectory plot</p></div><a href="../reference/aqt_plot_paths.html">Full function reference</a></div>
+
+```{r gallery-plot-paths, fig.alt="Actual plot rendered by aqt_plot_paths from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_paths(toy2)
+```
+
+Direct native output from the package's plotting function.
+
+**Interpretation boundary:** Tracks are simulated in tank/cm units; labels are camera-local.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_paths(toy2)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_path3d 3d scenes 3d trajectory paths">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-path3d">aqt_plot_path3d()</h2><p>3D trajectory paths</p></div><a href="../reference/aqt_plot_path3d.html">Full function reference</a></div>
+
+```{r gallery-plot-path3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_path3d", fig.height=5.4, fig.width=8.8}
+gallery_xyz_preview(toy3$x, toy3$y, toy3$z,
+                    "3D fish paths", groups = toy3$track_id, type = "l")
+```
+
+Native 3D function: `aqt_plot_path3d(toy3)`. The displayed figure is only an orthographic input preview; `rgl` is required to view the actual plot.
+**Optional native rgl function:** `aqt_plot_path3d(toy3)` (requires `rgl` and physical XYZ semantics where applicable). This page does **not** pretend the above projection is its native output.
+
+
+**Interpretation boundary:** Invented XYZ coordinates do not establish underwater reconstruction accuracy.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_path3d(toy3)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_calibration_comparison publication held-out xyz calibration comparison">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-calibration-comparison">aqt_plot_calibration_comparison()</h2><p>Held-out XYZ calibration comparison</p></div><a href="../reference/aqt_plot_calibration_comparison.html">Full function reference</a></div>
+
+```{r gallery-plot-calibration-comparison, fig.alt="Actual plot rendered by aqt_plot_calibration_comparison from synthetic input", fig.height=9.2, fig.width=8.8}
+aqt_plot_calibration_comparison(calibration, units = 'cm')
+```
+
+Native multi-panel calibration figure based on synthetic *held-out* reference coordinates.
+
+**Interpretation boundary:** Reference positions are fabricated for teaching; no real calibration is certified.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_calibration_comparison(calibration, units = 'cm')
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Behaviour" data-mode="native" data-search="aqt_plot_changepoints behaviour change-point diagnostics">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Behaviour</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-changepoints">aqt_plot_changepoints()</h2><p>Change-point diagnostics</p></div><a href="../reference/aqt_plot_changepoints.html">Full function reference</a></div>
+
+```{r gallery-plot-changepoints, fig.alt="Actual plot rendered by aqt_plot_changepoints from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_changepoints(cp_fit)
+```
+
+Native plot from `aqt_state_changepoint()` on an invented signal.
+
+**Interpretation boundary:** Descriptive mean changes are not automatically biological state changes.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_changepoints(cp_fit)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Uncertainty" data-mode="native" data-search="aqt_plot_ensemble2d uncertainty 2d measurement-error scenarios">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Uncertainty</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-ensemble2d">aqt_plot_ensemble2d()</h2><p>2D measurement-error scenarios</p></div><a href="../reference/aqt_plot_ensemble2d.html">Full function reference</a></div>
+
+```{r gallery-plot-ensemble2d, fig.alt="Actual plot rendered by aqt_plot_ensemble2d from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_ensemble2d(ensemble2, "S01", "SIM", "fish1", n_draws = 20L)
+```
+
+Native conditional scenario paths with original trajectory overlay.
+
+**Interpretation boundary:** Not a calibrated predictive interval, posterior or independent measurement.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_ensemble2d(ensemble2, "S01", "SIM", "fish1", n_draws = 20L)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_ensemble3d 3d scenes 3d measurement-error scenarios">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-ensemble3d">aqt_plot_ensemble3d()</h2><p>3D measurement-error scenarios</p></div><a href="../reference/aqt_plot_ensemble3d.html">Full function reference</a></div>
+
+```{r gallery-plot-ensemble3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_ensemble3d", fig.height=5.4, fig.width=8.8}
+gallery_xyz_preview(
+  c(one3$x, ensemble3$positions[,1,1]),
+  c(one3$y, ensemble3$positions[,2,1]),
+  c(one3$z, ensemble3$positions[,3,1]),
+  "3D error scenarios", groups = rep(c("Original", "Scenario"), each = nrow(one3)), type = "l")
+```
+
+Native 3D function: `aqt_plot_ensemble3d(ensemble3, 'S01', 'SIM', 'fish1')`. Preview shows just one scenario as a 2D projection, not the rgl scene.
+**Optional native rgl function:** `aqt_plot_ensemble3d(ensemble3, 'S01', 'SIM', 'fish1')` (requires `rgl` and physical XYZ semantics where applicable). This page does **not** pretend the above projection is its native output.
+
+
+**Interpretation boundary:** Conditional noise assumptions are not independently validated uncertainty coverage.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_ensemble3d(ensemble3, 'S01', 'SIM', 'fish1')
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_feeding_states publication descriptive feeding-index phases">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-feeding-states">aqt_plot_feeding_states()</h2><p>Descriptive feeding-index phases</p></div><a href="../reference/aqt_plot_feeding_states.html">Full function reference</a></div>
+
+```{r gallery-plot-feeding-states, fig.alt="Actual plot rendered by aqt_plot_feeding_states from synthetic input", fig.height=5.4, fig.width=10.2}
+aqt_plot_feeding_states(feeding, event_time_min = 0)
+```
+
+Native four-condition publication figure with supplied numerical index and labels.
+
+**Interpretation boundary:** Both index and phase categories are artificially supplied; not inferred feeding truth.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_feeding_states(feeding, event_time_min = 0)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_grid_pca analysis dense-grid trajectory pca">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-grid-pca">aqt_plot_grid_pca()</h2><p>Dense-grid trajectory PCA</p></div><a href="../reference/aqt_plot_grid_pca.html">Full function reference</a></div>
+
+```{r gallery-plot-grid-pca, fig.alt="Actual plot rendered by aqt_plot_grid_pca from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_grid_pca(pca_fit, component = 1L)
+```
+
+Native finite-grid PCA mode display for registered synthetic paths.
+
+**Interpretation boundary:** Not sparse FPCA or biological confidence bands.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_grid_pca(pca_fit, component = 1L)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_heading_rose publication circular heading rose">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-heading-rose">aqt_plot_heading_rose()</h2><p>Circular heading rose</p></div><a href="../reference/aqt_plot_heading_rose.html">Full function reference</a></div>
+
+```{r gallery-plot-heading-rose, fig.alt="Actual plot rendered by aqt_plot_heading_rose from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_heading_rose(headings, bins = 18L)
+```
+
+Native angular histogram with explicit mathematical direction convention.
+
+**Interpretation boundary:** 2D projected headings, not measured full 3D animal orientation.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_heading_rose(headings, bins = 18L)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Uncertainty" data-mode="native" data-search="aqt_plot_joint_scene_cloud uncertainty joint uncertainty scenario cloud">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Uncertainty</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-joint-scene-cloud">aqt_plot_joint_scene_cloud()</h2><p>Joint uncertainty scenario cloud</p></div><a href="../reference/aqt_plot_joint_scene_cloud.html">Full function reference</a></div>
+
+```{r gallery-plot-joint-scene-cloud, fig.alt="Actual plot rendered by aqt_plot_joint_scene_cloud from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_joint_scene_cloud(cloud, plane = 'xy')
+```
+
+Native projected scenario cloud on a clearly labeled plot-only synthetic fixture.
+
+**Interpretation boundary:** A multimodal identity cloud cannot be reduced to a calibrated Gaussian ellipse.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_joint_scene_cloud(cloud, plane = 'xy')
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_joint_scene_cloud3d 3d scenes 3d joint uncertainty samples">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-joint-scene-cloud3d">aqt_plot_joint_scene_cloud3d()</h2><p>3D joint uncertainty samples</p></div><a href="../reference/aqt_plot_joint_scene_cloud3d.html">Full function reference</a></div>
+
+```{r gallery-plot-joint-scene-cloud3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_joint_scene_cloud3d", fig.height=5.4, fig.width=8.8}
+gallery_xyz_preview(cloud$points$x, cloud$points$y, cloud$points$z,
+  "Joint scenario cloud", groups = cloud$points$track_id)
+```
+
+Native 3D function: `aqt_plot_joint_scene_cloud3d(cloud)`. This is a 2D projection of the fixture, not its native rgl output.
+**Optional native rgl function:** `aqt_plot_joint_scene_cloud3d(cloud)` (requires `rgl` and physical XYZ semantics where applicable). This page does **not** pretend the above projection is its native output.
+
+
+**Interpretation boundary:** No real optical errors or empirical posterior distributions are supplied.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_joint_scene_cloud3d(cloud)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_occupancy_timeseries publication tank occupancy time series">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-occupancy-timeseries">aqt_plot_occupancy_timeseries()</h2><p>Tank occupancy time series</p></div><a href="../reference/aqt_plot_occupancy_timeseries.html">Full function reference</a></div>
+
+```{r gallery-plot-occupancy-timeseries, fig.alt="Actual plot rendered by aqt_plot_occupancy_timeseries from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_occupancy_timeseries(occupancy, time_bin_s = 60,
+                                 band = 'sd')
+```
+
+Native plot aggregating invented area fractions across tank units.
+
+**Interpretation boundary:** Bands are descriptive between-tank SD, not inferential confidence intervals.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_occupancy_timeseries(occupancy, time_bin_s = 60,
+                                 band = 'sd')
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Diagnostics" data-mode="native" data-search="aqt_plot_reconstruction_qc diagnostics stereo reconstruction qc">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Diagnostics</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-reconstruction-qc">aqt_plot_reconstruction_qc()</h2><p>Stereo reconstruction QC</p></div><a href="../reference/aqt_plot_reconstruction_qc.html">Full function reference</a></div>
+
+```{r gallery-plot-reconstruction-qc, fig.alt="Actual plot rendered by aqt_plot_reconstruction_qc from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_reconstruction_qc(qc_tracks)
+```
+
+Native two-panel RMSE/time-skew distribution from synthetic QC columns.
+
+**Interpretation boundary:** Small reprojection error does not prove underwater positional accuracy.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_reconstruction_qc(qc_tracks)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_recurrence analysis trajectory recurrence matrix">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-recurrence">aqt_plot_recurrence()</h2><p>Trajectory recurrence matrix</p></div><a href="../reference/aqt_plot_recurrence.html">Full function reference</a></div>
+
+```{r gallery-plot-recurrence, fig.alt="Actual plot rendered by aqt_plot_recurrence from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_recurrence(recurrence)
+```
+
+Native recurrence image for the observed-position proximity rule.
+
+**Interpretation boundary:** This is not inferred animal stereotypy or an ethological diagnosis.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_recurrence(recurrence)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_school3d 3d scenes fish-school spatial snapshot">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-school3d">aqt_plot_school3d()</h2><p>Fish-school spatial snapshot</p></div><a href="../reference/aqt_plot_school3d.html">Full function reference</a></div>
+
+```{r gallery-plot-school3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_school3d", fig.height=5.4, fig.width=8.8}
+gallery_xyz_preview(
+ toy3$x[toy3$time_s == 5], toy3$y[toy3$time_s == 5],
+ toy3$z[toy3$time_s == 5], "3D school snapshot",
+ groups = toy3$track_id[toy3$time_s == 5])
+```
+
+Native 3D function: `aqt_plot_school3d(toy3, 'S01', 'SIM', 5)`. The thumbnail is an input projection only.
+**Optional native rgl function:** `aqt_plot_school3d(toy3, 'S01', 'SIM', 5)` (requires `rgl` and physical XYZ semantics where applicable). This page does **not** pretend the above projection is its native output.
+
+
+**Interpretation boundary:** Camera-scoped labels are not independently established identities.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_school3d(toy3, 'S01', 'SIM', 5)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_school_dynamics analysis school geometry over time">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-school-dynamics">aqt_plot_school_dynamics()</h2><p>School geometry over time</p></div><a href="../reference/aqt_plot_school_dynamics.html">Full function reference</a></div>
+
+```{r gallery-plot-school-dynamics, fig.alt="Actual plot rendered by aqt_plot_school_dynamics from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_school_dynamics(group_summary, "S01", "SIM")
+```
+
+Native school-radius or distance trend computed from simultaneously observed simulated fish.
+
+**Interpretation boundary:** Movement group structure can be sensitive to observed fish count and tracking loss.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_school_dynamics(group_summary, "S01", "SIM")
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_speed_response publication event-aligned speed changes">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-speed-response">aqt_plot_speed_response()</h2><p>Event-aligned speed changes</p></div><a href="../reference/aqt_plot_speed_response.html">Full function reference</a></div>
+
+```{r gallery-plot-speed-response, fig.alt="Actual plot rendered by aqt_plot_speed_response from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_speed_response(speed_data, event_time_s = 0,
+  baseline_s = c(-30, 0), response_s = c(0, 30),
+  speed_unit = 'cm/s', time_bin_s = 2)
+```
+
+Native two-panel tank-aggregated speed figure with synthetic tank identifiers.
+
+**Interpretation boundary:** Illustrative speed and event times are not real treatment outcomes.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_speed_response(speed_data, event_time_s = 0,
+  baseline_s = c(-30, 0), response_s = c(0, 30),
+  speed_unit = 'cm/s', time_bin_s = 2)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_tank_changes analysis tank-level before/after comparisons">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-tank-changes">aqt_plot_tank_changes()</h2><p>Tank-level before/after comparisons</p></div><a href="../reference/aqt_plot_tank_changes.html">Full function reference</a></div>
+
+```{r gallery-plot-tank-changes, fig.alt="Actual plot rendered by aqt_plot_tank_changes from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_tank_changes(tank_fit)
+```
+
+Native paired tank trajectories, preserving the experiment's unit of replication.
+
+**Interpretation boundary:** Independent tank labels are invented and do not create causal identification.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_tank_changes(tank_fit)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="native" data-search="aqt_plot_tank_projection 3d scenes physical xyz scene projection">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-tank-projection">aqt_plot_tank_projection()</h2><p>Physical XYZ scene projection</p></div><a href="../reference/aqt_plot_tank_projection.html">Full function reference</a></div>
+
+```{r gallery-plot-tank-projection, fig.alt="Actual plot rendered by aqt_plot_tank_projection from synthetic input", fig.height=5.4, fig.width=8.8}
+aqt_plot_tank_projection(scene3, plane = 'xy')
+```
+
+Native orthographic projection derived from complete synthetic XYZ input.
+
+**Interpretation boundary:** An existing depth coordinate is required; the plot does not infer one from video.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_tank_projection(scene3, plane = 'xy')
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_tank_scene3d 3d scenes 3d tank scene with movement tails">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-tank-scene3d">aqt_plot_tank_scene3d()</h2><p>3D tank scene with movement tails</p></div><a href="../reference/aqt_plot_tank_scene3d.html">Full function reference</a></div>
+
+```{r gallery-plot-tank-scene3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_tank_scene3d", fig.height=5.4, fig.width=8.8}
+gallery_xyz_preview(
+ c(scene3$tails$x, scene3$heads$x),
+ c(scene3$tails$y, scene3$heads$y),
+ c(scene3$tails$z, scene3$heads$z),
+ "3D tank scene",
+ groups = c(scene3$tails$track_id, scene3$heads$track_id))
+```
+
+Native 3D function: `aqt_plot_tank_scene3d(scene3)`; projected teaching preview is not an actual rgl scene.
+**Optional native rgl function:** `aqt_plot_tank_scene3d(scene3)` (requires `rgl` and physical XYZ semantics where applicable). This page does **not** pretend the above projection is its native output.
+
+
+**Interpretation boundary:** Real physical XYZ and independently measured optics are still necessary.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_tank_scene3d(scene3)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="native" data-search="aqt_plot_trajectory_storyboard3d 3d scenes four-frame 3d storyboard">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-trajectory-storyboard3d">aqt_plot_trajectory_storyboard3d()</h2><p>Four-frame 3D storyboard</p></div><a href="../reference/aqt_plot_trajectory_storyboard3d.html">Full function reference</a></div>
+
+```{r gallery-plot-trajectory-storyboard3d, fig.alt="Actual plot rendered by aqt_plot_trajectory_storyboard3d from synthetic input", fig.height=7.6, fig.width=8.8}
+aqt_plot_trajectory_storyboard3d(one3,
+  times_s = c(2, 4, 6, 8),
+  recent_s = 1, max_gap_s = .11, max_age_s = .11)
+```
+
+Native four-panel axonometric base-R figure; uses the supplied synthetic XYZ.
+
+**Interpretation boundary:** Recency bands summarize observed segments only; unobserved travel is not estimated.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_trajectory_storyboard3d(one3,
+  times_s = c(2, 4, 6, 8),
+  recent_s = 1, max_gap_s = .11, max_age_s = .11)
+~~~
+
+</details>
+</div>
+
+<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_voxel3d 3d scenes 3d voxel occupancy">
+<div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-voxel3d">aqt_plot_voxel3d()</h2><p>3D voxel occupancy</p></div><a href="../reference/aqt_plot_voxel3d.html">Full function reference</a></div>
+
+```{r gallery-plot-voxel3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_voxel3d", fig.height=5.4, fig.width=8.8}
+gallery_xyz_preview(
+ voxels$x_mid[voxels$n_samples > 0],
+ voxels$y_mid[voxels$n_samples > 0],
+ voxels$z_mid[voxels$n_samples > 0],
+ "3D voxel frequency", sizes = 1 + 4*voxels$sample_fraction[voxels$n_samples > 0])
+```
+
+Native 3D function: `aqt_plot_voxel3d(voxels)`. Projection shows synthetic observed sample frequencies, not the actual optional rgl output.
+**Optional native rgl function:** `aqt_plot_voxel3d(voxels)` (requires `rgl` and physical XYZ semantics where applicable). This page does **not** pretend the above projection is its native output.
+
+
+**Interpretation boundary:** Voxels represent counted sample points, not inferred continuous residence time.
+
+<details><summary>Reproduce this example</summary>
+
+~~~r
+# Run the fixture setup from this page's source Rmd first.
+aqt_plot_voxel3d(voxels)
+~~~
+
+</details>
+</div>
+
+
+## Reproducibility and limitations
+
+The **complete synthetic fixture setup**, all 22 plot calls and the six projected-preview routines are included in this website article's source. Follow the individual function reference links for argument specifications. Only the 16 plots marked **Actual package output** are screenshots generated by invoking their own `aqt_plot_*` R function in the website build. The other six demonstrate only the input geometry and should be opened locally with optional `rgl` for native 3D.
+
+Source code: [plot function atlas Rmd on GitHub](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/vignettes/articles/all-plot-functions.Rmd). For a shorter introduction, see the [five-figure workbook](five-figure-workbook.html), the [interactive synthetic teaching lab](../synthetic-explorer.html), and the [capabilities and validation matrix](capabilities-and-validation.html).
+
+<script src="../plot-gallery-filter.js" defer></script>
