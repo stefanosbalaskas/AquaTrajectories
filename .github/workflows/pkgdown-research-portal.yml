@@ -66,6 +66,7 @@ jobs:
         run: |
           node --check pkgdown/assets/synthetic-explorer.js
           node --check pkgdown/assets/synthetic-lab.js
+          node --check pkgdown/assets/plot-gallery-filter.js
           node --check scripts/check_site_research_portal.mjs
           node --check scripts/test_synthetic_explorer.mjs
           node --check scripts/test_synthetic_lab.mjs
@@ -86,6 +87,8 @@ jobs:
           test -s site/reference/aqt_plot_paths.html
           test -s site/articles/function-atlas.html
           test -s site/articles/five-figure-workbook.html
+          test -s site/articles/all-plot-functions.html
+          test -s site/plot-gallery-filter.js
           test -s site/articles/quickstart-five-minutes.html
           test -s site/articles/experiment-starter-kit.html
           test -s site/articles/capabilities-and-validation.html

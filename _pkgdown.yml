@@ -239,6 +239,7 @@ articles:
   - title: "Figures and research workflows"
     contents:
       - articles/visualization-gallery
+      - articles/all-plot-functions
       - articles/five-figure-workbook
       - articles/publication-figures
       - articles/research-datasets
