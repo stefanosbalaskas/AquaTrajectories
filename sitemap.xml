@@ -19,6 +19,7 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-datasets.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-laboratory.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-teaching.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/articles/uncertainty.html</loc></url>
@@ -190,6 +191,10 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_zone_occupancy.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/dot-aqt_max_assignment.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/research-data-inspector.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/research-geometry.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/research-multiview.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/research-webr.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/scientific-tracking-lab.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html</loc></url>
 </urlset>

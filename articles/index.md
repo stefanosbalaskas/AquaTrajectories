@@ -22,6 +22,13 @@
   demonstrations with transparent mathematical calculations and
   downloadable synthetic planning protocols.
 
+- [Research laboratory: geometry, executable R, multiview and local
+  data](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-laboratory.md):
+
+  Browser-based AquaTrajectories research methods: exact synthetic
+  single-interface rays, curated webR calculations, source-clock
+  multiview review, and local CSV quality checks.
+
 - [Plan your aquatic video
   experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):
 

@@ -182,6 +182,58 @@ recordings](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-yo
 Camera count alone does not establish physically calibrated XYZ or
 biological identity.
 
+## Phase 3 — Research laboratory
+
+The four new [research-laboratory
+tools](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-laboratory.md)
+move beyond static teaching figures. They include an interactive
+physical **single-interface 3D reconstruction example**, an opt-in
+**webR/WebAssembly runtime for executing real base R** code, a **locally
+synchronized multiview evidence viewer**, and a **privacy-preserving
+trajectory CSV inspector**. No original research files are uploaded.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/research-geometry.md)
+
+3D Geometry
+
+### Refracted-ray laboratory
+
+Adjust camera baseline, water index, fish depth and localization error.
+Rotate the scene and inspect geometric abstentions and synthetic XYZ
+error.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/research-webr.md)
+
+Executable R
+
+### Run R through webR
+
+On explicit request, initialize a pinned WebAssembly R runtime and
+execute four bounded base-R statistical demonstrations.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/research-multiview.md)
+
+Multiview review
+
+### Inspect synchronized sources
+
+Use local camera videos, timing manifests, 2D points, source XYZ and
+event markers without manufacturing measurements.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/research-data-inspector.md)
+
+Local QC
+
+### Inspect trajectory CSVs
+
+Check scoped identity/time duplicates, observed gaps, coordinate
+integrity and download a local quality report.
+
+These modules are research aids and synthetic teaching tools, **not**
+empirical fish-detection benchmarks, verified shutter synchronization,
+or underwater physical metrology. The webR page fetches its pinned
+interpreter from a public CDN only after you choose to initialize it.
+
 ## Scientific teaching: four interactive laboratories
 
 Explore deterministic examples that separate **what software computes**
@@ -800,6 +852,13 @@ Source data digest recording and verification.
   Four deterministic browser-based aquatic movement teaching
   demonstrations with transparent mathematical calculations and
   downloadable synthetic planning protocols.
+
+- [Research laboratory: geometry, executable R, multiview and local
+  data](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-laboratory.md):
+
+  Browser-based AquaTrajectories research methods: exact synthetic
+  single-interface rays, curated webR calculations, source-clock
+  multiview review, and local CSV quality checks.
 
 - [Plan your aquatic video
   experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):
