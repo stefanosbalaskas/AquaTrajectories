@@ -11,6 +11,6 @@ export default defineConfig({
  outputDir:"../site-qualification/playwright-results",
  use:{baseURL:"http://127.0.0.1:8765",trace:"retain-on-failure",screenshot:"only-on-failure",
       ...devices["Desktop Chrome"]},
- webServer:{command:"python3 -m http.server 8765 --directory site --bind 127.0.0.1",
+ webServer:{cwd:process.cwd(),command:"python3 -m http.server 8765 --directory site --bind 127.0.0.1",
             url:"http://127.0.0.1:8765/research-geometry.html",reuseExistingServer:!process.env.CI,timeout:30_000}
 });
