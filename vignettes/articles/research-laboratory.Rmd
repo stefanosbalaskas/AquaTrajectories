@@ -21,7 +21,9 @@ The 3D scene rotates, shows ray separation and known-truth synthetic error, and 
 
 The interface downloads the independently published **webR v0.6.1** WebAssembly R interpreter only when the user clicks Initialize. It explicitly uses GitHub Pages-compatible `PostMessage` worker communication; arbitrary R snippets are not accepted by the page. Curated bounded examples are executed using real *base R* for finite differences, directional polarization, affine clock transformation and synthetic trajectory summaries.
 
-The AquaTrajectories v0.1.1 R package is **not bundled or verified as WebAssembly-compatible**. Native R plotting/function execution remains documented in the [plot atlas](all-plot-functions.html). Interpreter download requires an external network request, although the computation is performed on the user's machine.
+An optional **actual v0.1.1 function-source subset** is now available in a separate on-demand mode. The browser can load byte-identical archived implementations of `aqt_tracks()`, `aqt_kinematics()` and `aqt_group_metrics()`, source them into webR and execute the real functions on a small synthetic example. This is **source-level execution**, not compilation or installation of the whole R package for WebAssembly. Native source hashes are checked against the released files in CI.
+
+The full AquaTrajectories v0.1.1 R package is **not bundled or verified as WebAssembly-compatible**. Native R plotting/function execution remains documented in the [plot atlas](all-plot-functions.html). Interpreter download requires an external network request, although the computation is performed on the user's machine.
 
 ## 3. Synchronized multiview evidence desk
 

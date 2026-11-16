@@ -15,6 +15,11 @@ on:
       - "scripts/check_site_research_portal.mjs"
       - "scripts/test_synthetic_explorer.mjs"
       - "scripts/test_synthetic_lab.mjs"
+      - "scripts/test_local_perf_budget.mjs"
+      - "scripts/browser.playwright.config.mjs"
+      - "tests/browser/**"
+      - "scripts/convert_digi4eco_cvat.py"
+      - "scripts/verify_browser_r_parity.R"
   pull_request:
     branches: [main]
     paths:
@@ -29,6 +34,11 @@ on:
       - "scripts/check_pkgdown_reference.R"
       - "scripts/test_synthetic_explorer.mjs"
       - "scripts/test_synthetic_lab.mjs"
+      - "scripts/test_local_perf_budget.mjs"
+      - "scripts/browser.playwright.config.mjs"
+      - "tests/browser/**"
+      - "scripts/convert_digi4eco_cvat.py"
+      - "scripts/verify_browser_r_parity.R"
       - "scripts/check_site_research_portal.mjs"
   workflow_dispatch:
 
