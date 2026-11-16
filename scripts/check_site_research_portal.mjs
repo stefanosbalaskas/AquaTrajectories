@@ -125,9 +125,9 @@ for(const id of ["one-camera","two-cameras","existing-recordings","before-record
 }
 assert.match(home,/plan-your-experiment/);
 assert.match(home,/synthetic-explorer/);
-assert.match(home,/<meta name="description" content="AquaTrajectories v0\\.1\\.1:/);
+assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.1.1:'),"Homepage concise description missing");
 assert.equal((home.match(/name="viewport"/g)||[]).length,1);
 assert.equal([...gallery.matchAll(/id="code-plot-[a-z0-9-]+"/g)].length,22);
 assert.equal([...gallery.matchAll(/data-code-link="true"/g)].length,22);
-assert.equal([...gallery.matchAll(/github\\.com\\/stefanosbalaskas\\/AquaTrajectories\\/blob\\/v0\\.1\\.1\\/R\\/[a-z0-9-]+\\.R/g)].length,22);
-console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 10 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");
+assert.equal(gallery.split("https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/").length-1,22,"Expected 22 pinned release source links");
+console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 11 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");
