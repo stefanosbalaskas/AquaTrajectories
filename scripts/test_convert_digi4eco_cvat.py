@@ -30,10 +30,11 @@ class ConverterTests(unittest.TestCase):
             self.assertFalse(report["aqt_detector_or_tracker_predictions_created"])
             rows=module.csv.DictReader((p/"output"/"source_2d_tracks.csv").open())
             data=list(rows)
-            self.assertEqual(data[0]["x"],"20")
-            self.assertEqual(data[2]["observed"],"FALSE")
-            self.assertEqual(data[2]["x"],"")
-            self.assertEqual(data[1]["original_occluded"],"TRUE")
+            by_frame={int(row["source_frame_id"]):row for row in data if row["track_id"]=="7"}
+            self.assertEqual(by_frame[0]["x"],"20")
+            self.assertEqual(by_frame[2]["observed"],"FALSE")
+            self.assertEqual(by_frame[2]["x"],"")
+            self.assertEqual(by_frame[1]["original_occluded"],"TRUE")
     def test_pts_out_of_order_rejected(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d);(p/"pts.csv").write_text("0\n.1\n.1\n")
