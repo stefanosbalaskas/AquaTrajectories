@@ -19,6 +19,7 @@
   const frameSlider = $("frame"), trailSlider = $("trail"), playButton = $("play");
   const occlusionToggle = $("occlusion-demo"), idSwitchToggle = $("idswitch-demo");
   let frame = 0, projection = "iso", trail = 60, playing = false, last = 0;
+  let azimuth = 30;
   const isMissing = (fish, time) =>
     occlusionToggle.checked && fish === 0 && time >= 90 && time <= 125;
   const visible = new Array(count).fill(true);
@@ -29,12 +30,13 @@
     parent.appendChild(el);
     return el;
   }
-  function point(p) {
-    if (projection === "xy") return [120 + 715*p.x, 470 - 360*p.y];
-    if (projection === "xz") return [120 + 715*p.x, 470 - 360*p.z];
-    if (projection === "yz") return [120 + 715*p.y, 470 - 360*p.z];
+  function point(p, view = projection) {
+    if (view === "xy") return [120 + 715*p.x, 470 - 360*p.y];
+    if (view === "xz") return [120 + 715*p.x, 470 - 360*p.z];
+    if (view === "yz") return [120 + 715*p.y, 470 - 360*p.z];
     const x = (p.x - .5)*2, y = (p.y - .5)*2, z = (p.z - .5)*2;
-    return [472 + x*260 - y*153, 282 + x*71 + y*111 - z*175];
+    const a = azimuth * Math.PI / 180;
+    return [472 + (x*Math.cos(a)-y*Math.sin(a))*300, 282 + (x*Math.sin(a)+y*Math.cos(a))*130-z*175];
   }
   function drawLine(a,b,color,width,alpha,dash) {
     const pa=point(a),pb=point(b);
@@ -102,11 +104,13 @@
     const titles={iso:"Isometric 3D projection",xy:"Top view · XY",xz:"Side view · XZ",yz:"Front view · YZ"};
     $("viewTitle").textContent=titles[projection];
     playButton.textContent=playing?"Ⅱ Pause":"▶ Play";
+    if (typeof window !== "undefined" && window.AQTExplorerExtension) window.AQTExplorerExtension.render();
   }
   function animate(now) {
     if(!playing)return;
     if(!last)last=now;
-    const steps=Math.floor((now-last)/(1000/30));
+    const rate = (typeof window !== "undefined" && Number(window.AQTExplorerRate)) || 1;
+    const steps=Math.floor((now-last)/(1000/(30*rate)));
     if(steps>=1) {
       frame=(frame+steps)%(totalFrames+1);
       last=now;
@@ -146,5 +150,22 @@
     playing=!playing;last=0;render();if(playing)requestAnimationFrame(animate);
   });
   $("reset").addEventListener("click",function(){playing=false;frame=0;last=0;render();});
+  if (typeof window !== "undefined") window.AQTExplorer = Object.freeze({
+    tracks, count, totalFrames, colors: palette.slice(),
+    getState() {return {frame,projection,trail,azimuth,playing,visible:visible.slice()};},
+    project(p,view) {return point(p,view);},
+    isMissing,
+    refresh() {render();},
+    setFrame(n) {frame=Math.max(0,Math.min(totalFrames,Math.round(n)));render();},
+    setOrbit(n) {azimuth=((Number(n)%360)+360)%360;render();},
+    setProjection(view) {
+      if (!["iso","xy","xz","yz"].includes(view)) return;
+      projection=view;
+      document.querySelectorAll('input[name="view"]').forEach(function(r){r.checked=r.value===view;});
+      render();
+    },
+    pause() {playing=false;last=0;render();},
+    togglePlay() {playButton.click();}
+  });
   render();
 }());

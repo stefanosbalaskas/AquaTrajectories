@@ -14,6 +14,7 @@ on:
       - "scripts/check_pkgdown_reference.R"
       - "scripts/check_site_research_portal.mjs"
       - "scripts/test_synthetic_explorer.mjs"
+      - "scripts/test_synthetic_lab.mjs"
   pull_request:
     branches: [main]
     paths:
@@ -26,6 +27,9 @@ on:
       - "NEWS.md"
       - ".github/workflows/pkgdown-research-portal.yml"
       - "scripts/check_pkgdown_reference.R"
+      - "scripts/test_synthetic_explorer.mjs"
+      - "scripts/test_synthetic_lab.mjs"
+      - "scripts/check_site_research_portal.mjs"
   workflow_dispatch:
 
 permissions:
@@ -61,9 +65,12 @@ jobs:
       - name: Check browser JavaScript and research-site smoke test syntax
         run: |
           node --check pkgdown/assets/synthetic-explorer.js
+          node --check pkgdown/assets/synthetic-lab.js
           node --check scripts/check_site_research_portal.mjs
           node --check scripts/test_synthetic_explorer.mjs
+          node --check scripts/test_synthetic_lab.mjs
           node scripts/test_synthetic_explorer.mjs
+          node scripts/test_synthetic_lab.mjs
       - name: Audit all exported R functions and article pages
         run: Rscript scripts/check_pkgdown_reference.R
       - name: Validate pkgdown article indexing before whole-site build
@@ -87,6 +94,7 @@ jobs:
           test -s site/articles/research-evidence-dashboard.html
           test -s site/synthetic-explorer.html
           test -s site/synthetic-explorer.js
+          test -s site/synthetic-lab.js
           node scripts/check_site_research_portal.mjs
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4

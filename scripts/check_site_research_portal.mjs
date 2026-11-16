@@ -28,6 +28,7 @@ const extras = [
   "starter-camera-inventory.csv",
   "starter-study-design.csv",
   "synthetic-explorer.js",
+  "synthetic-lab.js",
   "synthetic-explorer.css"
 ];
 const read = p => fs.readFileSync(path.join(site,p), "utf8");
@@ -45,11 +46,13 @@ const start=read("articles/aquaTrajectories.html");
 assert.match(start,/v0\.1\.1/);
 assert.doesNotMatch(start, /ref\s*=\s*(?:(?:<[^>]*>)*[\s"]*)?v0\.1\.0/, "Get-started guide still asks for old release");
 const demo=read("synthetic-explorer.html");
-for(const id of ["occlusion-demo","idswitch-demo","learningStatus","frame","fishfilters"]) {
+for(const id of ["occlusion-demo","idswitch-demo","learningStatus","frame","fishfilters","lessonPreset","cameraXY","cameraXZ","speedChart","focusFish","quizYes","quizNo","exportCsv","exportSvg"]) {
  assert.ok(demo.includes('id="'+id+'"'),"Missing accessible explorer feature: "+id);
 }
 assert.match(read("synthetic-explorer.js"),/isMissing/);
 assert.match(read("synthetic-explorer.js"),/segmentOpen/);
+assert.match(read("synthetic-lab.js"),/AQTExplorerExtension/);
+assert.match(demo,/synthetic-lab\.js/);
 const csv=read("starter-tracks.csv").trim().split(/\r?\n/);
 assert.equal(csv.length,61,"Expected 60 synthetic observations and a header");
 assert.ok(csv.some(x=>x.includes("fish03")&&x.includes("FALSE")), "Missing observation fixture absent");
@@ -95,4 +98,4 @@ for(let i=0;i<nEntries;i++){
  off+=46+len+extra+comment;
 }
 assert.ok(entries.has("starter-tracks.csv")&&entries.has("starter-README.txt"));
-console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 9 core pages, 13 assets, 9 ZIP entries, internal links, release and synthetic guarantees");
+console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 9 core pages, 14 assets, 9 ZIP entries, internal links, release and synthetic guarantees");
