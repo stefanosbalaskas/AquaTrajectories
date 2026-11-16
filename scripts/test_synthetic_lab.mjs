@@ -96,8 +96,8 @@ assert.equal((nodes.paths.children[0].attrs.d.match(/M/g)||[]).length,2);
 // Identity lesson swaps displayed labels only.
 nodes.lessonPreset.value="identity";nodes.lessonPreset.fire("change");
 assert.equal(api.getState().frame,137);
-assert.equal(nodes.heads.children[5].textContent,"F2?");
-assert.equal(nodes.heads.children[6].textContent,"F1?");
+assert.equal(nodes.heads.children[1].textContent,"F2?");
+assert.equal(nodes.heads.children[3].textContent,"F1?");
 assert.equal(JSON.stringify(api.tracks[0][105]),truth);
 nodes.quizYes.fire("click");assert.match(nodes.quizFeedback.textContent,/Not quite/);
 nodes.quizNo.fire("click");assert.match(nodes.quizFeedback.textContent,/Correct/);

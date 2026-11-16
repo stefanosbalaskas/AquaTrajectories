@@ -210,7 +210,7 @@
     pathNodes.forEach((n,i)=>{n.style.opacity=i===focused?".98":".43";
       n.setAttribute("stroke-width",i===focused?"5.4":"2.8");});
     headNodes.forEach((n,index)=>{
-      const i=index%api.count;
+      const i=Math.floor(index/2);
       n.style.opacity=i===focused?"1":".68";
     });
     $("focusFish").value=String(focused);
@@ -328,7 +328,7 @@
     else if(evt.code==="Space"){evt.preventDefault();api.togglePlay();}
   });
   Array.from($("heads").children).forEach((el,index)=>
-    el.addEventListener("click",()=>selectFish(index%api.count)));
+    el.addEventListener("click",()=>selectFish(Math.floor(index/2))));
   // Underlying SVG circles are not accessible buttons: keyboard focus is provided by focusFish.
   applyLesson("baseline");
 }());
