@@ -36,6 +36,8 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/aquaTrajectories.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../synthetic-explorer.html">Interactive labs</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/plan-your-experiment.html">Plan an experiment</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -85,6 +87,11 @@ projections of the same invented input</strong>, because a headless
 static documentation build cannot faithfully substitute an interactive
 <code>rgl</code> scene. The documented native <code>rgl</code> call is
 provided for each.</p>
+<p>Each figure card links directly to its <strong>reproducible
+example</strong>, <strong>function manual</strong>, and
+<strong>version-pinned R implementation</strong>. The complete Rmd
+remains website-development source; the implementation links correspond
+to the released v0.1.1 API.</p>
 <p>All plots use <strong>invented synthetic coordinates, synthetic study
 designs, or synthetic plotting fixtures</strong>, not real GoPro frames,
 biological feeding reference labels, physical surveyed underwater
@@ -148,13 +155,17 @@ aqt_plot_paths()
 2D trajectory plot
 </p>
 </div>
-<a href="../reference/aqt_plot_paths.html">Full function reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_paths"><a href="#code-plot-paths" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_paths.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/geometry-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-paths-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_paths from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Direct native output from the package’s plotting function.</p>
 <p><strong>Interpretation boundary:</strong> Tracks are simulated in
 tank/cm units; labels are camera-local.</p>
-<details><summary>
+<details id="code-plot-paths"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -172,7 +183,11 @@ aqt_plot_path3d()
 3D trajectory paths
 </p>
 </div>
-<a href="../reference/aqt_plot_path3d.html">Full function reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_path3d"><a href="#code-plot-path3d" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_path3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/geometry-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-path3d-1.png" class="r-plt" alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_path3d" width="100%" style="display: block; margin: auto;"></p>
 <p>Native 3D function: <code>aqt_plot_path3d(toy3)</code>. The displayed
@@ -184,7 +199,7 @@ does <strong>not</strong> pretend the above projection is its native
 output.</p>
 <p><strong>Interpretation boundary:</strong> Invented XYZ coordinates do
 not establish underwater reconstruction accuracy.</p>
-<details><summary>
+<details id="code-plot-path3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -202,15 +217,19 @@ aqt_plot_calibration_comparison()
 Held-out XYZ calibration comparison
 </p>
 </div>
-<a href="../reference/aqt_plot_calibration_comparison.html">Full
-function reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_calibration_comparison"><a href="#code-plot-calibration-comparison" data-code-link="true">View
+example
+code</a><a href="../reference/aqt_plot_calibration_comparison.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-calibration-comparison.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-calibration-comparison-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_calibration_comparison from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native multi-panel calibration figure based on synthetic
 <em>held-out</em> reference coordinates.</p>
 <p><strong>Interpretation boundary:</strong> Reference positions are
 fabricated for teaching; no real calibration is certified.</p>
-<details><summary>
+<details id="code-plot-calibration-comparison"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -228,15 +247,18 @@ aqt_plot_changepoints()
 Change-point diagnostics
 </p>
 </div>
-<a href="../reference/aqt_plot_changepoints.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_changepoints"><a href="#code-plot-changepoints" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_changepoints.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/fish-changepoints.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-changepoints-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_changepoints from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native plot from <code><a href="../reference/aqt_state_changepoint.html">aqt_state_changepoint()</a></code> on an invented
 signal.</p>
 <p><strong>Interpretation boundary:</strong> Descriptive mean changes
 are not automatically biological state changes.</p>
-<details><summary>
+<details id="code-plot-changepoints"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -254,15 +276,18 @@ aqt_plot_ensemble2d()
 2D measurement-error scenarios
 </p>
 </div>
-<a href="../reference/aqt_plot_ensemble2d.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_ensemble2d"><a href="#code-plot-ensemble2d" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_ensemble2d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/sensitivity-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-ensemble2d-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_ensemble2d from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native conditional scenario paths with original trajectory
 overlay.</p>
 <p><strong>Interpretation boundary:</strong> Not a calibrated predictive
 interval, posterior or independent measurement.</p>
-<details><summary>
+<details id="code-plot-ensemble2d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -280,8 +305,11 @@ aqt_plot_ensemble3d()
 3D measurement-error scenarios
 </p>
 </div>
-<a href="../reference/aqt_plot_ensemble3d.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_ensemble3d"><a href="#code-plot-ensemble3d" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_ensemble3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/sensitivity-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-ensemble3d-1.png" class="r-plt" alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_ensemble3d" width="100%" style="display: block; margin: auto;"></p>
 <p>Native 3D function:
@@ -294,7 +322,7 @@ This page does <strong>not</strong> pretend the above projection is its
 native output.</p>
 <p><strong>Interpretation boundary:</strong> Conditional noise
 assumptions are not independently validated uncertainty coverage.</p>
-<details><summary>
+<details id="code-plot-ensemble3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -312,15 +340,18 @@ aqt_plot_feeding_states()
 Descriptive feeding-index phases
 </p>
 </div>
-<a href="../reference/aqt_plot_feeding_states.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_feeding_states"><a href="#code-plot-feeding-states" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_feeding_states.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-feeding-states.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-feeding-states-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_feeding_states from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native four-condition publication figure with supplied numerical
 index and labels.</p>
 <p><strong>Interpretation boundary:</strong> Both index and phase
 categories are artificially supplied; not inferred feeding truth.</p>
-<details><summary>
+<details id="code-plot-feeding-states"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -338,15 +369,18 @@ aqt_plot_grid_pca()
 Dense-grid trajectory PCA
 </p>
 </div>
-<a href="../reference/aqt_plot_grid_pca.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_grid_pca"><a href="#code-plot-grid-pca" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_grid_pca.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/trajectory-grid-pca.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-grid-pca-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_grid_pca from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native finite-grid PCA mode display for registered synthetic
 paths.</p>
 <p><strong>Interpretation boundary:</strong> Not sparse FPCA or
 biological confidence bands.</p>
-<details><summary>
+<details id="code-plot-grid-pca"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -364,15 +398,18 @@ aqt_plot_heading_rose()
 Circular heading rose
 </p>
 </div>
-<a href="../reference/aqt_plot_heading_rose.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_heading_rose"><a href="#code-plot-heading-rose" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_heading_rose.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-heading-rose.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-heading-rose-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_heading_rose from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native angular histogram with explicit mathematical direction
 convention.</p>
 <p><strong>Interpretation boundary:</strong> 2D projected headings, not
 measured full 3D animal orientation.</p>
-<details><summary>
+<details id="code-plot-heading-rose"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -390,15 +427,19 @@ aqt_plot_joint_scene_cloud()
 Joint uncertainty scenario cloud
 </p>
 </div>
-<a href="../reference/aqt_plot_joint_scene_cloud.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_joint_scene_cloud"><a href="#code-plot-joint-scene-cloud" data-code-link="true">View
+example
+code</a><a href="../reference/aqt_plot_joint_scene_cloud.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/joint-scene-cloud.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-joint-scene-cloud-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_joint_scene_cloud from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native projected scenario cloud on a clearly labeled plot-only
 synthetic fixture.</p>
 <p><strong>Interpretation boundary:</strong> A multimodal identity cloud
 cannot be reduced to a calibrated Gaussian ellipse.</p>
-<details><summary>
+<details id="code-plot-joint-scene-cloud"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -416,8 +457,12 @@ aqt_plot_joint_scene_cloud3d()
 3D joint uncertainty samples
 </p>
 </div>
-<a href="../reference/aqt_plot_joint_scene_cloud3d.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_joint_scene_cloud3d"><a href="#code-plot-joint-scene-cloud3d" data-code-link="true">View
+example
+code</a><a href="../reference/aqt_plot_joint_scene_cloud3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/joint-scene-cloud.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-joint-scene-cloud3d-1.png" class="r-plt" alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_joint_scene_cloud3d" width="100%" style="display: block; margin: auto;"></p>
 <p>Native 3D function: <code>aqt_plot_joint_scene_cloud3d(cloud)</code>.
@@ -429,7 +474,7 @@ does <strong>not</strong> pretend the above projection is its native
 output.</p>
 <p><strong>Interpretation boundary:</strong> No real optical errors or
 empirical posterior distributions are supplied.</p>
-<details><summary>
+<details id="code-plot-joint-scene-cloud3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -447,15 +492,19 @@ aqt_plot_occupancy_timeseries()
 Tank occupancy time series
 </p>
 </div>
-<a href="../reference/aqt_plot_occupancy_timeseries.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_occupancy_timeseries"><a href="#code-plot-occupancy-timeseries" data-code-link="true">View
+example
+code</a><a href="../reference/aqt_plot_occupancy_timeseries.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-occupancy-timeseries.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-occupancy-timeseries-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_occupancy_timeseries from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native plot aggregating invented area fractions across tank
 units.</p>
 <p><strong>Interpretation boundary:</strong> Bands are descriptive
 between-tank SD, not inferential confidence intervals.</p>
-<details><summary>
+<details id="code-plot-occupancy-timeseries"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -474,15 +523,19 @@ aqt_plot_reconstruction_qc()
 Stereo reconstruction QC
 </p>
 </div>
-<a href="../reference/aqt_plot_reconstruction_qc.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_reconstruction_qc"><a href="#code-plot-reconstruction-qc" data-code-link="true">View
+example
+code</a><a href="../reference/aqt_plot_reconstruction_qc.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/voxel-quality.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-reconstruction-qc-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_reconstruction_qc from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native two-panel RMSE/time-skew distribution from synthetic QC
 columns.</p>
 <p><strong>Interpretation boundary:</strong> Small reprojection error
 does not prove underwater positional accuracy.</p>
-<details><summary>
+<details id="code-plot-reconstruction-qc"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -500,14 +553,17 @@ aqt_plot_recurrence()
 Trajectory recurrence matrix
 </p>
 </div>
-<a href="../reference/aqt_plot_recurrence.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_recurrence"><a href="#code-plot-recurrence" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_recurrence.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/trajectory-shape.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-recurrence-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_recurrence from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native recurrence image for the observed-position proximity rule.</p>
 <p><strong>Interpretation boundary:</strong> This is not inferred animal
 stereotypy or an ethological diagnosis.</p>
-<details><summary>
+<details id="code-plot-recurrence"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -525,8 +581,11 @@ aqt_plot_school3d()
 Fish-school spatial snapshot
 </p>
 </div>
-<a href="../reference/aqt_plot_school3d.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_school3d"><a href="#code-plot-school3d" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_school3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/school-spatial-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-school3d-1.png" class="r-plt" alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_school3d" width="100%" style="display: block; margin: auto;"></p>
 <p>Native 3D function:
@@ -538,7 +597,7 @@ does <strong>not</strong> pretend the above projection is its native
 output.</p>
 <p><strong>Interpretation boundary:</strong> Camera-scoped labels are
 not independently established identities.</p>
-<details><summary>
+<details id="code-plot-school3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -556,15 +615,18 @@ aqt_plot_school_dynamics()
 School geometry over time
 </p>
 </div>
-<a href="../reference/aqt_plot_school_dynamics.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_school_dynamics"><a href="#code-plot-school-dynamics" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_school_dynamics.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/school-spatial-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-school-dynamics-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_school_dynamics from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native school-radius or distance trend computed from simultaneously
 observed simulated fish.</p>
 <p><strong>Interpretation boundary:</strong> Movement group structure
 can be sensitive to observed fish count and tracking loss.</p>
-<details><summary>
+<details id="code-plot-school-dynamics"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -582,15 +644,18 @@ aqt_plot_speed_response()
 Event-aligned speed changes
 </p>
 </div>
-<a href="../reference/aqt_plot_speed_response.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_speed_response"><a href="#code-plot-speed-response" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_speed_response.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-speed-response.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-speed-response-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_speed_response from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native two-panel tank-aggregated speed figure with synthetic tank
 identifiers.</p>
 <p><strong>Interpretation boundary:</strong> Illustrative speed and
 event times are not real treatment outcomes.</p>
-<details><summary>
+<details id="code-plot-speed-response"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -610,15 +675,18 @@ aqt_plot_tank_changes()
 Tank-level before/after comparisons
 </p>
 </div>
-<a href="../reference/aqt_plot_tank_changes.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_tank_changes"><a href="#code-plot-tank-changes" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_tank_changes.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/event-visualization.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-tank-changes-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_tank_changes from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native paired tank trajectories, preserving the experiment’s unit of
 replication.</p>
 <p><strong>Interpretation boundary:</strong> Independent tank labels are
 invented and do not create causal identification.</p>
-<details><summary>
+<details id="code-plot-tank-changes"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -636,15 +704,18 @@ aqt_plot_tank_projection()
 Physical XYZ scene projection
 </p>
 </div>
-<a href="../reference/aqt_plot_tank_projection.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_tank_projection"><a href="#code-plot-tank-projection" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_tank_projection.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/tank-scenes.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-tank-projection-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_tank_projection from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native orthographic projection derived from complete synthetic XYZ
 input.</p>
 <p><strong>Interpretation boundary:</strong> An existing depth
 coordinate is required; the plot does not infer one from video.</p>
-<details><summary>
+<details id="code-plot-tank-projection"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -662,8 +733,11 @@ aqt_plot_tank_scene3d()
 3D tank scene with movement tails
 </p>
 </div>
-<a href="../reference/aqt_plot_tank_scene3d.html">Full function
-reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_tank_scene3d"><a href="#code-plot-tank-scene3d" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_tank_scene3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/tank-scenes.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-tank-scene3d-1.png" class="r-plt" alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_tank_scene3d" width="100%" style="display: block; margin: auto;"></p>
 <p>Native 3D function: <code>aqt_plot_tank_scene3d(scene3)</code>;
@@ -674,7 +748,7 @@ This page does <strong>not</strong> pretend the above projection is its
 native output.</p>
 <p><strong>Interpretation boundary:</strong> Real physical XYZ and
 independently measured optics are still necessary.</p>
-<details><summary>
+<details id="code-plot-tank-scene3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -692,15 +766,19 @@ aqt_plot_trajectory_storyboard3d()
 Four-frame 3D storyboard
 </p>
 </div>
-<a href="../reference/aqt_plot_trajectory_storyboard3d.html">Full
-function reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_trajectory_storyboard3d"><a href="#code-plot-trajectory-storyboard3d" data-code-link="true">View
+example
+code</a><a href="../reference/aqt_plot_trajectory_storyboard3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/trajectory-storyboard3d.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-trajectory-storyboard3d-1.png" class="r-plt" alt="Actual plot rendered by aqt_plot_trajectory_storyboard3d from synthetic input" width="100%" style="display: block; margin: auto;"></p>
 <p>Native four-panel axonometric base-R figure; uses the supplied
 synthetic XYZ.</p>
 <p><strong>Interpretation boundary:</strong> Recency bands summarize
 observed segments only; unobserved travel is not estimated.</p>
-<details><summary>
+<details id="code-plot-trajectory-storyboard3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -720,7 +798,11 @@ aqt_plot_voxel3d()
 3D voxel occupancy
 </p>
 </div>
-<a href="../reference/aqt_plot_voxel3d.html">Full function reference</a>
+<nav class="aqt-plot-actions" aria-label="Resources for aqt_plot_voxel3d"><a href="#code-plot-voxel3d" data-code-link="true">View example
+code</a><a href="../reference/aqt_plot_voxel3d.html">Function
+manual</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/school-spatial-viz.R" class="external-link">Source
+in v0.1.1</a>
+</nav>
 </div>
 <p><img src="all-plot-functions_files/figure-html/gallery-plot-voxel3d-1.png" class="r-plt" alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_voxel3d" width="100%" style="display: block; margin: auto;"></p>
 <p>Native 3D function: <code>aqt_plot_voxel3d(voxels)</code>. Projection
@@ -732,7 +814,7 @@ physical XYZ semantics where applicable). This page does
 output.</p>
 <p><strong>Interpretation boundary:</strong> Voxels represent counted
 sample points, not inferred continuous residence time.</p>
-<details><summary>
+<details id="code-plot-voxel3d"><summary>
 Reproduce this example
 </summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run the fixture setup from this page's source Rmd first.</span></span>
@@ -750,7 +832,7 @@ package output</strong> are screenshots generated by invoking their own
 <code>aqt_plot_*</code> R function in the website build. The other six
 demonstrate only the input geometry and should be opened locally with
 optional <code>rgl</code> for native 3D.</p>
-<p>Source code: <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/vignettes/articles/all-plot-functions.Rmd" class="external-link">plot
+<p>Website-development source (moving main branch): <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/vignettes/articles/all-plot-functions.Rmd" class="external-link">plot
 function atlas Rmd on GitHub</a>. For a shorter introduction, see the <a href="five-figure-workbook.html">five-figure workbook</a>, the <a href="../synthetic-explorer.html">interactive synthetic teaching
 lab</a>, and the <a href="capabilities-and-validation.html">capabilities
 and validation matrix</a>.</p>

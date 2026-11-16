@@ -10,6 +10,11 @@ a headless static documentation build cannot faithfully substitute an
 interactive `rgl` scene. The documented native `rgl` call is provided
 for each.
 
+Each figure card links directly to its **reproducible example**,
+**function manual**, and **version-pinned R implementation**. The
+complete Rmd remains website-development source; the implementation
+links correspond to the released v0.1.1 API.
+
 All plots use **invented synthetic coordinates, synthetic study designs,
 or synthetic plotting fixtures**, not real GoPro frames, biological
 feeding reference labels, physical surveyed underwater targets, or
@@ -53,8 +58,10 @@ TrajectoriesActual package output
 
 2D trajectory plot
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_paths.md)
+[View example code](#code-plot-paths)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_paths.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/geometry-viz.R)
 
 ![Actual plot rendered by aqt_plot_paths from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-paths-1.png)
@@ -78,8 +85,10 @@ aqt_plot_paths(toy2)
 
 3D trajectory paths
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_path3d.md)
+[View example code](#code-plot-path3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_path3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/geometry-viz.R)
 
 ![Clearly labeled two-dimensional input projection for optional rgl
 function
@@ -108,8 +117,10 @@ PublicationActual package output
 
 Held-out XYZ calibration comparison
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_calibration_comparison.md)
+[View example code](#code-plot-calibration-comparison)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_calibration_comparison.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-calibration-comparison.R)
 
 ![Actual plot rendered by aqt_plot_calibration_comparison from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-calibration-comparison-1.png)
@@ -134,8 +145,10 @@ BehaviourActual package output
 
 Change-point diagnostics
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_changepoints.md)
+[View example code](#code-plot-changepoints)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_changepoints.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/fish-changepoints.R)
 
 ![Actual plot rendered by aqt_plot_changepoints from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-changepoints-1.png)
@@ -161,8 +174,10 @@ UncertaintyActual package output
 
 2D measurement-error scenarios
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_ensemble2d.md)
+[View example code](#code-plot-ensemble2d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_ensemble2d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/sensitivity-viz.R)
 
 ![Actual plot rendered by aqt_plot_ensemble2d from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-ensemble2d-1.png)
@@ -186,8 +201,10 @@ aqt_plot_ensemble2d(ensemble2, "S01", "SIM", "fish1", n_draws = 20L)
 
 3D measurement-error scenarios
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_ensemble3d.md)
+[View example code](#code-plot-ensemble3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_ensemble3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/sensitivity-viz.R)
 
 ![Clearly labeled two-dimensional input projection for optional rgl
 function
@@ -218,8 +235,10 @@ PublicationActual package output
 
 Descriptive feeding-index phases
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_feeding_states.md)
+[View example code](#code-plot-feeding-states)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_feeding_states.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-feeding-states.R)
 
 ![Actual plot rendered by aqt_plot_feeding_states from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-feeding-states-1.png)
@@ -244,8 +263,10 @@ AnalysisActual package output
 
 Dense-grid trajectory PCA
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_grid_pca.md)
+[View example code](#code-plot-grid-pca)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_grid_pca.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/trajectory-grid-pca.R)
 
 ![Actual plot rendered by aqt_plot_grid_pca from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-grid-pca-1.png)
@@ -269,8 +290,10 @@ PublicationActual package output
 
 Circular heading rose
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_heading_rose.md)
+[View example code](#code-plot-heading-rose)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_heading_rose.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-heading-rose.R)
 
 ![Actual plot rendered by aqt_plot_heading_rose from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-heading-rose-1.png)
@@ -295,8 +318,10 @@ UncertaintyActual package output
 
 Joint uncertainty scenario cloud
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_joint_scene_cloud.md)
+[View example code](#code-plot-joint-scene-cloud)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_joint_scene_cloud.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/joint-scene-cloud.R)
 
 ![Actual plot rendered by aqt_plot_joint_scene_cloud from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-joint-scene-cloud-1.png)
@@ -321,8 +346,10 @@ aqt_plot_joint_scene_cloud(cloud, plane = 'xy')
 
 3D joint uncertainty samples
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_joint_scene_cloud3d.md)
+[View example code](#code-plot-joint-scene-cloud3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_joint_scene_cloud3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/joint-scene-cloud.R)
 
 ![Clearly labeled two-dimensional input projection for optional rgl
 function
@@ -351,8 +378,10 @@ PublicationActual package output
 
 Tank occupancy time series
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_occupancy_timeseries.md)
+[View example code](#code-plot-occupancy-timeseries)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_occupancy_timeseries.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-occupancy-timeseries.R)
 
 ![Actual plot rendered by aqt_plot_occupancy_timeseries from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-occupancy-timeseries-1.png)
@@ -377,8 +406,10 @@ DiagnosticsActual package output
 
 Stereo reconstruction QC
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_reconstruction_qc.md)
+[View example code](#code-plot-reconstruction-qc)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_reconstruction_qc.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/voxel-quality.R)
 
 ![Actual plot rendered by aqt_plot_reconstruction_qc from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-reconstruction-qc-1.png)
@@ -402,8 +433,10 @@ AnalysisActual package output
 
 Trajectory recurrence matrix
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_recurrence.md)
+[View example code](#code-plot-recurrence)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_recurrence.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/trajectory-shape.R)
 
 ![Actual plot rendered by aqt_plot_recurrence from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-recurrence-1.png)
@@ -427,8 +460,10 @@ aqt_plot_recurrence(recurrence)
 
 Fish-school spatial snapshot
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_school3d.md)
+[View example code](#code-plot-school3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_school3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/school-spatial-viz.R)
 
 ![Clearly labeled two-dimensional input projection for optional rgl
 function
@@ -457,8 +492,10 @@ AnalysisActual package output
 
 School geometry over time
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_school_dynamics.md)
+[View example code](#code-plot-school-dynamics)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_school_dynamics.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/school-spatial-viz.R)
 
 ![Actual plot rendered by aqt_plot_school_dynamics from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-school-dynamics-1.png)
@@ -483,8 +520,10 @@ PublicationActual package output
 
 Event-aligned speed changes
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_speed_response.md)
+[View example code](#code-plot-speed-response)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_speed_response.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/publication-speed-response.R)
 
 ![Actual plot rendered by aqt_plot_speed_response from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-speed-response-1.png)
@@ -511,8 +550,10 @@ AnalysisActual package output
 
 Tank-level before/after comparisons
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_changes.md)
+[View example code](#code-plot-tank-changes)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_changes.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/event-visualization.R)
 
 ![Actual plot rendered by aqt_plot_tank_changes from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-tank-changes-1.png)
@@ -537,8 +578,10 @@ aqt_plot_tank_changes(tank_fit)
 
 Physical XYZ scene projection
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_projection.md)
+[View example code](#code-plot-tank-projection)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_projection.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/tank-scenes.R)
 
 ![Actual plot rendered by aqt_plot_tank_projection from synthetic
 input](all-plot-functions_files/figure-html/gallery-plot-tank-projection-1.png)
@@ -563,8 +606,10 @@ aqt_plot_tank_projection(scene3, plane = 'xy')
 
 3D tank scene with movement tails
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_scene3d.md)
+[View example code](#code-plot-tank-scene3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_scene3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/tank-scenes.R)
 
 ![Clearly labeled two-dimensional input projection for optional rgl
 function
@@ -593,8 +638,10 @@ aqt_plot_tank_scene3d(scene3)
 
 Four-frame 3D storyboard
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_trajectory_storyboard3d.md)
+[View example code](#code-plot-trajectory-storyboard3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_trajectory_storyboard3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/trajectory-storyboard3d.R)
 
 ![Actual plot rendered by aqt_plot_trajectory_storyboard3d from
 synthetic
@@ -622,8 +669,10 @@ aqt_plot_trajectory_storyboard3d(one3,
 
 3D voxel occupancy
 
-[Full function
-reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_voxel3d.md)
+[View example code](#code-plot-voxel3d)[Function
+manual](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_voxel3d.md)[Source
+in
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/school-spatial-viz.R)
 
 ![Clearly labeled two-dimensional input projection for optional rgl
 function
@@ -656,7 +705,8 @@ screenshots generated by invoking their own `aqt_plot_*` R function in
 the website build. The other six demonstrate only the input geometry and
 should be opened locally with optional `rgl` for native 3D.
 
-Source code: [plot function atlas Rmd on
+Website-development source (moving main branch): [plot function atlas
+Rmd on
 GitHub](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/vignettes/articles/all-plot-functions.Rmd).
 For a shorter introduction, see the [five-figure
 workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.md),

@@ -15,6 +15,13 @@
   synthetic fish tracks; calculate kinematics, align an event, and
   export reproducible CSV outputs.
 
+- [Plan your aquatic video
+  experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):
+
+  Choose one-camera, multiview or existing-video workflows with explicit
+  acquisition, timing, annotation, calibration and replication
+  requirements.
+
 - [End-to-end workflow
   atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md):
 

@@ -8,11 +8,11 @@ examples, then supply independent annotations, camera calibration and
 real recording metadata for scientific measurements.
 
 [Run a five-minute
-example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)[What
-is
-validated?](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)[Download
-starter
-data](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md)
+example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)[Open
+interactive
+lab](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)[Plan
+your
+experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md)
 
 155 documented R functions14 reference categoriesOfficial GitHub release
 v0.1.1Zenodo archived
@@ -52,14 +52,23 @@ Working with footage
 Original PTS, externally trained detector, reviewable IDs, camera
 geometry, explicit scientific gates.
 
-[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md)
+[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md)
 
 Planning an experiment
 
-### Get the starter dataset
+### Choose your recording setup
 
-Download labeled example CSVs for trajectories, event logs,
-synchronization, and annotation formats.
+One camera, two cameras, or existing footage: match the workflow to the
+evidence your study can support.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)
+
+Interactive laboratory
+
+### Explore fish tracking visually
+
+Five invented tracks, two camera projections, occlusions, identity
+switches, event markers and exportable teaching outputs.
 
 **Released**[v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
 · MIT-licensed source
@@ -160,6 +169,19 @@ research protocols.
 Demonstration figures, publication storyboards, 3D projections and
 reproducible graphics.
 
+## Choose your camera configuration
+
+The [experiment planning
+guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md)
+provides separate paths for [one-camera 2D
+tracking](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.html#one-camera),
+[two-camera 3D
+research](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.html#two-cameras),
+and [existing
+recordings](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.html#existing-recordings).
+Camera count alone does not establish physically calibrated XYZ or
+biological identity.
+
 ## A visual laboratory
 
 ![Stylized underwater environment showing fish silhouettes,
@@ -255,7 +277,7 @@ interpretation limits.
   [Download
   BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
 - [Scientific methods and validation
-  protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/main/docs)
+  protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs)
 - [Function
   documentation](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)
   · [Publication
@@ -723,6 +745,13 @@ Source data digest recording and verification.
   Install released AquaTrajectories v0.1.1; generate explicitly
   synthetic fish tracks; calculate kinematics, align an event, and
   export reproducible CSV outputs.
+
+- [Plan your aquatic video
+  experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):
+
+  Choose one-camera, multiview or existing-video workflows with explicit
+  acquisition, timing, annotation, calibration and replication
+  requirements.
 
 - [End-to-end workflow
   atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md):

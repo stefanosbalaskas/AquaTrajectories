@@ -34,16 +34,24 @@
     update();
     search.focus();
   });
-  // Deep links unhide a previously filtered card and preserve its anchor.
-  window.addEventListener("hashchange",()=>{
-    const id=window.location.hash.substring(1);
-    const target=document.getElementById(id);
+  // Expand linked example panels and reveal hidden cards on hash navigation.
+  function revealHash() {
+    const id=decodeURIComponent(window.location.hash.slice(1));
+    const target=id && document.getElementById(id);
     if (!target) return;
     const card=target.closest(".aqt-plot-entry");
-    if (card && card.hidden){
-      search.value="";category.value="all";mode.value="all";
-      update();
+    if (card && card.hidden) {
+      search.value=""; category.value="all"; mode.value="all"; update();
     }
+    if (target.tagName==="DETAILS") target.open=true;
+  }
+  document.querySelectorAll("[data-code-link]").forEach(link=>{
+    link.addEventListener("click",()=>{
+      const target=document.getElementById(link.hash.substring(1));
+      if (target && target.tagName==="DETAILS") target.open=true;
+    });
   });
+  window.addEventListener("hashchange",revealHash);
   update();
+  revealHash();
 }());
