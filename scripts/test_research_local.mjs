@@ -20,7 +20,7 @@ const frames=normalizeFrameManifest([
 ]);
 assert.equal(selectScopedFrame(frames,"S","A",.09,.02).frame_id,1);
 assert.equal(selectScopedFrame(frames,"S","B",.2,.02),null);
-assert.ok(Math.abs(framePtsToVideoTime(frames,frames[1])-.1)<1e-9);
+assert.ok(Math.abs(framePtsToVideoTime(frames,frames.find(f=>f.camera_id==="A"&&f.frame_id===1))-.1)<1e-9);
 assert.throws(()=>normalizeFrameManifest([{session_id:"S",camera_id:"A",frame_id:"0",time_s:"0",raw_time_s:"0",width_px:"800",height_px:"450"},{session_id:"S",camera_id:"A",frame_id:"1",time_s:"0",raw_time_s:"1",width_px:"800",height_px:"450"}]));
 const tracks=normalizeLocalTracks([{session_id:"S",camera_id:"A",track_id:"fish01",time_s:"0.1",x:"100",y:"200",observed:"TRUE"}]);
 assert.equal(selectVisibleTracks(tracks,"S","A",.1,.01).length,1);
