@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "protocol_id": "AQT-METHODS-2026-001",
+  "protocol_version": "methods-v0.1.0",
+  "prepared_at": "2026-11-16",
+  "status": "protocol_only_not_registered",
+  "paper_status": "manuscript_draft_no_independent_results",
+  "software_baseline": {
+    "name": "aquaTrajectories",
+    "version": "0.1.1",
+    "git_tag": "v0.1.1",
+    "tag_commit_sha": "43101800087a18d0942da4d03e21ea47099cb7a9",
+    "doi": "10.5281/zenodo.24262905",
+    "license": "MIT",
+    "reference_main_commit": "938433baac91684a2cf5f68d136bcd7fb2a3237c"
+  },
+  "cran_candidate_is_separate": {
+    "version": "0.1.2",
+    "pull_request": 79,
+    "used_for_empirical_results": false,
+    "status": "not_part_of_this_dossier"
+  },
+  "source_science_registry": "inst/evidence/scientific-validation-gates.json",
+  "registration": {
+    "registered": false,
+    "url": null,
+    "timestamp": null,
+    "ethics_approval": null
+  },
+  "claims": {
+    "generalizable_detection": false,
+    "independent_fish_identity": false,
+    "physical_exposure_sync": false,
+    "underwater_xyz_metrology": false,
+    "calibrated_joint_uncertainty": false,
+    "validated_welfare_effect": false,
+    "physical_aci_safety": false,
+    "independent_scientific_release": false
+  },
+  "external_evidence": {
+    "independent_heldout_boxes": "not_provided",
+    "independent_multifish_ids": "not_provided",
+    "original_raw_video_permission": "not_provided",
+    "hardware_exposure_pulses": "not_provided",
+    "surveyed_xyz_holdout": "not_provided",
+    "measured_joint_error_coverage": "not_provided",
+    "randomized_tank_biology": "not_provided",
+    "physical_aci_trials": "not_provided"
+  },
+  "empirical_results_count": 0,
+  "scientific_release_allowed": false,
+  "required_schema_files": [
+    "schemas/source_inventory.csv",
+    "schemas/split_registry.csv",
+    "schemas/model_registry.csv",
+    "schemas/evaluated_frames.csv",
+    "schemas/reference_boxes.csv",
+    "schemas/reference_identities.csv",
+    "schemas/predictions.csv",
+    "schemas/pulse_markers.csv",
+    "schemas/physical_targets.csv",
+    "schemas/annotation_audit.csv",
+    "schemas/study_design.csv",
+    "schemas/analysis_result_registry.csv"
+  ],
+  "required_documents": [
+    "README.md",
+    "MANUSCRIPT.md",
+    "REGISTERABLE_PROTOCOL.md",
+    "STATISTICAL_ANALYSIS_PLAN.md",
+    "SOURCE_AND_CLAIM_LEDGER.md",
+    "REPORTING_BLUEPRINT.md",
+    "DATA_DICTIONARY.md",
+    "SUBMISSION_GATE.md",
+    "LITERATURE.bib"
+  ],
+  "notes": "File hashes verify integrity, not independent reference authenticity. This package includes no original fish media, restricted weights, blinded annotations or surveyed targets."
+}

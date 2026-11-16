@@ -1,0 +1,1 @@
+run_id,model_name,weights_sha256,code_commit,training_source_ids,domain_overlap_audit,input_width_px,input_height_px,normalization,confidence_threshold,nms_iou_threshold,class_mapping,tracker_name,tracker_version,configuration_sha256,freeze_timestamp

@@ -1,0 +1,1 @@
+experiment_id,tank_id,session_id,treatment_arm,randomization_unit,randomization_record_sha256,ethics_reference,planned_n_fish,actual_n_fish,event_time_s,event_type,device_id,operator_id
