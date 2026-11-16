@@ -68,6 +68,7 @@ jobs:
           node --check pkgdown/assets/synthetic-lab.js
           node --check pkgdown/assets/plot-gallery-filter.js
           node --check scripts/check_site_research_portal.mjs
+          node --check scripts/polish_site_metadata.mjs
           node --check scripts/test_synthetic_explorer.mjs
           node --check scripts/test_synthetic_lab.mjs
           node scripts/test_synthetic_explorer.mjs
@@ -78,6 +79,8 @@ jobs:
         run: Rscript -e 'pkgdown::build_articles_index(pkg=".")'
       - name: Build independent static site (never overwrite scientific docs/)
         run: Rscript -e 'pkgdown::build_site(examples=FALSE, preview=FALSE, quiet=FALSE)'
+      - name: Normalize homepage metadata
+        run: node scripts/polish_site_metadata.mjs
       - name: Verify build output
         run: |
           test -s site/index.html
@@ -90,6 +93,7 @@ jobs:
           test -s site/articles/all-plot-functions.html
           test -s site/plot-gallery-filter.js
           test -s site/articles/quickstart-five-minutes.html
+          test -s site/articles/plan-your-experiment.html
           test -s site/articles/experiment-starter-kit.html
           test -s site/articles/capabilities-and-validation.html
           test -s site/articles/video-to-results.html

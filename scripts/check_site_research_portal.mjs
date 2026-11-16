@@ -8,6 +8,7 @@ const pages = [
   "index.html",
   "articles/aquaTrajectories.html",
   "articles/quickstart-five-minutes.html",
+  "articles/plan-your-experiment.html",
   "articles/capabilities-and-validation.html",
   "articles/video-to-results.html",
   "articles/experiment-starter-kit.html",
@@ -118,4 +119,15 @@ const figureAlts=figures.map(m=>m[0]).join(" ");
 assert.match(figureAlts,/Actual plot rendered by aqt_plot_paths/);
 assert.match(figureAlts,/Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_voxel3d/);
 assert.match(gallery,/plot-gallery-filter\.js/);
-console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 10 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");
+const planner=read("articles/plan-your-experiment.html");
+for(const id of ["one-camera","two-cameras","existing-recordings","before-recording"]) {
+ assert.ok(planner.includes('id="'+id+'"'),"Experiment guide missing "+id);
+}
+assert.match(home,/plan-your-experiment/);
+assert.match(home,/synthetic-explorer/);
+assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.1.1:'),"Homepage concise description missing");
+assert.equal((home.match(/name="viewport"/g)||[]).length,1);
+assert.equal([...gallery.matchAll(/id="code-plot-[a-z0-9-]+"/g)].length,22);
+assert.equal([...gallery.matchAll(/data-code-link="true"/g)].length,22);
+assert.equal(gallery.split("https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/").length-1,22,"Expected 22 pinned release source links");
+console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 11 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");

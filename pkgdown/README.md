@@ -27,3 +27,7 @@ Neither the website nor any generated figure is evidence of independently certif
 ## Website-only research improvements
 
 Do not change the CRAN candidate or existing GitHub release to publish website content. The homepage shows the current *published* GitHub version, v0.1.1. The CRAN candidate 0.1.2 is not advertised as released. The new pages are: five-minute onboarding, capability matrix, video-to-results workflow, tank experiment starter kit, identity/occlusion explanation, and evidence dashboard. All illustrative files are synthetic, metadata examples, or empty schemas. Maintain source Rmd and pkgdown/index.md as the authority; never hand-edit generated HTML on gh-pages.
+
+## Phase 1 usability
+
+Main-branch website source adds visible lab/experiment routes, 22 direct plot-to-code/function help/version-pinned implementation links, accessible deep-link expansion and keyboard focus styles, and a source-only metadata normalizer after pkgdown builds. Review the PR preview artifact; the official v0.1.1 software release is unchanged.
