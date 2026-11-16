@@ -1,0 +1,1 @@
+trial_id,tank_id,session_id,camera_a_id,camera_b_id,target_id,board_id,partition,truth_x,truth_y,truth_z,units,a_u_px,a_v_px,b_u_px,b_v_px,external_survey_record_sha256,survey_approved
