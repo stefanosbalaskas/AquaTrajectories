@@ -118,6 +118,13 @@
   Reproducible synthetic plots for movement trajectories, spatial
   distribution, uncertainty and event-aligned curves.
 
+- [Every AquaTrajectories plotting function — visual
+  atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.md):
+
+  All 22 exported aqt_plot\_\* functions: native base-R example output,
+  synthetic input projections for optional rgl plots, reproducible
+  source code, and scientific limitations.
+
 - [Five native publication figure families — reproducible synthetic
   workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.md):
 

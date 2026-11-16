@@ -151,11 +151,11 @@ units.
 Telemetry, choices, access inequality and bounded device-control
 research protocols.
 
-[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/visualization-gallery.md)
+[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.md)
 
 09 · Communicate
 
-### Plots, figures and galleries
+### All 22 plotting functions
 
 Demonstration figures, publication storyboards, 3D projections and
 reproducible graphics.
@@ -223,6 +223,17 @@ and the [experiment design starter
 kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md).
 The dashboard links to reproducible tests and original source-evidence
 contracts; it does not invent benchmark accuracies.
+
+## Explore all 22 plotting functions
+
+The new [complete plotting-function visual
+atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.md)
+documents **all 22 `aqt_plot_*` exports**: 16 actual base-R plotting
+outputs reproduced from openly labeled synthetic inputs, and six
+separately labeled projected input previews for optional interactive
+`rgl` plots. Search by function name or scientific category, inspect
+scientific limitations, and copy the runnable calls. No projected
+preview is presented as a captured native `rgl` scene.
 
 ## Five complete, runnable publication figures
 
