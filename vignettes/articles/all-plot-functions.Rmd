@@ -127,6 +127,8 @@ occupancy <- expand.grid(
   scenario = c("Illustrative baseline", "Illustrative event"),
   tank_id = paste0("T", 1:5), time_s = seq(0, 1800, by = 60),
   KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+# A tank belongs to precisely one scenario; IDs must not be reused across arms.
+occupancy$tank_id <- paste(occupancy$scenario, occupancy$tank_id, sep = "_")
 occupancy$area_fraction <- pmax(0, pmin(1,
   .32 + ifelse(occupancy$scenario == "Illustrative event", .12, 0) +
   .06*sin(occupancy$time_s/450) + rnorm(nrow(occupancy), 0, .04)))
