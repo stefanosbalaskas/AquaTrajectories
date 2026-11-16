@@ -1,0 +1,3 @@
+session_id,tank_id,camera_id,view,recording_filename,source_type,calibration_reference,exposure_sync_evidence
+SYN01,EXAMPLE_TANK,CAM_TOP,top,NOT_SUPPLIED_TOP.mp4,synthetic_schema_only,NOT_SUPPLIED,NOT_SUPPLIED
+SYN01,EXAMPLE_TANK,CAM_SIDE,side,NOT_SUPPLIED_SIDE.mp4,synthetic_schema_only,NOT_SUPPLIED,NOT_SUPPLIED

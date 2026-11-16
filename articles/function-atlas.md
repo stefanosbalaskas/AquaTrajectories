@@ -2,7 +2,7 @@
 
 ## Complete R function atlas
 
-Every public R function in the tagged v0.1.0 package is documented by
+Every public R function in the tagged v0.1.1 package is documented by
 its generated `.Rd` help page. This atlas is a **navigation map** rather
 than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative

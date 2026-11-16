@@ -43,13 +43,13 @@ explicit handling. No interpolation should silently convert a 4-second
 disappearance into a continuously observed path.
 
 Read [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/GAUSSIAN_HMM_BEHAVIOURAL_STATES.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/GAUSSIAN_HMM_BEHAVIOURAL_STATES.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/HMM_TRANSITION_HOLDOUT.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/HMM_TRANSITION_HOLDOUT.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FUNCTIONAL_LONGITUDINAL_NLME.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FUNCTIONAL_LONGITUDINAL_NLME.md)
 and [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SPARSE_HIERARCHICAL_METHODS.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/SPARSE_HIERARCHICAL_METHODS.md).
 
 ### Plotting and reporting
 

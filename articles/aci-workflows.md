@@ -51,8 +51,8 @@ A static GitHub Pages site cannot actuate physical equipment. No remote
 live-device control interface is included here.
 
 **Read:** [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/ACI_CLOSED_LOOP_TELEMETRY.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/ACI_CLOSED_LOOP_TELEMETRY.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/ACI_CHOICE_AND_ACCESS.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/ACI_CHOICE_AND_ACCESS.md)
 and [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/ACI_PHYSICAL_DEVICE_PROTOCOL.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/ACI_PHYSICAL_DEVICE_PROTOCOL.md).

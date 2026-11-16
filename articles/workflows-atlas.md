@@ -159,5 +159,5 @@ workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/aci-work
 | ACI choice/actuator logs | H | Operator authorization, safety, external behavioural review |
 
 The [source
-protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs)
+protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs)
 provide further constraints and data schemas.

@@ -21,6 +21,15 @@ The repository contains read-only data-structure probes and contracts.
 **Do not redistribute** original datasets or derive universal
 fish-accuracy claims without permissions and independent benchmarking.
 
+### Download worked schema examples
+
+The [research starter
+kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md)
+provides an openly labeled synthetic trajectory sample, event log,
+two-camera marker times, independent-reference *formats* (invented
+values only), an empty surveyed-XYZ header and planned tank/session
+inventory. It is a **teaching fixture**, not benchmark ground truth.
+
 ### Recommended intake sequence
 
 1.  Record external dataset source, original license and access date.
@@ -49,17 +58,17 @@ and
 ### Published project protocols
 
 - [source
-  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/REAL_DATASET_STRUCTURE_AUDIT.md)
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/REAL_DATASET_STRUCTURE_AUDIT.md)
 - [source
-  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/EXTERNAL_FISH_DATASET_INGESTION.md)
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/EXTERNAL_FISH_DATASET_INGESTION.md)
 - [source
-  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/3D_ZEF_REAL_GO_PRO_BENCHMARK.md)
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/3D_ZEF_REAL_GO_PRO_BENCHMARK.md)
 - [source
-  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FRAUNHOFER_REAL_MODEL_TRACKER_COMPARISON.md)
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FRAUNHOFER_REAL_MODEL_TRACKER_COMPARISON.md)
 - [source
-  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md)
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/OXFORD_REAL_VIDEO_CLOCK_AUDIT.md)
 - [source
-  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/REAL_FISH_TANK_LAB_CAPTURE_PROTOCOL.md)
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/REAL_FISH_TANK_LAB_CAPTURE_PROTOCOL.md)
 
 For the latest version-specific claims, inspect the tag’s evidence files
 and source-linked test results before citing the software.

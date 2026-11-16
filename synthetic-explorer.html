@@ -34,6 +34,12 @@
           <legend>Visible simulated tracks</legend>
           <div id="fishfilters"></div>
         </fieldset>
+        <fieldset class="learning" aria-label="Tracking error learning controls">
+          <legend>Research teaching toggles</legend>
+          <label><input id="occlusion-demo" type="checkbox"> Simulate a missing observation</label>
+          <label><input id="idswitch-demo" type="checkbox"> Illustrate an ID switch after occlusion</label>
+          <p class="meta">For teaching only: missing points and swapped labels are invented, not detector predictions.</p>
+        </fieldset>
         <label class="inputlabel" for="trail">Trail length: <output id="trailValue">60</output> frames</label>
         <input id="trail" type="range" min="5" max="160" step="5" value="60" aria-label="Trail length in frames">
         <label class="inputlabel" for="frame">Timeline: <output id="frameValue">0.0 s / 10.0 s</output></label>
@@ -56,7 +62,8 @@
           <text x="22" y="38" fill="#8fc3d1" font-family="sans-serif" font-size="18">SIMULATED COORDINATES · ARBITRARY UNITS</text>
         </svg>
         <div class="legend" id="legend"></div>
-        <div class="methodnote"><strong>What you are seeing:</strong> original deterministic curves and simplified orthographic projections. Neither a real 3D reconstruction nor a validated biological fish simulator. Real studies must supply physical camera calibration, fish ID reference labels, actual timestamps and measured XYZ uncertainty.</div>
+        <div class="learningstatus" role="status" aria-live="polite" aria-atomic="true" id="learningStatus">No teaching perturbations enabled.</div>
+        <div class="methodnote"><strong>What you are seeing:</strong> original deterministic curves and simplified orthographic projections. Neither a real 3D reconstruction nor a validated biological fish simulator. Turn on the occlusion toggle to hide fish F1 for frames 90–125 without connecting missing segments; enable ID switching to swap displayed labels F1/F2 after frame 125. These labels are a deliberately invented diagnostic illustration, not a tracker output. Real studies must supply physical camera calibration, fish ID reference labels, actual timestamps and measured XYZ uncertainty.</div>
       </div>
     </section>
     <section class="more">
@@ -65,6 +72,7 @@
         <a href="articles/multiview-3d.html">Real multiview and refraction pipeline</a>
         <a href="articles/uncertainty.html">Conditional uncertainty</a>
         <a href="articles/scientific-status.html">Scientific evidence limits</a>
+        <a href="articles/identity-occlusion-tutorial.html">Detection, occlusion and ID switching tutorial</a>
       </div>
     </section>
   </main>

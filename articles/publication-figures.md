@@ -18,7 +18,7 @@ analysis* must be reported differently.
 | 2D directional rose | [`aqt_plot_heading_rose()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_heading_rose.md) | XY directional conventions and optional source-frame rasters |
 
 The [package visualization source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/PUBLICATION_VISUALIZATION_SUITE.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/PUBLICATION_VISUALIZATION_SUITE.md)
 documents expected fields, assumptions and file-export instructions.
 
 ### Export vector PDF or 300-dpi TIFF

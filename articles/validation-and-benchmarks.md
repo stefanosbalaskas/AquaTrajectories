@@ -82,11 +82,11 @@ gate. Do not claim that independent fish identity, physical underwater
 metrology, real device safety or welfare effects have passed that gate.
 
 **Protocols:** [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/VALIDATION_CONTRACT.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/VALIDATION_CONTRACT.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/OFFICIAL_FISH_HOTA_IDF1_PROTOCOL.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/OFFICIAL_FISH_HOTA_IDF1_PROTOCOL.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SCIENTIFIC_RELEASE_READINESS.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/SCIENTIFIC_RELEASE_READINESS.md).
 
 For status language suitable for citing the package, use the [scientific
 status

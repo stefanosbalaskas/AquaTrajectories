@@ -67,8 +67,8 @@ difference, or that frame-level posterior state probabilities are
 independent replicates.
 
 **Source detail:** [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/EVENT_INFERENCE_CONTRACT.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/EVENT_INFERENCE_CONTRACT.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FUNCTIONAL_EVENT_TANK_CURVES.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FUNCTIONAL_EVENT_TANK_CURVES.md)
 and [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SPARSE_HIERARCHICAL_METHODS.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/SPARSE_HIERARCHICAL_METHODS.md).

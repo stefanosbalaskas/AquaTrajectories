@@ -131,7 +131,7 @@ tables** and are not invoked here with fabricated biological values:
 
 A full synthetic five-figure workbook is already present in the
 repository at
-[inst/examples/publication_visualization_gallery.Rmd](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/inst/examples/publication_visualization_gallery.Rmd).
+[inst/examples/publication_visualization_gallery.Rmd](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/examples/publication_visualization_gallery.Rmd).
 Run all five directly in the [website’s five-figure
 workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.md).
 See the [publication figure

@@ -7,16 +7,20 @@ movement and multiview trajectories. The public package is named
 `aquaTrajectories` (lowercase `a`); the repository is named
 `AquaTrajectories`.
 
-**Release:** v0.1.0 — engineering preview. The software’s full-package
-tests do **not** establish real fish identity or underwater physical
-accuracy.
+**Published release:**
+[v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1),
+archived on [Zenodo](https://doi.org/10.5281/zenodo.24262905). This is a
+normal GitHub software release, **not** an assertion of independently
+verified fish identity or underwater physical accuracy. The separate
+0.1.2 CRAN candidate should not be installed as a public CRAN release
+before CRAN acceptance.
 
 ### Install from GitHub
 
 ``` r
 
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.0")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ```
@@ -79,6 +83,15 @@ aligned <- aqt_align_events(kin, event)
 
 Event labels come from an **external log**. Merely aligning trajectories
 to a time interval does not prove that the intervention caused a change.
+
+### Five-minute self-check
+
+For a guided script with checkable output shapes and CSV exports, follow
+the [five-minute quick
+start](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md).
+For input file schemas and a reproducible tank-event example, use the
+[experiment starter
+kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md).
 
 ### Navigating the package
 

@@ -89,13 +89,13 @@ for transparent evaluation.
 ```
 
 **Original protocols:** [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/PYAV_YOLO_BYTETRACK_RUNNER.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/PYAV_YOLO_BYTETRACK_RUNNER.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/MOT_FRAME_PTS_INGESTION.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/MOT_FRAME_PTS_INGESTION.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/INDEPENDENT_VIDEO_BENCHMARK.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/INDEPENDENT_VIDEO_BENCHMARK.md)
 and [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/PREDECLARED_VIDEO_ANNOTATION_SAMPLING.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/PREDECLARED_VIDEO_ANNOTATION_SAMPLING.md).
 
 ### Practical safeguards
 

@@ -252,6 +252,6 @@ rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "warning")
 
 ------------------------------------------------------------------------
 
-For the original, source-controlled training workbook see [the v0.1.0
+For the original, source-controlled training workbook see [the v0.1.1
 release
-artifact](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/inst/examples/publication_visualization_gallery.Rmd).
+artifact](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/examples/publication_visualization_gallery.Rmd).

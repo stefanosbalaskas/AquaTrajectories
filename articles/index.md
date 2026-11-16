@@ -5,8 +5,15 @@
 - [Get started with
   AquaTrajectories](https://stefanosbalaskas.github.io/AquaTrajectories/articles/aquaTrajectories.md):
 
-  Install the engineering preview and take a first reproducible 2D
-  movement analysis from synthetic tracks.
+  Install the official v0.1.1 GitHub release, follow a first
+  reproducible analysis, and understand research evidence limits.
+
+- [Five-minute quick start: tracks to scientific
+  outputs](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md):
+
+  Install released AquaTrajectories v0.1.1; generate explicitly
+  synthetic fish tracks; calculate kinematics, align an event, and
+  export reproducible CSV outputs.
 
 - [End-to-end workflow
   atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md):
@@ -19,6 +26,20 @@
 
   A complete categorized, linked map to all public native R functions
   and their source-generated help manuals.
+
+- [Capability and scientific validation
+  matrix](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md):
+
+  What AquaTrajectories v0.1.1 actually implements, what evidence is
+  required, and which fish detection, identity, stereo, uncertainty and
+  ACI claims remain unverified.
+
+- [Research evidence, release and validation
+  dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md):
+
+  Source-linked engineering qualification and honest empirical
+  validation gate status for the published AquaTrajectories v0.1.1
+  release.
 
 ### From pixels to trajectories
 
@@ -40,6 +61,20 @@
   Separate engineering contracts, independently reviewed fish labels,
   physical target accuracy and inferred welfare validity.
 
+- [From GoPro fish video to reproducible R
+  results](https://stefanosbalaskas.github.io/AquaTrajectories/articles/video-to-results.md):
+
+  A practical audit-led route from original GoPro files through
+  fish-trained detection, camera-local tracking, annotation review,
+  synchronization, refraction-aware 3D and movement analysis.
+
+- [Fish detection, tracking and identity: visual occlusion
+  tutorial](https://stefanosbalaskas.github.io/AquaTrajectories/articles/identity-occlusion-tutorial.md):
+
+  Interactive tutorial explaining how detector boxes, camera-local track
+  IDs, gaps, occlusions and ID switches differ from verified fish
+  identity.
+
 ### Scientific analysis
 
 - [Movement, social geometry and spatial
@@ -53,6 +88,13 @@
 
   Treat event times and independent tanks correctly; avoid
   pseudoreplication from high-frequency fish video.
+
+- [Five-fish tank experiment starter kit and data
+  schemas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md):
+
+  Download synthetic example fish trajectories and schema-compatible
+  CSVs for events, calibration targets, annotation, camera
+  synchronization and an aquaculture experiment design.
 
 - [Behavioural states, longitudinal models and functional
   trajectories](https://stefanosbalaskas.github.io/AquaTrajectories/articles/behavioural-models.md):
@@ -103,6 +145,6 @@
 - [Scientific validation status and research
   limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md):
 
-  Precisely distinguish AquaTrajectories v0.1.0 engineering
-  qualification from independently accepted fish and underwater
-  measurement evidence.
+  Current published v0.1.1 software release versus independent fish
+  identity, underwater XYZ, and welfare evidence, with historical v0.1.0
+  qualification preserved.

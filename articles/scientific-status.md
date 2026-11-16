@@ -1,9 +1,9 @@
 # Scientific validation status and research limitations
 
-## Scientific status of v0.1.0
+## Scientific status of the published v0.1.1 release
 
-**This is an engineering-qualified software preview, not an
-independently certified fish-welfare or underwater physical metrology
+**AquaTrajectories v0.1.1 is a published, citable software release, not
+an independently certified fish-welfare or underwater physical metrology
 system.**
 
 The release includes tested R/Python/JavaScript contracts, synthetic
@@ -29,10 +29,24 @@ passes.
 - Whole-package release qualification, including source, tests and
   synthetic integration evidence.
 
-The v0.1.0 release was tagged at commit
-`f63885411d55df764e452846758756114b90423a`. The qualified
-release-candidate tree matched the source merged to `main`. This website
-is being developed **after** that tag on a separate branch.
+**Release citation:** [v0.1.1 on
+GitHub](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+· [Zenodo DOI:
+10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905). CRAN
+candidate 0.1.2 is a separate package-source qualification track, not
+the published version of this site.
+
+**Historical evidence:** v0.1.0 was tagged at commit
+`f63885411d55df764e452846758756114b90423a`. The original v0.1.0
+qualification protocols below remain accessible as historical source
+records; they must not be mistaken for a new independent validation of
+v0.1.1.
+
+See the [current capability
+matrix](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)
+and [source-linked evidence
+dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)
+for a function-by-function and claim-by-claim orientation.
 
 ### Outstanding empirical gates
 
@@ -66,7 +80,7 @@ is being developed **after** that tag on a separate branch.
 | “Software tests passed.” | “The complete biological system is validated.” |
 | “A simulator exercised ACI control contracts.” | “The physical animal device is safe.” |
 
-### Reproducible qualification sources
+### Historical v0.1.0 qualification sources (not current release links)
 
 - [source
   protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SCIENTIFIC_RELEASE_READINESS.md)
@@ -75,9 +89,9 @@ is being developed **after** that tag on a separate branch.
 - [source
   protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/RELEASE_CANDIDATE_0_1_0.md)
 
-See also the [published GitHub
-release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.0)
-and the [source methods
+See the [current v0.1.1
+release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+and the [historical v0.1.0 source methods
 library](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs).
 
 The release is open-source research software. It is not a medical,

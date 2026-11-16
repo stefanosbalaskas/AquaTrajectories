@@ -1,25 +1,75 @@
-# From fish videos to scientific trajectories
+# From aquatic observations to reproducible movement science
 
-Open-source research software · v0.1.0 engineering preview
+Open-source research software · official v0.1.1 release
 
-Analyze aquatic-animal movement with a connected R, Python and
-JavaScript toolkit: detections and track identities, synchronized
-multiview geometry, observed 2D/3D trajectories, behavioural analysis,
-uncertainty, and experimental workflows.
+Track, reconstruct, analyze and visualize aquatic-animal trajectories
+with R, Python and browser tools. Start with documented synthetic
+examples, then supply independent annotations, camera calibration and
+real recording metadata for scientific measurements.
 
-[Start
-exploring](https://stefanosbalaskas.github.io/AquaTrajectories/articles/aquaTrajectories.md)[Browse
-all 155 R
-functions](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)
+[Run a five-minute
+example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)[What
+is
+validated?](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)[Download
+starter
+data](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md)
 
-155 documented functions2D + 3D14 function familiesEngineering-qualified
-preview
+155 documented R functions14 reference categoriesOfficial GitHub release
+v0.1.1Zenodo archived
+
+**Published software:** [AquaTrajectories
+v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+is a public GitHub release, permanently archived as
+[10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) on
+Zenodo. [![Zenodo DOI
+10.5281/zenodo.24262905](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)
+CRAN qualification is in progress; this package is not yet published on
+CRAN.
 
 **Scientific status:** this release is engineering-qualified, but
 biological identity, underwater metrology, fish welfare inference,
 empirical interval coverage and real actuator safety are **not
 independently certified**. See the [evidence and
 limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md).
+
+## Choose your path
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)
+
+New to R
+
+### Try a complete analysis
+
+Five minutes: synthetic tracks → movement → event alignment → CSV
+exports. Confirm expected row counts.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/video-to-results.md)
+
+Working with footage
+
+### Plan video → results
+
+Original PTS, externally trained detector, reviewable IDs, camera
+geometry, explicit scientific gates.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md)
+
+Planning an experiment
+
+### Get the starter dataset
+
+Download labeled example CSVs for trajectories, event logs,
+synchronization, and annotation formats.
+
+**Released**[v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+· MIT-licensed source
+
+**Citable**[Zenodo DOI](https://doi.org/10.5281/zenodo.24262905) ·
+[BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
+
+**Scientific validity**Software contracts tested; [independent
+biological validation
+pending](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)
 
 ## Discover the research workflows
 
@@ -119,8 +169,8 @@ points.](hero-science.svg)
 Original scientific illustration. The geometry is schematic, not a
 measurement from a real tank.
 
-**Start**[Installation and first
-analysis](https://stefanosbalaskas.github.io/AquaTrajectories/articles/aquaTrajectories.md)
+**Start**[Five-minute reproducible
+analysis](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)
 
 **Explore**[Complete workflow
 atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md)
@@ -128,16 +178,16 @@ atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-at
 **Reference**[155-function guided
 index](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md)
 
-**Research**[Datasets and
-evidence](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-datasets.md)
+**Research**[Evidence and validation
+status](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)
 
 ## Reproducible first steps
 
 ``` r
 
-# Install the preview from its public source repository
+# Install the official versioned GitHub release (not yet on CRAN)
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.0")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
 
 library(aquaTrajectories)
 x <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
@@ -150,13 +200,29 @@ calibrated fish movement.
 
 ## Interactive synthetic trajectory explorer
 
-Explore five invented trajectories in synchronized 3D, top, side and
-front projections with a frame scrubber, playback and individual track
-toggles. This is a **browser-only teaching demonstration**, not the
-actual multiview research explorer or a real animal observation.
+Explore five invented trajectories in 3D, top, side and front
+projections. New learning controls demonstrate camera-local occlusion
+and ID switching: the synthetic positions remain the same while the
+apparent labels can change. This is a **browser-only teaching
+illustration**, not a real synchronized multiview recording or a
+validated tracking benchmark.
 
 [Open interactive synthetic
-explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)
+explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)[Understand
+occlusions and track
+IDs](https://stefanosbalaskas.github.io/AquaTrajectories/articles/identity-occlusion-tutorial.md)
+
+## Transparent evidence and reproducible figures
+
+Before interpreting biological results, consult the [capability and
+validation
+matrix](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md),
+the [research evidence
+dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md),
+and the [experiment design starter
+kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md).
+The dashboard links to reproducible tests and original source-evidence
+contracts; it does not invent benchmark accuracies.
 
 ## Five complete, runnable publication figures
 
@@ -171,8 +237,12 @@ interpretation limits.
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
-- [v0.1.0 engineering
-  preview](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.0)
+- [Official v0.1.1 GitHub
+  release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+- [Version-specific Zenodo DOI:
+  10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) ·
+  [Download
+  BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
 - [Scientific methods and validation
   protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/main/docs)
 - [Function

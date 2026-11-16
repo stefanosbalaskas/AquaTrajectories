@@ -82,10 +82,10 @@ physical camera model.
 #### Go deeper
 
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/AUTOMATIC_CROSSVIEW_REFRACTIVE_PIPELINE.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/AUTOMATIC_CROSSVIEW_REFRACTIVE_PIPELINE.md)
 · [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FLATPORT_CAMERA_GEOMETRY.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FLATPORT_CAMERA_GEOMETRY.md)
 · [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md)
 · [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/CAMERA_CLOCK_HOLDOUT.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/CAMERA_CLOCK_HOLDOUT.md).

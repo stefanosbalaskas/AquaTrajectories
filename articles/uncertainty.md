@@ -52,10 +52,10 @@ verified biological identity probabilities or physically calibrated XYZ
 confidence regions.
 
 **Source protocols:** [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/TRAJECTORY_UNCERTAINTY.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/TRAJECTORY_UNCERTAINTY.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/IDENTITY_SCENARIOS.md),
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/IDENTITY_SCENARIOS.md),
 [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/JOINT_REFRACTIVE_SENSITIVITY.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/JOINT_REFRACTIVE_SENSITIVITY.md)
 and [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/EMPIRICAL_JOINT_UNCERTAINTY.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/EMPIRICAL_JOINT_UNCERTAINTY.md).

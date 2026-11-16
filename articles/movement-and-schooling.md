@@ -68,6 +68,6 @@ Proximity alone is not evidence of leadership, preference, stress or
 positive welfare.
 
 See [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/SCHOOL_SPATIAL_METHODS.md)
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/SCHOOL_SPATIAL_METHODS.md)
 and [source
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/FUNCTIONAL_TRAJECTORY_METHODS.md).
+protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/docs/FUNCTIONAL_TRAJECTORY_METHODS.md).

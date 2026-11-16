@@ -1,0 +1,3 @@
+session_id,camera_id,frame_id,track_id,x,y,class_id
+SYN01,CAM_TOP,0,fish01,156,103,0
+SYN01,CAM_TOP,1,fish01,158,105,0
