@@ -1,0 +1,27 @@
+/* Phase 3 research labs augment Phase 2 science styling. */
+.research-layout{grid-template-columns:minmax(280px,335px) minmax(0,1fr)}
+.science-boundary{font-size:.68rem;font-weight:850;letter-spacing:.06em;color:#9ce1e5;background:#12384d;border:1px solid #315973;border-radius:.4rem;padding:.2rem .5rem}
+.research-scene-head{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.smallmetric{font-size:.92rem!important;overflow-wrap:anywhere}
+.two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.local-files{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.local-files label{display:flex;flex-direction:column;gap:.4rem;font-weight:650;font-size:.87rem}
+.local-files input{max-width:100%}
+.camera-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem;margin:1rem 0}
+.video-card{min-width:0;background:#eef6f8;border:1px solid #c9e0e8;border-radius:.75rem;padding:.75rem}
+.video-card h3{font-size:.94rem;margin:.2rem 0 .6rem}
+.video-frame{position:relative;aspect-ratio:16/9;background:#0b2536;border-radius:.5rem;overflow:hidden}
+.video-frame video,.video-frame svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.video-frame svg{pointer-events:none}
+#xyzScene{width:100%;height:auto;max-height:530px;border-radius:.75rem}
+#geometryScene{width:100%;height:auto;max-height:620px;border-radius:.75rem}
+#issues{max-height:480px;overflow:auto}
+.audit-row{padding:.55rem .7rem;border-left:3px solid #bf7c28;background:#fff8ed;margin:.5rem 0;font-size:.88rem}
+.audit-good{border-left-color:#13805f;background:#f0f8f5}
+.tabular{font-variant-numeric:tabular-nums}
+.science-code,.r-code{font-size:.87rem}
+#timeline{accent-color:#087b95}
+input[type=file]{font:inherit;border:1px dashed #82a8b6;border-radius:.45rem;padding:.45rem;background:#f5fafc}
+footer a{overflow-wrap:anywhere}
+@media(max-width:900px){.local-files{grid-template-columns:repeat(2,minmax(0,1fr))}.camera-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.local-files,.two-col,.research-layout{grid-template-columns:1fr}}
