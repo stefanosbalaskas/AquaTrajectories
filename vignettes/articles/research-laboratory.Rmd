@@ -41,6 +41,10 @@ Load a canonical long-format table with session, camera, track, time, x and y co
 
 The inspector does not establish animal identity truth, calibrated measurement units, causal treatment effects or publication-ready inferential validity. Scientific research should still run the package's [track validation](../reference/aqt_tracks_validate.html) and QC functions.
 
+## Real original-video records
+
+The [DIGI4ECO source-video walkthrough](real-fish-data-walkthrough.html) provides a licence-compliant local workflow for original video, source annotation boxes, precise timestamps and file hashes. Original labels are never presented as software predictions or independent physical XYZ targets.
+
 ## Version, provenance and limitations
 
 The website uses synthetic demonstrations and links to the version-specific [AquaTrajectories v0.1.1 archive](https://doi.org/10.5281/zenodo.24262905). The research-lab JavaScript is independently versioned website source and is not an unannounced extension to the archived R API. The website CI exercises mathematical invariants, invalid source cases, clock mapping, CSV parsing, page generation and link checks; that qualification does not imply visual compatibility testing across all browsers or independent biological/scientific validation.

@@ -11,6 +11,7 @@ const pages = [
   "articles/plan-your-experiment.html",
   "articles/scientific-teaching.html",
   "articles/research-laboratory.html",
+  "articles/real-fish-data-walkthrough.html",
   "research-geometry.html",
   "research-webr.html",
   "research-multiview.html",

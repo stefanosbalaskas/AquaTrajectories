@@ -47,6 +47,10 @@
 
 The [experiment planning guide](articles/plan-your-experiment.html) provides separate paths for [one-camera 2D tracking](articles/plan-your-experiment.html#one-camera), [two-camera 3D research](articles/plan-your-experiment.html#two-cameras), and [existing recordings](articles/plan-your-experiment.html#existing-recordings). Camera count alone does not establish physically calibrated XYZ or biological identity.
 
+## Original video reproducibility
+
+The [licensed DIGI4ECO video walkthrough](articles/real-fish-data-walkthrough.html) converts original underwater MP4 and source CVAT tracking annotations using actual PTS and SHA-256 provenance. These are **source-author labels, not AquaTrajectories model predictions**; the website does not redistribute original footage or claim unverified accuracy.
+
 ## Phase 3 — Research laboratory
 
 The four new <a href="articles/research-laboratory.html">research-laboratory tools</a> move beyond static teaching figures. They include an interactive physical **single-interface 3D reconstruction example**, an opt-in **webR/WebAssembly runtime for executing real base R** code, a **locally synchronized multiview evidence viewer**, and a **privacy-preserving trajectory CSV inspector**. No original research files are uploaded.
