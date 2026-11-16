@@ -47,6 +47,19 @@
 
 The [experiment planning guide](articles/plan-your-experiment.html) provides separate paths for [one-camera 2D tracking](articles/plan-your-experiment.html#one-camera), [two-camera 3D research](articles/plan-your-experiment.html#two-cameras), and [existing recordings](articles/plan-your-experiment.html#existing-recordings). Camera count alone does not establish physically calibrated XYZ or biological identity.
 
+## Scientific teaching: four interactive laboratories
+
+Explore deterministic examples that separate **what software computes** from **what real biological observations establish**. Each exercise runs locally in the browser, uses invented inputs, and links to the published v0.1.1 R documentation.
+
+<div class="aqt-cardgrid aqt-teaching-grid">
+<a class="aqt-card" href="scientific-tracking-lab.html"><div class="aqt-kicker">01 · Evaluate</div><h3>Detector and tracker lab</h3><p>Move detection noise, missingness, false positives and ID switches; inspect computed synthetic precision, recall, F1 and identity changes.</p></a>
+<a class="aqt-card" href="math-workbench.html"><div class="aqt-kicker">02 · Explain</div><h3>Mathematical movement workbench</h3><p>Inspect velocity vectors, group polarization and camera-clock offsets with live mathematical readouts.</p></a>
+<a class="aqt-card" href="plot-playground.html"><div class="aqt-kicker">03 · Explore</div><h3>Adjust scientific plots</h3><p>Manipulate browser previews for three analytical plot families and export runnable version-pinned R examples.</p></a>
+<a class="aqt-card" href="experiment-protocol-builder.html"><div class="aqt-kicker">04 · Plan</div><h3>Download synthetic protocols</h3><p>Generate a camera/tank/session planning checklist and a blank-valued CSV intake manifest.</p></a>
+</div>
+
+These are **synthetic teaching labs**, not real-video benchmark results or a fully executable R environment. See the [teaching guide](articles/scientific-teaching.html) for interpretation and related code.
+
 ## A visual laboratory
 
 <div class="aqt-figure"><img src="hero-science.svg" alt="Stylized underwater environment showing fish silhouettes, trajectories, camera lines and scientific observation points." loading="lazy"></div>

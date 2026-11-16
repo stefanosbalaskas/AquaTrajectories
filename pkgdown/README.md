@@ -31,3 +31,7 @@ Do not change the CRAN candidate or existing GitHub release to publish website c
 ## Phase 1 usability
 
 Main-branch website source adds visible lab/experiment routes, 22 direct plot-to-code/function help/version-pinned implementation links, accessible deep-link expansion and keyboard focus styles, and a source-only metadata normalizer after pkgdown builds. Review the PR preview artifact; the official v0.1.1 software release is unchanged.
+
+## Phase 2 scientific teaching (website only)
+
+Four static browser labs provide deterministic **synthetic** object detection/track-ID didactics, vector/school/clock mathematics, three adjustable SVG plotting previews plus version-pinned R code recipes, and downloadable planned experiment protocols/blank CSV manifests. The website does not claim official HOTA/IDF1, independent video performance, live animal welfare or physical XYZ calibration. Source files are in `pkgdown/assets`, connected from the home page and the new `vignettes/articles/scientific-teaching.Rmd`. Node teaching-core regression tests run in the pkgdown CI build before smoke testing.

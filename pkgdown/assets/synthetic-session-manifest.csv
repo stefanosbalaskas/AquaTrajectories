@@ -1,0 +1,9 @@
+planned_session_id,tank_id,camera_id,fish_planned,duration_min_planned,fps_nominal_planned,source_filename,source_sha256,physical_sync_verified,surveyed_xyz_truth_available
+SYNTH-S01,SYNTH-T01,CAM01,5,20,30,,,,
+SYNTH-S01,SYNTH-T01,CAM02,5,20,30,,,,
+SYNTH-S02,SYNTH-T01,CAM01,5,20,30,,,,
+SYNTH-S02,SYNTH-T01,CAM02,5,20,30,,,,
+SYNTH-S01,SYNTH-T02,CAM01,5,20,30,,,,
+SYNTH-S01,SYNTH-T02,CAM02,5,20,30,,,,
+SYNTH-S02,SYNTH-T02,CAM01,5,20,30,,,,
+SYNTH-S02,SYNTH-T02,CAM02,5,20,30,,,,

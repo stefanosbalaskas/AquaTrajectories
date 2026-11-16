@@ -9,6 +9,11 @@ const pages = [
   "articles/aquaTrajectories.html",
   "articles/quickstart-five-minutes.html",
   "articles/plan-your-experiment.html",
+  "articles/scientific-teaching.html",
+  "scientific-tracking-lab.html",
+  "math-workbench.html",
+  "plot-playground.html",
+  "experiment-protocol-builder.html",
   "articles/capabilities-and-validation.html",
   "articles/video-to-results.html",
   "articles/experiment-starter-kit.html",
@@ -32,6 +37,14 @@ const extras = [
   "synthetic-explorer.js",
   "synthetic-lab.js",
   "plot-gallery-filter.js",
+  "scientific-teaching-core.mjs",
+  "scientific-tracking-lab.mjs",
+  "math-workbench.mjs",
+  "plot-playground.mjs",
+  "experiment-protocol-builder.mjs",
+  "scientific-teaching.css",
+  "synthetic-experiment-protocol.md",
+  "synthetic-session-manifest.csv",
   "synthetic-explorer.css"
 ];
 const read = p => fs.readFileSync(path.join(site,p), "utf8");
@@ -130,4 +143,16 @@ assert.equal((home.match(/name="viewport"/g)||[]).length,1);
 assert.equal([...gallery.matchAll(/id="code-plot-[a-z0-9-]+"/g)].length,22);
 assert.equal([...gallery.matchAll(/data-code-link="true"/g)].length,22);
 assert.equal(gallery.split("https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/").length-1,22,"Expected 22 pinned release source links");
+for(const file of ["scientific-tracking-lab.html","math-workbench.html","plot-playground.html","experiment-protocol-builder.html"]){
+  const source=read(file);
+  assert.match(source,/synthetic/i,"Lab missing synthetic-data disclaimer: "+file);
+  assert.match(source,/type="module"/,"Lab missing executable teaching script: "+file);
+}
+const plotted=read("articles/all-plot-functions.html");
+for(const mode of ["paths","ensemble","school"]){
+  assert.ok(plotted.includes("../plot-playground.html?mode="+mode),"Missing parameter playground link: "+mode);
+}
+const exampleManifest=read("synthetic-session-manifest.csv").trim().split(/\r?\n/);
+assert.equal(exampleManifest.length,9,"Expected header plus eight blank-valued planning rows");
+assert.ok(exampleManifest[0].includes("source_sha256"));
 console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 11 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");

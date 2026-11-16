@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><meta name="description" content="Teach detection precision and recall, F1, false-positive boxes, missing observations and tracker ID switches using deterministic synthetic fish.">
+<title>Fish detection and tracker identity laboratory | AquaTrajectories</title><link rel="stylesheet" href="scientific-teaching.css"></head><body>
+<a class="skip" href="#main">Skip to lesson</a><header class="sitebar"><a class="brand" href="index.html">◉ AquaTrajectories</a><nav aria-label="Teaching lab navigation"><a href="scientific-tracking-lab.html">Tracking evaluation</a><a href="math-workbench.html">Mathematics</a><a href="plot-playground.html">Plot playground</a><a href="experiment-protocol-builder.html">Experiment protocols</a><a href="articles/all-plot-functions.html">R plots</a></nav></header>
+<main id="main" class="shell"><p class="eyebrow">Scientific teaching · synthetic demonstration only · v0.1.1</p><h1>Fish detection ≠ fish identity</h1><p class="lede">A frame-by-frame synthetic benchmark that separates finding fish-shaped objects from maintaining their tracker labels. Adjust the error scenario and inspect its consequences. These metrics refer only to invented ground-truth boxes and synthetic predictions.</p>
+<div class="lab-layout">
+<section class="panel controls" aria-label="Synthetic benchmark parameters"><h2>Design a test scenario</h2>
+<label for="fishCount">Number of fish <output id="fishCountOut">5</output></label><input id="fishCount" type="range" min="2" max="12" value="5" step="1">
+<label for="frames">Frames <output id="framesOut">80</output></label><input id="frames" type="range" min="15" max="180" value="80" step="5">
+<label for="missRate">Missed-detection probability <output id="missRateOut">16%</output></label><input id="missRate" type="range" min="0" max="100" value="16" step="2">
+<label for="falsePositiveRate">False-positive chance per frame <output id="falsePositiveRateOut">10%</output></label><input id="falsePositiveRate" type="range" min="0" max="100" value="10" step="2">
+<label for="idSwitchRate">Tracker-ID change chance per visible fish <output id="idSwitchRateOut">6%</output></label><input id="idSwitchRate" type="range" min="0" max="100" value="6" step="2">
+<label for="noisePx">Localization perturbation (maximum ± px) <output id="noisePxOut">2</output></label><input id="noisePx" type="range" min="0" max="24" value="2" step="1">
+<label for="iouThreshold">IoU match threshold <output id="iouThresholdOut">0.50</output></label><input id="iouThreshold" type="range" min="20" max="90" value="50" step="5">
+<label for="seed">Deterministic random seed</label><input id="seed" type="number" value="20261116" min="1" max="4294967295" step="1">
+<button class="secondary" id="reset">Restore baseline scenario</button>
+</section>
+<section class="panel workspace"><h2>Synthetic observation and predicted boxes</h2>
+<p class="note">Dashed cyan boxes = known synthetic fish. Solid gold boxes = predicted matches. Solid red boxes = unmatched predictions. Tracked IDs are algorithmic labels, not independently known animal identities.</p>
+<svg id="scene" viewBox="0 0 820 445" role="img" aria-labelledby="sceneTitle sceneDesc"><title id="sceneTitle">Synthetic fish boxes and tracker predictions</title><desc id="sceneDesc">Fish locations and predicted boxes change with frame and user-defined simulation settings.</desc><rect x="0" y="0" width="820" height="445" rx="14" fill="#0e2b3f"></rect><g id="sceneItems"></g></svg>
+<label for="frame">Review synthetic frame <output id="frameOut">1 / 80</output></label><input id="frame" type="range" min="0" max="79" value="0" step="1">
+<div class="buttons"><button id="previous">Previous frame</button><button id="next">Next frame</button><button id="download">Download synthetic prediction CSV</button></div>
+<p id="frameStatus" role="status" aria-live="polite"></p>
+</section></div>
+<section class="panel"><h2>Computed evaluation</h2><div class="metric-grid">
+<div><span>Precision</span><strong id="precision">—</strong></div><div><span>Recall</span><strong id="recall">—</strong></div><div><span>F1</span><strong id="f1">—</strong></div><div><span>Matched true boxes</span><strong id="tp">—</strong></div><div><span>False positives</span><strong id="fp">—</strong></div><div><span>Missed true boxes</span><strong id="fn">—</strong></div><div><span>Tracker-ID changes</span><strong id="switches">—</strong></div><div><span>Matched frame transitions</span><strong id="transitions">—</strong></div>
+</div><p class="note">Detection boxes are paired greedily in descending IoU with a one-to-one constraint. The displayed ID-change count compares assigned labels for the same synthetic fish in adjacent matched frames. <strong>It is not official HOTA, IDF1, TrackEval, or an independent tracking benchmark.</strong> When no predictions exist, precision is defined as zero for this teaching dashboard.</p><p><a href="math-workbench.html">Explore the underlying equations</a> · <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/R/kinematics.R">Source example: released kinematics</a> · <a href="articles/validation-and-benchmarks.html">Actual validation requirements</a></p></section>
+<script type="module" src="scientific-tracking-lab.mjs"></script></main><footer class="footer">All interactive examples are synthetic teaching calculations; no real fish, empirical benchmark, validated underwater 3D, calibrated uncertainties or causal biological outcomes are represented. <a href="articles/capabilities-and-validation.html">Scientific evidence and limitations</a> · <a href="https://doi.org/10.5281/zenodo.24262905">Archived software DOI</a></footer></body></html>

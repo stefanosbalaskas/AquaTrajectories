@@ -69,6 +69,13 @@ jobs:
           node --check pkgdown/assets/plot-gallery-filter.js
           node --check scripts/check_site_research_portal.mjs
           node --check scripts/polish_site_metadata.mjs
+          node --check scripts/test_scientific_teaching.mjs
+          node --check pkgdown/assets/scientific-teaching-core.mjs
+          node --check pkgdown/assets/scientific-tracking-lab.mjs
+          node --check pkgdown/assets/math-workbench.mjs
+          node --check pkgdown/assets/plot-playground.mjs
+          node --check pkgdown/assets/experiment-protocol-builder.mjs
+          node scripts/test_scientific_teaching.mjs
           node --check scripts/test_synthetic_explorer.mjs
           node --check scripts/test_synthetic_lab.mjs
           node scripts/test_synthetic_explorer.mjs
@@ -94,6 +101,11 @@ jobs:
           test -s site/plot-gallery-filter.js
           test -s site/articles/quickstart-five-minutes.html
           test -s site/articles/plan-your-experiment.html
+          test -s site/articles/scientific-teaching.html
+          test -s site/scientific-tracking-lab.html
+          test -s site/math-workbench.html
+          test -s site/plot-playground.html
+          test -s site/experiment-protocol-builder.html
           test -s site/articles/experiment-starter-kit.html
           test -s site/articles/capabilities-and-validation.html
           test -s site/articles/video-to-results.html
