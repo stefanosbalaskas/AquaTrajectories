@@ -39,7 +39,7 @@
 <a class="aqt-card" href="articles/uncertainty.html"><div class="aqt-kicker">06 · Question</div><h3>Uncertainty-aware inference</h3><p>Pixel, optical, identity and trajectory perturbations, with explicit model assumptions.</p></a>
 <a class="aqt-card" href="articles/experimental-design.html"><div class="aqt-kicker">07 · Experiment</div><h3>Events and independent tanks</h3><p>Event alignment, tank-replicated summaries and defensible inferential units.</p></a>
 <a class="aqt-card" href="articles/aci-workflows.html"><div class="aqt-kicker">08 · Interact</div><h3>Animal–Computer Interaction</h3><p>Telemetry, choices, access inequality and bounded device-control research protocols.</p></a>
-<a class="aqt-card" href="articles/visualization-gallery.html"><div class="aqt-kicker">09 · Communicate</div><h3>Plots, figures and galleries</h3><p>Demonstration figures, publication storyboards, 3D projections and reproducible graphics.</p></a>
+<a class="aqt-card" href="articles/all-plot-functions.html"><div class="aqt-kicker">09 · Communicate</div><h3>All 22 plotting functions</h3><p>Demonstration figures, publication storyboards, 3D projections and reproducible graphics.</p></a>
 </div>
 
 ## A visual laboratory
@@ -78,6 +78,10 @@ Explore five invented trajectories in 3D, top, side and front projections. New l
 ## Transparent evidence and reproducible figures
 
 Before interpreting biological results, consult the [capability and validation matrix](articles/capabilities-and-validation.html), the [research evidence dashboard](articles/research-evidence-dashboard.html), and the [experiment design starter kit](articles/experiment-starter-kit.html). The dashboard links to reproducible tests and original source-evidence contracts; it does not invent benchmark accuracies.
+
+## Explore all 22 plotting functions
+
+The new [complete plotting-function visual atlas](articles/all-plot-functions.html) documents **all 22 `aqt_plot_*` exports**: 16 actual base-R plotting outputs reproduced from openly labeled synthetic inputs, and six separately labeled projected input previews for optional interactive `rgl` plots. Search by function name or scientific category, inspect scientific limitations, and copy the runnable calls. No projected preview is presented as a captured native `rgl` scene.
 
 ## Five complete, runnable publication figures
 

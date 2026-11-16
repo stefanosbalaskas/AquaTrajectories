@@ -13,6 +13,7 @@ const pages = [
   "articles/experiment-starter-kit.html",
   "articles/identity-occlusion-tutorial.html",
   "articles/research-evidence-dashboard.html",
+  "articles/all-plot-functions.html",
   "synthetic-explorer.html"
 ];
 const extras = [
@@ -29,6 +30,7 @@ const extras = [
   "starter-study-design.csv",
   "synthetic-explorer.js",
   "synthetic-lab.js",
+  "plot-gallery-filter.js",
   "synthetic-explorer.css"
 ];
 const read = p => fs.readFileSync(path.join(site,p), "utf8");
@@ -98,4 +100,11 @@ for(let i=0;i<nEntries;i++){
  off+=46+len+extra+comment;
 }
 assert.ok(entries.has("starter-tracks.csv")&&entries.has("starter-README.txt"));
-console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 9 core pages, 14 assets, 9 ZIP entries, internal links, release and synthetic guarantees");
+const gallery=read("articles/all-plot-functions.html");
+const galleryFunctions=Array.from(new Set(
+  [...gallery.matchAll(/id="fig-(plot-[a-z0-9-]+)"/g)].map(m=>m[1])));
+assert.equal(galleryFunctions.length,22,"Gallery must cover all 22 native plot exports");
+assert.match(gallery,/16 native base-R outputs/);
+assert.match(gallery,/six optional/);
+assert.match(gallery,/plot-gallery-filter\.js/);
+console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 10 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");
