@@ -127,19 +127,33 @@ statistical distribution of fish behavior.</p>
 </h3>
 <ol style="list-style-type: decimal">
 <li>Open the <a href="../synthetic-explorer.html">synthetic
-explorer</a>.</li>
-<li>Enable <strong>Simulated occlusion</strong> and move the slider
-around frames 90–125. One synthetic track temporarily disappears from
-observation. Its underlying invented path still exists, but observed
-positions are missing.</li>
-<li>Enable <strong>Illustrative ID switch</strong>, advance past frame
-125 and inspect the labels for the first two display tracks. They can
-exchange <em>observed labels</em> without the underlying invented fish
-exchanging bodies.</li>
-<li>Compare top (XY), side (XZ), front (YZ) and isometric projections. A
-drawing of 3D geometry is not measured physical XYZ.</li>
-<li>Switch the learning toggles off to see the unchanged deterministic
-trajectories.</li>
+explorer</a>. Choose <strong>Lesson 2: Missing fish
+observations</strong> to jump directly to frame 105.</li>
+<li>Use <strong>Simulate a missing observation</strong> (enabled in
+Lesson 2) and move the timeline around frames 90–125. One synthetic
+track temporarily disappears from observation. Its underlying invented
+path still exists, but observed positions are missing.</li>
+<li>Select <strong>Lesson 3: Track-ID confusion</strong> (or enable
+<strong>Illustrate an ID switch</strong>) and advance past frame 125 and
+inspect the labels for the first two display tracks. They can exchange
+<em>observed labels</em> without the underlying invented fish exchanging
+bodies.</li>
+<li>Choose <strong>Lesson 4: Compare camera projections</strong> to
+inspect synchronized schematic XY and XZ panels. Orbit the isometric
+view and compare coordinate projections; these are not real synchronized
+cameras or physically calibrated XYZ.</li>
+<li>Choose <strong>Lesson 5: Align an experimental event</strong> and
+jump to frame 150. The yellow event marker is an invented timestamp, not
+a treatment effect. View the arbitrary-unit movement-rate chart and
+answer the interpretation question.</li>
+<li>Toggle <strong>Illustrative detector boxes</strong>, adjust box-only
+pixel jitter, enable movement arrows, select a fish for focus, and
+experiment with playback speed and single-frame stepping. Jitter changes
+only drawn rectangles, not true synthetic coordinates.</li>
+<li>Export the teaching <strong>CSV</strong> (including underlying
+invented IDs, displayed labels and missingness) or <strong>SVG</strong>.
+Both exports are marked synthetic. Switch back to Lesson 1 to inspect
+the unperturbed deterministic scene.</li>
 </ol>
 <p>The rendered label changes are pedagogical only; no tracker actually
 ran. The figure explicitly marks simulated missingness. The example must
@@ -157,6 +171,23 @@ holdout provenance.</p>
 <p>See <a href="video-tracking.html">video intake</a>, <a href="research-datasets.html">research datasets</a>, <a href="validation-and-benchmarks.html">the evaluation contract</a>, and
 <a href="capabilities-and-validation.html">the capabilities
 matrix</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="interpretation-of-the-computed-panels">Interpretation of the computed panels<a class="anchor" aria-label="anchor" href="#interpretation-of-the-computed-panels"></a>
+</h3>
+<p><strong>Observed fish count:</strong> the number of displayed
+teaching observations at the current frame; hides missing F1 during the
+invented occlusion. <strong>Movement rate:</strong> Euclidean
+displacement between consecutive invented 3D points divided by the
+illustrative 1/30-second interval; displayed in <em>arbitrary units per
+simulated second</em>. <strong>Nearest neighbor:</strong> instantaneous
+distance in the invented 3D coordinate system. <strong>Event-relative
+time:</strong> time difference from the illustrative log at 5.0 seconds.
+No panel reports genuine fish welfare, model detection precision,
+calibration accuracy, or causal effects.</p>
+<p>The top and side camera panels project the same synthetic coordinates
+without any lens model, window refraction, occlusion segmentation, or
+image-processing model. They are concept teaching aids only.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

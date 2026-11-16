@@ -23,18 +23,32 @@ detector or a statistical distribution of fish behavior.
 
 1.  Open the [synthetic
     explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md).
-2.  Enable **Simulated occlusion** and move the slider around frames
-    90–125. One synthetic track temporarily disappears from observation.
-    Its underlying invented path still exists, but observed positions
-    are missing.
-3.  Enable **Illustrative ID switch**, advance past frame 125 and
-    inspect the labels for the first two display tracks. They can
-    exchange *observed labels* without the underlying invented fish
-    exchanging bodies.
-4.  Compare top (XY), side (XZ), front (YZ) and isometric projections. A
-    drawing of 3D geometry is not measured physical XYZ.
-5.  Switch the learning toggles off to see the unchanged deterministic
-    trajectories.
+    Choose **Lesson 2: Missing fish observations** to jump directly to
+    frame 105.
+2.  Use **Simulate a missing observation** (enabled in Lesson 2) and
+    move the timeline around frames 90–125. One synthetic track
+    temporarily disappears from observation. Its underlying invented
+    path still exists, but observed positions are missing.
+3.  Select **Lesson 3: Track-ID confusion** (or enable **Illustrate an
+    ID switch**) and advance past frame 125 and inspect the labels for
+    the first two display tracks. They can exchange *observed labels*
+    without the underlying invented fish exchanging bodies.
+4.  Choose **Lesson 4: Compare camera projections** to inspect
+    synchronized schematic XY and XZ panels. Orbit the isometric view
+    and compare coordinate projections; these are not real synchronized
+    cameras or physically calibrated XYZ.
+5.  Choose **Lesson 5: Align an experimental event** and jump to
+    frame 150. The yellow event marker is an invented timestamp, not a
+    treatment effect. View the arbitrary-unit movement-rate chart and
+    answer the interpretation question.
+6.  Toggle **Illustrative detector boxes**, adjust box-only pixel
+    jitter, enable movement arrows, select a fish for focus, and
+    experiment with playback speed and single-frame stepping. Jitter
+    changes only drawn rectangles, not true synthetic coordinates.
+7.  Export the teaching **CSV** (including underlying invented IDs,
+    displayed labels and missingness) or **SVG**. Both exports are
+    marked synthetic. Switch back to Lesson 1 to inspect the unperturbed
+    deterministic scene.
 
 The rendered label changes are pedagogical only; no tracker actually
 ran. The figure explicitly marks simulated missingness. The example must
@@ -57,3 +71,19 @@ datasets](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-
 contract](https://stefanosbalaskas.github.io/AquaTrajectories/articles/validation-and-benchmarks.md),
 and [the capabilities
 matrix](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md).
+
+### Interpretation of the computed panels
+
+**Observed fish count:** the number of displayed teaching observations
+at the current frame; hides missing F1 during the invented occlusion.
+**Movement rate:** Euclidean displacement between consecutive invented
+3D points divided by the illustrative 1/30-second interval; displayed in
+*arbitrary units per simulated second*. **Nearest neighbor:**
+instantaneous distance in the invented 3D coordinate system.
+**Event-relative time:** time difference from the illustrative log at
+5.0 seconds. No panel reports genuine fish welfare, model detection
+precision, calibration accuracy, or causal effects.
+
+The top and side camera panels project the same synthetic coordinates
+without any lens model, window refraction, occlusion segmentation, or
+image-processing model. They are concept teaching aids only.

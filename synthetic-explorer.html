@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta name="description" content="Original simulated aquatic trajectory explorer for illustrative teaching, not for interpreting real fish recordings.">
-  <title>Synthetic Trajectory Explorer | AquaTrajectories</title>
+  <title>Interactive Fish Tracking Teaching Lab | AquaTrajectories</title>
+  <meta name="theme-color" content="#071b2b">
   <link rel="stylesheet" href="synthetic-explorer.css">
 </head>
 <body>
@@ -17,12 +18,24 @@
   <main id="main">
     <section class="intro">
       <div class="eyebrow">Interactive teaching demonstration · synthetic data only</div>
-      <h1>Aquatic movement, from every angle.</h1>
-      <p>Explore a deterministic five-fish simulation in a conceptual 3D tank. Scrub time, play motion, change the projection, and inspect individual trajectories. No images or trajectories are taken from real fish, and displayed units are arbitrary.</p>
+      <h1>Fish tracking, explored frame by frame.</h1>
+      <p>Investigate a five-fish synthetic scene: compare two schematic cameras, pause at an occlusion, inspect label switches, explore a logged event, and export teaching data. Every path and metric is invented and has arbitrary coordinate units; nothing comes from real fish video.</p>
     </section>
     <section class="workspace" aria-label="Interactive synthetic trajectory explorer">
       <aside class="controls">
-        <h2>Explorer controls</h2>
+        <h2>Teaching lab controls</h2>
+        <div class="lesson-picker">
+          <label class="inputlabel" for="lessonPreset">Choose a guided lesson</label>
+          <select id="lessonPreset" aria-describedby="lessonText">
+            <option value="baseline">1 · Observe trajectories</option>
+            <option value="occlusion">2 · Missing fish observations</option>
+            <option value="identity">3 · Track-ID confusion</option>
+            <option value="multiview">4 · Compare camera projections</option>
+            <option value="event">5 · Align an experimental event</option>
+          </select>
+          <p id="lessonText" class="lesson-help">Start with five invented paths. Choose an exercise to jump to a meaningful frame.</p>
+          <button id="nextLesson" class="secondary-action" type="button">Next lesson <span aria-hidden="true">→</span></button>
+        </div>
         <fieldset class="views" aria-label="Projection view">
           <legend>Projection</legend>
           <label><input type="radio" name="view" value="iso" checked> Isometric 3D</label>
@@ -30,21 +43,52 @@
           <label><input type="radio" name="view" value="xz"> Side XZ</label>
           <label><input type="radio" name="view" value="yz"> Front YZ</label>
         </fieldset>
+        <label class="inputlabel" for="azimuth">3D orbit: <output id="azimuthValue">30°</output></label>
+        <input id="azimuth" type="range" min="0" max="360" step="5" value="30" aria-label="Rotate the schematic isometric tank">
+        <p class="mini-caption">Orbit changes the illustration, not camera calibration.</p>
         <fieldset class="fishfilters" aria-label="Fish tracks">
           <legend>Visible simulated tracks</legend>
           <div id="fishfilters"></div>
         </fieldset>
+        <label class="inputlabel" for="focusFish">Inspect one simulated fish</label>
+        <select id="focusFish" aria-label="Choose fish for the motion graph and statistics">
+          <option value="0">Fish F1 · Cyan</option>
+          <option value="1">Fish F2 · Amber</option>
+          <option value="2">Fish F3 · Lilac</option>
+          <option value="3">Fish F4 · Green</option>
+          <option value="4">Fish F5 · Rose</option>
+        </select>
         <fieldset class="learning" aria-label="Tracking error learning controls">
           <legend>Research teaching toggles</legend>
           <label><input id="occlusion-demo" type="checkbox"> Simulate a missing observation</label>
           <label><input id="idswitch-demo" type="checkbox"> Illustrate an ID switch after occlusion</label>
           <p class="meta">For teaching only: missing points and swapped labels are invented, not detector predictions.</p>
         </fieldset>
+        <fieldset class="learning" aria-label="Illustrative observation layers">
+          <legend>Observation &amp; camera layers</legend>
+          <label><input id="showBoxes" type="checkbox"> Draw schematic detector boxes</label>
+          <label><input id="showVectors" type="checkbox"> Show movement arrows</label>
+          <label><input id="showCameras" type="checkbox" checked> Compare top and side views</label>
+          <label><input id="showEvent" type="checkbox" checked> Mark a logged event</label>
+          <label class="inputlabel" for="noise">Illustrative box jitter: <output id="noiseValue">0 px</output></label>
+          <input id="noise" type="range" min="0" max="24" step="2" value="0" aria-label="Illustrative display pixel jitter on detector boxes">
+          <p class="mini-caption">Boxes and jitter are drawn for teaching; no detection model is running.</p>
+        </fieldset>
         <label class="inputlabel" for="trail">Trail length: <output id="trailValue">60</output> frames</label>
         <input id="trail" type="range" min="5" max="160" step="5" value="60" aria-label="Trail length in frames">
         <label class="inputlabel" for="frame">Timeline: <output id="frameValue">0.0 s / 10.0 s</output></label>
         <input id="frame" type="range" min="0" max="300" step="1" value="0" aria-label="Simulated recording time frame">
-        <div class="play"><button id="play" type="button">▶ Play</button><button id="reset" type="button">↺ Reset</button></div>
+        <div class="seek-label" id="eventReadout">Logged event at 5.0 s · not causal evidence</div>
+        <div class="play"><button id="stepBack" type="button" title="Previous frame">−1 frame</button><button id="play" type="button">▶ Play</button><button id="stepForward" type="button" title="Next frame">+1 frame</button><button id="reset" type="button">↺</button></div>
+        <div class="mini-actions">
+          <label for="playbackRate">Playback speed</label>
+          <select id="playbackRate"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+        </div>
+        <div class="jump-links" aria-label="Jump to teaching moments">
+          <button type="button" id="jumpOcclusion">Occlusion · 3.5s</button>
+          <button type="button" id="jumpSwitch">ID switch · 4.3s</button>
+          <button type="button" id="jumpEvent">Event · 5.0s</button>
+        </div>
         <p class="meta">300 equally spaced synthetic time steps at an illustrative 30 steps/second. This is not a video or hardware-synchronized recording.</p>
       </aside>
       <div class="stage">
@@ -59,10 +103,43 @@
           <g id="grid" aria-hidden="true"></g>
           <g id="paths"></g>
           <g id="heads"></g>
+          <g id="teachingOverlays" pointer-events="none"></g>
           <text x="22" y="38" fill="#8fc3d1" font-family="sans-serif" font-size="18">SIMULATED COORDINATES · ARBITRARY UNITS</text>
         </svg>
         <div class="legend" id="legend"></div>
+        <div class="metric-grid" aria-label="Computed synthetic scene readouts">
+          <div class="metric"><span>Fish observations</span><strong id="metricObserved">5 / 5</strong><small>at selected frame</small></div>
+          <div class="metric"><span>Focus movement rate</span><strong id="metricSpeed">—</strong><small>arbitrary units / s</small></div>
+          <div class="metric"><span>Nearest neighbor</span><strong id="metricNearest">—</strong><small>3D arbitrary units</small></div>
+          <div class="metric"><span>Event-relative time</span><strong id="metricEvent">−5.0 s</strong><small>logged synthetic event</small></div>
+        </div>
+        <div class="viz-grid">
+          <section class="viz-card" id="cameraPanel" aria-label="Synchronized illustrative camera views">
+            <div class="viz-heading"><h3>Two simultaneous schematic views</h3><span>Same invented 3D paths, no real cameras</span></div>
+            <div class="camera-grid">
+              <div><p>Camera A · top XY</p><svg id="cameraXY" viewBox="0 0 420 250" role="img" aria-label="Synthetic top-view fish tracks"></svg></div>
+              <div><p>Camera B · side XZ</p><svg id="cameraXZ" viewBox="0 0 420 250" role="img" aria-label="Synthetic side-view fish tracks"></svg></div>
+            </div>
+          </section>
+          <section class="viz-card" aria-label="Selected fish motion history">
+            <div class="viz-heading"><h3 id="speedTitle">F1 · computed movement</h3><span>Frame-to-frame synthetic 3D displacement / s</span></div>
+            <svg id="speedChart" viewBox="0 0 840 190" role="img" aria-label="Illustrative selected fish movement over time with event marker"></svg>
+            <p class="mini-caption">This plotted rate is mathematical displacement per simulated second, not a calibrated swimming speed or welfare indicator.</p>
+          </section>
+        </div>
+        <div class="lab-tools">
+          <button id="exportCsv" type="button">Export teaching observations (CSV)</button>
+          <button id="exportSvg" type="button">Save schematic scene (SVG)</button>
+          <span>Exports carry explicit <strong>synthetic</strong> labels; no uploaded recordings or external services.</span>
+        </div>
         <div class="learningstatus" role="status" aria-live="polite" aria-atomic="true" id="learningStatus">No teaching perturbations enabled.</div>
+        <div class="quiz-card" aria-label="Interactive interpretation exercise">
+          <div class="quiz-heading"><span>CHECK YOUR INTERPRETATION</span><span id="lessonProgress">Lesson 1 of 5</span></div>
+          <h3 id="quizQuestion">Does viewing a simulated 3D scene establish measured underwater XYZ accuracy?</h3>
+          <div class="quiz-actions"><button id="quizYes" type="button">Yes</button><button id="quizNo" type="button">No</button></div>
+          <p id="quizFeedback" role="status" aria-live="polite">Choose an answer to see the explanation.</p>
+        </div>
+        <p class="keyboard-help">Keyboard: <kbd>←</kbd> / <kbd>→</kbd> step by one frame, <kbd>Space</kbd> play or pause (when not editing a control). Click a fish marker to inspect it.</p>
         <div class="methodnote"><strong>What you are seeing:</strong> original deterministic curves and simplified orthographic projections. Neither a real 3D reconstruction nor a validated biological fish simulator. Turn on the occlusion toggle to hide fish F1 for frames 90–125 without connecting missing segments; enable ID switching to swap displayed labels F1/F2 after frame 125. These labels are a deliberately invented diagnostic illustration, not a tracker output. Real studies must supply physical camera calibration, fish ID reference labels, actual timestamps and measured XYZ uncertainty.</div>
       </div>
     </section>
@@ -78,5 +155,6 @@
   </main>
   <footer>© AquaTrajectories · MIT-licensed research software · this page is a client-side synthetic illustration.</footer>
   <script src="synthetic-explorer.js" defer></script>
+  <script src="synthetic-lab.js" defer></script>
 </body>
 </html>
