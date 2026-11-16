@@ -15,6 +15,13 @@
   synthetic fish tracks; calculate kinematics, align an event, and
   export reproducible CSV outputs.
 
+- [Scientific teaching
+  laboratories](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-teaching.md):
+
+  Four deterministic browser-based aquatic movement teaching
+  demonstrations with transparent mathematical calculations and
+  downloadable synthetic planning protocols.
+
 - [Plan your aquatic video
   experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):
 

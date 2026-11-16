@@ -71,6 +71,11 @@ Direct native output from the package’s plotting function.
 **Interpretation boundary:** Tracks are simulated in tank/cm units;
 labels are camera-local.
 
+[Adjust parameters in the synthetic browser
+playground](https://stefanosbalaskas.github.io/AquaTrajectories/plot-playground.html?mode=paths)
+— Adjust fish count and path duration. Browser previews are not native R
+plots; the linked R recipe executes the released function.
+
 Reproduce this example
 
 ``` r
@@ -186,6 +191,11 @@ Native conditional scenario paths with original trajectory overlay.
 
 **Interpretation boundary:** Not a calibrated predictive interval,
 posterior or independent measurement.
+
+[Adjust parameters in the synthetic browser
+playground](https://stefanosbalaskas.github.io/AquaTrajectories/plot-playground.html?mode=ensemble)
+— Explore assumed positional error and correlation. Browser previews are
+not native R plots; the linked R recipe executes the released function.
 
 Reproduce this example
 
@@ -505,6 +515,11 @@ observed simulated fish.
 
 **Interpretation boundary:** Movement group structure can be sensitive
 to observed fish count and tracking loss.
+
+[Adjust parameters in the synthetic browser
+playground](https://stefanosbalaskas.github.io/AquaTrajectories/plot-playground.html?mode=school)
+— Change synthetic group trajectories. Browser previews are not native R
+plots; the linked R recipe executes the released function.
 
 Reproduce this example
 

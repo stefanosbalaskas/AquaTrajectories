@@ -182,6 +182,54 @@ recordings](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-yo
 Camera count alone does not establish physically calibrated XYZ or
 biological identity.
 
+## Scientific teaching: four interactive laboratories
+
+Explore deterministic examples that separate **what software computes**
+from **what real biological observations establish**. Each exercise runs
+locally in the browser, uses invented inputs, and links to the published
+v0.1.1 R documentation.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/scientific-tracking-lab.md)
+
+01 · Evaluate
+
+### Detector and tracker lab
+
+Move detection noise, missingness, false positives and ID switches;
+inspect computed synthetic precision, recall, F1 and identity changes.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/math-workbench.md)
+
+02 · Explain
+
+### Mathematical movement workbench
+
+Inspect velocity vectors, group polarization and camera-clock offsets
+with live mathematical readouts.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/plot-playground.md)
+
+03 · Explore
+
+### Adjust scientific plots
+
+Manipulate browser previews for three analytical plot families and
+export runnable version-pinned R examples.
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/experiment-protocol-builder.md)
+
+04 · Plan
+
+### Download synthetic protocols
+
+Generate a camera/tank/session planning checklist and a blank-valued CSV
+intake manifest.
+
+These are **synthetic teaching labs**, not real-video benchmark results
+or a fully executable R environment. See the [teaching
+guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-teaching.md)
+for interpretation and related code.
+
 ## A visual laboratory
 
 ![Stylized underwater environment showing fish silhouettes,
@@ -745,6 +793,13 @@ Source data digest recording and verification.
   Install released AquaTrajectories v0.1.1; generate explicitly
   synthetic fish tracks; calculate kinematics, align an event, and
   export reproducible CSV outputs.
+
+- [Scientific teaching
+  laboratories](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-teaching.md):
+
+  Four deterministic browser-based aquatic movement teaching
+  demonstrations with transparent mathematical calculations and
+  downloadable synthetic planning protocols.
 
 - [Plan your aquatic video
   experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):

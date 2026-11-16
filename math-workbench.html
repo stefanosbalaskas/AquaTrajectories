@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><meta name="description" content="Interactive synthetic vector kinematics, fish-school polarization and camera clock synchronization equations.">
+<title>Mathematical movement workbench | AquaTrajectories</title><link rel="stylesheet" href="scientific-teaching.css"></head><body>
+<a class="skip" href="#main">Skip to lesson</a><header class="sitebar"><a class="brand" href="index.html">◉ AquaTrajectories</a><nav aria-label="Teaching lab navigation"><a href="scientific-tracking-lab.html">Tracking evaluation</a><a href="math-workbench.html">Mathematics</a><a href="plot-playground.html">Plot playground</a><a href="experiment-protocol-builder.html">Experiment protocols</a><a href="articles/all-plot-functions.html">R plots</a></nav></header>
+<main id="main" class="shell"><p class="eyebrow">Scientific teaching · synthetic demonstration only · v0.1.1</p><h1>Understand the mathematics behind aquatic trajectories</h1><p class="lede">Change the inputs and watch mathematical quantities update. These illustrations are deterministic, low-dimensional teaching examples—not a browser implementation of every v0.1.1 method or a camera calibration.</p>
+<div class="lab-layout"><section class="panel controls">
+<h2>1. Timestamp-aware swimming speed</h2>
+<label for="dx">Δx (cm) <output id="dxOut"></output></label><input type="range" id="dx" min="-20" max="20" value="12" step="1">
+<label for="dy">Δy (cm) <output id="dyOut"></output></label><input type="range" id="dy" min="-20" max="20" value="5" step="1">
+<label for="dt">Δt (seconds) <output id="dtOut"></output></label><input type="range" id="dt" min="0.1" max="5" value="2" step=".1">
+<p class="formula" aria-label="Velocity is displacement vector divided by elapsed time">v = (p₂ − p₁)/Δt; speed = √(Δx²+Δy²)/Δt</p>
+<output class="reading" id="speedReadout"></output>
+<p class="note">Matches the finite-difference concept in <a href="reference/aqt_kinematics.html">aqt_kinematics()</a>. The released function also requires valid observed positions, positive timestamps, and permitted time gaps.</p>
+</section><section class="panel workspace"><h2>Displacement vector</h2><svg id="vectorScene" viewBox="0 0 460 340" role="img" aria-label="Synthetic displacement arrow with Cartesian axes"><rect width="460" height="340" rx="14" fill="#0e2b3f"></rect><g id="vectorItems"></g></svg></section></div>
+<div class="lab-layout"><section class="panel controls"><h2>2. Group directional polarization</h2>
+<label for="spread">Angular spread of five fish (degrees) <output id="spreadOut"></output></label><input id="spread" type="range" min="0" max="180" value="50" step="5">
+<p class="formula" aria-label="Group polarization is length of the mean normalized heading vector">P = ‖(1/N) Σ [vᵢ / ‖vᵢ‖]‖</p>
+<output class="reading" id="polarizationReadout"></output>
+<p class="note">This visualization uses five nonzero unit headings, so polarization lies between 0 and 1. <a href="reference/aqt_group_metrics.html">aqt_group_metrics()</a> additionally requires simultaneous valid observations.</p></section><section class="panel workspace"><h2>Five synthetic headings</h2><svg id="schoolScene" viewBox="0 0 460 340" role="img" aria-label="Five simulated direction arrows and their resultant polarization"><rect width="460" height="340" rx="14" fill="#0e2b3f"></rect><g id="schoolItems"></g></svg></section></div>
+<section class="panel"><h2>3. Cross-camera affine clock relationship</h2><div class="three-col">
+<div><label for="clockTime">Camera timestamp (s) <output id="clockTimeOut"></output></label><input id="clockTime" type="range" min="0" max="300" value="120" step="5"></div>
+<div><label for="offset">Reference offset (s) <output id="offsetOut"></output></label><input id="offset" type="range" min="-1" max="1" value=".2" step=".05"></div>
+<div><label for="drift">Clock drift (ppm) <output id="driftOut"></output></label><input id="drift" type="range" min="-500" max="500" value="100" step="25"></div>
+</div><p class="formula">t_reference = a + (1 + d · 10⁻⁶) × t_camera</p>
+<output class="reading" id="clockReadout"></output><p class="note">The displayed mapping is algebraic. Fitted and holdout pulse residuals require independently corresponding physical synchronization events. See <a href="reference/aqt_sync_holdout_fit.html">aqt_sync_holdout_fit()</a>.</p>
+</section><p><a href="scientific-tracking-lab.html">Try the tracking evaluation simulator</a> · <a href="plot-playground.html">Explore synthetic graphics</a></p>
+<script type="module" src="math-workbench.mjs"></script></main><footer class="footer">All interactive examples are synthetic teaching calculations; no real fish, empirical benchmark, validated underwater 3D, calibrated uncertainties or causal biological outcomes are represented. <a href="articles/capabilities-and-validation.html">Scientific evidence and limitations</a> · <a href="https://doi.org/10.5281/zenodo.24262905">Archived software DOI</a></footer></body></html>
