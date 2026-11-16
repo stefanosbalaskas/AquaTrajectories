@@ -178,10 +178,10 @@ assert.match(home,/research-geometry.html/);
 assert.match(home,/research-webr.html/);
 assert.match(home,/research-multiview.html/);
 assert.match(home,/research-data-inspector.html/);
-assert.match(read("research-webr.mjs"),/v0\\.6\\.1\\/webr\\.mjs/);
+assert.ok(read("research-webr.mjs").includes("https://webr.r-wasm.org/v0.6.1/webr.mjs"),"Pinned webR CDN import missing");
 assert.match(read("research-webr.mjs"),/PostMessage/);
 for(const name of ["research-multiview.mjs","research-inspector.mjs"]){
  const content=read(name);
- assert.doesNotMatch(content,/fetch\\s*\\(|XMLHttpRequest|sendBeacon/,"User selected data cannot be uploaded: "+name);
+ for(const forbidden of ["fetch(", "XMLHttpRequest", "sendBeacon"]) assert.ok(!content.includes(forbidden),"Local research module must not upload files: "+name);
 }
 console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 11 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");
