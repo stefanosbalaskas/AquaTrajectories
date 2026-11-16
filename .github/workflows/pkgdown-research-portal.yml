@@ -137,8 +137,45 @@ jobs:
           path: site/
           if-no-files-found: error
 
-  deploy:
+  browser:
     needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          name: aquatrajectories-pkgdown-preview
+          path: site
+      - name: Native R source provenance and large private CSV budget
+        run: |
+          cmp R/tracks.R pkgdown/assets/native-v0.1.1-tracks.R
+          cmp R/kinematics.R pkgdown/assets/native-v0.1.1-kinematics.R
+          node scripts/test_local_perf_budget.mjs
+      - name: Install pinned Chromium and accessibility dependencies
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.65.1 @axe-core/playwright@4.14.0
+          npx playwright install --with-deps chromium
+      - name: Qualify the exact downloadable site artifact in Chromium
+        env:
+          CI: "true"
+          RUN_WEBR_NETWORK: "1"
+        run: npx playwright test --config scripts/browser.playwright.config.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aquatrajectories-browser-qualification
+          path: |
+            site-qualification/playwright-report/
+            site-qualification/playwright-results/
+            site-qualification/geometry-browser.png
+          if-no-files-found: warn
+
+  deploy:
+    needs: [build, browser]
     # The live Pages source currently publishes from gh-pages/(root).
     # Enable this job ONLY after switching Settings > Pages > Source to GitHub Actions
     # and setting repository variable AQT_PAGES_ACTIONS_ENABLED=true.
@@ -168,7 +205,7 @@ jobs:
     # Current Pages source is gh-pages/(root), not the Actions deployment source.
     # Only publish a site after successful build on a main-branch push. PRs
     # produce preview artifacts only and cannot write to gh-pages.
-    needs: build
+    needs: [build, browser]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
