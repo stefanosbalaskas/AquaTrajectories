@@ -118,7 +118,15 @@ Initialize. It explicitly uses GitHub Pages-compatible
 not accepted by the page. Curated bounded examples are executed using
 real <em>base R</em> for finite differences, directional polarization,
 affine clock transformation and synthetic trajectory summaries.</p>
-<p>The AquaTrajectories v0.1.1 R package is <strong>not bundled or
+<p>An optional <strong>actual v0.1.1 function-source subset</strong> is
+now available in a separate on-demand mode. The browser can load
+byte-identical archived implementations of <code><a href="../reference/aqt_tracks.html">aqt_tracks()</a></code>,
+<code><a href="../reference/aqt_kinematics.html">aqt_kinematics()</a></code> and <code><a href="../reference/aqt_group_metrics.html">aqt_group_metrics()</a></code>,
+source them into webR and execute the real functions on a small
+synthetic example. This is <strong>source-level execution</strong>, not
+compilation or installation of the whole R package for WebAssembly.
+Native source hashes are checked against the released files in CI.</p>
+<p>The full AquaTrajectories v0.1.1 R package is <strong>not bundled or
 verified as WebAssembly-compatible</strong>. Native R plotting/function
 execution remains documented in the <a href="all-plot-functions.html">plot atlas</a>. Interpreter download
 requires an external network request, although the computation is
@@ -162,6 +170,15 @@ measurement units, causal treatment effects or publication-ready
 inferential validity. Scientific research should still run the package’s
 <a href="../reference/aqt_tracks_validate.html">track validation</a> and
 QC functions.</p>
+</div>
+<div class="section level3">
+<h3 id="real-original-video-records">Real original-video records<a class="anchor" aria-label="anchor" href="#real-original-video-records"></a>
+</h3>
+<p>The <a href="real-fish-data-walkthrough.html">DIGI4ECO source-video
+walkthrough</a> provides a licence-compliant local workflow for original
+video, source annotation boxes, precise timestamps and file hashes.
+Original labels are never presented as software predictions or
+independent physical XYZ targets.</p>
 </div>
 <div class="section level3">
 <h3 id="version-provenance-and-limitations">Version, provenance and limitations<a class="anchor" aria-label="anchor" href="#version-provenance-and-limitations"></a>

@@ -29,6 +29,12 @@
   single-interface rays, curated webR calculations, source-clock
   multiview review, and local CSV quality checks.
 
+- [Original underwater fish video: reproducible source-annotation
+  walkthrough](https://stefanosbalaskas.github.io/AquaTrajectories/articles/real-fish-data-walkthrough.md):
+
+  Work with the CC BY 4.0 DIGI4ECO underwater video, original CVAT fish
+  labels and frame PTS locally without invented detector predictions.
+
 - [Plan your aquatic video
   experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md):
 

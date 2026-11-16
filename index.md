@@ -182,6 +182,15 @@ recordings](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-yo
 Camera count alone does not establish physically calibrated XYZ or
 biological identity.
 
+## Original video reproducibility
+
+The [licensed DIGI4ECO video
+walkthrough](https://stefanosbalaskas.github.io/AquaTrajectories/articles/real-fish-data-walkthrough.md)
+converts original underwater MP4 and source CVAT tracking annotations
+using actual PTS and SHA-256 provenance. These are **source-author
+labels, not AquaTrajectories model predictions**; the website does not
+redistribute original footage or claim unverified accuracy.
+
 ## Phase 3 — Research laboratory
 
 The four new [research-laboratory

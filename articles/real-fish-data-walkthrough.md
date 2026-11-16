@@ -1,0 +1,118 @@
+# Original underwater fish video: reproducible source-annotation walkthrough
+
+## Real underwater video: original-source workflow
+
+This walkthrough uses the **DIGI4ECO Underwater Fish Tracking Dataset**,
+archived at [DOI
+10.5281/zenodo.20701225](https://doi.org/10.5281/zenodo.20701225) under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The original
+dataset includes underwater MP4 videos and **source-author CVAT 1.1
+track annotations**. You must credit the dataset creators and identify
+modifications when using the data.
+
+**No original third-party video or annotations are copied into
+AquaTrajectories or redistributed by its website.** Download the files
+directly from the original Zenodo record. The instructions below operate
+locally and produce source-labelled observation tables, **not model
+predictions or independently evaluated performance**.
+
+### Step 1 — Acquire and preserve original media
+
+Select one source sequence, for example the smaller OBSEA recording, and
+retain the downloaded original video.mp4 and annotations.xml. Record the
+Zenodo version and the dataset licence.
+
+Use FFmpeg/ffprobe to extract the decoded frame presentation timestamp
+rather than manufacturing time from frame index and nominal FPS:
+
+    ffprobe -v error -select_streams v:0 \
+      -show_entries frame=best_effort_timestamp_time \
+      -of csv=p=0 "OBSEA/video.mp4" > "OBSEA/source_pts.csv"
+
+The converter requires one valid, strictly increasing raw PTS value for
+every decoded frame. Failed timestamp checks should trigger
+investigation of the original recording; never interpolate missing
+source timing evidence to force a valid audit.
+
+### Step 2 — Convert original CVAT tracks, retaining provenance
+
+From an AquaTrajectories repository checkout:
+
+    python3 scripts/convert_digi4eco_cvat.py \
+      --video "OBSEA/video.mp4" \
+      --annotations "OBSEA/annotations.xml" \
+      --pts "OBSEA/source_pts.csv" \
+      --output "local_outputs/OBSEA" \
+      --session "DIGI4ECO_OBSEA" \
+      --camera "CAM1"
+
+The standard-library converter writes:
+
+| Local output | Contents and limitations |
+|----|----|
+| source_frames.csv | Original frame IDs, raw decoded PTS, recording-relative time, source video dimensions |
+| source_2d_tracks.csv | Camera-local source CVAT fish IDs, annotation-box centres, observed/missing rows and original occlusion flags |
+| reviewed_source_boxes.csv | Original source-author labels and fish bounding boxes; not AquaTrajectories detections |
+| provenance.json | Video, XML and PTS SHA-256 digests; source counts; explicit scientific validity flags |
+
+An annotation with outside=1 becomes an unobserved row with **blank
+position coordinates**. An annotation with occluded=1 remains flagged;
+the converter does not silently discard partially visible animals.
+Original track IDs are preserved as source annotation IDs, not certified
+biological identities.
+
+### Step 3 — Review original video and annotation coordinates
+
+Open the [local research data
+inspector](https://stefanosbalaskas.github.io/AquaTrajectories/research-data-inspector.md)
+and select source_2d_tracks.csv for original-data timestamp and
+missingness checks.
+
+You may also open the [local multiview evidence
+desk](https://stefanosbalaskas.github.io/AquaTrajectories/research-multiview.md).
+For this single-camera example, choose source_frames.csv under frame
+manifest, source_2d_tracks.csv under 2D tracks, and the **original
+video.mp4** in Camera A. Leave Camera B and source XYZ blank. This is a
+review of original video and original annotations, not stereo
+reconstruction or validation of a software detector.
+
+Browser video seeking can land near presentation timestamps, depending
+on codec and media playback behavior. No browser timestamp alignment
+proves physical shutter synchronization.
+
+### Step 4 — Separate real source evidence from algorithmic inference
+
+These files contain genuine recorded fish observations and source-author
+annotations. They do **not** contain predictions from AquaTrajectories,
+YOLO or ByteTrack. Do not calculate F1, HOTA or IDF1 by comparing the
+source labels against themselves.
+
+An independent computational benchmark would additionally need frozen
+detector/tracker predictions, matching rules, reviewed source
+annotations and sufficiently independent holdout recordings. An
+underwater XYZ benchmark would separately require a calibrated multiview
+setup and physically surveyed targets; the DIGI4ECO source labels alone
+cannot certify underwater XYZ.
+
+### Step 5 — Verify the converter and document attribution
+
+Run the converter’s automated structural test:
+
+    python3 scripts/test_convert_digi4eco_cvat.py
+
+This test uses **invented three-frame CVAT fixture records**, not the
+published DIGI4ECO video. It checks occlusion, outside/missingness,
+original PTS and provenance handling. Running it does not constitute a
+real-video model benchmark. The genuine data-processing command above
+must be run separately after acquiring the original media; the website
+CI does not download third-party videos.
+
+**Cite the original data:** [DIGI4ECO Underwater Fish Tracking Dataset
+(2026)](https://doi.org/10.5281/zenodo.20701225), original dataset
+authors, CC BY 4.0.
+
+**Cite the software:** [AquaTrajectories
+v0.1.1](https://doi.org/10.5281/zenodo.24262905).
+
+For the research context, see the [evidence and limitations
+dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md).

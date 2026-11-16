@@ -43,9 +43,21 @@ Curated bounded examples are executed using real *base R* for finite
 differences, directional polarization, affine clock transformation and
 synthetic trajectory summaries.
 
-The AquaTrajectories v0.1.1 R package is **not bundled or verified as
-WebAssembly-compatible**. Native R plotting/function execution remains
-documented in the [plot
+An optional **actual v0.1.1 function-source subset** is now available in
+a separate on-demand mode. The browser can load byte-identical archived
+implementations of
+[`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md),
+[`aqt_kinematics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_kinematics.md)
+and
+[`aqt_group_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_group_metrics.md),
+source them into webR and execute the real functions on a small
+synthetic example. This is **source-level execution**, not compilation
+or installation of the whole R package for WebAssembly. Native source
+hashes are checked against the released files in CI.
+
+The full AquaTrajectories v0.1.1 R package is **not bundled or verified
+as WebAssembly-compatible**. Native R plotting/function execution
+remains documented in the [plot
 atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.md).
 Interpreter download requires an external network request, although the
 computation is performed on the user’s machine.
@@ -90,6 +102,15 @@ inferential validity. Scientific research should still run the package’s
 [track
 validation](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)
 and QC functions.
+
+### Real original-video records
+
+The [DIGI4ECO source-video
+walkthrough](https://stefanosbalaskas.github.io/AquaTrajectories/articles/real-fish-data-walkthrough.md)
+provides a licence-compliant local workflow for original video, source
+annotation boxes, precise timestamps and file hashes. Original labels
+are never presented as software predictions or independent physical XYZ
+targets.
 
 ### Version, provenance and limitations
 
