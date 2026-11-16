@@ -205,6 +205,8 @@ Direct native output from the package's plotting function.
 
 **Interpretation boundary:** Tracks are simulated in tank/cm units; labels are camera-local.
 
+<p class="aqt-plot-interactive"><a href="../plot-playground.html?mode=paths">Adjust parameters in the synthetic browser playground</a> — Adjust fish count and path duration. Browser previews are not native R plots; the linked R recipe executes the released function.</p>
+
 <details id="code-plot-paths"><summary>Reproduce this example</summary>
 
 ~~~r
@@ -291,6 +293,8 @@ aqt_plot_ensemble2d(ensemble2, "S01", "SIM", "fish1", n_draws = 20L)
 Native conditional scenario paths with original trajectory overlay.
 
 **Interpretation boundary:** Not a calibrated predictive interval, posterior or independent measurement.
+
+<p class="aqt-plot-interactive"><a href="../plot-playground.html?mode=ensemble">Adjust parameters in the synthetic browser playground</a> — Explore assumed positional error and correlation. Browser previews are not native R plots; the linked R recipe executes the released function.</p>
 
 <details id="code-plot-ensemble2d"><summary>Reproduce this example</summary>
 
@@ -538,6 +542,8 @@ aqt_plot_school_dynamics(group_summary, "S01", "SIM")
 Native school-radius or distance trend computed from simultaneously observed simulated fish.
 
 **Interpretation boundary:** Movement group structure can be sensitive to observed fish count and tracking loss.
+
+<p class="aqt-plot-interactive"><a href="../plot-playground.html?mode=school">Adjust parameters in the synthetic browser playground</a> — Change synthetic group trajectories. Browser previews are not native R plots; the linked R recipe executes the released function.</p>
 
 <details id="code-plot-school-dynamics"><summary>Reproduce this example</summary>
 

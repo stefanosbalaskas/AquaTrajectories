@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><meta name="description" content="Generate downloadable synthetic aquatic video study planning protocols and blank acquisition manifests locally in your browser.">
+<title>Aquatic experiment protocol builder | AquaTrajectories</title><link rel="stylesheet" href="scientific-teaching.css"></head><body>
+<a class="skip" href="#main">Skip to lesson</a><header class="sitebar"><a class="brand" href="index.html">◉ AquaTrajectories</a><nav aria-label="Teaching lab navigation"><a href="scientific-tracking-lab.html">Tracking evaluation</a><a href="math-workbench.html">Mathematics</a><a href="plot-playground.html">Plot playground</a><a href="experiment-protocol-builder.html">Experiment protocols</a><a href="articles/all-plot-functions.html">R plots</a></nav></header>
+<main id="main" class="shell"><p class="eyebrow">Scientific teaching · synthetic demonstration only · v0.1.1</p><h1>Build a reproducible recording protocol</h1><p class="lede">Choose an illustrative study design and download a planning document plus a blank session–camera manifest. <strong>No experimental observations are created</strong>; these files are intended to guide future acquisition, annotation, synchronization and independent-tank analysis.</p>
+<div class="lab-layout"><section class="panel controls"><h2>Planned design parameters</h2>
+<label for="study">Study code</label><input type="text" id="study" value="AQT-SYNTHETIC-PLAN" maxlength="40">
+<label for="cameras">Number of cameras per tank</label><select id="cameras"><option value="1">1 · 2D</option><option value="2" selected>2 · conditional 3D</option></select>
+<label for="tanks">Independent tanks <output id="tanksOut">4</output></label><input id="tanks" type="range" min="1" max="20" value="4" step="1">
+<label for="fish">Fish per tank (planned) <output id="fishOut">5</output></label><input id="fish" type="range" min="1" max="25" value="5" step="1">
+<label for="sessions">Sessions per tank <output id="sessionsOut">3</output></label><input id="sessions" type="range" min="1" max="12" value="3" step="1">
+<label for="minutes">Minutes per session <output id="minutesOut">20</output></label><input id="minutes" type="range" min="1" max="120" value="20" step="1">
+<label for="fps">Nominal planned FPS <output id="fpsOut">30</output></label><input id="fps" type="range" min="10" max="120" value="30" step="10">
+<button id="reset" class="secondary">Restore example design</button>
+</section><section class="panel workspace"><h2>Protocol preview</h2><p id="protocolStats" role="status" aria-live="polite"></p><pre class="protocol-preview" tabindex="0" id="preview"></pre>
+<div class="buttons"><button id="downloadMd">Download protocol .md</button><button id="downloadCsv">Download blank camera-session CSV</button></div>
+<p class="note">All generation runs inside this browser tab. CSV cells for real source files, SHA-256 hashes, physical sync and independently surveyed XYZ evidence remain <strong>blank</strong>, not fictitiously verified.</p>
+</section></div>
+<section class="panel"><h2>Reusable static starter templates</h2><p>Prefer a fixed demonstration? Download the <a href="synthetic-experiment-protocol.md" download>sample synthetic protocol (Markdown)</a> and <a href="synthetic-session-manifest.csv" download>blank-valued session-camera manifest (CSV)</a>.</p>
+<p>Before live acquisition, consult the <a href="articles/plan-your-experiment.html">camera-aware experiment planner</a>, <a href="articles/experiment-starter-kit.html">starter input formats</a> and <a href="articles/experimental-design.html">independent tank-level inference guidance</a>. Ethical approval and researcher validation are not automated.</p></section>
+<script type="module" src="experiment-protocol-builder.mjs"></script></main><footer class="footer">All interactive examples are synthetic teaching calculations; no real fish, empirical benchmark, validated underwater 3D, calibrated uncertainties or causal biological outcomes are represented. <a href="articles/capabilities-and-validation.html">Scientific evidence and limitations</a> · <a href="https://doi.org/10.5281/zenodo.24262905">Archived software DOI</a></footer></body></html>
