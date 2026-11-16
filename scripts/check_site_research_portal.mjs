@@ -105,6 +105,17 @@ const galleryFunctions=Array.from(new Set(
   [...gallery.matchAll(/id="fig-(plot-[a-z0-9-]+)"/g)].map(m=>m[1])));
 assert.equal(galleryFunctions.length,22,"Gallery must cover all 22 native plot exports");
 assert.match(gallery,/16 native base-R outputs/);
-assert.match(gallery,/six optional/);
+assert.match(gallery,/<strong>six\\s+optional\\s+<code>rgl<\\/code>/);
+const cards=[...gallery.matchAll(/class="aqt-plot-entry"/g)].length;
+assert.equal(cards,22,"Every plot function must have a visible card");
+const nativeCards=[...gallery.matchAll(/data-mode="native"/g)].length;
+const rglCards=[...gallery.matchAll(/data-mode="rgl"/g)].length;
+assert.equal(nativeCards,16,"Expected 16 native figure cards");
+assert.equal(rglCards,6,"Expected six explicitly marked rgl input preview cards");
+const figures=[...gallery.matchAll(/<img\\b[^>]*>/gi)];
+assert.ok(figures.length>=23,"22 figure outputs plus the site logo must be present");
+const figureAlts=figures.map(m=>m[0]).join(" ");
+assert.match(figureAlts,/Actual plot rendered by aqt_plot_paths/);
+assert.match(figureAlts,/Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_voxel3d/);
 assert.match(gallery,/plot-gallery-filter\.js/);
 console.log("AQT_WEBSITE_RESEARCH_SMOKE_PASS: 10 core pages, 15 assets, 22 plotted functions, internal links and synthetic data guarantees");

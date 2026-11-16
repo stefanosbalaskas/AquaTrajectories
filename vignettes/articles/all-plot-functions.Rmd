@@ -192,7 +192,7 @@ gallery_xyz_preview <- function(x, y, z, label, groups = NULL,
 
 ```
 
-<div class="aqt-plot-entry" data-category="Trajectories" data-mode="native" data-search="aqt_plot_paths trajectories 2d trajectory plot">
+::: {.aqt-plot-entry data-category="Trajectories" data-mode="native" data-search="aqt_plot_paths trajectories 2d trajectory plot"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Trajectories</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-paths">aqt_plot_paths()</h2><p>2D trajectory plot</p></div><a href="../reference/aqt_plot_paths.html">Full function reference</a></div>
 
 ```{r gallery-plot-paths, fig.alt="Actual plot rendered by aqt_plot_paths from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -211,9 +211,9 @@ aqt_plot_paths(toy2)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_path3d 3d scenes 3d trajectory paths">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_path3d 3d scenes 3d trajectory paths"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-path3d">aqt_plot_path3d()</h2><p>3D trajectory paths</p></div><a href="../reference/aqt_plot_path3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-path3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_path3d", fig.height=5.4, fig.width=8.8}
@@ -235,9 +235,9 @@ aqt_plot_path3d(toy3)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_calibration_comparison publication held-out xyz calibration comparison">
+::: {.aqt-plot-entry data-category="Publication" data-mode="native" data-search="aqt_plot_calibration_comparison publication held-out xyz calibration comparison"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-calibration-comparison">aqt_plot_calibration_comparison()</h2><p>Held-out XYZ calibration comparison</p></div><a href="../reference/aqt_plot_calibration_comparison.html">Full function reference</a></div>
 
 ```{r gallery-plot-calibration-comparison, fig.alt="Actual plot rendered by aqt_plot_calibration_comparison from synthetic input", fig.height=9.2, fig.width=8.8}
@@ -256,9 +256,9 @@ aqt_plot_calibration_comparison(calibration, units = 'cm')
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Behaviour" data-mode="native" data-search="aqt_plot_changepoints behaviour change-point diagnostics">
+::: {.aqt-plot-entry data-category="Behaviour" data-mode="native" data-search="aqt_plot_changepoints behaviour change-point diagnostics"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Behaviour</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-changepoints">aqt_plot_changepoints()</h2><p>Change-point diagnostics</p></div><a href="../reference/aqt_plot_changepoints.html">Full function reference</a></div>
 
 ```{r gallery-plot-changepoints, fig.alt="Actual plot rendered by aqt_plot_changepoints from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -277,9 +277,9 @@ aqt_plot_changepoints(cp_fit)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Uncertainty" data-mode="native" data-search="aqt_plot_ensemble2d uncertainty 2d measurement-error scenarios">
+::: {.aqt-plot-entry data-category="Uncertainty" data-mode="native" data-search="aqt_plot_ensemble2d uncertainty 2d measurement-error scenarios"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Uncertainty</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-ensemble2d">aqt_plot_ensemble2d()</h2><p>2D measurement-error scenarios</p></div><a href="../reference/aqt_plot_ensemble2d.html">Full function reference</a></div>
 
 ```{r gallery-plot-ensemble2d, fig.alt="Actual plot rendered by aqt_plot_ensemble2d from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -298,9 +298,9 @@ aqt_plot_ensemble2d(ensemble2, "S01", "SIM", "fish1", n_draws = 20L)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_ensemble3d 3d scenes 3d measurement-error scenarios">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_ensemble3d 3d scenes 3d measurement-error scenarios"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-ensemble3d">aqt_plot_ensemble3d()</h2><p>3D measurement-error scenarios</p></div><a href="../reference/aqt_plot_ensemble3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-ensemble3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_ensemble3d", fig.height=5.4, fig.width=8.8}
@@ -325,9 +325,9 @@ aqt_plot_ensemble3d(ensemble3, 'S01', 'SIM', 'fish1')
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_feeding_states publication descriptive feeding-index phases">
+::: {.aqt-plot-entry data-category="Publication" data-mode="native" data-search="aqt_plot_feeding_states publication descriptive feeding-index phases"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-feeding-states">aqt_plot_feeding_states()</h2><p>Descriptive feeding-index phases</p></div><a href="../reference/aqt_plot_feeding_states.html">Full function reference</a></div>
 
 ```{r gallery-plot-feeding-states, fig.alt="Actual plot rendered by aqt_plot_feeding_states from synthetic input", fig.height=5.4, fig.width=10.2}
@@ -346,9 +346,9 @@ aqt_plot_feeding_states(feeding, event_time_min = 0)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_grid_pca analysis dense-grid trajectory pca">
+::: {.aqt-plot-entry data-category="Analysis" data-mode="native" data-search="aqt_plot_grid_pca analysis dense-grid trajectory pca"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-grid-pca">aqt_plot_grid_pca()</h2><p>Dense-grid trajectory PCA</p></div><a href="../reference/aqt_plot_grid_pca.html">Full function reference</a></div>
 
 ```{r gallery-plot-grid-pca, fig.alt="Actual plot rendered by aqt_plot_grid_pca from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -367,9 +367,9 @@ aqt_plot_grid_pca(pca_fit, component = 1L)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_heading_rose publication circular heading rose">
+::: {.aqt-plot-entry data-category="Publication" data-mode="native" data-search="aqt_plot_heading_rose publication circular heading rose"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-heading-rose">aqt_plot_heading_rose()</h2><p>Circular heading rose</p></div><a href="../reference/aqt_plot_heading_rose.html">Full function reference</a></div>
 
 ```{r gallery-plot-heading-rose, fig.alt="Actual plot rendered by aqt_plot_heading_rose from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -388,9 +388,9 @@ aqt_plot_heading_rose(headings, bins = 18L)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Uncertainty" data-mode="native" data-search="aqt_plot_joint_scene_cloud uncertainty joint uncertainty scenario cloud">
+::: {.aqt-plot-entry data-category="Uncertainty" data-mode="native" data-search="aqt_plot_joint_scene_cloud uncertainty joint uncertainty scenario cloud"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Uncertainty</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-joint-scene-cloud">aqt_plot_joint_scene_cloud()</h2><p>Joint uncertainty scenario cloud</p></div><a href="../reference/aqt_plot_joint_scene_cloud.html">Full function reference</a></div>
 
 ```{r gallery-plot-joint-scene-cloud, fig.alt="Actual plot rendered by aqt_plot_joint_scene_cloud from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -409,9 +409,9 @@ aqt_plot_joint_scene_cloud(cloud, plane = 'xy')
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_joint_scene_cloud3d 3d scenes 3d joint uncertainty samples">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_joint_scene_cloud3d 3d scenes 3d joint uncertainty samples"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-joint-scene-cloud3d">aqt_plot_joint_scene_cloud3d()</h2><p>3D joint uncertainty samples</p></div><a href="../reference/aqt_plot_joint_scene_cloud3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-joint-scene-cloud3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_joint_scene_cloud3d", fig.height=5.4, fig.width=8.8}
@@ -433,9 +433,9 @@ aqt_plot_joint_scene_cloud3d(cloud)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_occupancy_timeseries publication tank occupancy time series">
+::: {.aqt-plot-entry data-category="Publication" data-mode="native" data-search="aqt_plot_occupancy_timeseries publication tank occupancy time series"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-occupancy-timeseries">aqt_plot_occupancy_timeseries()</h2><p>Tank occupancy time series</p></div><a href="../reference/aqt_plot_occupancy_timeseries.html">Full function reference</a></div>
 
 ```{r gallery-plot-occupancy-timeseries, fig.alt="Actual plot rendered by aqt_plot_occupancy_timeseries from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -456,9 +456,9 @@ aqt_plot_occupancy_timeseries(occupancy, time_bin_s = 60,
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Diagnostics" data-mode="native" data-search="aqt_plot_reconstruction_qc diagnostics stereo reconstruction qc">
+::: {.aqt-plot-entry data-category="Diagnostics" data-mode="native" data-search="aqt_plot_reconstruction_qc diagnostics stereo reconstruction qc"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Diagnostics</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-reconstruction-qc">aqt_plot_reconstruction_qc()</h2><p>Stereo reconstruction QC</p></div><a href="../reference/aqt_plot_reconstruction_qc.html">Full function reference</a></div>
 
 ```{r gallery-plot-reconstruction-qc, fig.alt="Actual plot rendered by aqt_plot_reconstruction_qc from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -477,9 +477,9 @@ aqt_plot_reconstruction_qc(qc_tracks)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_recurrence analysis trajectory recurrence matrix">
+::: {.aqt-plot-entry data-category="Analysis" data-mode="native" data-search="aqt_plot_recurrence analysis trajectory recurrence matrix"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-recurrence">aqt_plot_recurrence()</h2><p>Trajectory recurrence matrix</p></div><a href="../reference/aqt_plot_recurrence.html">Full function reference</a></div>
 
 ```{r gallery-plot-recurrence, fig.alt="Actual plot rendered by aqt_plot_recurrence from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -498,9 +498,9 @@ aqt_plot_recurrence(recurrence)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_school3d 3d scenes fish-school spatial snapshot">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_school3d 3d scenes fish-school spatial snapshot"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-school3d">aqt_plot_school3d()</h2><p>Fish-school spatial snapshot</p></div><a href="../reference/aqt_plot_school3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-school3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_school3d", fig.height=5.4, fig.width=8.8}
@@ -524,9 +524,9 @@ aqt_plot_school3d(toy3, 'S01', 'SIM', 5)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_school_dynamics analysis school geometry over time">
+::: {.aqt-plot-entry data-category="Analysis" data-mode="native" data-search="aqt_plot_school_dynamics analysis school geometry over time"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-school-dynamics">aqt_plot_school_dynamics()</h2><p>School geometry over time</p></div><a href="../reference/aqt_plot_school_dynamics.html">Full function reference</a></div>
 
 ```{r gallery-plot-school-dynamics, fig.alt="Actual plot rendered by aqt_plot_school_dynamics from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -545,9 +545,9 @@ aqt_plot_school_dynamics(group_summary, "S01", "SIM")
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Publication" data-mode="native" data-search="aqt_plot_speed_response publication event-aligned speed changes">
+::: {.aqt-plot-entry data-category="Publication" data-mode="native" data-search="aqt_plot_speed_response publication event-aligned speed changes"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Publication</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-speed-response">aqt_plot_speed_response()</h2><p>Event-aligned speed changes</p></div><a href="../reference/aqt_plot_speed_response.html">Full function reference</a></div>
 
 ```{r gallery-plot-speed-response, fig.alt="Actual plot rendered by aqt_plot_speed_response from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -570,9 +570,9 @@ aqt_plot_speed_response(speed_data, event_time_s = 0,
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="Analysis" data-mode="native" data-search="aqt_plot_tank_changes analysis tank-level before/after comparisons">
+::: {.aqt-plot-entry data-category="Analysis" data-mode="native" data-search="aqt_plot_tank_changes analysis tank-level before/after comparisons"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">Analysis</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-tank-changes">aqt_plot_tank_changes()</h2><p>Tank-level before/after comparisons</p></div><a href="../reference/aqt_plot_tank_changes.html">Full function reference</a></div>
 
 ```{r gallery-plot-tank-changes, fig.alt="Actual plot rendered by aqt_plot_tank_changes from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -591,9 +591,9 @@ aqt_plot_tank_changes(tank_fit)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="native" data-search="aqt_plot_tank_projection 3d scenes physical xyz scene projection">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="native" data-search="aqt_plot_tank_projection 3d scenes physical xyz scene projection"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-tank-projection">aqt_plot_tank_projection()</h2><p>Physical XYZ scene projection</p></div><a href="../reference/aqt_plot_tank_projection.html">Full function reference</a></div>
 
 ```{r gallery-plot-tank-projection, fig.alt="Actual plot rendered by aqt_plot_tank_projection from synthetic input", fig.height=5.4, fig.width=8.8}
@@ -612,9 +612,9 @@ aqt_plot_tank_projection(scene3, plane = 'xy')
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_tank_scene3d 3d scenes 3d tank scene with movement tails">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_tank_scene3d 3d scenes 3d tank scene with movement tails"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-tank-scene3d">aqt_plot_tank_scene3d()</h2><p>3D tank scene with movement tails</p></div><a href="../reference/aqt_plot_tank_scene3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-tank-scene3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_tank_scene3d", fig.height=5.4, fig.width=8.8}
@@ -640,9 +640,9 @@ aqt_plot_tank_scene3d(scene3)
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="native" data-search="aqt_plot_trajectory_storyboard3d 3d scenes four-frame 3d storyboard">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="native" data-search="aqt_plot_trajectory_storyboard3d 3d scenes four-frame 3d storyboard"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Actual package output</span><h2 id="fig-plot-trajectory-storyboard3d">aqt_plot_trajectory_storyboard3d()</h2><p>Four-frame 3D storyboard</p></div><a href="../reference/aqt_plot_trajectory_storyboard3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-trajectory-storyboard3d, fig.alt="Actual plot rendered by aqt_plot_trajectory_storyboard3d from synthetic input", fig.height=7.6, fig.width=8.8}
@@ -665,9 +665,9 @@ aqt_plot_trajectory_storyboard3d(one3,
 ~~~
 
 </details>
-</div>
+:::
 
-<div class="aqt-plot-entry" data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_voxel3d 3d scenes 3d voxel occupancy">
+::: {.aqt-plot-entry data-category="3D scenes" data-mode="rgl" data-search="aqt_plot_voxel3d 3d scenes 3d voxel occupancy"}
 <div class="aqt-plot-title"><div><span class="aqt-plot-category">3D scenes</span><span class="aqt-plot-source">Projected input preview only</span><h2 id="fig-plot-voxel3d">aqt_plot_voxel3d()</h2><p>3D voxel occupancy</p></div><a href="../reference/aqt_plot_voxel3d.html">Full function reference</a></div>
 
 ```{r gallery-plot-voxel3d, fig.alt="Clearly labeled two-dimensional input projection for optional rgl function aqt_plot_voxel3d", fig.height=5.4, fig.width=8.8}
@@ -692,7 +692,7 @@ aqt_plot_voxel3d(voxels)
 ~~~
 
 </details>
-</div>
+:::
 
 
 ## Reproducibility and limitations
