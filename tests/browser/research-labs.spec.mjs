@@ -1,6 +1,11 @@
 import {test,expect} from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import {Buffer} from "node:buffer";
+async function setRange(page,selector,value){
+ await page.locator(selector).evaluate((el,n)=>{
+  el.value=String(n);el.dispatchEvent(new Event("input",{bubbles:true}));
+ },value);
+}
 const labs=["research-geometry.html","research-webr.html","research-multiview.html","research-data-inspector.html"];
 async function noModuleErrors(page,fn){
  const errors=[];page.on("pageerror",e=>errors.push(String(e)));
@@ -12,7 +17,7 @@ test("geometry: sliders recompute valid synthetic XYZ without page error",async(
   await page.goto("/research-geometry.html");
   await expect(page.locator("#validReadout")).toContainText("Admissible");
   const before=await page.locator("#gapReadout").innerText();
-  await page.locator("#noisePx").fill("7");
+  await setRange(page,"#noisePx",7);
   await expect(page.locator("#noisePxOut")).toHaveText("7");
   expect(await page.locator("#gapReadout").innerText()).not.toBe(before);
   await page.locator("#reset").click();
@@ -51,7 +56,7 @@ test("multiview: synthetic frame alignment and XYZ seek",async({page})=>{
   await expect(page.locator("#cameraBReadout")).toContainText("Source frame");
   await page.locator("#stepNext").click();
   await expect(page.locator("#timeReadout")).toContainText("s");
-  await page.locator("#yaw").fill("80");
+  await setRange(page,"#yaw",80);
   await expect(page.locator("#yawOut")).toHaveText("80");
   await expect(page.locator("#xyzReadout")).toContainText("source XYZ points");
   await page.locator("#clear").click();
@@ -67,7 +72,7 @@ test("webR: runtime lazy and source responsive",async({page})=>{
   expect(external).toEqual([]);
   await page.locator("#preset").selectOption("school");
   await expect(page.locator("#rSource")).toContainText("polarization");
-  await page.locator("#n").fill("8");
+  await setRange(page,"#n",8);
   await expect(page.locator("#rSource")).toContainText("8L");
   await expect(page.locator("#run")).toBeDisabled();
  });
