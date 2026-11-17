@@ -15,7 +15,7 @@ test_that("all six optional rgl plotting exports create native 3D scenes", {
   path <- aqt_tracks(as.data.frame(tracks)[tracks$track_id=="fish1",],
                      units="cm",coordinate_system="tank")
   ensemble <- aqt_trajectory_ensemble(path,sigma=.1,draws=20L,seed=81L)
-  expect_null(aqt_plot_path3d(path))
+  expect_null(aqt_plot_path3d(path,max_gap_s=.11))
   expect_gt(length(rgl::ids3d()),0L)
   ids <- aqt_plot_ensemble3d(ensemble,"S01","SIM","fish1",n_draws=4L)
   expect_equal(length(ids),9L)
