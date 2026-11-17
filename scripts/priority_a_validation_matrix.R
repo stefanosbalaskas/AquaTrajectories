@@ -67,7 +67,12 @@ reference_tests <- c(
   "aqt_group_spatial_edges","aqt_scale_calibrate",
   "aqt_voxel_occupancy","aqt_voxel_entropy",
   "aqt_event_epoch_summary","aqt_tank_event_contrast",
-  "aqt_design_audit","aqt_hmm_decode")
+  "aqt_design_audit","aqt_hmm_decode",
+  "aqt_rig_new","aqt_rig_validate","aqt_rig_baseline",
+  "aqt_rig_project","aqt_triangulate_pairs","aqt_brown_camera",
+  "aqt_brown_distort_pixels","aqt_brown_undistort_pixels",
+  "aqt_stereo_pixel_mc","aqt_trajectory_ensemble",
+  "aqt_ensemble_tracks","aqt_zone_occupancy")
 if(!all(reference_tests %in% exports)) stop("Oracle registry exports drift")
 test_files <- list.files("tests/testthat",pattern="^test-.*\\.R$",
                           full.names=TRUE)
