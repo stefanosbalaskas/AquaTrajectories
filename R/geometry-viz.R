@@ -40,7 +40,7 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
 
 #' Plot 2D trajectories without joining unobserved or long-gap segments
 #'
-#' With finite max_gap_s, paths are split whenever consecutive timestamps
+#' @details With finite max_gap_s, paths are split whenever consecutive timestamps
 #' exceed the declared gap. Explicitly unobserved or missing positions also
 #' split paths. Observed singletons are shown as points, not false movement
 #' segments. This is a visualization rule, not physical clock validation.
