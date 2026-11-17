@@ -45,19 +45,26 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
 #' @export
 aqt_plot_paths <- function(tracks,...) {
   aqt_tracks_validate(tracks)
-  if (!nrow(tracks) || all(is.na(tracks$x)) || all(is.na(tracks$y)))
-    stop("No valid positions",call.=FALSE)
-  ylim <- range(tracks$y,na.rm=TRUE)
+  if (!nrow(tracks)) stop("No observed 2D positions", call. = FALSE)
+  # An external tracking file may include coordinates with observed=FALSE.
+  # Such coordinates are NOT verified observations: do not join them into
+  # measured trajectories or use them when setting the plotted limits.
+  valid <- tracks$observed & is.finite(tracks$x) & is.finite(tracks$y)
+  if (!any(valid)) stop("No observed 2D positions", call. = FALSE)
+  display <- tracks
+  display$x[!valid] <- NA_real_
+  display$y[!valid] <- NA_real_
+  ylim <- range(display$y,na.rm=TRUE)
   if (identical(attr(tracks,"aqt_coordinate_system"),"image")) ylim <- rev(ylim)
-  graphics::plot(tracks$x,tracks$y,type="n",
+  graphics::plot(display$x,display$y,type="n",
     xlab=paste0("X (",attr(tracks,"aqt_units"),")"),
     ylab=paste0("Y (",attr(tracks,"aqt_units"),")"),
     ylim=ylim,asp=1,...)
-  keys <- interaction(tracks$session_id,tracks$camera_id,tracks$track_id,drop=TRUE)
-  gr <- split(seq_len(nrow(tracks)),keys)
+  keys <- interaction(display$session_id,display$camera_id,display$track_id,drop=TRUE)
+  gr <- split(seq_len(nrow(display)),keys)
   cols <- grDevices::hcl.colors(length(gr),"Dark 3")
   for (j in seq_along(gr)) {
-    d <- tracks[gr[[j]],,drop=FALSE]
+    d <- display[gr[[j]],,drop=FALSE]
     graphics::lines(d$x,d$y,col=cols[j],lwd=1.3)
   }
   invisible(NULL)
