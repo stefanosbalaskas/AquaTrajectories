@@ -38,17 +38,27 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
   d
 }
 
-#' Plot 2D trajectories
+#' Plot 2D trajectories without joining unobserved or long-gap segments
+#'
+#' With finite max_gap_s, paths are split whenever consecutive timestamps
+#' exceed the declared gap. Explicitly unobserved or missing positions also
+#' split paths. Observed singletons are shown as points, not false movement
+#' segments. This is a visualization rule, not physical clock validation.
 #' @param tracks Validated trajectories.
 #' @param ... Passed to graphics::plot.
+#' @param max_gap_s Positive maximum elapsed time between connected positions
+#'   in the supplied time_s units; defaults to Inf for legacy plotting.
+#'   Specify a finite threshold to prevent joining long unsampled intervals.
 #' @return Invisibly NULL, creating a base graphics plot.
 #' @export
-aqt_plot_paths <- function(tracks,...) {
+aqt_plot_paths <- function(tracks,...,max_gap_s=Inf) {
   aqt_tracks_validate(tracks)
+  if (!is.numeric(max_gap_s) || length(max_gap_s)!=1L ||
+      is.na(max_gap_s) || max_gap_s<=0)
+    stop("max_gap_s must be a positive numeric interval or Inf",
+         call.=FALSE)
   if (!nrow(tracks)) stop("No valid positions: no observed 2D coordinates", call. = FALSE)
-  # An external tracking file may include coordinates with observed=FALSE.
-  # Such coordinates are NOT verified observations: do not join them into
-  # measured trajectories or use them when setting the plotted limits.
+  # Unobserved numeric positions must never be shown as measured.
   valid <- tracks$observed & is.finite(tracks$x) & is.finite(tracks$y)
   if (!any(valid)) stop("No valid positions: no observed 2D coordinates", call. = FALSE)
   display <- tracks
@@ -65,9 +75,27 @@ aqt_plot_paths <- function(tracks,...) {
   cols <- grDevices::hcl.colors(length(gr),"Dark 3")
   for (j in seq_along(gr)) {
     d <- display[gr[[j]],,drop=FALSE]
-    graphics::lines(d$x,d$y,col=cols[j],lwd=1.3)
+    for (ii in .aqt_observed_path_runs(d,max_gap_s)) {
+      if (length(ii)>1L) {
+        graphics::lines(d$x[ii],d$y[ii],col=cols[j],lwd=1.3)
+      } else {
+        graphics::points(d$x[ii],d$y[ii],col=cols[j],pch=16,cex=.6)
+      }
+    }
   }
   invisible(NULL)
+}
+
+# Compute display segments independently of graphics devices. Each segment
+# has only observed coordinates and no internal temporal gap above threshold.
+.aqt_observed_path_runs <- function(d,max_gap_s=Inf) {
+  if (!nrow(d)) return(list())
+  good <- is.finite(d$x) & is.finite(d$y)
+  n <- nrow(d)
+  start <- c(TRUE, diff(d$time_s)>max_gap_s |
+                 !(good[-n] & good[-1L]))
+  parts <- split(seq_len(n),cumsum(start))
+  Filter(function(ix) good[ix[1L]],unname(parts))
 }
 
 #' Plot true calibrated 3D trajectories
