@@ -803,9 +803,9 @@ Static publication plots, trajectory storyboards and optional 3D views.
 - [`aqt_plot_occupancy_timeseries()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_occupancy_timeseries.md)
   : Plot tank-level spatial occupancy trajectories and uncertainty bands
 - [`aqt_plot_path3d()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_path3d.md)
-  : Plot true calibrated 3D trajectories
+  : Plot true 3D trajectories with explicit missing/gap segmentation
 - [`aqt_plot_paths()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_paths.md)
-  : Plot 2D trajectories
+  : Plot 2D trajectories without joining unobserved or long-gap segments
 - [`aqt_plot_reconstruction_qc()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_reconstruction_qc.md)
   : Inspect reconstructed 3D trajectory quality using two diagnostic
   plots
