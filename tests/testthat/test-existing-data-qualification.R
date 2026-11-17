@@ -101,5 +101,5 @@ test_that("unobserved coordinates are not presented as visible fish paths", {
            finally = grDevices::dev.off())
   expect_gt(file.info(output)$size, 1000)
   d$observed <- FALSE
-  expect_error(aqt_plot_paths(aqt_tracks(d)), "No observed")
+  expect_error(aqt_plot_paths(aqt_tracks(d)), "No valid positions")
 })
