@@ -45,12 +45,12 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
 #' @export
 aqt_plot_paths <- function(tracks,...) {
   aqt_tracks_validate(tracks)
-  if (!nrow(tracks)) stop("No observed 2D positions", call. = FALSE)
+  if (!nrow(tracks)) stop("No valid positions: no observed 2D coordinates", call. = FALSE)
   # An external tracking file may include coordinates with observed=FALSE.
   # Such coordinates are NOT verified observations: do not join them into
   # measured trajectories or use them when setting the plotted limits.
   valid <- tracks$observed & is.finite(tracks$x) & is.finite(tracks$y)
-  if (!any(valid)) stop("No observed 2D positions", call. = FALSE)
+  if (!any(valid)) stop("No valid positions: no observed 2D coordinates", call. = FALSE)
   display <- tracks
   display$x[!valid] <- NA_real_
   display$y[!valid] <- NA_real_
