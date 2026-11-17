@@ -63,3 +63,22 @@ test_that("unobserved fish are excluded from simultaneous geometry", {
   expect_equal(g$mean_nearest_neighbor,5)
   expect_equal(aqt_group_spatial_summary(tracks)$group_extent,5)
 })
+
+
+test_that("physical XYZ paths use the same observation and gap boundaries", {
+  d <- data.frame(session_id="S",camera_id="FUSED3D",track_id="0008",
+    time_s=c(0,.1,.2,.3,.4,4),
+    x=c(0,1,1000,3,4,5),y=c(0,0,1000,0,0,0),
+    z=c(1,2,1000,3,4,5),
+    observed=c(TRUE,TRUE,FALSE,TRUE,TRUE,TRUE))
+  tr <- aqt_tracks(d,units="cm",coordinate_system="tank")
+  runs <- getFromNamespace(".aqt_observed_path_runs",
+                            "aquaTrajectories")
+  actual <- unname(runs(as.data.frame(tr),max_gap_s=.25,
+                        axes=c("x","y","z")))
+  expect_equal(actual,list(1:2,4:5,6L))
+  tr$z[5] <- NA_real_
+  actual2 <- unname(runs(as.data.frame(tr),max_gap_s=.25,
+                         axes=c("x","y","z")))
+  expect_equal(actual2,list(1:2,4L,6L))
+})
