@@ -65,13 +65,13 @@ test_that("zero assumed pixel noise returns exactly deterministic stereo XYZ", {
   result <- aqt_stereo_pixel_mc(a,b,P1,P2,sigma_px=0,
                                 draws=30L,seed=42L)
   expect_identical(.Random.seed,before)
-  expect_equal(unname(as.numeric(result[1,c("x","y","z")])),
+  expect_equal(unname(as.numeric(unlist(result[1,c("x","y","z"),drop=FALSE],use.names=FALSE))),
                unname(as.numeric(truth)),tolerance=1e-10)
-  expect_equal(unname(as.numeric(result[1,c("sd_x","sd_y","sd_z")])),
+  expect_equal(unname(as.numeric(unlist(result[1,c("sd_x","sd_y","sd_z"),drop=FALSE],use.names=FALSE))),
                rep(0,3),tolerance=1e-10)
-  expect_equal(unname(as.numeric(result[1,c("lower_x","lower_y","lower_z")])),
+  expect_equal(unname(as.numeric(unlist(result[1,c("lower_x","lower_y","lower_z"),drop=FALSE],use.names=FALSE))),
                unname(as.numeric(truth)),tolerance=1e-10)
-  expect_equal(unname(as.numeric(result[1,c("upper_x","upper_y","upper_z")])),
+  expect_equal(unname(as.numeric(unlist(result[1,c("upper_x","upper_y","upper_z"),drop=FALSE],use.names=FALSE))),
                unname(as.numeric(truth)),tolerance=1e-10)
   expect_equal(result$n_valid_draws,30L)
   expect_equal(result$valid_fraction,1)
