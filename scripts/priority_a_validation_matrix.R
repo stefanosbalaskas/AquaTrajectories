@@ -18,12 +18,17 @@ exports <- sub("^export\\(([^)]+)\\)$","\\1",
 if(length(exports)!=155L || anyDuplicated(exports))
   stop("API count or uniqueness changed: review manifest scope")
 cfg <- yaml::read_yaml("_pkgdown.yml")
-groups <- lapply(cfg$reference,function(section) {
-  if(is.null(section$contents)) return(NULL)
-  data.frame(function_name=unlist(section$contents,use.names=FALSE),
-             family=section$title,stringsAsFactors=FALSE)
-})
-groups <- do.call(rbind,Filter(Negate(is.null),groups))
+family <- "Unclassified"
+group_rows <- list()
+for(section in cfg$reference) {
+  if(!is.null(section$title)) family <- section$title
+  if(!is.null(section$contents)) {
+    group_rows[[length(group_rows)+1L]] <- data.frame(
+      function_name=unlist(section$contents,use.names=FALSE),
+      family=family,stringsAsFactors=FALSE)
+  }
+}
+groups <- do.call(rbind,group_rows)
 if(!setequal(exports,groups$function_name) ||
    anyDuplicated(groups$function_name))
   stop("Unmapped or duplicated exports in reference index")
