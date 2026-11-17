@@ -44,7 +44,7 @@ public export and distinguishes:
 | Measurement scenarios | Zero-perturbation identity | Preserved coordinates, flags, units, caller RNG |
 | Hierarchical event modelling | Direct `nlme::lme` fit | Fixed effects and log likelihood of tank/fish nested model |
 | Sparse FPCA adapter | Direct `fdapace::FPCA` fit | Backend eigenvalues, mean, conditional scores and input-preserving adapters |
-| 2D path graphics | Explicit observed/gap segment references | Never draw unobserved or long-unsampled motion |
+| 2D and 3D path graphics | Explicit observed/gap segment references | Never draw unobserved or long-unsampled motion |
 
 The reference implementations are *not* independent physical measurements.
 Some comparators intentionally reuse established base R numerical primitives
