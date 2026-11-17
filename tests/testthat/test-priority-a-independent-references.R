@@ -239,7 +239,8 @@ test_that("HMM posteriors and likelihood agree with exhaustive state sequences",
     expect_equal(got[[paste0("hmm_p",s)]][i],reference,
                  tolerance=1e-10)
   }
-  expect_equal(got$hmm_state,as.integer(paths[which.max(probability),]),
+  expect_equal(got$hmm_state,as.integer(unlist(paths[which.max(probability),,drop=FALSE],
+                                     use.names=FALSE)),
                ignore_attr=TRUE)
   expect_false(attr(got,"aqt_hmm_welfare_certified"))
   data$observed[2] <- FALSE
