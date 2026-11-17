@@ -101,7 +101,7 @@ test_that("recurrence agrees with externally computed distance comparisons", {
         sum((pos[i,]-pos[j,])^2)<=1
     got <- aqt_trajectory_recurrence(path,radius=1,theiler=theiler,
                    store_matrix=TRUE)
-    expect_equal(got$recurrence_matrix,oracle)
+    expect_equal(unname(got$recurrence_matrix),unname(oracle))
     expect_equal(got$n_pairs,sum(abs(outer(1:5,1:5,"-"))>theiler))
     expect_equal(got$n_recurrent,sum(oracle))
     expect_equal(got$recurrence_rate,mean(oracle[
