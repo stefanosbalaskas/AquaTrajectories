@@ -89,3 +89,17 @@ test_that("invalid coordinates and duplicate times are rejected", {
   expect_error(aqt_plot_school3d(aqt_tracks(d), "S", "TOP", 0),
                "True calibrated 3D")
 })
+
+
+test_that("unobserved coordinates are not presented as visible fish paths", {
+  d <- data.frame(session_id = "S", camera_id = "TOP", track_id = "001",
+                  time_s = 0:2, x = c(1,999,3), y = c(1,999,3),
+                  observed = c(TRUE,FALSE,TRUE))
+  output <- tempfile(fileext = ".pdf")
+  grDevices::pdf(output)
+  tryCatch(expect_null(aqt_plot_paths(aqt_tracks(d))),
+           finally = grDevices::dev.off())
+  expect_gt(file.info(output)$size, 1000)
+  d$observed <- FALSE
+  expect_error(aqt_plot_paths(aqt_tracks(d)), "No observed")
+})
