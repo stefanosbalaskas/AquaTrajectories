@@ -72,7 +72,10 @@ reference_tests <- c(
   "aqt_rig_project","aqt_triangulate_pairs","aqt_brown_camera",
   "aqt_brown_distort_pixels","aqt_brown_undistort_pixels",
   "aqt_stereo_pixel_mc","aqt_trajectory_ensemble",
-  "aqt_ensemble_tracks","aqt_zone_occupancy")
+  "aqt_ensemble_tracks","aqt_zone_occupancy",
+  "aqt_hierarchical_event_prepare","aqt_hierarchical_event_fit",
+  "aqt_sparse_fpca_input","aqt_sparse_fpca_design_audit",
+  "aqt_sparse_fpca_fit")
 if(!all(reference_tests %in% exports)) stop("Oracle registry exports drift")
 test_files <- list.files("tests/testthat",pattern="^test-.*\\.R$",
                           full.names=TRUE)
