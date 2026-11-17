@@ -57,6 +57,9 @@ jobs:
       - name: Independent numerical reference suite
         run: |
           Rscript -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-priority-a-independent-references.R",reporter="summary",stop_on_failure=TRUE)'
+      - name: Independent established-R modelling-backend comparisons
+        run: |
+          Rscript -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-priority-a-backend-agreement.R",reporter="summary",stop_on_failure=TRUE)'
       - name: Optics and uncertainty independent reference suite
         run: |
           Rscript -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-priority-a-optics-uncertainty-references.R",reporter="summary",stop_on_failure=TRUE)'
