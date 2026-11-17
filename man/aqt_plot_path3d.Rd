@@ -2,16 +2,22 @@
 % Please edit documentation in R/geometry-viz.R
 \name{aqt_plot_path3d}
 \alias{aqt_plot_path3d}
-\title{Plot true calibrated 3D trajectories}
+\title{Plot true 3D trajectories with explicit missing/gap segmentation}
 \usage{
-aqt_plot_path3d(tracks)
+aqt_plot_path3d(tracks, max_gap_s = Inf)
 }
 \arguments{
 \item{tracks}{Validated 3D tank trajectories.}
+
+\item{max_gap_s}{Positive maximum elapsed time between connected
+observations; Inf preserves the legacy time-gap policy.}
 }
 \value{
 Invisibly NULL; opens optional rgl scene.
 }
 \description{
-Plot true calibrated 3D trajectories
+A 3D scene draws measured XYZ points only. Unobserved numeric points and
+timestamps separated by more than max_gap_s never form a path segment.
+Single observed points are rendered as points. The caller, not this
+renderer, must verify true physical XYZ and observation clocks.
 }

@@ -38,6 +38,9 @@ timestamps, per-individual path totals, and durations agree with the package.
 The generated PDF confirms that the native plotting function renders but
 does not prove that the input fish positions are biologically accurate.
 Numeric positions marked observed=FALSE are masked from plotted paths.
+When a finite `max_gap_s` is supplied, the native 2D figure also splits
+paths across longer intervals with no intermediate observations. Isolated
+observed positions are plotted as points; no interpolated motion is drawn.
 No 3D scene is automatically produced by this headless script.
 
 ## Analytical tests

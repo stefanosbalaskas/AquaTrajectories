@@ -91,7 +91,8 @@ aqt_qualify_existing_csv <- function(input_csv, output_dir,
       stop("No observed 2D positions to plot", call. = FALSE)
     plot_file <- file.path(output_dir, "OBSERVED_2D_PATHS.pdf")
     grDevices::pdf(plot_file, width = 9, height = 6, onefile = TRUE)
-    tryCatch(aquaTrajectories::aqt_plot_paths(display_tracks),
+    tryCatch(aquaTrajectories::aqt_plot_paths(display_tracks,
+      max_gap_s = max_gap_s),
              finally = grDevices::dev.off())
   }
   report <- list(
@@ -110,6 +111,7 @@ aqt_qualify_existing_csv <- function(input_csv, output_dir,
     independent_step_length_comparison = "PASS",
     independent_path_summary_comparison = "PASS",
     plot_2d_rendered = !is3d,
+    plot_2d_finite_gap_breaking = !is3d && is.finite(max_gap_s),
     input_timestamps_physically_verified = FALSE,
     biological_individual_identity_certified = FALSE,
     physical_xyz_calibration_certified = FALSE,

@@ -38,17 +38,27 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
   d
 }
 
-#' Plot 2D trajectories
+#' Plot 2D trajectories without joining unobserved or long-gap segments
+#'
+#' @details With finite max_gap_s, paths are split whenever consecutive timestamps
+#' exceed the declared gap. Explicitly unobserved or missing positions also
+#' split paths. Observed singletons are shown as points, not false movement
+#' segments. This is a visualization rule, not physical clock validation.
 #' @param tracks Validated trajectories.
 #' @param ... Passed to graphics::plot.
+#' @param max_gap_s Positive maximum elapsed time between connected positions
+#'   in the supplied time_s units; defaults to Inf for legacy plotting.
+#'   Specify a finite threshold to prevent joining long unsampled intervals.
 #' @return Invisibly NULL, creating a base graphics plot.
 #' @export
-aqt_plot_paths <- function(tracks,...) {
+aqt_plot_paths <- function(tracks,...,max_gap_s=Inf) {
   aqt_tracks_validate(tracks)
+  if (!is.numeric(max_gap_s) || length(max_gap_s)!=1L ||
+      is.na(max_gap_s) || max_gap_s<=0)
+    stop("max_gap_s must be a positive numeric interval or Inf",
+         call.=FALSE)
   if (!nrow(tracks)) stop("No valid positions: no observed 2D coordinates", call. = FALSE)
-  # An external tracking file may include coordinates with observed=FALSE.
-  # Such coordinates are NOT verified observations: do not join them into
-  # measured trajectories or use them when setting the plotted limits.
+  # Unobserved numeric positions must never be shown as measured.
   valid <- tracks$observed & is.finite(tracks$x) & is.finite(tracks$y)
   if (!any(valid)) stop("No valid positions: no observed 2D coordinates", call. = FALSE)
   display <- tracks
@@ -65,19 +75,53 @@ aqt_plot_paths <- function(tracks,...) {
   cols <- grDevices::hcl.colors(length(gr),"Dark 3")
   for (j in seq_along(gr)) {
     d <- display[gr[[j]],,drop=FALSE]
-    graphics::lines(d$x,d$y,col=cols[j],lwd=1.3)
+    for (ii in .aqt_observed_path_runs(d,max_gap_s)) {
+      if (length(ii)>1L) {
+        graphics::lines(d$x[ii],d$y[ii],col=cols[j],lwd=1.3)
+      } else {
+        graphics::points(d$x[ii],d$y[ii],col=cols[j],pch=16,cex=.6)
+      }
+    }
   }
   invisible(NULL)
 }
 
-#' Plot true calibrated 3D trajectories
+# Compute observed display segments independently of graphics devices.
+# Both 2D and 3D paths must honor explicit non-observation, missing XYZ
+# coordinates, and a declared maximum adjacent time interval.
+.aqt_observed_path_runs <- function(d,max_gap_s=Inf,
+                                    axes=c("x","y")) {
+  if (!nrow(d)) return(list())
+  good <- d$observed &
+    stats::complete.cases(d[,axes,drop=FALSE])
+  n <- nrow(d)
+  start <- c(TRUE, diff(d$time_s)>max_gap_s |
+                 !(good[-n] & good[-1L]))
+  parts <- split(seq_len(n),cumsum(start))
+  Filter(function(ix) good[ix[1L]],unname(parts))
+}
+
+#' Plot true 3D trajectories with explicit missing/gap segmentation
+#'
+#' A 3D scene draws measured XYZ points only. Unobserved numeric points and
+#' timestamps separated by more than max_gap_s never form a path segment.
+#' Single observed points are rendered as points. The caller, not this
+#' renderer, must verify true physical XYZ and observation clocks.
 #' @param tracks Validated 3D tank trajectories.
+#' @param max_gap_s Positive maximum elapsed time between connected
+#'   observations; Inf preserves the legacy time-gap policy.
 #' @return Invisibly NULL; opens optional rgl scene.
 #' @export
-aqt_plot_path3d <- function(tracks) {
+aqt_plot_path3d <- function(tracks,max_gap_s=Inf) {
   aqt_tracks_validate(tracks)
   if (!identical(attr(tracks,"aqt_dimension"),3L))
     stop("True 3D coordinates required; absent z is not zero depth",call.=FALSE)
+  if (!is.numeric(max_gap_s) || length(max_gap_s)!=1L ||
+      is.na(max_gap_s) || max_gap_s<=0)
+    stop("max_gap_s must be positive or Inf",call.=FALSE)
+  if (!any(tracks$observed & stats::complete.cases(
+            tracks[,c("x","y","z"),drop=FALSE])))
+    stop("No observed 3D positions",call.=FALSE)
   if (!requireNamespace("rgl",quietly=TRUE))
     stop("Optional package rgl is required",call.=FALSE)
   keys <- interaction(tracks$session_id,tracks$camera_id,tracks$track_id,drop=TRUE)
@@ -86,7 +130,12 @@ aqt_plot_path3d <- function(tracks) {
   rgl::plot3d(0,0,0,type="n",xlab="X",ylab="Y",zlab="Z")
   for (j in seq_along(gr)) {
     d <- tracks[gr[[j]],,drop=FALSE]
-    rgl::lines3d(d$x,d$y,d$z,color=cols[j],lwd=2)
+    for (ii in .aqt_observed_path_runs(d,max_gap_s,c("x","y","z"))) {
+      if (length(ii)>1L)
+        rgl::lines3d(d$x[ii],d$y[ii],d$z[ii],color=cols[j],lwd=2)
+      else
+        rgl::points3d(d$x[ii],d$y[ii],d$z[ii],color=cols[j],size=6)
+    }
   }
   invisible(NULL)
 }

@@ -2,18 +2,28 @@
 % Please edit documentation in R/geometry-viz.R
 \name{aqt_plot_paths}
 \alias{aqt_plot_paths}
-\title{Plot 2D trajectories}
+\title{Plot 2D trajectories without joining unobserved or long-gap segments}
 \usage{
-aqt_plot_paths(tracks, ...)
+aqt_plot_paths(tracks, ..., max_gap_s = Inf)
 }
 \arguments{
 \item{tracks}{Validated trajectories.}
 
 \item{...}{Passed to graphics::plot.}
+
+\item{max_gap_s}{Positive maximum elapsed time between connected positions
+in the supplied time_s units; defaults to Inf for legacy plotting.
+Specify a finite threshold to prevent joining long unsampled intervals.}
 }
 \value{
 Invisibly NULL, creating a base graphics plot.
 }
 \description{
-Plot 2D trajectories
+Plot 2D trajectories without joining unobserved or long-gap segments
+}
+\details{
+With finite max_gap_s, paths are split whenever consecutive timestamps
+exceed the declared gap. Explicitly unobserved or missing positions also
+split paths. Observed singletons are shown as points, not false movement
+segments. This is a visualization rule, not physical clock validation.
 }
