@@ -17,8 +17,7 @@ Invisibly NULL; opens optional rgl scene.
 }
 \description{
 Plot true 3D trajectories with explicit missing/gap segmentation
-}
-\details{
+
 A 3D scene draws measured XYZ points only. Unobserved numeric points and
 timestamps separated by more than max_gap_s never form a path segment.
 Single observed points are rendered as points. The caller, not this
