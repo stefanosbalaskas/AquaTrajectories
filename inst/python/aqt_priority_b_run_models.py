@@ -27,12 +27,13 @@ def cli(method,video,model,settings,native_output,outdir,device,prefix,
         if not settings or not settings.is_file():
             raise ValueError("idtracker.ai requires an independently frozen source TOML")
         return ["idtrackerai","--load",str(settings),"--video_paths",
-                str(video),"--trajectories_formats","csv_tidy","--track"]
+                str(video),"--trajectories_formats","csv_tidy","--device",
+                device,"--track"]
     if method=="sleap":
         if not model or not model.exists():
             raise ValueError("SLEAP requires fitted source-compatible pose model")
         return ["sleap","predict","-i",str(video),"-m",str(model),
-                "--tracking","-o",str(native_output)]
+                "--tracking","--device",device,"-o",str(native_output)]
     if method=="yolo_bytetrack":
         if not model or not model.is_file():
             raise ValueError("YOLO must receive original frozen .pt model weights")
