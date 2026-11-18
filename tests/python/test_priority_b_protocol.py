@@ -69,6 +69,7 @@ class TestPriorityB(unittest.TestCase):
               "unlabelled_test_video_used_for_session_training":
                       name=="idtrackerai"})
         return {"protocol":b.PROTOCOL,"sequence":"TOY_ONLY",
+          "source_kind":"synthetic_known_truth",
           "gt_mot":"gt.txt","frame_manifest":"frames.csv",
           "split_manifest":"splits.csv",
           "timestamps":"timestamps.csv","source_split":"test",
@@ -149,6 +150,10 @@ class TestPriorityB(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"test reference labels"):
                 b.validate_spec(root,spec)
             spec["methods"][0]["test_reference_labels_used_for_training_or_selection"]=False
+            spec["source_kind"]="real_recording"
+            with self.assertRaisesRegex(ValueError,"original source video bytes"):
+                b.validate_spec(root,spec)
+            spec["source_kind"]="synthetic_known_truth"
             spec["methods"][0]["prediction_source"]="oracle_box_association"
             with self.assertRaisesRegex(ValueError,"detection-oracle"):
                 b.validate_spec(root,spec)
