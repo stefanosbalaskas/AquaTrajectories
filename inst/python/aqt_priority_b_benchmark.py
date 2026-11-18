@@ -41,7 +41,8 @@ def _path(base, relative):
 
 
 def _unique_files(spec):
-    paths = [spec["gt_mot"], spec["frame_manifest"], spec["timestamps"]]
+    paths = [spec["gt_mot"], spec["frame_manifest"], spec["timestamps"],
+             spec["split_manifest"]]
     if "source_video" in spec:
         paths.append(spec["source_video"])
     names = set()
@@ -74,8 +75,11 @@ def validate_spec(base, spec):
             raise ValueError("Unsupported tracking method")
         if item.get("prediction_source") != "model_generated":
             raise ValueError("No detection-oracle inputs for end-to-end method comparison")
-        if item.get("test_video_used_for_training_or_selection") is not False:
-            raise ValueError("Cannot benchmark a model tuned on test recording")
+        if item.get("test_reference_labels_used_for_training_or_selection") is not False:
+            raise ValueError("Cannot benchmark a model tuned on held-out test reference labels")
+        transductive=item.get("unlabelled_test_video_used_for_session_training")
+        if transductive not in (True,False) or (item["method"]=="idtrackerai")!=transductive:
+            raise ValueError("Declare idtracker.ai transductive unlabeled test-video identity training explicitly")
         if item.get("score_semantics") not in ALLOWED_SCORE_SEMANTICS:
             raise ValueError("Explicit scoring semantics required")
         if item.get("score_semantics") == "detection_confidence" and not item.get("centres_csv"):
@@ -96,6 +100,11 @@ def validate_spec(base, spec):
     for p in _unique_files(spec):
         if not _path(base,p).is_file():
             raise ValueError("Missing source/baseline file: "+p)
+    from aqt_priority_b_splits import validate_split
+    splits=validate_split(_path(base,spec["split_manifest"]))
+    video_hash=official.digest(_path(base,spec["source_video"])) if                  spec.get("source_video") else spec.get("declared_source_video_sha256")
+    if video_hash not in splits["test_video_sha256"]:
+        raise ValueError("Scored video is not an independently frozen held-out test recording")
 
 
 def freeze(base, spec, path):
@@ -298,8 +307,10 @@ def tracking_fragmentation(matches, gt, n):
     episodes=changes=0
     fish=[]
     for ident,frames in sorted(by_gt.items()):
-        active=False;last_id=None;frags=switches=0
+        active=False;last_id=None;prev_frame=None;frags=switches=0
         for frame in sorted(frames):
+            if prev_frame is not None and frame!=prev_frame+1:
+                active=False;last_id=None  # missing GT annotation is not a tracker fragment
             selected=matched[ident].get(frame)
             if selected is None:
                 active=False
@@ -307,6 +318,7 @@ def tracking_fragmentation(matches, gt, n):
                 if not active and last_id is not None:frags+=1
                 if last_id is not None and active and selected!=last_id:switches+=1
                 active=True;last_id=selected
+            prev_frame=frame
         episodes+=frags;changes+=switches
         fish.append({"gt_id":ident,"missed_match_fragments":frags,
                      "within_contiguous_matched_identity_changes":switches,
@@ -415,9 +427,18 @@ def compare(base,spec,lock):
             raise ValueError("Missing detector confidences")
         runtime=read_runtime(_path(base,item["runtime_json"]),expected_video_hash,n)
         provenance=json.loads(_path(base,item["training_provenance_json"]).read_text())
-        if not isinstance(provenance,dict) or not provenance.get("model_or_config_sha256") or \
-                provenance.get("test_split_used_for_training_or_tuning") is not False:
-            raise ValueError("Missing frozen training provenance or leakage")
+        if not isinstance(provenance,dict) or not provenance.get("model_or_config_sha256") or                 provenance.get("test_reference_labels_used_for_training_or_selection") is not False:
+            raise ValueError("Missing frozen label-blind training provenance or leakage")
+        from aqt_priority_b_splits import validate_split
+        split=validate_split(_path(base,spec["split_manifest"]))
+        if provenance.get("source_split_manifest_sha256")!=split["source_manifest_sha256"]:
+            raise ValueError("Method provenance not bound to the frozen source partition")
+        source_train=set(provenance.get("training_source_video_sha256",[]))
+        source_val=set(provenance.get("model_selection_source_video_sha256",[]))
+        if not source_train<=set(split["train_video_sha256"]) or            not source_val<=set(split["val_video_sha256"]) or            source_train & set(split["test_video_sha256"]) or            source_val & set(split["test_video_sha256"]):
+            raise ValueError("External training or validation source violates locked split")
+        if method.startswith("yolo") and (not source_train or not source_val):
+            raise ValueError("Fine-tuned YOLO requires recorded training and validation source evidence")
         matches, cm=matched_frames(gt_c,pd,n,spec["centre_gate_px"],
                  threshold=spec["detection_confidence_threshold"]
                  if item["score_semantics"]=="detection_confidence" else 0)
@@ -436,11 +457,19 @@ def compare(base,spec,lock):
             # An original idtracker centroid is NOT a fish body bounding box.
             if method=="idtrackerai" and item.get("box_origin")!="native_verified_segmentation":
                 raise ValueError("No boxes synthesized from idtracker centres")
+            canonical={(q[0],q[1]):q for q in pd}
+            if set(canonical)!={(q[0],q[1]) for q in pb}:
+                raise ValueError("Native box/centre observations have different support")
             for f,ident,(x,y,w,h),sc in pb:
-                if any(k[0]==f and k[1]==ident and
-                       math.dist((x+w/2,y+h/2),(k[2],k[3]))>2
-                       for k in pd):
+                centre=canonical[(f,ident)]
+                if math.dist((x+w/2,y+h/2),(centre[2],centre[3]))>2:
                     raise ValueError("Native box centre differs from canonical centre")
+                if centre[4] is not None and abs(sc-centre[4])>1e-5:
+                    raise ValueError("Box confidence and centre score disagree")
+            if item["score_semantics"]=="detection_confidence":
+                with _path(base,item["boxes_mot"]).open(newline="",encoding="utf-8") as f:
+                    if any(row and len(row)<7 for row in csv.reader(f)):
+                        raise ValueError("Bounding-box AP requires native detector confidence field")
             boxmetric=official.evaluate(gt,pb,n,spec["sequence"])
             boxap=(confidence_ap(gt,pb,n,spec["iou_threshold"],bbox=True)
                    if item["score_semantics"]=="detection_confidence" else None)
@@ -451,6 +480,7 @@ def compare(base,spec,lock):
                  "same_body_extent_annotation_definition_required":True}
         results.append({
           "method":method,"prediction_source":"model_generated",
+          "unlabelled_test_video_used_for_session_training":item["unlabelled_test_video_used_for_session_training"],
           "runtime":runtime,"n_raw_predictions":len(pd),
           "detection_at_frozen_threshold":cm,
           "centre_AP101":centre_ap,
@@ -467,6 +497,9 @@ def compare(base,spec,lock):
            and len({r["runtime"]["device"] for r in results})==1
            and len({r["runtime"]["n_input_frames"] for r in results})==1
            and len({r["runtime"]["phase"] for r in results})==1)
+    runtime_rank_valid=runtime_comparable and all(
+        r["runtime"].get("n_input_frames_actually_decoded_verified") is True
+        for r in results)
     return {
         "protocol":PROTOCOL,"sequence":spec["sequence"],
         "n_fully_annotated_frames_including_empty":n,"n_gt_fish_boxes":len(gt),
@@ -479,13 +512,14 @@ def compare(base,spec,lock):
         "prespecified_box_iou_threshold":spec["iou_threshold"],
         "prespecified_detection_confidence_threshold":spec["detection_confidence_threshold"],
         "runtime_same_hardware_and_device":runtime_comparable,
-        "runtime_rank_valid":runtime_comparable,
+        "runtime_rank_valid":runtime_rank_valid,
         "results":results,
         "all_methods_scored_on_same_original_frames":True,
         "cross_method_AP_comparable_only_for_matching_detection_score_semantics":True,
         "different_body_extents_or_pose_boxes_may_invalidate_box_IoU_comparisons":True,
         "physical_units_validated":False,"welfare_or_stress_inferred":False,
-        "test_video_used_for_method_selection":False,
+        "heldout_test_reference_labels_used_for_method_selection":False,
+        "transductive_unlabelled_test_video_learning_declared":True,
         "reference_ground_truth_not_independently_audited_by_this_script":True
     }
 
