@@ -94,6 +94,8 @@ class TestPriorityB(unittest.TestCase):
             self.assertEqual(ans["n_fully_annotated_frames_including_empty"],5)
             self.assertEqual(ans["n_gt_fish_boxes"],8)
             self.assertEqual(len(ans["results"]),3)
+            self.assertTrue(ans["all_three_requested_tracker_families_present"])
+            self.assertFalse(ans["independently_verified_three_way_real_accuracy_claim"])
             self.assertTrue(ans["runtime_rank_valid"])
             yolo=ans["results"][2]
             self.assertAlmostEqual(yolo["tracking"]["centre_HOTA"],1,places=8)
