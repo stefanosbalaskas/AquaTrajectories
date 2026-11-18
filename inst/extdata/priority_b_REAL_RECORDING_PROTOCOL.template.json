@@ -31,6 +31,8 @@
       "runtime_json": "predictions/sleap_runtime.json",
       "training_provenance_json": "predictions/sleap_model_provenance.json",
       "score_semantics": "pose_instance_score",
+      "pose_score_threshold": 1.5,
+      "score_threshold_selection_source": "validation",
       "test_reference_labels_used_for_training_or_selection": false,
       "unlabelled_test_video_used_for_session_training": false
     },
@@ -42,6 +44,7 @@
       "runtime_json": "predictions/yolo_runtime.json",
       "training_provenance_json": "predictions/yolo_training_provenance.json",
       "score_semantics": "detection_confidence",
+      "score_threshold_selection_source": "validation",
       "test_reference_labels_used_for_training_or_selection": false,
       "unlabelled_test_video_used_for_session_training": false
     }
