@@ -209,5 +209,46 @@ class PriorityBExecutionContract(unittest.TestCase):
             self.assertFalse((out/"runtime.json").exists())
 
 
+
+    def test_sleap_native_slp_preserves_all_frames_including_empty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            video=root/"example.mp4";video.write_bytes(b"SYNTHETIC_MOCKED_VIDEO")
+            model=root/"pose_model";model.mkdir()
+            out=root/"sleap_out";native=root/"predicted"/"fish.slp"
+            shared_video=object()
+            def mocked_command(command,**kwargs):
+                self.assertEqual(command[:2],["sleap","predict"])
+                native.write_bytes(b"FAKE_SLP_EXTERNAL_EXECUTION_MOCK_ONLY")
+                return SimpleNamespace(returncode=0,stdout="mock",stderr="")
+            fake_sleap=SimpleNamespace(load_slp=lambda p: [
+                SimpleNamespace(frame_idx=i,video=shared_video) for i in range(3)])
+            with mock.patch.object(run.subprocess,"run",side_effect=mocked_command), \
+                 mock.patch.dict(sys.modules,{"sleap_io":fake_sleap}):
+                r=run.run("sleap",video,model,None,out,native,"cpu","hostA",3,
+                          "fish","S","CAM",.25)
+            self.assertTrue(r["n_input_frames_actually_decoded_verified"])
+            self.assertEqual(r["native_artifact_sha256"],sha(native))
+
+    def test_sleap_native_slp_refuses_dropped_zero_detection_frames(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            video=root/"example.mp4";video.write_bytes(b"SYNTHETIC_MOCKED_VIDEO")
+            model=root/"pose_model";model.mkdir()
+            out=root/"sleap_out";native=root/"predicted"/"fish.slp"
+            shared_video=object()
+            def mocked_command(command,**kwargs):
+                native.write_bytes(b"FAKE_SLP_MISSING_FRAME")
+                return SimpleNamespace(returncode=0,stdout="",stderr="")
+            fake_sleap=SimpleNamespace(load_slp=lambda p: [
+                SimpleNamespace(frame_idx=i,video=shared_video) for i in (0,2)])
+            with mock.patch.object(run.subprocess,"run",side_effect=mocked_command), \
+                 mock.patch.dict(sys.modules,{"sleap_io":fake_sleap}):
+                with self.assertRaisesRegex(ValueError,"complete original frame schedule"):
+                    run.run("sleap",video,model,None,out,native,"cpu","hostA",3,
+                            "fish","S","CAM",.25)
+            self.assertFalse((out/"runtime.json").exists())
+
+
 if __name__=="__main__":
     unittest.main()
