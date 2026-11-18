@@ -63,6 +63,10 @@ def validate_spec(base, spec):
         raise ValueError("Unknown priority-B benchmark protocol")
     if spec.get("source_split") != "test":
         raise ValueError("Only independent frozen TEST split can be scored")
+    if spec.get("source_kind") not in ("real_recording","synthetic_known_truth"):
+        raise ValueError("Explicit real-recording or synthetic-known-truth source kind is required")
+    if spec["source_kind"]=="real_recording" and not spec.get("source_video"):
+        raise ValueError("Real benchmark requires original source video bytes, not a claimed SHA alone")
     if spec.get("annotation_independence") not in ("unverified", "independent_blind_reviewed"):
         raise ValueError("Annotation independence must be explicitly declared")
     if spec.get("dataset_annotator_model_assistance") not in (True, False):
@@ -502,6 +506,9 @@ def compare(base,spec,lock):
         for r in results)
     return {
         "protocol":PROTOCOL,"sequence":spec["sequence"],
+        "source_kind":spec["source_kind"],
+        "original_real_video_bytes_present_and_hashed":
+            spec["source_kind"]=="real_recording" and bool(spec.get("source_video")),
         "n_fully_annotated_frames_including_empty":n,"n_gt_fish_boxes":len(gt),
         "annotation_independence":spec["annotation_independence"],
         "dataset_annotator_model_assistance":spec["dataset_annotator_model_assistance"],
