@@ -6,6 +6,7 @@ on:
       - "inst/python/aqt_priority_b_*.py"
       - "tests/python/test_priority_b_protocol.py"
       - "tests/python/test_priority_b_execution.py"
+      - "tests/integration/priority_b_handoff.R"
       - "tests/python/generate_priority_b_synthetic_evidence.py"
       - "docs/PRIORITY_B_CONTROLLED_BENCHMARK.md"
       - ".github/workflows/priority-b-controlled-benchmark.yml"
@@ -15,6 +16,7 @@ on:
       - "inst/python/aqt_priority_b_*.py"
       - "tests/python/test_priority_b_protocol.py"
       - "tests/python/test_priority_b_execution.py"
+      - "tests/integration/priority_b_handoff.R"
       - "tests/python/generate_priority_b_synthetic_evidence.py"
       - "docs/PRIORITY_B_CONTROLLED_BENCHMARK.md"
       - ".github/workflows/priority-b-controlled-benchmark.yml"
@@ -75,3 +77,41 @@ jobs:
           name: priority-b-synthetic-only-three-system-software-contract
           path: ${{ runner.temp }}/priority_b_synthetic/
           if-no-files-found: error
+
+
+  python_to_r_source_timestamp_handoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+      - name: Generate synthetic-only third-party predictions with source PTS
+        run: |
+          mkdir -p "$RUNNER_TEMP/priority_b_handoff"
+          python - <<'PY'
+          import os,sys
+          from pathlib import Path
+          sys.path.insert(0,"tests/python")
+          sys.path.insert(0,"inst/python")
+          from test_priority_b_protocol import TestPriorityB
+          from aqt_priority_b_to_r import export
+          root=Path(os.environ["RUNNER_TEMP"])/"priority_b_handoff"
+          TestPriorityB().build_fixture(root)
+          report=export(root/"yolo.csv",root/"frames.csv",
+                        root/"timestamps.csv",root/"canonical.csv",
+                        "TOY_ONLY","TOP")
+          assert report["n_exported_observed_positions"]==8
+          print("SYNTHETIC_PYTHON_EXPORT_PASS; NO REAL FISH INFERENCE")
+          PY
+      - name: Native R import and gap-safe publication plot across exact Python bytes
+        run: |
+          Rscript tests/integration/priority_b_handoff.R "$RUNNER_TEMP/priority_b_handoff/canonical.csv"
+      - name: No modification of scientific source from regression tests
+        run: |
+          test -z "$(git status --porcelain -- R tests man NAMESPACE)"
