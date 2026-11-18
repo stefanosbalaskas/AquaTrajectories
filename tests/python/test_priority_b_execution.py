@@ -12,6 +12,8 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest import mock
+from types import SimpleNamespace
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"inst/python"))
 import aqt_priority_b_splits as split
@@ -156,6 +158,56 @@ class PriorityBExecutionContract(unittest.TestCase):
                 (1,"fully_annotated"),(2,"partial")])
             with self.assertRaisesRegex(ValueError,"non-reviewed"):
                 bridge.export(cen,frames,pts,root/"r.csv","S","CAM")
+
+
+    def test_idtracker_native_session_output_is_checked_and_preserved(self):
+        # Mock the external executable only; the session path handling and
+        # frame-completeness checks run as the production code does.
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            video=root/"vid.mp4";video.write_bytes(b"FAKE_NO_REAL_INFERENCE")
+            settings=root/"params.toml";settings.write_text("number_of_animals=1\n")
+            out=root/"session_results"
+            native=root/"preserved"/"trajectories_tidy.csv"
+            def fake_subprocess(command,**kwargs):
+                self.assertIn("--output_dir",command)
+                self.assertIn(str(out),command)
+                self.assertIn("--device",command)
+                exported=out/"session_vid"/"trajectories"/"trajectories_tidy.csv"
+                exported.parent.mkdir(parents=True,exist_ok=True)
+                write_csv(exported,["frame","time","individual","x","y","probability"],[
+                   [0,0,0,3,5,.99],[1,.1,0,4,5,.99],[2,.2,0,5,6,.99]])
+                return SimpleNamespace(returncode=0,stdout="mock",stderr="")
+            with mock.patch.object(run.subprocess,"run",side_effect=fake_subprocess):
+                record=run.run("idtrackerai",video,None,settings,out,native,
+                        "cpu","bench-host",3,"fish","S","CAM",.25)
+            self.assertTrue(record["n_input_frames_actually_decoded_verified"])
+            self.assertEqual(record["input_video_sha256"],sha(video))
+            self.assertEqual(record["native_artifact_sha256"],sha(native))
+            self.assertEqual(len(list(csv.DictReader(native.open()))),3)
+            self.assertEqual(record["execution_status"],"completed_on_actual_video")
+            # This test uses mocked subprocess: cannot certify actual model.
+            self.assertEqual(record["native_command"][0],"idtrackerai")
+
+    def test_idtracker_incomplete_native_session_cannot_claim_success(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            video=root/"vid.mp4";video.write_bytes(b"FAKE_NO_REAL_INFERENCE")
+            settings=root/"params.toml";settings.write_text("number_of_animals=1\n")
+            out=root/"session_results";native=root/"frozen.csv"
+            def missing_frame_subprocess(command,**kwargs):
+                exported=out/"session_vid"/"trajectories"/"trajectories_tidy.csv"
+                exported.parent.mkdir(parents=True,exist_ok=True)
+                write_csv(exported,["frame","time","individual","x","y","probability"],[
+                   [0,0,0,3,5,.99],[2,.2,0,5,6,.99]])
+                return SimpleNamespace(returncode=0,stdout="",stderr="")
+            with mock.patch.object(run.subprocess,"run",side_effect=missing_frame_subprocess):
+                with self.assertRaisesRegex(ValueError,"complete frame schedule"):
+                    run.run("idtrackerai",video,None,settings,out,native,
+                            "cpu","bench-host",3,"fish","S","CAM",.25)
+            self.assertFalse(native.exists())
+            self.assertFalse((out/"runtime.json").exists())
+
 
 if __name__=="__main__":
     unittest.main()
