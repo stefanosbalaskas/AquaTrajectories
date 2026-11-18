@@ -24,7 +24,7 @@ LOCK_SCHEMA = "AQT_PRIORITY_B_LOCK_V1"
 PROTOCOL = "AQT_PRIORITY_B_COMPARISON_V1"
 ALLOWED_METHODS = {"idtrackerai", "sleap", "yolo_bytetrack", "yolo_botsort",
                    "frozen_fish_bytetrack", "alternative_hungarian"}
-ALLOWED_SCORE_SEMANTICS = {"detection_confidence", "identity_probability", "absent"}
+ALLOWED_SCORE_SEMANTICS = {"detection_confidence", "pose_instance_score", "absent"}
 MAX_POINTS = 500000
 
 
@@ -86,8 +86,8 @@ def validate_spec(base, spec):
             raise ValueError("Declare idtracker.ai transductive unlabeled test-video identity training explicitly")
         if item.get("score_semantics") not in ALLOWED_SCORE_SEMANTICS:
             raise ValueError("Explicit scoring semantics required")
-        if item.get("score_semantics") == "detection_confidence" and not item.get("centres_csv"):
-            raise ValueError("Detection AP requires scored canonical centres")
+        if item.get("score_semantics") in ("detection_confidence","pose_instance_score") and not item.get("centres_csv"):
+            raise ValueError("Score-based AP requires scored canonical centres")
         if not item.get("centres_csv") or not item.get("runtime_json"):
             raise ValueError("Each method requires genuine centre predictions and runtime provenance")
         if not item.get("training_provenance_json"):
@@ -426,7 +426,7 @@ def compare(base,spec,lock):
         pd=centres(_path(base,item["centres_csv"]),n)
         if not pd and not item.get("allow_zero_predictions",False):
             raise ValueError("Empty predictions require an explicit no-detection declaration")
-        if item["score_semantics"]=="detection_confidence" and \
+        if item["score_semantics"] in ("detection_confidence","pose_instance_score") and \
                 any(v[-1] is None for v in pd):
             raise ValueError("Missing detector confidences")
         runtime=read_runtime(_path(base,item["runtime_json"]),expected_video_hash,n)
@@ -445,11 +445,11 @@ def compare(base,spec,lock):
             raise ValueError("Fine-tuned YOLO requires recorded training and validation source evidence")
         matches, cm=matched_frames(gt_c,pd,n,spec["centre_gate_px"],
                  threshold=spec["detection_confidence_threshold"]
-                 if item["score_semantics"]=="detection_confidence" else 0)
+                 if item["score_semantics"] in ("detection_confidence","pose_instance_score") else 0)
         centre_ap=(confidence_ap(gt_c,pd,n,spec["centre_gate_px"])
-                   if item["score_semantics"]=="detection_confidence" else None)
+                   if item["score_semantics"] in ("detection_confidence","pose_instance_score") else None)
         filtered=[p for p in pd if p[-1] is None or
-          item["score_semantics"]!="detection_confidence" or
+          item["score_semantics"] not in ("detection_confidence","pose_instance_score") or
           p[-1]>=spec["detection_confidence_threshold"]]
         tracker=trackeval_centres(gt_c,filtered,n,spec["centre_gate_px"],
                                    spec["sequence"])
@@ -523,6 +523,7 @@ def compare(base,spec,lock):
         "results":results,
         "all_methods_scored_on_same_original_frames":True,
         "cross_method_AP_comparable_only_for_matching_detection_score_semantics":True,
+        "sleap_pose_scores_are_not_yolo_detector_confidences":True,
         "different_body_extents_or_pose_boxes_may_invalidate_box_IoU_comparisons":True,
         "physical_units_validated":False,"welfare_or_stress_inferred":False,
         "heldout_test_reference_labels_used_for_method_selection":False,
