@@ -117,6 +117,12 @@ not silently infer column meanings.
 keypoints. This is not guaranteed to coincide with a human fish-body
 box centre. Native instance confidence is stored only when provided, and labelled
 **pose_instance_score** rather than conflated with YOLO detector confidence.
+SLEAP grouping/instance scores are not necessarily probabilities or bounded
+between 0 and 1. Preserve the original finite scores. The protocol must
+specify a **method-specific pose_score_threshold** determined on validation
+data, and **score_threshold_selection_source=validation**, independently
+of YOLO's frozen detection confidence threshold. No min–max normalization
+may be fitted using the held-out test recording.
 Reference GT must distinguish the appropriate anatomical centre convention.
 
 **YOLO:** the original scored MOT must be produced by actual model
@@ -203,7 +209,10 @@ Camera-local pixel displacement is **not centimetres or welfare**.
 `centre_gate_px` yields TP/FP/FN, F1, precision and recall.
 Confidence-based 101-point interpolated centre AP is meaningful
 **only** for a genuine model score (YOLO detection confidence or SLEAP
-pose-instance score, reported under their distinct source semantics). Idtracker's
+pose-instance score, reported under their distinct source semantics).
+SLEAP raw grouping scores may exceed 1: they remain unmodified, with
+a validation-selected cutoff for F1 and identity evaluation. Detection
+score ranking/AP is *not* probability calibration. Idtracker's
 identity posterior and SLEAP identity confidence cannot be relabelled
 as detector confidence. Standard detection **box AP50** is only available
 for genuine scored body boxes with anatomically equivalent definitions.
