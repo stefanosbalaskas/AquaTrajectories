@@ -22,6 +22,8 @@ def export(centres_csv,frame_manifest,timestamps_csv,output,
     n=manifest(frame_manifest)
     timestamp=times_csv(timestamps_csv,n)
     positions=centres(centres_csv,n)
+    if not positions:
+        raise ValueError("No real predicted fish centres supplied for R import")
     output.parent.mkdir(parents=True,exist_ok=True)
     with output.open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f)
