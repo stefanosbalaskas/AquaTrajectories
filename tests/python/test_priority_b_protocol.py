@@ -1,5 +1,6 @@
 """Priority B synthetic exact-case qualification; never claim real tracker accuracy."""
 import csv
+import importlib.util
 import json
 from pathlib import Path
 import sys
@@ -65,6 +66,10 @@ class TestPriorityB(unittest.TestCase):
           "centre_gate_px":3,"detection_confidence_threshold":.5,
           "iou_threshold":.5,"methods":methods}
 
+    @unittest.skipUnless(
+        all(importlib.util.find_spec(m) is not None
+            for m in ("numpy","scipy","trackeval")),
+        "Dedicated Priority B CI installs independently pinned TrackEval and numerical libraries")
     def test_three_method_same_data_with_official_trackeval(self):
         import trackeval
         with tempfile.TemporaryDirectory() as temp:
@@ -91,6 +96,10 @@ class TestPriorityB(unittest.TestCase):
             self.assertFalse(ans["physical_units_validated"])
             self.assertEqual(ans["results"][0]["centre_AP_score_semantics"],"absent")
 
+    @unittest.skipUnless(
+        all(importlib.util.find_spec(m) is not None
+            for m in ("numpy","scipy","trackeval")),
+        "Dedicated Priority B CI installs independently pinned TrackEval and numerical libraries")
     def test_switch_and_false_positive_reduce_accuracy(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp);spec=self.build_fixture(root)
@@ -136,6 +145,10 @@ class TestPriorityB(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"alias"):
                 b.validate_spec(root,spec)
 
+    @unittest.skipUnless(
+        all(importlib.util.find_spec(m) is not None
+            for m in ("numpy","scipy","trackeval")),
+        "Dedicated Priority B CI installs independently pinned TrackEval and numerical libraries")
     def test_runtime_non_comparability_when_hardware_differs(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp);spec=self.build_fixture(root)
