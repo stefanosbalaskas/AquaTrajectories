@@ -119,6 +119,19 @@ def run(method,video,model,settings,outdir,native_output,device,
         if native_output.exists():
             raise FileExistsError("Refuse overwriting native idtracker output")
         shutil.copy2(candidates[0],native_output)
+    elif method=="sleap":
+        if not native_output.is_file() or native_output.stat().st_size<1:
+            raise RuntimeError("SLEAP native predictions file missing or empty")
+        try:
+            import sleap_io
+        except ImportError as exc:
+            raise RuntimeError("Cannot verify native SLEAP frame coverage without sleap-io") from exc
+        labels=sleap_io.load_slp(str(native_output))
+        frames=[int(lf.frame_idx) for lf in labels]
+        if sorted(frames)!=list(range(expected_frames)):
+            raise ValueError("SLEAP predicted SLP lacks complete original frame schedule including empty frames")
+        if len({id(lf.video) for lf in labels})!=1:
+            raise ValueError("SLEAP predictions must belong to one original camera recording")
     elif not native_output.is_file() or native_output.stat().st_size<1:
         raise RuntimeError("Native tracker output missing/empty, no benchmark evidence")
     record={
@@ -127,7 +140,7 @@ def run(method,video,model,settings,outdir,native_output,device,
       "input_video_sha256":plan["original_video_sha256"],
       "n_input_frames":expected_frames,
       "n_input_frames_actually_decoded_verified":method in
-            ("yolo_bytetrack","idtrackerai"),
+            ("yolo_bytetrack","idtrackerai","sleap"),
       "software_versions":installed_versions(),
       "native_command":command,
       "source_settings_sha256":plan["settings_sha256"],
