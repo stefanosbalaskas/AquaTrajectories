@@ -108,7 +108,8 @@ not silently infer column meanings.
 `sleap_io.load_slp`; `PredictedInstance` must have explicit assigned
 `track`. The single exported centre is the mean of model-visible
 keypoints. This is not guaranteed to coincide with a human fish-body
-box centre. Native instance confidence is stored only when provided.
+box centre. Native instance confidence is stored only when provided, and labelled
+**pose_instance_score** rather than conflated with YOLO detector confidence.
 Reference GT must distinguish the appropriate anatomical centre convention.
 
 **YOLO:** the original scored MOT must be produced by actual model
@@ -194,7 +195,8 @@ Camera-local pixel displacement is **not centimetres or welfare**.
 **Detection:** common matching at a prespecified Euclidean
 `centre_gate_px` yields TP/FP/FN, F1, precision and recall.
 Confidence-based 101-point interpolated centre AP is meaningful
-**only** for a genuine model detection score. Idtracker's
+**only** for a genuine model score (YOLO detection confidence or SLEAP
+pose-instance score, reported under their distinct source semantics). Idtracker's
 identity posterior and SLEAP identity confidence cannot be relabelled
 as detector confidence. Standard detection **box AP50** is only available
 for genuine scored body boxes with anatomically equivalent definitions.
