@@ -1,0 +1,99 @@
+name: Priority B real Fraunhofer fish downstream trajectory error and support
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_real_fraunhofer_behaviour_error.py"
+      - "tests/python/test_real_fraunhofer_behaviour_error.py"
+      - "docs/PRIORITY_B_REAL_TRAJECTORY_ERROR.md"
+      - ".github/workflows/priority-b-real-trajectory-error.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_real_fraunhofer_behaviour_error.py"
+      - "tests/python/test_real_fraunhofer_behaviour_error.py"
+      - "docs/PRIORITY_B_REAL_TRAJECTORY_ERROR.md"
+      - ".github/workflows/priority-b-real-trajectory-error.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  frozen-real-source-model-behaviour-error:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Pin independent assignment solver
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.23.5" "scipy==1.10.1"
+      - name: Known-answer movement-support measurement and scientific refusal tests
+        run: |
+          python -m py_compile inst/python/aqt_real_fraunhofer_behaviour_error.py
+          python -m unittest discover -s tests/python -p "test_real_fraunhofer_behaviour_error.py" -v
+      - name: Retrieve EXACT original successful Wave14G real model-generated fish predictions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/qualified_model"
+          gh run download 43372413985 \
+            --repo stefanosbalaskas/AquaTrajectories \
+            --name wave14g-real-ricefish-cross-domain-model-detection-and-trackeval \
+            --dir "$RUNNER_TEMP/qualified_model"
+          test -s "$RUNNER_TEMP/qualified_model/report.json"
+          test -f "$RUNNER_TEMP/qualified_model/fish_model_detections.csv"
+          test -f "$RUNNER_TEMP/qualified_model/fish_model_bytetrack.csv"
+          echo 43372413985 > "$RUNNER_TEMP/frozen_wave14g_source_run_id.txt"
+      - name: Original HHI 101 real JPEG source and GT independently checksum-locked
+        run: |
+          # The HHI source host has an incomplete issuer chain; --insecure
+          # does not verify peer identity; file bytes are SHA-256-locked.
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            -o "$RUNNER_TEMP/original_HHI_A_mot.zip"
+          echo "18c39619b1f84ea774f16fedfac5911d92de86ab7da4aa03cf365b9b4be58ceb  $RUNNER_TEMP/original_HHI_A_mot.zip" |
+            sha256sum -c -
+      - name: Measure actual source-frame trajectory support and error for both frozen trackers
+        run: |
+          python inst/python/aqt_real_fraunhofer_behaviour_error.py \
+            --source-archive "$RUNNER_TEMP/original_HHI_A_mot.zip" \
+            --model-csv "$RUNNER_TEMP/qualified_model/fish_model_detections.csv" \
+            --bytetrack-csv "$RUNNER_TEMP/qualified_model/fish_model_bytetrack.csv" \
+            --model-report "$RUNNER_TEMP/qualified_model/report.json" \
+            --out "$RUNNER_TEMP/real_fish_source_frame_behaviour_error.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"real_fish_source_frame_behaviour_error.json"
+          x=json.loads(p.read_text())
+          assert x["schema"]=="AQT_REAL_FRAUNHOFER_BEHAVIOUR_MEASUREMENT_ERROR_V1"
+          assert x["source_kind"]=="original_real_fraunhofer_ricefish_A"
+          assert x["n_original_source_JPEG_frames"]==101
+          assert not x["source_video_PTS_seconds_independently_known"]
+          assert x["source_original_model_generated_predictions_not_oracle"]
+          assert not x["source_reference_annotation_prediction_blind_reviewed"]
+          for method in ("ByteTrack_real_source_model","Hungarian_same_real_model"):
+              y=x[method]
+              assert y["n_GT_observations"]==9214
+              assert y["n_IoU_matched_fish_positions"]<=y["n_predicted_observations"]
+              assert (y["n_same_predicted_identity_supported_adjacent_intervals"]+
+                      y["n_matched_adjacent_intervals_with_predicted_ID_change"]+
+                      y["n_adjacent_GT_intervals_without_both_matches"]==
+                      y["n_adjacent_original_source_GT_fish_intervals"])
+              assert not y["physical_time_s_or_physical_speed_computed"]
+              assert not y["stress_welfare_or_causality_inferred"]
+          print("REAL SOURCE-FRAME TRAJECTORY ERROR EVIDENCE QUALIFIED; NO PTS/CM/S OR STRESS CLAIM")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: priority-b-real-hhi-frozen-tracker-behaviour-measurement-error
+          path: |
+            ${{ runner.temp }}/real_fish_source_frame_behaviour_error.json
+            ${{ runner.temp }}/frozen_wave14g_source_run_id.txt
+          if-no-files-found: error
