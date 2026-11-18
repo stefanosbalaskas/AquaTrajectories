@@ -5,6 +5,7 @@ on:
     paths:
       - "inst/python/aqt_priority_b_*.py"
       - "tests/python/test_priority_b_protocol.py"
+      - "tests/python/test_priority_b_execution.py"
       - "tests/python/generate_priority_b_synthetic_evidence.py"
       - "docs/PRIORITY_B_CONTROLLED_BENCHMARK.md"
       - ".github/workflows/priority-b-controlled-benchmark.yml"
@@ -13,6 +14,7 @@ on:
     paths:
       - "inst/python/aqt_priority_b_*.py"
       - "tests/python/test_priority_b_protocol.py"
+      - "tests/python/test_priority_b_execution.py"
       - "tests/python/generate_priority_b_synthetic_evidence.py"
       - "docs/PRIORITY_B_CONTROLLED_BENCHMARK.md"
       - ".github/workflows/priority-b-controlled-benchmark.yml"
@@ -48,6 +50,10 @@ jobs:
           python -m unittest discover -s tests/python -p "test_official_fish_trackeval.py" -v
       - name: Qualify same-data ID/HOTA/AP/fragmentation/runtime/downstream contracts
         run: python -m unittest discover -s tests/python -p "test_priority_b_protocol.py" -v
+      - name: Validate real model command construction, split-safe fine-tuning and R handoff
+        run: |
+          python -m py_compile inst/python/aqt_priority_b_run_models.py inst/python/aqt_priority_b_yolo_finetune.py inst/python/aqt_priority_b_to_r.py
+          python -m unittest discover -s tests/python -p "test_priority_b_execution.py" -v
       - name: Generate reproducible synthetic-only three-method evidence
         run: |
           python tests/python/generate_priority_b_synthetic_evidence.py --output "$RUNNER_TEMP/priority_b_synthetic"
