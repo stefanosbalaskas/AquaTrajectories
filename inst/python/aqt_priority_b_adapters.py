@@ -94,8 +94,8 @@ def sleap_rows(path,frame_origin,expected_frames):
             score=getattr(instance,"score",None)
             if score is None or not math.isfinite(float(score)):
                 bad_score+=1;score=None
-            elif not 0<=float(score)<=1:
-                raise ValueError("SLEAP instance score out of detection confidence range")
+            # Pose/grouping scores can be unbounded, unlike YOLO probabilities.
+            # Preserve the native finite score; never normalize against test data.
             mid=positions[valid].mean(axis=0)
             raw.append((frame,name,float(mid[0]),float(mid[1]),score))
     if len(videos)!=1:
@@ -109,6 +109,7 @@ def sleap_rows(path,frame_origin,expected_frames):
       "centroid_definition":"mean_of_visible_model_predicted_pose_keypoints",
       "n_no_visible_keypoint_instances_excluded":miss,
       "n_missing_instance_confidence":bad_score,
+      "pose_instance_scores_are_not_probabilities":True,
       "score_semantics":"pose_instance_score" if bad_score==0 else "absent",
       "native_fish_bbox_supplied":False,
       "pose_centroid_not_independently_annotated_body_center":True}
