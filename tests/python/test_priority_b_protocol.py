@@ -63,7 +63,8 @@ class TestPriorityB(unittest.TestCase):
               "runtime_json":label+"-runtime.json",
               "training_provenance_json":label+"-train.json",
               "score_semantics":"absent" if name=="idtrackerai" else
-                                "detection_confidence",
+                                ("pose_instance_score" if name=="sleap" else
+                                 "detection_confidence"),
               "prediction_source":"model_generated",
               "test_reference_labels_used_for_training_or_selection":False,
               "unlabelled_test_video_used_for_session_training":
@@ -100,6 +101,8 @@ class TestPriorityB(unittest.TestCase):
             self.assertAlmostEqual(yolo["centre_AP101"],1,places=8)
             self.assertAlmostEqual(yolo["bbox_metrics"]["box_AP50_101"],1,places=8)
             self.assertAlmostEqual(yolo["bbox_metrics"]["official_iou_HOTA"],1,places=8)
+            self.assertIsNotNone(ans["results"][1]["centre_AP101"])
+            self.assertEqual(ans["results"][1]["centre_AP_score_semantics"],"pose_instance_score")
             self.assertIsNone(ans["results"][0]["centre_AP101"])
             self.assertIsNone(ans["results"][0]["bbox_metrics"])
             self.assertEqual(ans["results"][0]["fragmentation"]["identity_fragmentations"],1)
