@@ -12,7 +12,9 @@ import importlib.metadata
 import json
 import os
 from pathlib import Path
+import csv
 import platform
+import shutil
 import subprocess
 import sys
 import time
@@ -27,8 +29,8 @@ def cli(method,video,model,settings,native_output,outdir,device,prefix,
         if not settings or not settings.is_file():
             raise ValueError("idtracker.ai requires an independently frozen source TOML")
         return ["idtrackerai","--load",str(settings),"--video_paths",
-                str(video),"--trajectories_formats","csv_tidy","--device",
-                device,"--track"]
+                str(video),"--output_dir",str(outdir),"--trajectories_formats",
+                "csv_tidy","--device",device,"--track"]
     if method=="sleap":
         if not model or not model.exists():
             raise ValueError("SLEAP requires fitted source-compatible pose model")
@@ -74,6 +76,8 @@ def run(method,video,model,settings,outdir,native_output,device,
           "real_video_inference_performed":False}
     if dry_run:return plan
     outdir.mkdir(parents=True)
+    if method=="sleap":
+        native_output.parent.mkdir(parents=True,exist_ok=True)
     start=time.perf_counter()
     proc=subprocess.run(command,cwd=str(video.parent),capture_output=True,
                         text=True,check=False)
@@ -91,6 +95,30 @@ def run(method,video,model,settings,outdir,native_output,device,
         if metadata.get("n_decoded_frames")!=expected_frames or \
             metadata.get("video_sha256")!=plan["original_video_sha256"]:
             raise ValueError("YOLO did not decode the exact full frozen video")
+    elif method=="idtrackerai":
+        # Native v6 writes session_<name>/trajectories/trajectories_tidy.csv
+        # under the requested output directory, never directly to our path.
+        candidates=list(outdir.glob("session_*/trajectories/trajectories_tidy.csv"))
+        if len(candidates)!=1 or not candidates[0].is_file():
+            raise RuntimeError("idtracker.ai did not generate one unambiguous native tidy CSV")
+        with candidates[0].open(newline="",encoding="utf-8-sig") as f:
+            reader=csv.DictReader(f)
+            if reader.fieldnames!=["frame","time","individual","x","y","probability"]:
+                raise ValueError("Unexpected idtracker.ai v6 native output schema")
+            observed_frames=set()
+            for row in reader:
+                try: frame=int(row["frame"])
+                except (ValueError,TypeError) as exc:
+                    raise ValueError("Invalid native idtracker.ai frame") from exc
+                if not 0<=frame<expected_frames:
+                    raise ValueError("idtracker.ai produced a source frame outside frozen recording")
+                observed_frames.add(frame)
+        if observed_frames!=set(range(expected_frames)):
+            raise ValueError("idtracker.ai did not export complete frame schedule")
+        native_output.parent.mkdir(parents=True,exist_ok=True)
+        if native_output.exists():
+            raise FileExistsError("Refuse overwriting native idtracker output")
+        shutil.copy2(candidates[0],native_output)
     elif not native_output.is_file() or native_output.stat().st_size<1:
         raise RuntimeError("Native tracker output missing/empty, no benchmark evidence")
     record={
@@ -98,7 +126,8 @@ def run(method,video,model,settings,outdir,native_output,device,
       "wall_seconds":wall,"hardware_id":hardware_id,"device":device,
       "input_video_sha256":plan["original_video_sha256"],
       "n_input_frames":expected_frames,
-      "n_input_frames_actually_decoded_verified":method=="yolo_bytetrack",
+      "n_input_frames_actually_decoded_verified":method in
+            ("yolo_bytetrack","idtrackerai"),
       "software_versions":installed_versions(),
       "native_command":command,
       "source_settings_sha256":plan["settings_sha256"],
