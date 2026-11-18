@@ -65,7 +65,8 @@ jobs:
           import json,os
           from pathlib import Path
           z=json.loads((Path(os.environ["RUNNER_TEMP"])/"priority_b_synthetic"/"SYNTHETIC_BENCHMARK_REPORT.json").read_text())
-          assert z["source_kind"]=="SYNTHETIC_KNOWN_TRUTH_ONLY"
+          assert z["source_kind"]=="synthetic_known_truth"
+          assert z["evidence_label"]=="SYNTHETIC_KNOWN_TRUTH_ONLY"
           assert not z["empirical_model_execution_performed"]
           assert len(z["results"])==3
           assert z["runtime_rank_valid"]
