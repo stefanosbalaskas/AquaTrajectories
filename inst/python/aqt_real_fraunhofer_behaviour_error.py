@@ -147,8 +147,9 @@ def compute(gt,pred,*,gate=IOU_GATE,nframes=FRAME_COUNT):
     school_signed_errors=[]
     for frame in range(1,nframes+1):
         for a,b in combinations(per_frame[frame],2):
-            true_dist=math.dist(a[3],b[3])
-            predicted_dist=math.dist(a[4],b[4])
+            # Per-frame entries are (gt_id, predicted_id, GT_xy, pred_xy, IoU).
+            true_dist=math.dist(a[2],b[2])
+            predicted_dist=math.dist(a[3],b[3])
             school_signed_errors.append(predicted_dist-true_dist)
             school_absolute_errors.append(abs(predicted_dist-true_dist))
     position_errors=[math.dist(pair[3],pair[4]) for pair in matches]
