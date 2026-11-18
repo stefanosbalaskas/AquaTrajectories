@@ -3,6 +3,7 @@
 No real fish truth, physical clock, model execution or ethology in tests.
 """
 import math
+import importlib.util
 from pathlib import Path
 import sys
 import unittest
@@ -19,6 +20,10 @@ def gt_fixture():
     return truth
 
 
+@unittest.skipUnless(
+    importlib.util.find_spec("numpy") is not None and
+    importlib.util.find_spec("scipy") is not None,
+    "Dedicated real-fish error CI installs pinned NumPy/SciPy")
 class RealFishErrorContract(unittest.TestCase):
     def test_contiguous_support_gap_and_switch_are_not_interpolated(self):
         truth=gt_fixture()
