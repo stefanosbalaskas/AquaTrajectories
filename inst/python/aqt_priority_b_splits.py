@@ -75,7 +75,7 @@ def validate_model_provenance(path,split):
     if (set(p["training_source_video_sha256"]) |
         set(p["model_selection_source_video_sha256"])) & set(split["test_video_sha256"]):
         raise ValueError("Held-out test source contaminated by training/model selection")
-    if p.get("test_split_used_for_training_or_tuning") is not False:
+    if p.get("test_reference_labels_used_for_training_or_selection") is not False:
         raise ValueError("Training provenance admits test leakage")
     return True
 
