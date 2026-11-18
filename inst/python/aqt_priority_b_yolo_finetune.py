@@ -123,12 +123,16 @@ def train(output,split_csv,image_root,image_csv,initial_weights,
         import ultralytics
     except ImportError as e:
         raise RuntimeError("Training requires a separately installed and audited Ultralytics runtime") from e
-    result=YOLO(str(initial_weights)).train(
+    detector=YOLO(str(initial_weights))
+    detector.train(
         data=str(data),epochs=epochs,imgsz=imgsz,batch=batch,
         seed=seed,device=device,project=str(output/"runs"),name="fish",
         exist_ok=False)
     elapsed=time.perf_counter()-started
-    best=Path(result.save_dir)/"weights"/"best.pt"
+    trainer=getattr(detector,"trainer",None)
+    if trainer is None or not getattr(trainer,"best",None):
+        raise RuntimeError("Ultralytics returned no validation-selected best checkpoint")
+    best=Path(trainer.best)
     if not best.is_file() or best.stat().st_size<10000:
         raise RuntimeError("Training did not produce a usable best validation checkpoint")
     provenance={
