@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from test_priority_b_protocol import TestPriorityB
 import aqt_priority_b_benchmark as b
+import aqt_priority_b_report as tab
 
 def main():
     p=argparse.ArgumentParser();p.add_argument("--output",type=Path,required=True)
@@ -20,6 +21,9 @@ def main():
     report["training_performed"]=False
     (a.output/"SYNTHETIC_BENCHMARK_REPORT.json").write_text(
         json.dumps(report,indent=2,sort_keys=True,allow_nan=False)+"\n")
+    info=tab.write_table(a.output/"SYNTHETIC_BENCHMARK_REPORT.json",
+                         a.output/"SYNTHETIC_ONLY_COMPARATIVE_TABLE.csv")
+    assert info["rows"]==3 and not info["independent_real_accuracy_certified"]
     print("SYNTHETIC THREE-METHOD SCORE CONTRACT PASS; NOT REAL TRACKER ACCURACY")
 
 if __name__=="__main__":main()
