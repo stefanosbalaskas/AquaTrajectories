@@ -116,6 +116,11 @@ jobs:
       - name: Native R import and gap-safe publication plot across exact Python bytes
         run: |
           Rscript tests/integration/priority_b_handoff.R "$RUNNER_TEMP/priority_b_handoff/canonical.csv"
-      - name: No modification of scientific source from regression tests
+      - name: Verify no tracked scientific source or R manuals changed
         run: |
-          test -z "$(git status --porcelain -- R tests man NAMESPACE)"
+          # R package setup may create ignored/untracked generated files.
+          # Record these for audit, but fail specifically on tracked source drift.
+          git status --short -- R tests man NAMESPACE
+          git diff --exit-code -- R tests man NAMESPACE
+          git diff --cached --exit-code -- R tests man NAMESPACE
+          echo "Tracked R source, tests, man pages and NAMESPACE unchanged"
