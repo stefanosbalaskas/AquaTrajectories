@@ -88,6 +88,15 @@ def validate_spec(base, spec):
             raise ValueError("Explicit scoring semantics required")
         if item.get("score_semantics") in ("detection_confidence","pose_instance_score") and not item.get("centres_csv"):
             raise ValueError("Score-based AP requires scored canonical centres")
+        if item["score_semantics"]=="pose_instance_score":
+            threshold=item.get("pose_score_threshold")
+            if type(threshold) not in (int,float) or not math.isfinite(threshold):
+                raise ValueError("SLEAP requires a finite method-specific pose-score threshold")
+            if item.get("score_threshold_selection_source")!="validation":
+                raise ValueError("SLEAP threshold must be selected without test labels")
+        if item["score_semantics"]=="detection_confidence" and (
+                item.get("score_threshold_selection_source")!="validation"):
+            raise ValueError("YOLO detection threshold must be validation-selected")
         if not item.get("centres_csv") or not item.get("runtime_json"):
             raise ValueError("Each method requires genuine centre predictions and runtime provenance")
         if not item.get("training_provenance_json"):
@@ -166,7 +175,7 @@ def centres(path,n):
                 raise ValueError("Invalid track centre") from e
             if (not 1<=frame<=n or ident<1 or (frame,ident) in seen or
                 not (math.isfinite(x) and math.isfinite(y)) or
-                (score is not None and (not math.isfinite(score) or not 0<=score<=1))):
+                (score is not None and not math.isfinite(score))):
                 raise ValueError("Duplicate, nonfinite or out-of-schedule track centre")
             seen.add((frame,ident))
             result.append((frame,ident,x,y,score))
@@ -428,7 +437,12 @@ def compare(base,spec,lock):
             raise ValueError("Empty predictions require an explicit no-detection declaration")
         if item["score_semantics"] in ("detection_confidence","pose_instance_score") and \
                 any(v[-1] is None for v in pd):
-            raise ValueError("Missing detector confidences")
+            raise ValueError("Missing source model scores")
+        if item["score_semantics"]=="detection_confidence" and \
+                any(not 0<=v[-1]<=1 for v in pd):
+            raise ValueError("YOLO detection confidences must remain in [0,1]")
+        if item["score_semantics"]=="absent" and any(v[-1] is not None for v in pd):
+            raise ValueError("Unscored idtracker identities cannot contain invented detection confidences")
         runtime=read_runtime(_path(base,item["runtime_json"]),expected_video_hash,n)
         provenance=json.loads(_path(base,item["training_provenance_json"]).read_text())
         if not isinstance(provenance,dict) or not provenance.get("model_or_config_sha256") or                 provenance.get("test_reference_labels_used_for_training_or_selection") is not False:
@@ -443,14 +457,16 @@ def compare(base,spec,lock):
             raise ValueError("External training or validation source violates locked split")
         if method.startswith("yolo") and (not source_train or not source_val):
             raise ValueError("Fine-tuned YOLO requires recorded training and validation source evidence")
+        threshold=(item["pose_score_threshold"] if item["score_semantics"]=="pose_instance_score"
+                   else spec["detection_confidence_threshold"] if item["score_semantics"]=="detection_confidence"
+                   else None)
         matches, cm=matched_frames(gt_c,pd,n,spec["centre_gate_px"],
-                 threshold=spec["detection_confidence_threshold"]
-                 if item["score_semantics"] in ("detection_confidence","pose_instance_score") else 0)
+                 threshold=threshold if threshold is not None else 0)
         centre_ap=(confidence_ap(gt_c,pd,n,spec["centre_gate_px"])
                    if item["score_semantics"] in ("detection_confidence","pose_instance_score") else None)
         filtered=[p for p in pd if p[-1] is None or
           item["score_semantics"] not in ("detection_confidence","pose_instance_score") or
-          p[-1]>=spec["detection_confidence_threshold"]]
+          p[-1]>=threshold]
         tracker=trackeval_centres(gt_c,filtered,n,spec["centre_gate_px"],
                                    spec["sequence"])
         fragmentation=tracking_fragmentation(matches,gt_c,n)
@@ -489,6 +505,8 @@ def compare(base,spec,lock):
           "detection_at_frozen_threshold":cm,
           "centre_AP101":centre_ap,
           "centre_AP_score_semantics":item["score_semantics"],
+          "method_specific_score_threshold":threshold,
+          "threshold_selection_source":item.get("score_threshold_selection_source"),
           "tracking":tracker,"fragmentation":fragmentation,
           "behaviour_error":behaviour,"bbox_metrics":box,
           "source_files_sha256":{key:hashes[val] for key,val in item.items()
