@@ -522,6 +522,10 @@ def compare(base,spec,lock):
         "runtime_rank_valid":runtime_rank_valid,
         "results":results,
         "all_methods_scored_on_same_original_frames":True,
+        "all_three_requested_tracker_families_present":
+            {"idtrackerai","sleap"} <= {r["method"] for r in results}
+            and any(r["method"].startswith("yolo_") for r in results),
+        "independently_verified_three_way_real_accuracy_claim":False,
         "cross_method_AP_comparable_only_for_matching_detection_score_semantics":True,
         "sleap_pose_scores_are_not_yolo_detector_confidences":True,
         "different_body_extents_or_pose_boxes_may_invalidate_box_IoU_comparisons":True,
