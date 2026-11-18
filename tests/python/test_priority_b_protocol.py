@@ -37,17 +37,26 @@ class TestPriorityB(unittest.TestCase):
         with (root/"yolo.txt").open("w",newline="") as f:csv.writer(f).writerows(yolo)
         for name,rows in (("yolo.csv",pr),("sleap.csv",slea),("idtrackerai.csv",idtra)):
             self.write_csv(root/name,["frame","track_id","x_px","y_px","score"],rows)
+        self.write_csv(root/"splits.csv",sp.COLUMNS,[
+          ["SYN","R1","G1","S1","1"*64,"train","training_labels"],
+          ["SYN","R2","G2","S2","2"*64,"val","training_labels"],
+          ["SYN","R3","G3","S3","a"*64,"test","fully_annotated"]])
+        split=sp.validate_split(root/"splits.csv")
         methods=[]
         for name in ("idtrackerai","sleap","yolo_bytetrack"):
             label = "yolo" if name=="yolo_bytetrack" else name
             r={"wall_seconds":2 if name=="idtrackerai" else 3,
                "hardware_id":"HOST1","device":"CPU","input_video_sha256":"a"*64,
                "n_input_frames":5,
+               "n_input_frames_actually_decoded_verified":True,
                "software_versions":{name:"frozen-test-version"},
                "phase":"full_inference_and_tracking"}
             (root/(label+"-runtime.json")).write_text(json.dumps(r))
             provenance={"model_or_config_sha256":"b"*64,
-                        "test_split_used_for_training_or_tuning":False}
+                        "test_reference_labels_used_for_training_or_selection":False,
+                        "source_split_manifest_sha256":split["source_manifest_sha256"],
+                        "training_source_video_sha256":["1"*64] if name=="yolo_bytetrack" else [],
+                        "model_selection_source_video_sha256":["2"*64] if name=="yolo_bytetrack" else []}
             (root/(label+"-train.json")).write_text(json.dumps(provenance))
             methods.append({"method":name,"centres_csv":label+".csv",
               "boxes_mot":"yolo.txt" if name=="yolo_bytetrack" else None,
@@ -56,9 +65,12 @@ class TestPriorityB(unittest.TestCase):
               "score_semantics":"absent" if name=="idtrackerai" else
                                 "detection_confidence",
               "prediction_source":"model_generated",
-              "test_video_used_for_training_or_selection":False})
+              "test_reference_labels_used_for_training_or_selection":False,
+              "unlabelled_test_video_used_for_session_training":
+                      name=="idtrackerai"})
         return {"protocol":b.PROTOCOL,"sequence":"TOY_ONLY",
           "gt_mot":"gt.txt","frame_manifest":"frames.csv",
+          "split_manifest":"splits.csv",
           "timestamps":"timestamps.csv","source_split":"test",
           "declared_source_video_sha256":"a"*64,
           "annotation_independence":"unverified",
@@ -133,10 +145,10 @@ class TestPriorityB(unittest.TestCase):
     def test_missing_gt_and_source_leakage_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp);spec=self.build_fixture(root)
-            spec["methods"][0]["test_video_used_for_training_or_selection"]=True
-            with self.assertRaisesRegex(ValueError,"tuned on test"):
+            spec["methods"][0]["test_reference_labels_used_for_training_or_selection"]=True
+            with self.assertRaisesRegex(ValueError,"test reference labels"):
                 b.validate_spec(root,spec)
-            spec["methods"][0]["test_video_used_for_training_or_selection"]=False
+            spec["methods"][0]["test_reference_labels_used_for_training_or_selection"]=False
             spec["methods"][0]["prediction_source"]="oracle_box_association"
             with self.assertRaisesRegex(ValueError,"detection-oracle"):
                 b.validate_spec(root,spec)
@@ -209,7 +221,7 @@ class TestPriorityB(unittest.TestCase):
                   "training_source_video_sha256":["1"*64],
                   "model_selection_source_video_sha256":["2"*64],
                   "source_split_manifest_sha256":audit["source_manifest_sha256"],
-                  "test_split_used_for_training_or_tuning":False}
+                  "test_reference_labels_used_for_training_or_selection":False}
             p=Path(temp)/"provenance.json";p.write_text(json.dumps(prov))
             self.assertTrue(sp.validate_model_provenance(p,audit))
             rows[2][2]="fish_group_1"
