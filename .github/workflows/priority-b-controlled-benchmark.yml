@@ -60,6 +60,7 @@ jobs:
         run: |
           python tests/python/generate_priority_b_synthetic_evidence.py --output "$RUNNER_TEMP/priority_b_synthetic"
           test -s "$RUNNER_TEMP/priority_b_synthetic/SYNTHETIC_BENCHMARK_REPORT.json"
+          test -s "$RUNNER_TEMP/priority_b_synthetic/SYNTHETIC_ONLY_COMPARATIVE_TABLE.csv"
           python - <<'PY'
           import json,os
           from pathlib import Path
