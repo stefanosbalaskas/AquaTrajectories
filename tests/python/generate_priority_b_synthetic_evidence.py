@@ -16,7 +16,7 @@ def main():
     (a.output/"protocol.json").write_text(json.dumps(spec,indent=2,sort_keys=True)+"\n")
     b.freeze(a.output,spec,a.output/"inputs.lock.json")
     report=b.compare(a.output,spec,json.loads((a.output/"inputs.lock.json").read_text()))
-    report["source_kind"]="SYNTHETIC_KNOWN_TRUTH_ONLY"
+    report["evidence_label"]="SYNTHETIC_KNOWN_TRUTH_ONLY"
     report["empirical_model_execution_performed"]=False
     report["training_performed"]=False
     (a.output/"SYNTHETIC_BENCHMARK_REPORT.json").write_text(
