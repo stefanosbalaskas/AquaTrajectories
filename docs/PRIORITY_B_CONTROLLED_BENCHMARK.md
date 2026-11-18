@@ -77,6 +77,13 @@ At benchmark root, save:
    **native** `boxes_mot` scored boxes. Blank `score` is allowed when
    genuinely absent, not a proxy. Predictions must carry no reference truth.
 6. `protocol.json`, specifying all preceding paths, method names,
+   `source_kind=real_recording` and a hash-verified original
+   `source_video` file. A declared video hash alone is accepted **only**
+   for `source_kind=synthetic_known_truth` software tests. A full
+   three-family comparison is explicitly marked in the evidence status.
+   Use `inst/extdata/priority_b_REAL_RECORDING_PROTOCOL.template.json`
+   to start a real-video study; all paths are placeholders, not supplied data.
+   
    source partition `test`, fixed pixel-distance threshold and IoU
    threshold, declared source assistance and reference blindness, and
    exactly one source video SHA-256. `inputs.lock.json` freezes those
@@ -247,6 +254,11 @@ error-propagation checks, not animal-stress inference.
 | Fine-tuned YOLO train/val/test, actual test execution | **Not yet executed** | Requires train/val images, fitted weights and withheld test |
 | 3-way locked real empirical HOTA/IDF1/AP, runtime | **Not certified** | All methods' actual outputs on the exact same independently reviewed frames |
 | Behavioural validity on independent fish with physical scale | **Not certified** | Physical calibration and expert-checked measurement ground truth |
+
+The reproducible output also includes
+`SYNTHETIC_ONLY_COMPARATIVE_TABLE.csv`, with explicit method-wise
+centre F1, score-semantic AP, HOTA/IDF1, fragmentations, timestamp-supported
+pixel-speed and schooling error, and runtime-validity flags.
 
 The CI artifact `priority-b-synthetic-only-three-system-software-contract`
 contains simulated known truth solely for code qualification.
