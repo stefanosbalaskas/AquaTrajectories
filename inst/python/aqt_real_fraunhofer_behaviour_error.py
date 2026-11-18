@@ -110,10 +110,12 @@ def compute(gt,pred,*,gate=IOU_GATE,nframes=FRAME_COUNT):
                 if last_match is not None:
                     gap=True
             else:
+                after_unmatched_gap=gap
                 if gap:
                     reacquisitions+=1
                     gap=False
-                if last_match is not None and current[0]!=last_match[0]:
+                if (last_match is not None and not after_unmatched_gap and
+                    current[0]!=last_match[0]):
                     identity_changes_on_contiguous_matches+=1
                 last_match=current
             last_frame=fr
