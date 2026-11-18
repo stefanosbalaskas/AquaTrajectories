@@ -5,7 +5,7 @@ if(length(args)!=1L || !file.exists(args[[1L]]))
   stop("A canonical externally created fish CSV fixture is required")
 library(aquaTrajectories)
 t <- aqt_import_csv(args[[1L]],units="px",coordinate_system="image")
-stopifnot(inherits(t,"aqt_tracks"),nrow(t)==7L,
+stopifnot(inherits(t,"aqt_tracks"),nrow(t)==8L,
           identical(attr(t,"aqt_units"),"px"),
           identical(attr(t,"aqt_coordinate_system"),"image"),
           identical(unique(t$session_id),"TOY_ONLY"),
