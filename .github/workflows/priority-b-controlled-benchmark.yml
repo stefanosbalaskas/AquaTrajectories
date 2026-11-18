@@ -1,0 +1,71 @@
+name: Priority B frozen same-data tracker benchmark contract
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_priority_b_*.py"
+      - "tests/python/test_priority_b_protocol.py"
+      - "tests/python/generate_priority_b_synthetic_evidence.py"
+      - "docs/PRIORITY_B_CONTROLLED_BENCHMARK.md"
+      - ".github/workflows/priority-b-controlled-benchmark.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_priority_b_*.py"
+      - "tests/python/test_priority_b_protocol.py"
+      - "tests/python/generate_priority_b_synthetic_evidence.py"
+      - "docs/PRIORITY_B_CONTROLLED_BENCHMARK.md"
+      - ".github/workflows/priority-b-controlled-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: priority-b-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frozen_three_tracker_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install frozen independent metric implementation and numerical solvers
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.23.5" "scipy==1.10.1"
+          git clone https://github.com/JonathonLuiten/TrackEval.git "$RUNNER_TEMP/trackeval"
+          git -C "$RUNNER_TEMP/trackeval" checkout 12c8791b303e0a0b50f753af204249e622d0281a
+          test "$(git -C "$RUNNER_TEMP/trackeval" rev-parse HEAD)" = 12c8791b303e0a0b50f753af204249e622d0281a
+          python -m pip install --no-deps --no-build-isolation -e "$RUNNER_TEMP/trackeval"
+      - name: Refuse syntax errors and run unchanged official metric tests
+        run: |
+          python -m py_compile inst/python/aqt_priority_b_benchmark.py inst/python/aqt_priority_b_adapters.py inst/python/aqt_priority_b_splits.py tests/python/test_priority_b_protocol.py
+          python -m unittest discover -s tests/python -p "test_official_fish_trackeval.py" -v
+      - name: Qualify same-data ID/HOTA/AP/fragmentation/runtime/downstream contracts
+        run: python -m unittest discover -s tests/python -p "test_priority_b_protocol.py" -v
+      - name: Generate reproducible synthetic-only three-method evidence
+        run: |
+          python tests/python/generate_priority_b_synthetic_evidence.py --output "$RUNNER_TEMP/priority_b_synthetic"
+          test -s "$RUNNER_TEMP/priority_b_synthetic/SYNTHETIC_BENCHMARK_REPORT.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          z=json.loads((Path(os.environ["RUNNER_TEMP"])/"priority_b_synthetic"/"SYNTHETIC_BENCHMARK_REPORT.json").read_text())
+          assert z["source_kind"]=="SYNTHETIC_KNOWN_TRUTH_ONLY"
+          assert not z["empirical_model_execution_performed"]
+          assert len(z["results"])==3
+          assert z["runtime_rank_valid"]
+          assert all(x["tracking"]["official_metric_classes_executed"] for x in z["results"])
+          assert all(not x["independent_real_accuracy_certified"] for x in z["results"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: priority-b-synthetic-only-three-system-software-contract
+          path: ${{ runner.temp }}/priority_b_synthetic/
+          if-no-files-found: error
