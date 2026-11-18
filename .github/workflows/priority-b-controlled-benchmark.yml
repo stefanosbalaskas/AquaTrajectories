@@ -69,6 +69,8 @@ jobs:
           assert z["evidence_label"]=="SYNTHETIC_KNOWN_TRUTH_ONLY"
           assert not z["empirical_model_execution_performed"]
           assert len(z["results"])==3
+          assert z["all_three_requested_tracker_families_present"]
+          assert not z["independently_verified_three_way_real_accuracy_claim"]
           assert z["runtime_rank_valid"]
           assert all(x["tracking"]["official_metric_classes_executed"] for x in z["results"])
           assert all(not x["independent_real_accuracy_certified"] for x in z["results"])
