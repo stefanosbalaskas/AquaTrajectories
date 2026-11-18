@@ -1,0 +1,49 @@
+{
+  "protocol": "AQT_PRIORITY_B_COMPARISON_V1",
+  "sequence": "REPLACE_WITH_FROZEN_SOURCE_SEQUENCE",
+  "source_kind": "real_recording",
+  "source_split": "test",
+  "source_video": "original_video.mp4",
+  "gt_mot": "reference/gt.txt",
+  "frame_manifest": "reference/frames.csv",
+  "timestamps": "reference/timestamps.csv",
+  "split_manifest": "recording_splits.csv",
+  "annotation_independence": "unverified",
+  "dataset_annotator_model_assistance": true,
+  "centre_gate_px": 15,
+  "detection_confidence_threshold": 0.25,
+  "iou_threshold": 0.5,
+  "methods": [
+    {
+      "method": "idtrackerai",
+      "prediction_source": "model_generated",
+      "centres_csv": "predictions/idtrackerai_centres.csv",
+      "runtime_json": "predictions/idtrackerai_runtime.json",
+      "training_provenance_json": "predictions/idtrackerai_model_provenance.json",
+      "score_semantics": "absent",
+      "test_reference_labels_used_for_training_or_selection": false,
+      "unlabelled_test_video_used_for_session_training": true
+    },
+    {
+      "method": "sleap",
+      "prediction_source": "model_generated",
+      "centres_csv": "predictions/sleap_centres.csv",
+      "runtime_json": "predictions/sleap_runtime.json",
+      "training_provenance_json": "predictions/sleap_model_provenance.json",
+      "score_semantics": "pose_instance_score",
+      "test_reference_labels_used_for_training_or_selection": false,
+      "unlabelled_test_video_used_for_session_training": false
+    },
+    {
+      "method": "yolo_bytetrack",
+      "prediction_source": "model_generated",
+      "centres_csv": "predictions/yolo_centres.csv",
+      "boxes_mot": "predictions/yolo_native_scored_boxes.mot",
+      "runtime_json": "predictions/yolo_runtime.json",
+      "training_provenance_json": "predictions/yolo_training_provenance.json",
+      "score_semantics": "detection_confidence",
+      "test_reference_labels_used_for_training_or_selection": false,
+      "unlabelled_test_video_used_for_session_training": false
+    }
+  ]
+}
