@@ -30,7 +30,7 @@ class TestPriorityB(unittest.TestCase):
                 gt.append((f,animal,x,10,8,8,1))
                 yolo.append((f,animal,x+.2,10,8,8,.92))
                 pr.append((f,animal,x+4.2,14,.92))
-                slea.append((f,animal,x+4,14,.84))
+                slea.append((f,animal,x+4,14,1.8))
                 if not (f==3 and animal==2):
                     idtra.append((f,animal,x+4,14,""))
         with (root/"gt.txt").open("w",newline="") as f:csv.writer(f).writerows(gt)
@@ -65,6 +65,9 @@ class TestPriorityB(unittest.TestCase):
               "score_semantics":"absent" if name=="idtrackerai" else
                                 ("pose_instance_score" if name=="sleap" else
                                  "detection_confidence"),
+              "pose_score_threshold":1.5 if name=="sleap" else None,
+              "score_threshold_selection_source":
+                  "validation" if name!="idtrackerai" else None,
               "prediction_source":"model_generated",
               "test_reference_labels_used_for_training_or_selection":False,
               "unlabelled_test_video_used_for_session_training":
@@ -105,6 +108,8 @@ class TestPriorityB(unittest.TestCase):
             self.assertAlmostEqual(yolo["bbox_metrics"]["official_iou_HOTA"],1,places=8)
             self.assertIsNotNone(ans["results"][1]["centre_AP101"])
             self.assertEqual(ans["results"][1]["centre_AP_score_semantics"],"pose_instance_score")
+            self.assertEqual(ans["results"][1]["method_specific_score_threshold"],1.5)
+            self.assertEqual(ans["results"][2]["method_specific_score_threshold"],.5)
             self.assertIsNone(ans["results"][0]["centre_AP101"])
             self.assertIsNone(ans["results"][0]["bbox_metrics"])
             self.assertEqual(ans["results"][0]["fragmentation"]["identity_fragmentations"],1)
@@ -205,7 +210,7 @@ class TestPriorityB(unittest.TestCase):
             name="animal-A"
         PredictedInstance=type("PredictedInstance",(),{
           "numpy":lambda self:np.asarray([[1.,3.],[3.,5.],[float("nan"),2.]]),
-          "track":Track(),"score":.9})
+          "track":Track(),"score":1.8})
         class Frame:
             frame_idx=0;video=object()
             def __iter__(self):return iter([PredictedInstance()])
@@ -214,7 +219,7 @@ class TestPriorityB(unittest.TestCase):
             source=Path(temp)/"pred.slp";source.touch()
             with mock.patch.dict(sys.modules,{"sleap_io":fake}):
                 rows,report=ad.sleap_rows(source,0,1)
-            self.assertEqual(rows,[(1,1,2.0,4.0,.9)])
+            self.assertEqual(rows,[(1,1,2.0,4.0,1.8)])
             self.assertFalse(report["native_fish_bbox_supplied"])
 
     def test_disjoint_group_split_audit_and_leakage(self):
