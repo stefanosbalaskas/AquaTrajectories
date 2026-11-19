@@ -67,6 +67,16 @@ annotations.
 - [`aqt_track_qc()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_track_qc.md)
   : Track QC flags for missing positions, time gaps, and implausible
   motion
+- [`aqt_trajectory_qc()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_qc.md)
+  : Audit video-derived aquatic trajectories without editing source
+  observations
+- [`aqt_qc_review()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_review.md)
+  : Apply documented review decisions without changing the original
+  trajectories
+- [`aqt_qc_derive()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_derive.md)
+  : Calculate audited movement only from reviewed, eligible observations
+- [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
+  : Export a complete, immutable, provenance-linked trajectory QC audit
 - [`aqt_tracking_match()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_match.md)
   : Match separately observed fish positions to reference tracks
 - [`aqt_tracking_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_metrics.md)

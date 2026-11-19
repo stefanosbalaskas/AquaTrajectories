@@ -138,6 +138,9 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_voxel3d.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_provenance_new.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_provenance_verify.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_derive.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_review.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reconstruct_3d.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reconstruction_pixel_uncertainty.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reconstruction_quality.html</loc></url>
@@ -184,6 +187,7 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_dtw_matrix.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_ensemble.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_grid_pca.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_qc.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_recurrence.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_triangulate_pairs.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_video_bundle_benchmark.html</loc></url>

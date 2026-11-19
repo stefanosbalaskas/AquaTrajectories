@@ -1,4 +1,4 @@
-# Atlas of all 157 R functions
+# Atlas of all 161 R functions
 
 ## Complete R function atlas
 
@@ -8,7 +8,7 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 157 exported functions in 14 mutually exclusive research
+**Coverage:** 161 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -39,7 +39,7 @@ formats.
 - [`aqt_tracks_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)
 - [`aqt_video_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_video_bundle_import.md)
 
-### 2. Detection, tracking and annotation validation (16)
+### 2. Detection, tracking and annotation validation (20)
 
 Detector and identity metrics against explicitly defined reference
 annotations.
@@ -56,6 +56,10 @@ annotations.
 - [`aqt_detection_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_detection_metrics.md)
 - [`aqt_evaluation_frames()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evaluation_frames.md)
 - [`aqt_track_qc()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_track_qc.md)
+- [`aqt_trajectory_qc()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_trajectory_qc.md)
+- [`aqt_qc_review()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_review.md)
+- [`aqt_qc_derive()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_derive.md)
+- [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
 - [`aqt_tracking_match()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_match.md)
 - [`aqt_tracking_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_metrics.md)
 - [`aqt_tracking_observations()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_observations.md)
