@@ -32,10 +32,48 @@ stopifnot(inherits(bundle,"aqt_research_bundle"),
     source$n_native_model_generated_bytetrack_observations))
 
 qc <- aqt_trajectory_qc(bundle,max_gap_s=.15)
-reviewed <- aqt_qc_review(qc)
 stopifnot(identical(qc$raw,bundle$observations),
-  isFALSE(qc$biological_identity_certified),
-  reviewed$n_manual_decisions==0L)
+          isFALSE(qc$biological_identity_certified))
+# This genuine Oxford video is a ONE-FISH trial. A camera frame with multiple
+# predicted tracker IDs contradicts the original biological trial design.
+# Without a prediction-blind human adjudication, NEVER choose an arbitrary
+# "winning" detection. Keep all original observations and mark ALL conflicting
+# rows ineligible. These explicit decisions are rule-based, NOT manual
+# visual fish-identity certification.
+rows <- qc$raw
+frame_scope <- paste(rows$session_id,rows$camera_id,rows$frame_id,sep="\r")
+frame_parts <- split(seq_len(nrow(rows)),frame_scope)
+conflict_parts <- frame_parts[vapply(frame_parts,function(ix)
+     length(unique(as.character(rows$track_id[ix])))>1L,logical(1L))]
+ambiguous <- sort(as.integer(unlist(conflict_parts,use.names=FALSE)))
+all_frames <- qc$frames
+frame_keys <- paste(all_frames$session_id,all_frames$camera_id,
+                    all_frames$frame_id,sep="\r")
+counts <- tabulate(match(frame_scope,frame_keys),nbins=nrow(all_frames))
+frame_audit <- data.frame(
+  session_id=all_frames$session_id,camera_id=all_frames$camera_id,
+  frame_id=all_frames$frame_id,time_s=all_frames$time_s,
+  predicted_track_IDs=as.integer(counts),
+  one_fish_trial_consistent=counts<=1L,
+  retained_observation_eligible=counts==1L,
+  stringsAsFactors=FALSE)
+stopifnot(sum(counts>0L)==
+  as.integer(source$n_source_frames_containing_tracker_predictions),
+  length(conflict_parts)==46L,length(ambiguous)==92L,
+  sum(counts==1L)==85L,sum(counts==0L)==18L,
+  max(counts)==2L,length(unique(rows$track_id))==3L)
+decisions <- data.frame(raw_row=ambiguous,
+  decision=rep("exclude",length(ambiguous)),
+  reason=rep(paste0(
+    "Predeclared biological trial rule: 1 fish per original Oxford trial, ",
+    "but >1 concurrent predicted tracker IDs; ambiguous, cannot arbitrate ",
+    "without prediction-blind human adjudication. NOT a manual visual review."),
+    length(ambiguous)),stringsAsFactors=FALSE)
+reviewed <- aqt_qc_review(qc,decisions=decisions)
+stopifnot(reviewed$n_review_excluded==length(ambiguous),
+  reviewed$n_review_eligible==sum(counts==1L),
+  reviewed$n_manual_decisions==length(ambiguous),
+  isFALSE(reviewed$independent_human_review_certified))
 study <- aqt_research_analyze(reviewed,
     profiles=c("movement","events","functional",
                "experimental","uncertainty"),
@@ -60,6 +98,12 @@ on.exit(if(dir.exists(output) &&
      !file.exists(file.path(output,"M05_SUCCESS.json")))
      unlink(output,recursive=TRUE,force=TRUE),add=TRUE)
 dir.create(file.path(output,"source_evidence"))
+utils::write.csv(frame_audit,
+  file.path(output,"FRAME_FISH_COUNT_CONSISTENCY.csv"),
+  row.names=FALSE,na="")
+utils::write.csv(decisions,file.path(output,
+  "EXPLICIT_ONE_FISH_RULE_EXCLUSIONS.csv"),
+  row.names=FALSE,na="")
 stopifnot(file.copy(audit_file,file.path(output,"source_evidence",
                                          "REAL_SOURCE_AUDIT.json")))
 aqt_research_publish(study,file.path(output,"publication"),
@@ -108,6 +152,16 @@ results <- list(
   n_raw_real_tracking_observations=as.integer(nrow(bundle$observations)),
   n_review_eligible_observations=as.integer(study$audit$accepted_positions),
   n_review_excluded_observations=as.integer(study$audit$excluded_rows),
+  n_original_frames_with_any_predictions=as.integer(sum(counts>0L)),
+  n_original_frames_with_multiple_predicted_IDs=as.integer(sum(counts>1L)),
+  n_original_source_rows_in_biologically_impossible_multi_ID_frames=
+    as.integer(length(ambiguous)),
+  n_frames_with_exactly_one_predicted_ID=as.integer(sum(counts==1L)),
+  n_source_frames_without_predictions=as.integer(sum(counts==0L)),
+  n_distinct_predicted_tracker_IDs=as.integer(length(unique(rows$track_id))),
+  known_original_fish_per_trial=1L,
+  independent_human_review_of_ambiguous_predictions=FALSE,
+  exclusion_reason="explicit design consistency: all concurrent multi-ID rows excluded; true fish track not adjudicated",
   n_eligible_frame_adjacent_movements=as.integer(steps),
   spatial_units="px",speed_units="px/s",
   video_local_PTS_reverified=TRUE,
@@ -144,6 +198,11 @@ readme <- c(
  paste("Original acquisition frames:",nrow(bundle$frames)),
  paste("Source-generated tracked observations:",nrow(bundle$observations)),
  paste("Quality eligible tracked positions:",study$audit$accepted_positions),
+ paste("Biologically impossible multi-ID frames:",sum(counts>1L)),
+ paste("Original rows excluded by one-fish rule:",length(ambiguous)),
+ paste("Single-ID eligible source frames:",sum(counts==1L)),
+ "Exclusions are automated study-design decisions in the QC review ledger,",
+ "not visual/manual ID adjudication. Rejected rows remain archived.",
  paste("Valid consecutive-frame movement intervals:",steps),
  "",
  "Original time units are seconds from MP4 video-local PTS. Original",
@@ -169,6 +228,8 @@ readme <- c(
  "Source evidence: source_evidence/REAL_SOURCE_AUDIT.json",
  "Exact empirical measurements: REAL_STUDY_RESULTS.json",
  "Per-profile status and reasons: PROFILE_STATUS.csv",
+ "Biologically contradictory source frames: FRAME_FISH_COUNT_CONSISTENCY.csv",
+ "Reasoned QC exclusions: EXPLICIT_ONE_FISH_RULE_EXCLUSIONS.csv",
  "Original QC and computed full analysis: publication/analysis/",
  "Figures and manuscript captions: publication/figures/ and publication/REPORT.md",
  "All downstream hashes: publication/PUBLICATION_MANIFEST.json",
@@ -180,6 +241,9 @@ jsonlite::write_json(list(status="PASS",
     original_source_frames=149L,
     actual_source_tracker_observations=as.integer(nrow(bundle$observations)),
     frame_adjacent_movement_steps=as.integer(steps),
+    original_simultaneous_multi_ID_frames=as.integer(sum(counts>1L)),
+    biological_design_incompatible_rows_excluded=as.integer(length(ambiguous)),
+    independent_human_visual_ID_review_performed=FALSE,
     published_file_sha256_verified=TRUE,
     independent_identity_accuracy_certified=FALSE,
     untouched_session_holdout_certified=FALSE),
@@ -188,6 +252,8 @@ cat("M05_REAL_OXFORD_TO_AQT_R_PUBLICATION: PASS\n")
 cat("Real source frames:",nrow(bundle$frames),"\n")
 cat("Real tracker observations:",nrow(bundle$observations),"\n")
 cat("QC-eligible displacement intervals:",steps,"\n")
+cat("ONE-FISH rule: multi-ID source frames:",sum(counts>1L),
+    "| excluded tracker rows:",length(ambiguous),"\n")
 cat("Figures:",sum(catalog$status=="complete"),
   "published,",sum(catalog$status=="skipped"),"withheld\n")
 cat("No independent biological identity or fresh-session claim\n")
