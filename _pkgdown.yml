@@ -43,6 +43,8 @@ reference:
       - aqt_research_bundle_import
       - aqt_research_analyze
       - aqt_research_export
+      - aqt_research_figure_plan
+      - aqt_research_publish
       - aqt_simulate_tracks
       - aqt_tracks
       - aqt_tracks_validate
