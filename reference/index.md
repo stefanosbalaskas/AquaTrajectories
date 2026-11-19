@@ -24,6 +24,11 @@ formats.
   provenance
 - [`aqt_research_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_bundle_import.md)
   : Import a versioned Python-to-R aquatic tracking research bundle
+- [`aqt_research_analyze()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_analyze.md)
+  : Run a unified, QC-linked aquatic scientific research analysis
+- [`aqt_research_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_export.md)
+  : Export a complete, auditable scientific-analysis result without
+  recomputation
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
   : Simulate deterministic mathematical fish paths
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)
