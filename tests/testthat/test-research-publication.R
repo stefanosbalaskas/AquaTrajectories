@@ -147,3 +147,64 @@ test_that("publication validates formats and dimensions before writing", {
   expect_error(aqt_research_publish(study,tempfile("baddpi-"),
                     dpi=70),"100..600")
 })
+
+
+test_that("published inferential tables are copied from a genuinely replicated tank analysis", {
+  scopes <- data.frame(
+      session_id=c("C1s","C2s","T1s","T2s"),
+      camera_id="TOP",
+      tank_id=c("C1","C2","T1","T2"),
+      treatment=c("control","control","treatment","treatment"))
+  ff <- do.call(rbind,lapply(scopes$session_id,function(session)
+    data.frame(session_id=session,camera_id="TOP",
+               frame_id=0:5,time_s=(0:5)/10,
+               width_px=100,height_px=80)))
+  raw <- do.call(rbind,lapply(scopes$session_id,function(session) {
+    do.call(rbind,lapply(1:2,function(id)
+      data.frame(session_id=session,camera_id="TOP",
+        track_id=sprintf("%04d",id),frame_id=0:5,
+        time_s=(0:5)/10,x=0:5,y=rep(if(id==1)0 else 3,6),
+        observed=TRUE,detection_confidence=.95)))
+  }))
+  ev <- data.frame(session_id=scopes$session_id,
+          event_id="feeding",start_s=.3,end_s=.3)
+  review <- aqt_qc_review(aqt_trajectory_qc(raw,ff,max_gap_s=.11))
+  study <- aqt_research_analyze(review,
+      profiles=c("movement","schooling","events",
+                 "functional","experimental"),
+      events=ev,design=scopes,
+      config=list(max_gap_s=.11,event_clock="same_recording",
+        event_windows=list(baseline=c(-.2,0),response=c(0,.2)),
+        functional_grid_s=seq(-.2,.2,by=.1),
+        experimental_contrast=TRUE,experimental_draws=100L,
+        functional_contrast=TRUE,treatment_levels=c("control","treatment")))
+  expect_equal(study$diagnostics$status[
+      study$diagnostics$profile=="experimental"],"complete")
+  expect_true(is.list(study$statistical_models$tank_contrast))
+  expect_true(is.list(study$statistical_models$functional_contrast))
+  plan <- aqt_research_figure_plan(study,max_scopes=1L)
+  expect_true(plan$eligible[plan$kind=="tank_changes"])
+  expect_true(plan$eligible[plan$kind=="functional_contrast"])
+  out <- tempfile("aqt-pub-replicated-")
+  on.exit(unlink(out,recursive=TRUE,force=TRUE),add=TRUE)
+  aqt_research_publish(study,out,formats="pdf",max_scopes=1L,
+                       data_origin="synthetic")
+  expect_true(file.exists(file.path(out,
+       "figures/F30_INDEPENDENT_TANK_CHANGES.pdf")))
+  expect_true(file.exists(file.path(out,
+       "figures/F31_FUNCTIONAL_TANK_CONTRAST.pdf")))
+  estimates <- utils::read.csv(file.path(out,"tables",
+       "T10_INDEPENDENT_TANK_CONTRAST.csv"))
+  expect_equal(estimates$estimate,
+      study$statistical_models$tank_contrast$estimate)
+  expect_identical(estimates$reference,"control")
+  expect_identical(estimates$comparison,"treatment")
+  expect_false(estimates$causal_identification)
+  curves <- utils::read.csv(file.path(out,"tables",
+       "T11_FUNCTIONAL_TANK_CONTRAST.csv"))
+  expect_equal(curves$contrast,
+      study$statistical_models$functional_contrast$curve$contrast)
+  catalog <- utils::read.csv(file.path(out,"FIGURE_CATALOG.csv"),
+                              stringsAsFactors=FALSE)
+  expect_false(any(catalog$status=="failed"))
+})
