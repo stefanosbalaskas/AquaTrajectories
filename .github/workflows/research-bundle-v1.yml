@@ -1,0 +1,65 @@
+name: Universal tracking research bundle v1 - Python and R interchange
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_research_bundle.py"
+      - "inst/python/aqt_track_video.py"
+      - "R/research-bundle.R"
+      - "tests/python/test_research_bundle.py"
+      - "tests/python/generate_research_bundle_fixtures.py"
+      - "tests/python/test_video_runner.py"
+      - "tests/testthat/test-research-bundle.R"
+      - "tests/integration/research_bundle_roundtrip.R"
+      - "NAMESPACE"
+      - "man/aqt_research_bundle_*.Rd"
+      - "docs/RESEARCH_BUNDLE_V1.md"
+      - ".github/workflows/research-bundle-v1.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cross-language-qualification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Python syntax and native video runner tests
+        run: |
+          python -m py_compile inst/python/aqt_research_bundle.py inst/python/aqt_track_video.py
+          python -m unittest discover -s tests/python -p "test_research_bundle.py" -v
+          python -m unittest discover -s tests/python -p "test_video_runner.py" -v
+      - name: Generate synthetic source-format fixtures and validate output hashes
+        run: |
+          python tests/python/generate_research_bundle_fixtures.py "$RUNNER_TEMP/aqt-research-v1"
+          for kind in mot_bytetrack mot_botsort idtracker_tidy yolo_csv unknown_clock; do
+            python inst/python/aqt_research_bundle.py verify \
+              --directory "$RUNNER_TEMP/aqt-research-v1/$kind/bundle"
+          done
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+          extra-packages: any::testthat, any::roxygen2
+      - name: Regenerated R documentation must match tracked source
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Native R package tests for identical canonical format
+        run: |
+          Rscript -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-research-bundle.R", reporter="summary", stop_on_failure=TRUE)'
+      - name: Python-to-R exact-byte roundtrip and unknown-clock refusal
+        run: |
+          Rscript --vanilla tests/integration/research_bundle_roundtrip.R "$RUNNER_TEMP/aqt-research-v1"
+      - name: Verify source files unchanged
+        run: |
+          git diff --exit-code -- R inst/python tests
