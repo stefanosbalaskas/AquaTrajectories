@@ -115,7 +115,6 @@ jobs:
             --camera-id oxford_single_video \
             --frame-origin 1 \
             --time-status source_pts \
-            --tracker-config "$RUNNER_TEMP/real_model_evidence/summary.json" \
             --clock-evidence "$RUNNER_TEMP/reverified_real_pts/audit.json" \
             --out "$RUNNER_TEMP/real_science_source/oxford_research_bundle"
           python inst/python/aqt_research_bundle.py verify \
