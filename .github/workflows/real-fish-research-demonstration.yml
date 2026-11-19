@@ -148,7 +148,18 @@ jobs:
           m=json.loads((out/"publication"/"PUBLICATION_MANIFEST.json").read_text())
           assert b["status"]=="PASS"
           assert a["n_source_frames"]==149
+          assert a["n_raw_real_tracking_observations"]==177
+          assert a["known_original_fish_per_trial"]==1
+          assert a["n_distinct_predicted_tracker_IDs"]==3
+          assert a["n_original_frames_with_any_predictions"]==131
+          assert a["n_original_frames_with_multiple_predicted_IDs"]==46
+          assert a["n_source_frames_without_predictions"]==18
+          assert a["n_review_eligible_observations"]==85
+          assert a["n_review_excluded_observations"]==92
           assert a["n_eligible_frame_adjacent_movements"]>0
+          assert a["independent_human_review_of_ambiguous_predictions"] is False
+          assert (out/"FRAME_FISH_COUNT_CONSISTENCY.csv").is_file()
+          assert (out/"EXPLICIT_ONE_FISH_RULE_EXCLUSIONS.csv").is_file()
           assert a["new_model_inference_performed_during_handoff"] is False
           assert a["independently_certified_fish_ID_accuracy"] is False
           assert a["freshly_untouched_session_independent_holdout"] is False
