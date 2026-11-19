@@ -12,7 +12,7 @@ An open-source **R + Python research toolkit** for fish and other aquatic-animal
 [![Official release](https://img.shields.io/badge/release-v0.1.1-167D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://doi.org/10.5281/zenodo.24262905)
 [![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
-[![Public API](https://img.shields.io/badge/exported%20R%20functions-161-147F97)](NAMESPACE)
+[![Public API](https://img.shields.io/badge/exported%20R%20functions-163-147F97)](NAMESPACE)
 [![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
 
 **[Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.1 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
@@ -45,7 +45,7 @@ An open-source **R + Python research toolkit** for fish and other aquatic-animal
 
 ### The research documentation portal
 
-The pkgdown site includes **161 exported R functions** in **14 scientific reference categories**, **22 research articles**, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
+The pkgdown site includes **163 exported R functions** in **14 scientific reference categories**, **22 research articles**, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
 
 **[All 22 plotting functions — illustrated](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.html)** · **[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
 
@@ -74,7 +74,7 @@ For real footage, independently validate detection weights, original video times
 
 | Scope | Current meaning |
 | :--- | :--- |
-| **Public R API** | 161 exported functions with reference documentation and automated coverage audit |
+| **Public R API** | 163 exported functions with reference documentation and automated coverage audit |
 | **Visualizations** | Five publication figure families, descriptive 2D/3D plotting, tank storyboards and explicitly synthetic demonstrations |
 | **Video ingestion** | Optional runner and native R import/benchmark contracts; model training and real-video detector accuracy are not supplied or certified |
 | **Multiview reconstruction** | Calibrated-geometry and refraction-aware algorithms; independent underwater XYZ accuracy and reliable biological ID recovery remain unverified |
