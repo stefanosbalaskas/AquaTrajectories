@@ -133,7 +133,7 @@ test_that("unknown timestamps produce quality figures but no synthetic movement"
 
 test_that("missing-frame breaks survive publication and source tables are identical", {
   study <- publication_fixture(nfish=1L,include_events=FALSE)
-  study$review$row_audit$manual_decision[1L] <- "test_tamper"
+  study$review$qc$raw$x[1L] <- study$review$qc$raw$x[1L]+.5
   expect_error(aqt_research_publish(study,tempfile("tamper-")),
       "source-verified|intact",fixed=FALSE)
 })
