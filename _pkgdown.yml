@@ -39,6 +39,8 @@ reference:
       - aqt_import_mot
       - aqt_import_yolo
       - aqt_mot_support_audit
+      - aqt_research_bundle_export
+      - aqt_research_bundle_import
       - aqt_simulate_tracks
       - aqt_tracks
       - aqt_tracks_validate
