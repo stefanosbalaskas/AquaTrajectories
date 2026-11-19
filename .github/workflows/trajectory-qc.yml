@@ -1,0 +1,62 @@
+name: Milestone 02 - quality-controlled trajectories and scientific provenance
+
+on:
+  pull_request:
+    paths:
+      - "R/trajectory-qc-workflow.R"
+      - "tests/testthat/test-trajectory-qc-workflow.R"
+      - "tests/integration/research_bundle_qc.R"
+      - "man/aqt_qc_*.Rd"
+      - "man/aqt_trajectory_qc.Rd"
+      - "docs/TRAJECTORY_QC_WORKFLOW.md"
+      - ".github/workflows/trajectory-qc.yml"
+      - "NAMESPACE"
+      - "_pkgdown.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/trajectory-qc-workflow.R"
+      - "tests/testthat/test-trajectory-qc-workflow.R"
+      - ".github/workflows/trajectory-qc.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-review-derive-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate actual Python-source-format fixtures
+        run: |
+          python -m unittest discover -s tests/python -p "test_research_bundle.py" -v
+          python tests/python/generate_research_bundle_fixtures.py "$RUNNER_TEMP/aqt-qc-fixtures"
+          for kind in mot_bytetrack mot_botsort idtracker_tidy yolo_csv unknown_clock; do
+            python inst/python/aqt_research_bundle.py verify \
+              --directory "$RUNNER_TEMP/aqt-qc-fixtures/$kind/bundle"
+          done
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+          extra-packages: any::testthat, any::roxygen2
+      - name: Reproduce exact-source documentation and namespace
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Verify automatic and manual QC arithmetic and immutable lineage
+        run: |
+          Rscript -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-trajectory-qc-workflow.R", reporter="summary", stop_on_failure=TRUE)'
+      - name: Verify actual Python-written bundle through native R QC reporting
+        run: |
+          Rscript --vanilla tests/integration/research_bundle_qc.R "$RUNNER_TEMP/aqt-qc-fixtures"
+      - name: Ensure qualification did not modify input source files
+        run: |
+          git diff --exit-code -- R tests inst/python
