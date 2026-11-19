@@ -170,6 +170,33 @@ aqt_research_publish <- function(study,directory,formats=c("png","pdf"),
   if(!is.null(study$uncertainty))
     tables[["T09_POSITION_SENSITIVITY.csv"]] <-
       study$uncertainty$path_sensitivity
+  models <- study$statistical_models
+  fit <- if(!is.null(models))models$tank_contrast else NULL
+  if(is.list(fit) && is.numeric(fit$estimate) &&
+     length(fit$estimate)==1L) {
+    tables[["T10_INDEPENDENT_TANK_CONTRAST.csv"]] <- data.frame(
+       reference=as.character(fit$treatment_levels[1L]),
+       comparison=as.character(fit$treatment_levels[2L]),
+       estimate=fit$estimate,
+       bootstrap_percentile_lower=fit$lower,
+       bootstrap_percentile_upper=fit$upper,
+       bootstrap_sd=fit$bootstrap_sd,
+       resamples=fit$draws,
+       n_tanks_reference=fit$n_tanks_control,
+       n_tanks_comparison=fit$n_tanks_treatment,
+       causal_identification=FALSE)
+  }
+  fc <- if(!is.null(models))models$functional_contrast else NULL
+  if(is.list(fc) && is.data.frame(fc$curve) && nrow(fc$curve))
+    tables[["T11_FUNCTIONAL_TANK_CONTRAST.csv"]] <- fc$curve
+  fm <- if(!is.null(models))models$functional_model else NULL
+  if(is.list(fm) && (is.matrix(fm$fixed_effects) ||
+                     is.data.frame(fm$fixed_effects))) {
+    effect <- as.data.frame(fm$fixed_effects)
+    effect$term <- rownames(effect)
+    effect <- effect[,c("term",setdiff(names(effect),"term")),drop=FALSE]
+    tables[["T12_FUNCTIONAL_MODEL_FIXED_EFFECTS.csv"]] <- effect
+  }
   for (name in names(tables))
     utils::write.csv(tables[[name]],
         file.path(staging,"tables",name),row.names=FALSE,na="")
