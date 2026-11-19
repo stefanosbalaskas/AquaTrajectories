@@ -55,7 +55,7 @@ aqt_research_figure_plan <- function(study,max_scopes=3L) {
   scopes <- unique(f[,c("session_id","camera_id"),drop=FALSE])
   scopes <- scopes[order(as.character(scopes$session_id),
                          as.character(scopes$camera_id)),,drop=FALSE]
-  scopes <- head(scopes,max_scopes)
+  scopes <- utils::head(scopes,max_scopes)
   for (i in seq_len(nrow(scopes))) {
     s <- as.character(scopes$session_id[i])
     c <- as.character(scopes$camera_id[i])
