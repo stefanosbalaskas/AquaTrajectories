@@ -8,6 +8,7 @@ aqt_qc_review(qc, decisions = NULL)
 }
 \arguments{
 \item{qc}{Output of aqt_trajectory_qc.}
+
 \item{decisions}{Optional manual review table; row ids identify source rows.}
 }
 \value{
