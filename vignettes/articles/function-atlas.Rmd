@@ -1,5 +1,5 @@
 ---
-title: "Atlas of all 157 R functions"
+title: "Atlas of all 161 R functions"
 description: "A complete categorized, linked map to all public native R functions and their source-generated help manuals."
 ---
 
@@ -7,7 +7,7 @@ description: "A complete categorized, linked map to all public native R function
 
 Every public R function in this development branch is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
 
-**Coverage:** 157 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
+**Coverage:** 161 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
 
@@ -29,7 +29,7 @@ Canonical track objects, synthetic examples and interoperable data formats.
 - [`aqt_tracks_validate()`](../reference/aqt_tracks_validate.html)
 - [`aqt_video_bundle_import()`](../reference/aqt_video_bundle_import.html)
 
-## 2. Detection, tracking and annotation validation (16)
+## 2. Detection, tracking and annotation validation (20)
 
 Detector and identity metrics against explicitly defined reference annotations.
 
@@ -45,6 +45,10 @@ Detector and identity metrics against explicitly defined reference annotations.
 - [`aqt_detection_metrics()`](../reference/aqt_detection_metrics.html)
 - [`aqt_evaluation_frames()`](../reference/aqt_evaluation_frames.html)
 - [`aqt_track_qc()`](../reference/aqt_track_qc.html)
+- [`aqt_trajectory_qc()`](../reference/aqt_trajectory_qc.html)
+- [`aqt_qc_review()`](../reference/aqt_qc_review.html)
+- [`aqt_qc_derive()`](../reference/aqt_qc_derive.html)
+- [`aqt_qc_report()`](../reference/aqt_qc_report.html)
 - [`aqt_tracking_match()`](../reference/aqt_tracking_match.html)
 - [`aqt_tracking_metrics()`](../reference/aqt_tracking_metrics.html)
 - [`aqt_tracking_observations()`](../reference/aqt_tracking_observations.html)
