@@ -49,6 +49,31 @@ The pkgdown site includes **165 exported R functions** in **14 scientific refere
 
 **[All 22 plotting functions — illustrated](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.html)** · **[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
 
+## Genuine fish-video research demonstration (Milestone 05)
+
+A reproducible GitHub Actions study now carries a **real Oxford fish-tank recording**
+through external frozen EfficientDet-D2 v2 detections and genuine ByteTrack outputs,
+source-video/PTS SHA-256 authentication, the common tracking-data bundle,
+reviewed R trajectory QC, qualified movement analysis and actual PNG/vector-PDF
+scientific reports.
+
+The original one-fish trial contains **149 frames and 177 predicted tracker observations**.
+The camera tracker generated competing identities in **46 frames**, so the
+research-design audit **preserves every original row but excludes all 92 ambiguous
+rows**; 85 source positions and 63 valid adjacent movement intervals remain
+for conditional **pixel-based, per-tracker-ID** description. Four qualified figures
+are published; eight unsupported figures are withheld.
+
+This is a **real-data integration demonstration, not independent identity tracking
+accuracy or a newly untouched generalization test**. The original video was exposed
+during development; source-reviewed detection labels are not prediction-blind
+ground truth, and no calibrated physical units, schooling, event effects or
+biological welfare claims are made. The Milestone 05 job reuses an archived
+authentic model inference run rather than claiming a new model forward pass.
+
+**[Full real-data scientific protocol and limitations](docs/REAL_OXFORD_RESEARCH_DEMONSTRATION_M05.md)**
+· **[Download evidence and R publication figures from the successful GitHub Action](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/real-fish-research-demonstration.yml)**
+
 ## Quick start
 
 Install the published **v0.1.1 GitHub release** (CRAN submission is being prepared; CRAN installation is not yet available):
