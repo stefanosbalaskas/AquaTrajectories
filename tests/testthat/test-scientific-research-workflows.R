@@ -206,3 +206,48 @@ test_that("unknown config settings and unsupported analyses fail visibly", {
                        stringsAsFactors=FALSE),
      profiles="movement"),NA)
 })
+
+
+test_that("replicated independent tanks permit a declared-direction contrast", {
+  assignments <- data.frame(
+    session_id=c("C1s","C2s","T1s","T2s"),
+    tank_id=c("C1","C2","T1","T2"),
+    treatment=c("control","control","treatment","treatment"),
+    stringsAsFactors=FALSE)
+  parts <- lapply(seq_len(nrow(assignments)),function(i)
+    make_research_fixture(nfish=2L,
+      session=assignments$session_id[i],
+      tank=assignments$tank_id[i],
+      treatment=assignments$treatment[i]))
+  raw <- do.call(rbind,lapply(parts,function(x) x$review$qc$raw))
+  ff <- do.call(rbind,lapply(parts,function(x) x$review$qc$frames))
+  ev <- do.call(rbind,lapply(parts,function(x) x$events))
+  des <- do.call(rbind,lapply(parts,function(x) x$design))
+  review <- aqt_qc_review(aqt_trajectory_qc(raw,ff,max_gap_s=.11))
+  common <- list(event_clock="same_recording",max_gap_s=.11,
+    event_windows=list(baseline=c(-.2,0),response=c(0,.2)),
+    experimental_contrast=TRUE,experimental_draws=100L)
+  blocked <- aqt_research_analyze(review,profiles="experimental",
+      events=ev,design=des,config=common)
+  expect_equal(blocked$diagnostics$status[
+      blocked$diagnostics$profile=="experimental"],"blocked")
+  expect_match(blocked$diagnostics$reason[
+      blocked$diagnostics$profile=="experimental"],"treatment_levels")
+  common$treatment_levels <- c("control","treatment")
+  study <- aqt_research_analyze(review,
+       profiles=c("events","experimental"),events=ev,
+       design=des,config=common)
+  expect_equal(study$diagnostics$status[
+      study$diagnostics$profile=="experimental"],"complete")
+  expect_equal(study$statistical_models$tank_contrast$n_tanks_control,2)
+  expect_equal(study$statistical_models$tank_contrast$n_tanks_treatment,2)
+  expect_equal(study$statistical_models$tank_contrast$estimate,0,tolerance=1e-9)
+  expect_false(study$statistical_models$tank_contrast$causal_identification)
+  expect_equal(study$statistical_models$tank_contrast$treatment_levels,
+               c("control","treatment"))
+  expect_equal(study$provenance$coordinate_units,"px")
+  expect_error(aqt_research_analyze(review,profiles="experimental",
+    events=ev,design=des,
+    config=list(treatment_levels=c("control","control"))),
+    "distinct|ordered")
+})
