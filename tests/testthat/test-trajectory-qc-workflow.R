@@ -183,3 +183,17 @@ test_that("acceleration never carries across an acquisition-frame gap", {
   expect_equal(d$summary$n_usable_movements,2)
   expect_equal(d$path_summary$path_length,3)
 })
+
+test_that("missing detector scores cannot silently pass a requested threshold", {
+  f <- qc_fixture()
+  f$obs$detection_confidence[c(1,2)] <- NA_real_
+  q <- aqt_trajectory_qc(f$obs,f$frames,
+       min_detection_confidence=.5,max_jump_px=10)
+  expect_true(all(q$row_audit$flag_missing_detection_confidence[c(1,2)]))
+  expect_false(any(q$row_audit$automatically_eligible[c(1,2)]))
+  expect_equal(aqt_qc_review(q)$n_review_eligible,2)
+  without <- f$obs
+  without$detection_confidence <- NULL
+  expect_error(aqt_trajectory_qc(without,f$frames,
+      min_detection_confidence=.5),"requires source detection_confidence")
+})
