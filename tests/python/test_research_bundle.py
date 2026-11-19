@@ -31,7 +31,7 @@ def fixture(root, kind="mot_bytetrack", time_status="source_pts", filename="bund
         csv_write(source, [["frame","time","individual","x","y","probability"],
                            ["1","0","0007","15","25","0.99"],
                            ["2","0.055","0007","16","25","0.8"],
-                           ["3","0.17","0007","","",""]])
+                           ["3","0.17","0007","NaN","nan","0"]])
     else:
         csv_write(source, [["frame_id","track_id","x_px","y_px","confidence"],
                            ["0","0007","15","25","0.8"],
@@ -77,6 +77,7 @@ class TestResearchBundle(unittest.TestCase):
             self.assertEqual(rows[2]["quality_flag"], "source_missing_position")
             self.assertEqual(rows[2]["x"], "")
             self.assertEqual(rows[2]["y"], "")
+            self.assertEqual(rows[2]["identity_probability"], "0")
             rb.verify(a.out)
 
     def test_unknown_clock_is_explicit_and_never_inferred(self):
