@@ -8,6 +8,7 @@ aqt_qc_derive(review, max_gap_s = NULL)
 }
 \arguments{
 \item{review}{An aqt_qc_review from explicit aqt_qc_review().}
+
 \item{max_gap_s}{Maximum interval used for valid movement steps.}
 }
 \value{
