@@ -44,6 +44,7 @@ The report includes multiple source-supported figure families:
 - Event-relative functional observation coverage
 - Actual supported functional curves with missing values as line gaps
 - Native aqt_plot_tank_changes for properly fitted tank-level comparisons
+- Source-preserved time-varying functional treatment contrasts and empirically resampled bands where model eligibility is satisfied
 - Conditional fixed-ID positional sensitivity scenario quantiles
 
 No figure is emitted if an essential scientific profile is absent.
@@ -90,6 +91,9 @@ the GitHub repository or publication archive.
         T07_FUNCTIONAL_SUPPORT.csv (when eligible)
         T08_EXPERIMENTAL_DESIGN.csv (when eligible)
         T09_POSITION_SENSITIVITY.csv (when eligible)
+        T10_INDEPENDENT_TANK_CONTRAST.csv (when eligible)
+        T11_FUNCTIONAL_TANK_CONTRAST.csv (when eligible)
+        T12_FUNCTIONAL_MODEL_FIXED_EFFECTS.csv (when eligible)
 
 The report is standalone Markdown for straightforward scholarly review,
 with figure captions, model decisions, missing data/exclusion counts,
