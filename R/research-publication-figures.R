@@ -165,6 +165,31 @@
         ylab=paste0(study$config$event_outcome," (",unit$speed,")"))
     return(invisible(NULL))
   }
+  if(kind=="functional_contrast") {
+    fit <- study$statistical_models$functional_contrast
+    d <- fit$curve
+    lo <- min(c(d$pointwise_lower,d$simultaneous_lower),na.rm=TRUE)
+    hi <- max(c(d$pointwise_upper,d$simultaneous_upper),na.rm=TRUE)
+    graphics::plot(NA_real_,NA_real_,type="n",
+       xlim=.aqt_publication_axis(d$time_relative_s),
+       ylim=.aqt_publication_axis(c(lo,hi,d$contrast)),
+       xlab="Seconds relative to recorded event",
+       ylab=paste0("Treatment-reference contrast (",
+                    study$config$event_outcome,")"),
+       main="Independently replicated tank-functional contrast")
+    graphics::polygon(c(d$time_relative_s,rev(d$time_relative_s)),
+       c(d$simultaneous_lower,rev(d$simultaneous_upper)),
+       border=NA,col=grDevices::adjustcolor("#286B80",alpha.f=.14))
+    graphics::polygon(c(d$time_relative_s,rev(d$time_relative_s)),
+       c(d$pointwise_lower,rev(d$pointwise_upper)),
+       border=NA,col=grDevices::adjustcolor("#286B80",alpha.f=.28))
+    graphics::abline(h=0,lty=2,col="#B06E58")
+    graphics::lines(d$time_relative_s,d$contrast,
+                    col="#144F62",lwd=2.2)
+    graphics::mtext("Empirical tank resampling bands; coverage NOT certified",
+       side=3,line=.15,cex=.70)
+    return(invisible(NULL))
+  }
   if(kind=="sensitivity") {
     d <- study$uncertainty$path_sensitivity
     d <- d[order(d$session_id,d$camera_id,d$track_id),,drop=FALSE]
