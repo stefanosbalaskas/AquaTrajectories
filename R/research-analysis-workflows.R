@@ -51,7 +51,7 @@
   if (!c$event_clock %in% c("unspecified","same_recording",
                             "externally_synchronized"))
     stop("event_clock must be explicitly declared",call.=FALSE)
-  if (!c$event_outcome %in% c("speed","step_distance","x","y"))
+  if (!c$event_outcome %in% c("speed","step_distance"))
     stop("Event outcome must be an available source-derived numeric measure",
          call.=FALSE)
   if (!c$event_estimator %in% c("sample_mean","time_weighted"))
