@@ -274,17 +274,17 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
       f$camera_id==id$camera_id[part[1L]] &
       f$frame_id>=start & f$frame_id<=end
     denom <- sum(ix)
+    eligible_track_frames <- length(unique(
+      frame[part[flags$automatically_eligible[part]]]))
     track_rows[[length(track_rows)+1L]] <- data.frame(
       session_id=id$session_id[part[1L]],camera_id=id$camera_id[part[1L]],
       track_id=id$track_id[part[1L]],first_frame=start,last_frame=end,
       n_frames_in_observed_span=denom,
       n_frames_with_raw_track=length(unique(frame[part])),
-      n_frames_with_eligible_track=length(unique(frame[part[
-        flags$automatically_eligible[part]])),
-      n_missing_within_span=denom-length(unique(frame[part[
-        flags$automatically_eligible[part]])),
-      fraction_eligible_within_span=if(denom) length(unique(frame[part[
-        flags$automatically_eligible[part]]))/denom else NA_real_)
+      n_frames_with_eligible_track=eligible_track_frames,
+      n_not_eligible_within_span=denom-eligible_track_frames,
+      fraction_eligible_within_span=if(denom)
+        eligible_track_frames/denom else NA_real_)
   }
   per_track <- if(length(track_rows)) do.call(rbind,track_rows) else
     data.frame(session_id=character(),camera_id=character(),track_id=character(),
@@ -292,7 +292,7 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
                n_frames_in_observed_span=integer(),
                n_frames_with_raw_track=integer(),
                n_frames_with_eligible_track=integer(),
-               n_missing_within_span=integer(),
+               n_not_eligible_within_span=integer(),
                fraction_eligible_within_span=numeric())
   rownames(per_track) <- NULL
   expected_coverage <- NULL
