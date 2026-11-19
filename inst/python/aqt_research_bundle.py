@@ -61,7 +61,7 @@ def integer(value, name, minimum=0):
 
 
 def number(value, name, nullable=False):
-    if value is None or str(value).strip() == "":
+    if value is None or str(value).strip() == "" or (nullable and str(value).strip().lower() == "nan"):
         require(nullable, name + " is missing")
         return None
     try:
