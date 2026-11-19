@@ -60,6 +60,10 @@ reference:
       - aqt_detection_metrics
       - aqt_evaluation_frames
       - aqt_track_qc
+      - aqt_trajectory_qc
+      - aqt_qc_review
+      - aqt_qc_derive
+      - aqt_qc_report
       - aqt_tracking_match
       - aqt_tracking_metrics
       - aqt_tracking_observations
