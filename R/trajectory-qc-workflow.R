@@ -334,6 +334,7 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
     }
   }
   manual <- NULL
+  annotation_inputs <- NULL
   if (!is.null(truth) || !is.null(evaluated_frames) ||
       !is.null(max_reference_distance)) {
     if (is.null(truth) || is.null(evaluated_frames) ||
@@ -354,10 +355,13 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
       stringsAsFactors=FALSE)
     manual <- aqt_tracking_metrics(truth,pd,max_distance=max_reference_distance,
                                    evaluated_frames=ef)
+    annotation_inputs <- list(truth=truth,evaluated_frames=ef,
+                              max_distance=max_reference_distance)
   }
   structure(list(raw=raw,frames=f,row_audit=flags,camera_coverage=coverage,
        per_track_coverage=per_track,expected_coverage=expected_coverage,
-       manual_accuracy=manual,automatic_eligible=flags$automatically_eligible,
+       manual_accuracy=manual,annotation_inputs=annotation_inputs,
+       automatic_eligible=flags$automatically_eligible,
        raw_sha256=raw_sha,provenance=provenance,time_provenance=time_provenance,
        thresholds=list(max_gap_s=max_gap_s,max_speed=max_speed,
         max_jump_px=max_jump_px,min_detection_confidence=min_detection_confidence),
@@ -441,7 +445,21 @@ aqt_qc_review <- function(qc,decisions=NULL) {
     attr(screened,"aqt_qc_policy") <- qc$thresholds
     analysis_blocked <- NULL
   }
+  reviewed_accuracy <- NULL
+  if (!is.null(qc$annotation_inputs)) {
+    idx <- which(eligible)
+    pred <- data.frame(session_id=as.character(qc$raw$session_id[idx]),
+      camera_id=as.character(qc$raw$camera_id[idx]),
+      frame_id=.aqt_qc_numeric(qc$raw$frame_id[idx]),
+      track_id=as.character(qc$raw$track_id[idx]),
+      x=.aqt_qc_numeric(qc$raw$x[idx]),
+      y=.aqt_qc_numeric(qc$raw$y[idx]),stringsAsFactors=FALSE)
+    info <- qc$annotation_inputs
+    reviewed_accuracy <- aqt_tracking_metrics(info$truth,pred,
+       max_distance=info$max_distance,evaluated_frames=info$evaluated_frames)
+  }
   structure(list(qc=qc,row_audit=audit,tracks=screened,
+      reviewed_manual_accuracy=reviewed_accuracy,
       analysis_blocked=analysis_blocked,
       n_original=n,n_review_eligible=sum(eligible),
       n_review_excluded=sum(!eligible),
@@ -469,6 +487,8 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
   if (is.null(max_gap_s)) max_gap_s <- review$qc$thresholds$max_gap_s
   .aqt_qc_limit(max_gap_s,"max_gap_s")
   kin <- aqt_kinematics(review$tracks,max_gap_s=max_gap_s)
+  native_track_qc <- aqt_track_qc(review$tracks,max_gap_s=max_gap_s,
+     max_speed=review$qc$thresholds$max_speed)
   paths <- aqt_path_summary(review$tracks,max_gap_s=max_gap_s)
   # Never connect two observations across a source frame that was missing
   # from this scoped track (even if nominal dt appears small).
@@ -492,6 +512,27 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
         if (match(later,positions)-match(earlier,positions)!=1L) {
           kin[b,c("step_distance","vx","vy","vz","speed",
                   "heading_rad","acceleration","turn_rate_rad_s")] <- NA_real_
+        }
+      }
+    }
+    # Recompute second-order derivatives after invalidating any missed-frame
+    # segment: otherwise acceleration after the gap can be spuriously finite.
+    key_for_derivative <- .aqt_qc_scope(
+      kin$session_id,kin$camera_id,track=kin$track_id)
+    kin$acceleration[] <- NA_real_
+    kin$turn_rate_rad_s[] <- NA_real_
+    for (idx in split(seq_len(nrow(kin)),key_for_derivative)) {
+      idx <- idx[order(kin$time_s[idx])]
+      if (length(idx)<3L) next
+      for (j in seq.int(3L,length(idx))) {
+        p <- idx[j-1L]; q <- idx[j]
+        if (!is.finite(kin$speed[p]) || !is.finite(kin$speed[q]) ||
+            !is.finite(kin$dt_s[q]) || kin$dt_s[q]<=0) next
+        kin$acceleration[q] <- (kin$speed[q]-kin$speed[p])/kin$dt_s[q]
+        if (is.finite(kin$heading_rad[p]) &&
+            is.finite(kin$heading_rad[q])) {
+          theta <- kin$heading_rad[q]-kin$heading_rad[p]
+          kin$turn_rate_rad_s[q] <- atan2(sin(theta),cos(theta))/kin$dt_s[q]
         }
       }
     }
@@ -521,7 +562,8 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
     n_original_source_frames=nrow(review$qc$frames),
     original_source_sha256=review$original_source_sha256,
     stringsAsFactors=FALSE)
-  structure(list(kinematics=kin,path_summary=paths,summary=summary,
+  structure(list(kinematics=kin,native_track_qc=native_track_qc,
+    path_summary=paths,summary=summary,
     review=review,provenance=review$qc$provenance,
     physical_calibration_certified=FALSE,
     fish_identity_accuracy_certified=FALSE),class="aqt_qc_derived")
@@ -545,7 +587,9 @@ aqt_qc_report <- function(review,derived=NULL,directory) {
   if (!is.null(derived) &&
       (!inherits(derived,"aqt_qc_derived") ||
        !identical(derived$review$original_source_sha256,
-                  review$original_source_sha256)))
+                  review$original_source_sha256) ||
+       !identical(derived$review$row_audit$review_eligible,
+                  review$row_audit$review_eligible)))
     stop("Derived measurements must originate from this review",call.=FALSE)
   if (!is.character(directory) || length(directory)!=1L ||
       is.na(directory) || file.exists(directory) || dir.exists(directory) ||
@@ -563,11 +607,14 @@ aqt_qc_report <- function(review,derived=NULL,directory) {
   if(!is.null(review$qc$expected_coverage))
     files[["EXPECTED_TRACK_COVERAGE.csv"]] <- review$qc$expected_coverage
   if(!is.null(review$qc$manual_accuracy))
-    files[["ANNOTATED_ACCURACY.csv"]] <- review$qc$manual_accuracy
+    files[["ANNOTATED_ACCURACY_AUTOMATIC.csv"]] <- review$qc$manual_accuracy
+  if(!is.null(review$reviewed_manual_accuracy))
+    files[["ANNOTATED_ACCURACY_REVIEWED.csv"]] <- review$reviewed_manual_accuracy
   if(!is.null(review$tracks))
     files[["REVIEWED_TRACKS.csv"]] <- as.data.frame(review$tracks)
   if(!is.null(derived)){
     files[["DERIVED_KINEMATICS.csv"]] <- derived$kinematics
+    files[["NATIVE_TRACK_QC.csv"]] <- derived$native_track_qc
     files[["DERIVED_PATH_SUMMARY.csv"]] <- derived$path_summary
     files[["DERIVED_COUNTS.csv"]] <- derived$summary
   }
