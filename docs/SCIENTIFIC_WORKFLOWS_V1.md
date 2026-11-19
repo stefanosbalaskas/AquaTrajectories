@@ -92,6 +92,7 @@ Named list fields and defaults:
       functional_grid_s=seq(-5,5,by=.5),
       functional_max_gap_s=NULL,      # defaults to max_gap_s
       experimental_contrast=FALSE,
+      treatment_levels=NULL,         # explicitly c('control','treatment') for inference
       experimental_draws=199L,
       functional_contrast=FALSE,
       functional_model="none",        # or nested_nlme if eligible
@@ -181,3 +182,10 @@ R import, QC, review, scientific analysis and export.
 
 These software tests do NOT replace per-study manual annotation QC or claim
 validated welfare or stress measurements.
+
+For any requested treatment contrast, treatment_levels must explicitly
+specify the ordered reference and comparison group labels, in that order.
+The contrast is comparison minus reference, and the function will not silently
+choose direction by alphabetically sorting treatment names. With two or more
+independently treated tanks in each group, this may produce a descriptive
+resampled estimate; it does not establish causal identification on its own.
