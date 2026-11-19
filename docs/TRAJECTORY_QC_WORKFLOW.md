@@ -90,3 +90,14 @@ with synthetic fixtures. It does NOT independently establish tracking accuracy.
 
 Public functions: aqt_trajectory_qc, aqt_qc_review, aqt_qc_derive,
 aqt_qc_report.
+
+Detector-score policy: when a minimum detection confidence is requested,
+records without an actual detector score are excluded from the automatically
+eligible set and flagged as score-unavailable. idtracker.ai identity
+probabilities are not substituted for detector confidence. Reviewer decisions
+may explicitly accept a visually checked observation, with a recorded reason.
+
+Final coverage is recomputed after review. The exported file pairs
+CAMERA_COVERAGE.csv / CAMERA_COVERAGE_REVIEWED.csv and
+TRACK_COVERAGE.csv / TRACK_COVERAGE_REVIEWED.csv distinguish the
+initial automated screen from the observations actually used for inference.
