@@ -112,11 +112,14 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
                 "x","y","observed")
   if (!all(required %in% names(raw)))
     stop("Raw observations require: ",paste(required,collapse=","),call.=FALSE)
-  if (!is.null(max_jump_px) &&
-      !(is_bundle || (inherits(input,"aqt_tracks") &&
-        identical(attr(input,"aqt_coordinate_system"),"image")) ||
-        !is_bundle))
-    stop("max_jump_px applies only to image-space coordinates",call.=FALSE)
+  if (inherits(input,"aqt_tracks") &&
+      !identical(attr(input,"aqt_coordinate_system"),"image"))
+    stop("This acquisition QC requires image-space coordinates; use the physical trajectory core directly for calibrated XYZ",call.=FALSE)
+  if ("z" %in% names(raw) && any(!is.na(raw$z)))
+    stop("This acquisition QC accepts source-image XY, not physical XYZ",call.=FALSE)
+  if (!is.null(min_detection_confidence) &&
+      !"detection_confidence" %in% names(raw))
+    stop("A detector confidence cutoff requires source detection_confidence; identity probability is not interchangeable",call.=FALSE)
   n <- nrow(raw)
   raw_sha <- digest::digest(raw,algo="sha256",serialize=TRUE)
   id <- lapply(c("session_id","camera_id","track_id"),function(k)
@@ -169,6 +172,7 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
   width[!is.na(frameix)] <- f$width_px[frameix[!is.na(frameix)]]
   height[!is.na(frameix)] <- f$height_px[frameix[!is.na(frameix)]]
   out_of_bounds <- has_xy & (x<0 | y<0 | x>width | y>height)
+  out_of_bounds[is.na(out_of_bounds)] <- FALSE
   nonfinite_position <- (!is.na(raw$x) & !is.finite(x)) |
     (!is.na(raw$y) & !is.finite(y))
   invalid_conf <- if ("detection_confidence" %in% names(raw))
@@ -181,13 +185,17 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
   excessive_speed <- rep(FALSE,n)
   valid_for_motion <- valid_id & valid_frame & !dup & has_xy &
     !conflict_obs & !out_of_bounds & !nonfinite_position & !time_conflict &
-    !time_invented
+    !time_invented & !invalid_conf
   for (idx in split(seq_len(n),trackkey)) {
     if (length(idx)<2L) next
     idx <- idx[order(frame[idx],na.last=TRUE)]
     for (j in seq.int(2L,length(idx))) {
       a <- idx[j-1L]; b <- idx[j]
-      if (!valid_for_motion[a] || !valid_for_motion[b]) next
+      if (!valid_for_motion[b]) next
+      if (!valid_for_motion[a]) {
+        large_gap[b] <- TRUE
+        next
+      }
       before <- frameix[a]; after <- frameix[b]
       # Two observations must refer to adjacent recorded acquisition frames.
       # A dropped fish observation is never silently jumped across.
