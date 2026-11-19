@@ -158,7 +158,8 @@ aqt_research_bundle_import <- function(directory) {
   structure(list(
     observations=obs,frames=frames,tracks=tracks,metadata=meta,
     directory=root,output_sha256_verified=TRUE,
-    clock_independently_verified=identical(meta$time_status,"externally_verified"),
+    clock_verification_evidence_declared=identical(meta$time_status,"externally_verified"),
+    clock_independently_verified=FALSE,
     biological_identity_certified=FALSE
   ),class="aqt_research_bundle")
 }
