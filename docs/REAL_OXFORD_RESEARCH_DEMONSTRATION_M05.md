@@ -42,6 +42,22 @@ Accordingly:
   source-image trajectory figures are the permitted scientific descriptions.
 - **No schooling profile is run for this one-fish trial**. Multiple predicted
   tracker IDs may be fragments of one fish, not a real fish school.
+- Real source investigation found 177 tracker observations over 149
+  original frames, with three camera-local predicted IDs. Forty-six
+  source frames contained two simultaneous predicted IDs, biologically
+  incompatible with the known one-fish-per-trial original study.
+- To avoid arbitrarily selecting a correct fish ID, the source-to-R
+  workflow explicitly **excludes all 92 rows on the 46 conflicting frames**
+  using documented, non-human, study-design review decisions.
+  All 177 raw observations remain unchanged in the source bundle and
+  review ledger. The remaining 85 rows are eligible for conditional
+  per-tracker-ID analyses, not independently visually validated fish positions.
+- Source-frame coverage was 131/149 frames with at least one tracker
+  detection. Post-rule eligibility is 85/149 original frames, and must
+  not be mislabeled as detection recall or tracking identity accuracy.
+- The source file FRAME_FISH_COUNT_CONSISTENCY.csv and explicit exclusion
+  decisions permit reconstruction of every source and inference denominator.
+  Reviewer decisions are rule-based, **not manually adjudicated identities**.
 - No independent body identity GT or reliable cross-camera biological ID
   certification is present, so path lengths are *tracker-ID-local* conditional
   measurements; they are not guaranteed continuous whole-fish paths.
@@ -73,8 +89,10 @@ Accordingly:
 5. Use the universal Research Bundle v1 converter with kind mot_bytetrack,
    original source PTS, and the historical original model source report.
 6. Import into R using aqt_research_bundle_import.
-7. aqt_trajectory_qc(max_gap_s=.15) then aqt_qc_review() — automatic
-   screening only; no fabricated manual visual review decisions.
+7. aqt_trajectory_qc(max_gap_s=.15) then aqt_qc_review() with an explicitly
+   recorded, study-design based one-fish rule excluding every multi-ID frame.
+   These are programmatic, documented exclusion decisions, NOT manual visual
+   or independent biological identity review.
 8. aqt_research_analyze() computes qualified movement and explicitly
    refuses unsupported event/functional/experimental inferences. The
    schooling profile is not selected because the recorded trial is one fish.
@@ -99,7 +117,10 @@ Its RESULTS/ directory contains:
 - M05_SUCCESS.json (final verified integrated real analysis marker)
 - REAL_STUDY_RESULTS.json (the actual observed counts, pixel measures and
   source-reviewed detector agreement, with explicit validity flags)
-- REAL_OBSERVED_PATH_SUMMARY.csv (all source-ID-local measured path lengths)
+- REAL_OBSERVED_PATH_SUMMARY.csv (QC-eligible source-ID-local measurements)
+- FRAME_FISH_COUNT_CONSISTENCY.csv (every original frame, original observed
+  tracker ID count and eligibility decision)
+- EXPLICIT_ONE_FISH_RULE_EXCLUSIONS.csv (all documented source-row exclusions)
 - PROFILE_STATUS.csv (each permitted/blocked profile)
 - README_REAL_FISH_STUDY.md (human-readable evidence restrictions)
 - source_evidence/REAL_SOURCE_AUDIT.json (authentic original video and
