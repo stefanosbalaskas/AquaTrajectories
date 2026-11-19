@@ -1,0 +1,167 @@
+name: Milestone 05 - actual Oxford fish recording through R scientific publication
+
+on:
+  pull_request:
+    paths:
+      - "inst/python/aqt_m05_real_oxford_bridge.py"
+      - "tests/integration/oxford_real_research_m05.R"
+      - "tests/python/test_m05_real_oxford_bridge.py"
+      - "docs/REAL_OXFORD_RESEARCH_DEMONSTRATION_M05.md"
+      - ".github/workflows/real-fish-research-demonstration.yml"
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_m05_real_oxford_bridge.py"
+      - "tests/integration/oxford_real_research_m05.R"
+      - ".github/workflows/real-fish-research-demonstration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-real-source-to-native-science:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check new real-source bridge and anti-fabrication contracts
+        run: |
+          python -m py_compile inst/python/aqt_m05_real_oxford_bridge.py
+          python -m unittest discover -s tests/python -p "test_m05_real_oxford_bridge.py" -v
+      - name: Retrieve original successful real fish detector/ByteTrack outputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/oxford_prior_real"
+          gh run download 43287906771 \
+            --repo stefanosbalaskas/AquaTrajectories \
+            --name wave13e-real-model-detections-tracks-and-source-agreement \
+            --dir "$RUNNER_TEMP/oxford_prior_real"
+          for file in summary.json frames.csv model_generated_bytetrack.csv model_generated_detections.csv; do
+            test -s "$RUNNER_TEMP/oxford_prior_real/$file"
+          done
+          echo "Original real model inference: exact archived run 43287906771"
+      - name: Install FFprobe/FFmpeg for original fish MP4 PTS audit
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+      - name: Independently re-download and hash-authenticate original Oxford fish video
+        run: |
+          curl --fail --location --show-error --retry 3 --retry-delay 4 \
+            --max-time 600 --max-filesize 1000000000 \
+            "https://thor.robots.ox.ac.uk/~vgg/data/fish/fish-tank-obstacles-eval-15.zip" \
+            --output "$RUNNER_TEMP/original_oxford_eval_15.zip"
+          echo "91c71d297b7bfa6bd19c6f34ec5d12e1534bf7ef2f90d3249662605507ca9ae4  $RUNNER_TEMP/original_oxford_eval_15.zip" | sha256sum -c -
+          python - <<'PY'
+          import hashlib,os,zipfile,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          with zipfile.ZipFile(root/"original_oxford_eval_15.zip") as z:
+              member="eval/F30_T15.mp4"
+              if member not in z.namelist():
+                  raise ValueError("Frozen original Oxford fish video not in archive")
+              clip=z.read(member)
+          sha=hashlib.sha256(clip).hexdigest()
+          assert sha=="acd118909b7bd44b013450e35525409ab2bfe53e15e81f48834fe33bfea682c0",sha
+          (root/"original_oxford_fish.mp4").write_bytes(clip)
+          print("REAL OXFORD SOURCE 149-FRAME MP4 SHA-256 MATCH")
+          PY
+      - name: Re-probe all original frame presentation timestamps (no inferred FPS)
+        run: |
+          python inst/python/aqt_oxford_video_probe.py \
+            --archive "$RUNNER_TEMP/original_oxford_eval_15.zip" \
+            --member "eval/F30_T15.mp4" \
+            --session-id oxford_eval \
+            --camera-id oxford_single_video \
+            --output-dir "$RUNNER_TEMP/reverified_real_pts"
+          test -s "$RUNNER_TEMP/reverified_real_pts/frames.csv"
+          test -s "$RUNNER_TEMP/reverified_real_pts/audit.json"
+      - name: Authenticate frozen original model/tracker outputs against fresh video source
+        run: |
+          mkdir -p "$RUNNER_TEMP/real_science_source"
+          python inst/python/aqt_m05_real_oxford_bridge.py \
+            --archived-report "$RUNNER_TEMP/oxford_prior_real/summary.json" \
+            --archived-frames "$RUNNER_TEMP/oxford_prior_real/frames.csv" \
+            --archived-tracks "$RUNNER_TEMP/oxford_prior_real/model_generated_bytetrack.csv" \
+            --reverified-frames "$RUNNER_TEMP/reverified_real_pts/frames.csv" \
+            --original-clip "$RUNNER_TEMP/original_oxford_fish.mp4" \
+            --out "$RUNNER_TEMP/real_science_source/verified_original_tracks"
+          test -s "$RUNNER_TEMP/real_science_source/verified_original_tracks/oxford_real_bytetrack_mot.csv"
+          test -s "$RUNNER_TEMP/real_science_source/verified_original_tracks/REAL_SOURCE_AUDIT.json"
+      - name: Create losslessly timestamped Research Bundle v1 with true frozen model provenance
+        run: |
+          python inst/python/aqt_research_bundle.py create \
+            --kind mot_bytetrack \
+            --source "$RUNNER_TEMP/real_science_source/verified_original_tracks/oxford_real_bytetrack_mot.csv" \
+            --frames "$RUNNER_TEMP/oxford_prior_real/frames.csv" \
+            --session-id oxford_eval \
+            --camera-id oxford_single_video \
+            --frame-origin 1 \
+            --time-status source_pts \
+            --tracker-config "$RUNNER_TEMP/oxford_prior_real/summary.json" \
+            --clock-evidence "$RUNNER_TEMP/reverified_real_pts/audit.json" \
+            --out "$RUNNER_TEMP/real_science_source/oxford_research_bundle"
+          python inst/python/aqt_research_bundle.py verify \
+            --directory "$RUNNER_TEMP/real_science_source/oxford_research_bundle"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+      - name: Run ACTUAL 149-frame source through R QC, science and PNG/vector PDF reporting
+        run: |
+          Rscript --vanilla tests/integration/oxford_real_research_m05.R \
+            "$RUNNER_TEMP/real_science_source/oxford_research_bundle" \
+            "$RUNNER_TEMP/real_science_source/verified_original_tracks/REAL_SOURCE_AUDIT.json" \
+            "$RUNNER_TEMP/real_science_source/RESULTS"
+          test -s "$RUNNER_TEMP/real_science_source/RESULTS/M05_SUCCESS.json"
+          test -s "$RUNNER_TEMP/real_science_source/RESULTS/REAL_STUDY_RESULTS.json"
+          test -s "$RUNNER_TEMP/real_science_source/RESULTS/publication/REPORT.md"
+          test -s "$RUNNER_TEMP/real_science_source/RESULTS/publication/figures/S01_QUALIFIED_PATHS.png"
+          test -s "$RUNNER_TEMP/real_science_source/RESULTS/publication/figures/S01_MEASURED_SPEED.pdf"
+      - name: Final automated scientific evidence claims and hashes audit
+        run: |
+          python - <<'PY'
+          import os,json,hashlib,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"real_science_source"
+          out=root/"RESULTS"
+          a=json.loads((out/"REAL_STUDY_RESULTS.json").read_text())
+          b=json.loads((out/"M05_SUCCESS.json").read_text())
+          m=json.loads((out/"publication"/"PUBLICATION_MANIFEST.json").read_text())
+          assert b["status"]=="PASS"
+          assert a["n_source_frames"]==149
+          assert a["n_eligible_frame_adjacent_movements"]>0
+          assert a["new_model_inference_performed_during_handoff"] is False
+          assert a["independently_certified_fish_ID_accuracy"] is False
+          assert a["freshly_untouched_session_independent_holdout"] is False
+          assert a["external_intervention_event_times_supplied"] is False
+          assert a["physical_calibration_certified"] is False
+          assert m["n_figures_complete"]>=4
+          assert m["n_figures_failed"]==0
+          assert m["original_raw_sha256"]==a["original_observations_sha256"]
+          for filename,expected in m["output_sha256"].items():
+              path=out/"publication"/filename
+              assert path.is_file()
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==expected
+          print("GENUINE OXFORD SOURCE-LOCKED PYTHON TO R M05: PASS")
+          print("149 original frames; tracked rows:",
+                a["n_raw_real_tracking_observations"])
+          print("QC-eligible displacement steps:",
+                a["n_eligible_frame_adjacent_movements"])
+          print("Real published figures:",m["n_figures_complete"])
+          print("No independent ID/HOTA, new holdout, calibrated XYZ or event claims")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: milestone05-real-oxford-published-R-scientific-report
+          path: |
+            ${{ runner.temp }}/real_science_source/RESULTS/
+            ${{ runner.temp }}/real_science_source/oxford_research_bundle/
+          if-no-files-found: error
+          retention-days: 90
