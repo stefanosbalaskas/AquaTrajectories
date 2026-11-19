@@ -45,7 +45,7 @@ idtracker.ai 6.x tidy CSV (frame,time,individual,x,y,probability):
       --session-id S01 --camera-id TOP --time-status source_pts \
       --out result/top_idtracker
 
-The frame origin is **explicit**. Inspect the actual idtracker.ai output before choosing 0 or 1. Its source time column must agree with the frame manifest. Missing source positions remain missing and identity probabilities remain distinct from detector confidences.
+The frame origin is **explicit**. Inspect the actual idtracker.ai output before choosing 0 or 1. Its source time column must agree with the frame manifest. Missing source positions (empty or NaN, as documented for idtracker.ai) remain explicitly missing and their original identity probabilities, including zero, remain distinct from detector confidences.
 
 YOLO long CSV requires frame_id,track_id,x_px,y_px and may contain confidence/detection_confidence and complete bbox_left/bbox_top/bbox_width/bbox_height fields:
 
