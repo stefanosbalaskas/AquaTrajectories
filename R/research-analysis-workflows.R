@@ -20,6 +20,7 @@
     functional_grid_s=seq(-5,5,by=.5),
     functional_max_gap_s=NULL,
     experimental_contrast=FALSE,
+    treatment_levels=NULL,
     experimental_draws=199L,
     functional_contrast=FALSE,
     functional_model="none",
@@ -63,6 +64,13 @@
       !is.logical(c$functional_contrast) ||
       length(c$functional_contrast)!=1L || is.na(c$functional_contrast))
     stop("Model requests must be TRUE/FALSE",call.=FALSE)
+  if (!is.null(c$treatment_levels) &&
+      (!is.character(c$treatment_levels) ||
+       length(c$treatment_levels)!=2L ||
+       anyNA(c$treatment_levels) ||
+       any(!nzchar(trimws(c$treatment_levels))) ||
+       anyDuplicated(c$treatment_levels)))
+    stop("treatment_levels requires explicit ordered control and treatment labels",call.=FALSE)
   if (c$experimental_contrast && c$experimental_draws<100L)
     stop("experimental_draws must be >=100 for tank bootstrap",call.=FALSE)
   if (c$functional_contrast &&
@@ -388,19 +396,25 @@ aqt_research_analyze <- function(review,
                             estimator_status="not_requested")
           sufficient <- nrow(design_audit)==2L &&
             all(design_audit$n_tanks>=2L)
+          declared_levels <- cfg$treatment_levels
+          ordered_levels_ok <- !is.null(declared_levels) &&
+            setequal(design_audit$treatment,declared_levels)
           if (!sufficient) {
             report[["experimental"]] <- .aqt_research_status("blocked",
                 "Two treatment groups with >=2 independent tanks each are required; fish/frames are not experimental replicates")
           } else if (is.null(event_out)) {
             report[["experimental"]] <- .aqt_research_status("blocked",
                 "Experimental estimation requires observed baseline and response epochs")
+          } else if (cfg$experimental_contrast && !ordered_levels_ok) {
+            report[["experimental"]] <- .aqt_research_status("blocked",
+                "Specify explicit ordered treatment_levels matching the two observed independent-tank groups")
           } else if (!cfg$experimental_contrast) {
             report[["experimental"]] <- .aqt_research_status("skipped",
               "Study design audited; treatment inference requires experimental_contrast=TRUE")
           } else {
             contrast <- .aqt_research_model_try(function()
               aqt_tank_event_contrast(event_out$epoch_summaries,
-                treatment_levels=sort(unique(d$treatment)),
+                treatment_levels=cfg$treatment_levels,
                 draws=cfg$experimental_draws))
             if (contrast$ok) {
               stats_out$tank_contrast <- contrast$value
@@ -411,16 +425,16 @@ aqt_research_analyze <- function(review,
             } else report[["experimental"]] <-
               .aqt_research_status("failed",contrast$error)
           }
-          if (sufficient && !is.null(functional) && cfg$functional_contrast) {
+          if (sufficient && ordered_levels_ok && !is.null(functional) && cfg$functional_contrast) {
             fc <- .aqt_research_model_try(function()
               aqt_functional_tank_contrast(functional$grid,
-                treatment_levels=sort(unique(d$treatment)),
+                treatment_levels=cfg$treatment_levels,
                 min_fish_fraction=cfg$min_fish_fraction,
                 draws=cfg$experimental_draws))
             if(fc$ok) stats_out$functional_contrast <- fc$value
             else stats_out$functional_contrast_error <- fc$error
           }
-          if (sufficient && !is.null(functional) &&
+          if (sufficient && ordered_levels_ok && !is.null(functional) &&
               cfg$functional_model=="nested_nlme") {
             fm <- .aqt_research_model_try(function()
               aqt_functional_longitudinal_fit(
@@ -475,6 +489,8 @@ aqt_research_analyze <- function(review,
       provenance=list(source=review$qc$provenance,
          raw_sha256=review$original_source_sha256,
          clock_provenance=review$qc$time_provenance,
+         coordinate_units=if(clock) attr(review$tracks,"aqt_units") else "px",
+         coordinate_system=if(clock) attr(review$tracks,"aqt_coordinate_system") else "image",
          event_clock_relation_declared=cfg$event_clock,
          event_clock_independently_certified=FALSE,
          fish_identity_certified=FALSE,physical_calibration_certified=FALSE,
