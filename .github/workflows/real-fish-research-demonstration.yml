@@ -42,9 +42,22 @@ jobs:
             --repo stefanosbalaskas/AquaTrajectories \
             --name wave13e-real-model-detections-tracks-and-source-agreement \
             --dir "$RUNNER_TEMP/oxford_prior_real"
-          for file in summary.json frames.csv model_generated_bytetrack.csv model_generated_detections.csv; do
-            test -s "$RUNNER_TEMP/oxford_prior_real/$file"
-          done
+          echo "Original archived real fish artifact members:"
+          find "$RUNNER_TEMP/oxford_prior_real" -type f -printf '%P %s bytes\n'
+          python - <<'PY'
+          import os,shutil,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"oxford_prior_real"
+          dest=pathlib.Path(os.environ["RUNNER_TEMP"])/"real_model_evidence"
+          dest.mkdir()
+          for name in ("summary.json","frames.csv",
+                 "model_generated_bytetrack.csv","model_generated_detections.csv"):
+              found=[p for p in root.rglob(name) if p.is_file() and p.stat().st_size]
+              if len(found)!=1:
+                  raise ValueError("Expected unique archived original model file: "+
+                                   name+", found "+str([str(p) for p in found]))
+              shutil.copyfile(found[0],dest/name)
+              print("SOURCE ARCHIVED FILE VERIFIED:",name,found[0].stat().st_size)
+          PY
           echo "Original real model inference: exact archived run 43287906771"
       - name: Install FFprobe/FFmpeg for original fish MP4 PTS audit
         run: |
@@ -84,9 +97,9 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/real_science_source"
           python inst/python/aqt_m05_real_oxford_bridge.py \
-            --archived-report "$RUNNER_TEMP/oxford_prior_real/summary.json" \
-            --archived-frames "$RUNNER_TEMP/oxford_prior_real/frames.csv" \
-            --archived-tracks "$RUNNER_TEMP/oxford_prior_real/model_generated_bytetrack.csv" \
+            --archived-report "$RUNNER_TEMP/real_model_evidence/summary.json" \
+            --archived-frames "$RUNNER_TEMP/real_model_evidence/frames.csv" \
+            --archived-tracks "$RUNNER_TEMP/real_model_evidence/model_generated_bytetrack.csv" \
             --reverified-frames "$RUNNER_TEMP/reverified_real_pts/frames.csv" \
             --original-clip "$RUNNER_TEMP/original_oxford_fish.mp4" \
             --out "$RUNNER_TEMP/real_science_source/verified_original_tracks"
@@ -97,12 +110,12 @@ jobs:
           python inst/python/aqt_research_bundle.py create \
             --kind mot_bytetrack \
             --source "$RUNNER_TEMP/real_science_source/verified_original_tracks/oxford_real_bytetrack_mot.csv" \
-            --frames "$RUNNER_TEMP/oxford_prior_real/frames.csv" \
+            --frames "$RUNNER_TEMP/real_model_evidence/frames.csv" \
             --session-id oxford_eval \
             --camera-id oxford_single_video \
             --frame-origin 1 \
             --time-status source_pts \
-            --tracker-config "$RUNNER_TEMP/oxford_prior_real/summary.json" \
+            --tracker-config "$RUNNER_TEMP/real_model_evidence/summary.json" \
             --clock-evidence "$RUNNER_TEMP/reverified_real_pts/audit.json" \
             --out "$RUNNER_TEMP/real_science_source/oxford_research_bundle"
           python inst/python/aqt_research_bundle.py verify \
