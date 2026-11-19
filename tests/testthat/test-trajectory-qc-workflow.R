@@ -144,3 +144,42 @@ test_that("report is new-only, complete and content checksum-locked", {
   expect_error(aqt_qc_report(r,d,out),"must be new")
   expect_identical(q$raw,f$obs)
 })
+
+
+test_that("review decisions recompute the actual scientific coverage denominators", {
+  f <- qc_fixture()
+  q <- aqt_trajectory_qc(f$obs,f$frames,max_jump_px=10,
+       min_detection_confidence=.5)
+  before <- q$camera_coverage$n_eligible_rows
+  r <- aqt_qc_review(q,data.frame(
+      raw_row=2L,decision="exclude",reason="Independent image review"))
+  expect_equal(r$camera_coverage$n_review_eligible_rows,before-1L)
+  expect_equal(r$camera_coverage$n_frames_with_reviewed_positions,3L)
+  expect_equal(r$per_track_coverage$n_frames_with_eligible_track[
+    r$per_track_coverage$track_id=="0007"],3L)
+  out <- tempfile("aqt-qc-coverage-")
+  on.exit(unlink(out,recursive=TRUE),add=TRUE)
+  aqt_qc_report(r,aqt_qc_derive(r),out)
+  expect_true(file.exists(file.path(out,"CAMERA_COVERAGE_REVIEWED.csv")))
+  expect_true(file.exists(file.path(out,"TRACK_COVERAGE_REVIEWED.csv")))
+  d <- utils::read.csv(file.path(out,"CAMERA_COVERAGE_REVIEWED.csv"))
+  expect_equal(d$n_review_eligible_rows,before-1)
+})
+
+test_that("acceleration never carries across an acquisition-frame gap", {
+  ff <- data.frame(session_id="S",camera_id="C",frame_id=0:4,
+       time_s=seq(0,.4,by=.1),width_px=rep(100,5),height_px=rep(90,5))
+  raw <- data.frame(session_id="S",camera_id="C",track_id="A",
+       frame_id=c(0,2,3,4),time_s=c(0,.2,.3,.4),
+       x=c(0,2,3,5),y=rep(0,4),observed=TRUE)
+  q <- aqt_trajectory_qc(raw,ff,max_gap_s=.3)
+  d <- aqt_qc_derive(aqt_qc_review(q),max_gap_s=.3)
+  k <- d$kinematics
+  expect_true(is.na(k$step_distance[k$frame_id==2]))
+  expect_equal(k$step_distance[k$frame_id==3],1)
+  expect_equal(k$step_distance[k$frame_id==4],2)
+  expect_true(is.na(k$acceleration[k$frame_id==3]))
+  expect_equal(k$acceleration[k$frame_id==4],100,tolerance=1e-9)
+  expect_equal(d$summary$n_usable_movements,2)
+  expect_equal(d$path_summary$path_length,3)
+})
