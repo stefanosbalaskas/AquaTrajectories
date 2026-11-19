@@ -1,0 +1,68 @@
+name: Milestone 03 - integrated R scientific-analysis workflows
+
+on:
+  pull_request:
+    paths:
+      - "R/research-analysis-workflows.R"
+      - "tests/testthat/test-scientific-research-workflows.R"
+      - "tests/integration/research_bundle_scientific_workflows.R"
+      - "docs/SCIENTIFIC_WORKFLOWS_V1.md"
+      - ".github/workflows/scientific-research-workflows.yml"
+      - "NAMESPACE"
+      - "man/aqt_research_*.Rd"
+      - "_pkgdown.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/research-analysis-workflows.R"
+      - "tests/testthat/test-scientific-research-workflows.R"
+      - "tests/integration/research_bundle_scientific_workflows.R"
+      - ".github/workflows/scientific-research-workflows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scientific-workflow-qualification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate four actual Python tracker interchange fixtures
+        run: |
+          python -m unittest discover -s tests/python -p "test_research_bundle.py" -v
+          python tests/python/generate_research_bundle_fixtures.py "$RUNNER_TEMP/aqt-science-v1"
+          for kind in mot_bytetrack mot_botsort idtracker_tidy yolo_csv unknown_clock; do
+            python inst/python/aqt_research_bundle.py verify \
+              --directory "$RUNNER_TEMP/aqt-science-v1/$kind/bundle"
+          done
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: local::.
+          extra-packages: any::testthat, any::roxygen2
+      - name: Regenerate exact-source documentation and public APIs
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Independent analytical reference and leakage-prevention tests
+        run: |
+          Rscript -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-scientific-research-workflows.R", reporter="summary", stop_on_failure=TRUE)'
+      - name: Python-to-R reviewed science and report SHA256 roundtrips
+        run: |
+          Rscript --vanilla tests/integration/research_bundle_scientific_workflows.R "$RUNNER_TEMP/aqt-science-v1"
+      - name: Prove source and test files were not modified by qualification
+        run: |
+          git diff --exit-code -- R tests inst/python
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: milestone03-python-to-r-synthetic-evidence
+          path: ${{ runner.temp }}/aqt-science-v1/
+          if-no-files-found: error

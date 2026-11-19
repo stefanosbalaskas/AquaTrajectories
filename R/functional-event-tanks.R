@@ -77,9 +77,16 @@ aqt_functional_event_grid <- function(data,events,outcome="speed",
     obs <- rep(NA_real_,length(grid_s))
     for (j in seq_along(grid_s)) {
       target <- event$start_s[1L]+grid_s[j]
-      exact <- which(t==target)
-      if (length(exact)==1L && valid[exact]) {
-        obs[j] <- d[[outcome]][exact]
+      # Binary floating-point arithmetic may represent an event-relative
+      # grid target a few ULP away from its original recorded timestamp.
+      # Treat only that numerical rounding as exact; never bridge an actual
+      # missing/invalid sample or a genuine time interval.
+      tol <- 16*.Machine$double.eps*max(1,abs(target))
+      exact <- which(abs(t-target)<=tol)
+      if (length(exact)>1L)
+        stop("Ambiguous near-identical frame times at grid target",call.=FALSE)
+      if (length(exact)==1L) {
+        if (valid[exact]) obs[j] <- d[[outcome]][exact]
         next
       }
       left <- findInterval(target,t)

@@ -41,6 +41,8 @@ reference:
       - aqt_mot_support_audit
       - aqt_research_bundle_export
       - aqt_research_bundle_import
+      - aqt_research_analyze
+      - aqt_research_export
       - aqt_simulate_tracks
       - aqt_tracks
       - aqt_tracks_validate
