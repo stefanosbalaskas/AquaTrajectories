@@ -19,20 +19,29 @@ aqt_trajectory_qc(
 }
 \arguments{
 \item{input}{An imported aqt_research_bundle or raw observation data frame.}
+
 \item{frames}{Complete frame manifest; omit for aqt_research_bundle input.}
+
 \item{max_gap_s}{Maximum continuous observed movement interval, seconds.}
+
 \item{max_speed}{Optional position-unit/second threshold; requires times.}
+
 \item{max_jump_px}{Optional maximum image-space adjacent step in pixels.}
+
 \item{min_detection_confidence}{Optional score threshold in [0,1].}
+
 \item{expected_tracks}{Optional externally declared session_id,camera_id,track_id
 roster; used only for explicitly roster-based expected coverage.}
+
 \item{truth}{Optional independent manually annotated point tracks.}
+
 \item{evaluated_frames}{Explicit annotated frames, including empty frames.}
+
 \item{max_reference_distance}{Distance tolerance for manual point tracking check.}
 }
 \value{
 An aqt_trajectory_qc object with raw, row_audit, coverage, optional
-manual_accuracy, provenance, and an immutable source-of-truth audit ledger.
+ manual_accuracy, provenance, and an immutable source-of-truth audit ledger.
 }
 \description{
 The original research bundle or caller-provided data are retained as raw.
