@@ -186,6 +186,12 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
   valid_for_motion <- valid_id & valid_frame & !dup & has_xy &
     !conflict_obs & !out_of_bounds & !nonfinite_position & !time_conflict &
     !time_invented & !invalid_conf
+  frame_rank <- integer(nrow(f))
+  for (ix in split(seq_len(nrow(f)),
+                   .aqt_qc_scope(f$session_id,f$camera_id))) {
+    sorted <- ix[order(f$frame_id[ix])]
+    frame_rank[sorted] <- seq_along(sorted)
+  }
   for (idx in split(seq_len(n),trackkey)) {
     if (length(idx)<2L) next
     idx <- idx[order(frame[idx],na.last=TRUE)]
@@ -203,10 +209,7 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
         f$camera_id[before]==f$camera_id[after] &&
         frame[b]>frame[a]
       if (!candidate) next
-      scopeframe <- which(f$session_id==id$session_id[b] &
-                          f$camera_id==id$camera_id[b])
-      chronological <- scopeframe[order(f$frame_id[scopeframe])]
-      adjacent <- match(after,chronological)-match(before,chronological)==1L
+      adjacent <- frame_rank[after]-frame_rank[before]==1L
       dt <- if (is.finite(expected_time[a]) && is.finite(expected_time[b]))
         expected_time[b]-expected_time[a] else NA_real_
       dist <- sqrt((x[b]-x[a])^2+(y[b]-y[a])^2)
@@ -458,7 +461,49 @@ aqt_qc_review <- function(qc,decisions=NULL) {
     reviewed_accuracy <- aqt_tracking_metrics(info$truth,pred,
        max_distance=info$max_distance,evaluated_frames=info$evaluated_frames)
   }
+  # Coverage in the original QC is automatically screened. Recalculate
+  # final denominators after explicit review, without mutating the source.
+  camera_coverage <- qc$camera_coverage
+  camera_coverage$n_frames_with_reviewed_positions <- integer(nrow(camera_coverage))
+  camera_coverage$n_review_eligible_rows <- integer(nrow(camera_coverage))
+  for (i in seq_len(nrow(camera_coverage))) {
+    z <- which(eligible & audit$session_id==camera_coverage$session_id[i] &
+                      audit$camera_id==camera_coverage$camera_id[i])
+    camera_coverage$n_review_eligible_rows[i] <- length(z)
+    camera_coverage$n_frames_with_reviewed_positions[i] <-
+      length(unique(audit$frame_id[z]))
+  }
+  camera_coverage$reviewed_frame_fraction <-
+    camera_coverage$n_frames_with_reviewed_positions /
+    camera_coverage$n_acquisition_frames
+  per_track_coverage <- qc$per_track_coverage
+  for (i in seq_len(nrow(per_track_coverage))) {
+    z <- which(eligible &
+      audit$session_id==per_track_coverage$session_id[i] &
+      audit$camera_id==per_track_coverage$camera_id[i] &
+      audit$track_id==per_track_coverage$track_id[i])
+    count <- length(unique(audit$frame_id[z]))
+    per_track_coverage$n_frames_with_eligible_track[i] <- count
+    per_track_coverage$n_not_eligible_within_span[i] <-
+      per_track_coverage$n_frames_in_observed_span[i]-count
+    per_track_coverage$fraction_eligible_within_span[i] <-
+      count/per_track_coverage$n_frames_in_observed_span[i]
+  }
+  expected_coverage <- qc$expected_coverage
+  if (!is.null(expected_coverage)) for (i in seq_len(nrow(expected_coverage))) {
+    z <- which(eligible &
+      audit$session_id==expected_coverage$session_id[i] &
+      audit$camera_id==expected_coverage$camera_id[i] &
+      audit$track_id==expected_coverage$track_id[i])
+    count <- length(unique(audit$frame_id[z]))
+    expected_coverage$n_frames_eligible[i] <- count
+    expected_coverage$eligible_fraction[i] <-
+      count/expected_coverage$n_acquisition_frames[i]
+  }
   structure(list(qc=qc,row_audit=audit,tracks=screened,
+      camera_coverage=camera_coverage,
+      per_track_coverage=per_track_coverage,
+      expected_coverage=expected_coverage,
       reviewed_manual_accuracy=reviewed_accuracy,
       analysis_blocked=analysis_blocked,
       n_original=n,n_review_eligible=sum(eligible),
@@ -496,6 +541,17 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
     ledger <- review$row_audit
     raw_idx <- kin$raw_row
     stopifnot(all(raw_idx %in% ledger$raw_row))
+    f <- review$qc$frames
+    frame_keys <- .aqt_qc_scope(f$session_id,f$camera_id,f$frame_id)
+    frame_rank <- integer(nrow(f))
+    for (ix in split(seq_len(nrow(f)),
+                     .aqt_qc_scope(f$session_id,f$camera_id))) {
+      sorted <- ix[order(f$frame_id[ix])]
+      frame_rank[sorted] <- seq_along(sorted)
+    }
+    raw_frame_index <- match(.aqt_qc_scope(
+      ledger$session_id,ledger$camera_id,ledger$frame_id),frame_keys)
+    raw_frame_rank <- frame_rank[raw_frame_index]
     for (part in split(seq_len(nrow(kin)),
            .aqt_qc_scope(kin$session_id,kin$camera_id,track=kin$track_id))) {
       if (length(part)<2L) next
@@ -503,13 +559,7 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
       for (j in seq.int(2L,length(order_part))) {
         a <- order_part[j-1L]; b <- order_part[j]
         if (!is.finite(kin$dt_s[b]) || is.na(kin$step_distance[b])) next
-        f <- review$qc$frames
-        sid <- kin$session_id[b]; cam <- kin$camera_id[b]
-        positions <- f$frame_id[f$session_id==sid & f$camera_id==cam]
-        positions <- sort(positions)
-        earlier <- ledger$frame_id[raw_idx[a]]
-        later <- ledger$frame_id[raw_idx[b]]
-        if (match(later,positions)-match(earlier,positions)!=1L) {
+        if (raw_frame_rank[raw_idx[b]]-raw_frame_rank[raw_idx[a]]!=1L) {
           kin[b,c("step_distance","vx","vy","vz","speed",
                   "heading_rad","acceleration","turn_rate_rad_s")] <- NA_real_
         }
@@ -559,6 +609,8 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
     n_jump_warnings=sum(review$row_audit$flag_jump),
     n_speed_warnings=sum(review$row_audit$flag_excessive_speed),
     n_usable_movements=sum(is.finite(kin$step_distance)),
+    n_review_covered_acquisition_frames=
+      sum(review$camera_coverage$n_frames_with_reviewed_positions),
     n_original_source_frames=nrow(review$qc$frames),
     original_source_sha256=review$original_source_sha256,
     stringsAsFactors=FALSE)
@@ -603,9 +655,13 @@ aqt_qc_report <- function(review,derived=NULL,directory) {
     "SOURCE_FRAME_MANIFEST.csv"=review$qc$frames,
     "ROW_QUALITY_AUDIT.csv"=review$row_audit,
     "CAMERA_COVERAGE.csv"=review$qc$camera_coverage,
-    "TRACK_COVERAGE.csv"=review$qc$per_track_coverage)
-  if(!is.null(review$qc$expected_coverage))
+    "TRACK_COVERAGE.csv"=review$qc$per_track_coverage,
+    "CAMERA_COVERAGE_REVIEWED.csv"=review$camera_coverage,
+    "TRACK_COVERAGE_REVIEWED.csv"=review$per_track_coverage)
+  if(!is.null(review$qc$expected_coverage)) {
     files[["EXPECTED_TRACK_COVERAGE.csv"]] <- review$qc$expected_coverage
+    files[["EXPECTED_TRACK_COVERAGE_REVIEWED.csv"]] <- review$expected_coverage
+  }
   if(!is.null(review$qc$manual_accuracy))
     files[["ANNOTATED_ACCURACY_AUTOMATIC.csv"]] <- review$qc$manual_accuracy
   if(!is.null(review$reviewed_manual_accuracy))
