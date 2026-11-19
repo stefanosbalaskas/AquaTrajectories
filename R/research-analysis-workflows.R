@@ -287,7 +287,7 @@ aqt_research_analyze <- function(review,
   measures <- if (clock) derived$kinematics else NULL
   if (clock && !is.null(d))
     measures <- .aqt_research_attach_design(measures,d)
-  report <- setNames(lapply(options,function(z)
+  report <- stats::setNames(lapply(options,function(z)
     .aqt_research_status("not_requested","Profile not requested")),options)
   for (z in profiles)
     report[[z]] <- .aqt_research_status("skipped","No eligible observations")
