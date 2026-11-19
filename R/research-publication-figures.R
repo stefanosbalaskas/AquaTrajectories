@@ -193,7 +193,7 @@
   if(kind=="sensitivity") {
     d <- study$uncertainty$path_sensitivity
     d <- d[order(d$session_id,d$camera_id,d$track_id),,drop=FALSE]
-    if(nrow(d)>35L) d <- head(d,35L)
+    if(nrow(d)>35L) d <- utils::head(d,35L)
     labels <- paste(d$session_id,d$camera_id,d$track_id,sep="/")
     graphics::plot(NA_real_,NA_real_,type="n",
         xlim=.aqt_publication_axis(c(d$scenario_q025,d$scenario_q975)),
