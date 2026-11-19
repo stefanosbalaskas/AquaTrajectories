@@ -29,6 +29,11 @@ formats.
 - [`aqt_research_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_export.md)
   : Export a complete, auditable scientific-analysis result without
   recomputation
+- [`aqt_research_figure_plan()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_figure_plan.md)
+  : Plan source-supported scientific publication figures
+- [`aqt_research_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_publish.md)
+  : Export actual scientific figures and a provenance-linked publication
+  report
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
   : Simulate deterministic mathematical fish paths
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)

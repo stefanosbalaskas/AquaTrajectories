@@ -1,4 +1,4 @@
-# Atlas of all 163 R functions
+# Atlas of all 165 R functions
 
 ## Complete R function atlas
 
@@ -8,7 +8,7 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 163 exported functions in 14 mutually exclusive research
+**Coverage:** 165 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -20,7 +20,7 @@ atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-at
 · [Scientific
 limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md)
 
-### 1. Data models, import and export (15)
+### 1. Data models, import and export (17)
 
 Canonical track objects, synthetic examples and interoperable data
 formats.
@@ -36,6 +36,8 @@ formats.
 - [`aqt_research_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_bundle_import.md)
 - [`aqt_research_analyze()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_analyze.md)
 - [`aqt_research_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_export.md)
+- [`aqt_research_figure_plan()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_figure_plan.md)
+- [`aqt_research_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_publish.md)
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)
 - [`aqt_tracks_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)
