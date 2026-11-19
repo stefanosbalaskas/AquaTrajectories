@@ -131,6 +131,15 @@ aqt_research_figure_plan <- function(study,max_scopes=3L) {
       "One measured before/after line per independent tank. Descriptive, not causal proof.",
       nf>0L,"No fitted design-eligible independent-tank contrast",
       used=nf)
+  fc <- if(!is.null(study$statistical_models))
+    study$statistical_models$functional_contrast else NULL
+  curve <- if(is.list(fc)) fc$curve else NULL
+  nc <- if(.aqt_publication_valid(curve)) nrow(curve) else 0L
+  add("F31_FUNCTIONAL_TANK_CONTRAST","functional_contrast",
+      "Descriptive independently replicated functional tank contrast",
+      "Treatment minus reference tank-level functional contrasts and empirical within-tank-resampling bands; interval coverage is NOT certified.",
+      nc>0L,"No design-eligible functional tank contrast was fitted",
+      used=nc)
   sim <- if(!is.null(study$uncertainty))
     study$uncertainty$path_sensitivity else NULL
   ns <- if(.aqt_publication_valid(sim)) nrow(sim) else 0L
