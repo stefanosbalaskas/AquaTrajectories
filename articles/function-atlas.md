@@ -1,14 +1,14 @@
-# Atlas of all 155 R functions
+# Atlas of all 157 R functions
 
 ## Complete R function atlas
 
-Every public R function in the tagged v0.1.1 package is documented by
-its generated `.Rd` help page. This atlas is a **navigation map** rather
+Every public R function in this development branch is documented by its
+generated `.Rd` help page. This atlas is a **navigation map** rather
 than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 155 exported functions in 14 mutually exclusive research
+**Coverage:** 157 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -20,7 +20,7 @@ atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-at
 · [Scientific
 limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md)
 
-### 1. Data models, import and export (11)
+### 1. Data models, import and export (13)
 
 Canonical track objects, synthetic examples and interoperable data
 formats.
@@ -32,6 +32,8 @@ formats.
 - [`aqt_import_mot()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_mot.md)
 - [`aqt_import_yolo()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_yolo.md)
 - [`aqt_mot_support_audit()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_mot_support_audit.md)
+- [`aqt_research_bundle_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_bundle_export.md)
+- [`aqt_research_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_bundle_import.md)
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)
 - [`aqt_tracks_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)

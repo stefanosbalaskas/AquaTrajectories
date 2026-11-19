@@ -19,6 +19,11 @@ formats.
   : Import explicitly exported YOLO/Ultralytics long-format tracks
 - [`aqt_mot_support_audit()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_mot_support_audit.md)
   : Audit tracker support against actual video frame availability
+- [`aqt_research_bundle_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_bundle_export.md)
+  : Export an unchanged, verified research bundle without losing
+  provenance
+- [`aqt_research_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_bundle_import.md)
+  : Import a versioned Python-to-R aquatic tracking research bundle
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
   : Simulate deterministic mathematical fish paths
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)
