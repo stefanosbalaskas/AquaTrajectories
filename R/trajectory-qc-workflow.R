@@ -178,6 +178,8 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
   invalid_conf <- if ("detection_confidence" %in% names(raw))
     (!is.na(raw$detection_confidence) & !is.finite(conf)) |
     (!is.na(conf) & (conf<0 | conf>1)) else rep(FALSE,n)
+  missing_conf <- if (is.null(min_detection_confidence)) rep(FALSE,n) else
+    is.na(conf)
   low_conf <- if (is.null(min_detection_confidence)) rep(FALSE,n) else
     !is.na(conf) & conf<min_detection_confidence
   step_delta <- rep(NA_real_,n); step_dt <- rep(NA_real_,n)
@@ -241,6 +243,7 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
     flag_out_of_bounds=out_of_bounds,
     flag_timestamp_conflict=time_conflict | time_invented,
     flag_invalid_confidence=invalid_conf,
+    flag_missing_detection_confidence=missing_conf,
     flag_low_confidence=low_conf,
     flag_gap_boundary=large_gap,
     flag_jump=jump,
@@ -248,7 +251,7 @@ aqt_trajectory_qc <- function(input,frames=NULL,max_gap_s=.2,
     structural_exclusion=structural,
     source_missing_time=time_missing_declared,
     automatically_eligible=valid_for_motion & !structural & !missing &
-      !low_conf & !jump & !excessive_speed,
+      !low_conf & !missing_conf & !jump & !excessive_speed,
     step_distance=step_delta,step_dt_s=step_dt,
     stringsAsFactors=FALSE)
   flag_names <- grep("^flag_",names(flags),value=TRUE)
@@ -606,6 +609,8 @@ aqt_qc_derive <- function(review,max_gap_s=NULL) {
     n_missing_positions=sum(review$row_audit$flag_missing_position),
     n_duplicate_identity_rows=sum(review$row_audit$flag_duplicate_identity),
     n_gap_boundaries=sum(review$row_audit$flag_gap_boundary),
+    n_missing_detection_confidence=sum(
+      review$row_audit$flag_missing_detection_confidence),
     n_jump_warnings=sum(review$row_audit$flag_jump),
     n_speed_warnings=sum(review$row_audit$flag_excessive_speed),
     n_usable_movements=sum(is.finite(kin$step_distance)),
