@@ -8,7 +8,9 @@ aqt_qc_report(review, derived = NULL, directory)
 }
 \arguments{
 \item{review}{An aqt_qc_review.}
+
 \item{derived}{Optional aqt_qc_derived built from this review.}
+
 \item{directory}{New output directory (parent must exist).}
 }
 \value{
