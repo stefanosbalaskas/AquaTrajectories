@@ -5,13 +5,13 @@ description: "A complete categorized, linked map to all public native R function
 
 # Complete R function atlas
 
-Every public R function in the tagged v0.1.1 package is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
+Every public R function in this development branch is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
 
 **Coverage:** 157 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
 
-## 1. Data models, import and export (11)
+## 1. Data models, import and export (13)
 
 Canonical track objects, synthetic examples and interoperable data formats.
 
@@ -22,6 +22,8 @@ Canonical track objects, synthetic examples and interoperable data formats.
 - [`aqt_import_mot()`](../reference/aqt_import_mot.html)
 - [`aqt_import_yolo()`](../reference/aqt_import_yolo.html)
 - [`aqt_mot_support_audit()`](../reference/aqt_mot_support_audit.html)
+- [`aqt_research_bundle_export()`](../reference/aqt_research_bundle_export.html)
+- [`aqt_research_bundle_import()`](../reference/aqt_research_bundle_import.html)
 - [`aqt_simulate_tracks()`](../reference/aqt_simulate_tracks.html)
 - [`aqt_tracks()`](../reference/aqt_tracks.html)
 - [`aqt_tracks_validate()`](../reference/aqt_tracks_validate.html)
