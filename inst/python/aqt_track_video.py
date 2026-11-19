@@ -131,8 +131,8 @@ def run_video(video: Path, weights: Path, output_dir: Path, prefix: str,
     if not isinstance(iou, (int, float)) or \
             not math.isfinite(iou) or not (0 < iou <= 1):
         raise ValueError("iou must be in (0,1]")
-    if tracker != "bytetrack.yaml":
-        raise ValueError("This runner explicitly supports bytetrack.yaml only")
+    if tracker not in ("bytetrack.yaml", "botsort.yaml"):
+        raise ValueError("This runner supports only the pinned ByteTrack / BoT-SORT YAML names")
     if not video.is_file() or not weights.is_file():
         raise FileNotFoundError("Both input video and model weights must exist")
     if class_filter is not None and \
@@ -276,6 +276,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--session-id", required=True)
     parser.add_argument("--camera-id", required=True)
     parser.add_argument("--confidence", type=float, default=0.25)
+    parser.add_argument("--tracker", choices=("bytetrack.yaml","botsort.yaml"),
+                        default="bytetrack.yaml",
+                        help="Ultralytics native association model; appearance ReID is optional")
     parser.add_argument("--iou", type=float, default=0.7)
     parser.add_argument("--device", default=None)
     parser.add_argument("--classes", type=int, nargs="*", default=None)
@@ -283,7 +286,7 @@ def main(argv: list[str] | None = None) -> int:
     metadata = run_video(
         args.video, args.weights, args.output_dir, args.prefix,
         args.session_id, args.camera_id, args.confidence, args.iou,
-        device=args.device, class_filter=args.classes)
+        tracker=args.tracker, device=args.device, class_filter=args.classes)
     print(json.dumps({
         "outputs": metadata["outputs"],
         "n_decoded_frames": metadata["n_decoded_frames"],

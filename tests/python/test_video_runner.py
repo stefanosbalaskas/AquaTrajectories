@@ -168,12 +168,13 @@ class VideoIngestContracts(unittest.TestCase):
         ultra = types.ModuleType("ultralytics")
         ultra.__version__ = "mock"
 
+        expected_tracker = ["bytetrack.yaml"]
         class FakeYOLO:
             def __init__(self, weights):
                 self.n = 0
 
             def track(self, **kwargs):
-                if kwargs["tracker"] != "bytetrack.yaml" or \
+                if kwargs["tracker"] != expected_tracker[0] or \
                         not kwargs["persist"]:
                     raise AssertionError("Model tracker state must persist")
                 if kwargs["source"].shape != (80, 100, 3):
@@ -227,6 +228,13 @@ class VideoIngestContracts(unittest.TestCase):
                                  aqt.sha256_file(path))
             self.assertEqual(record["output_bundle_integrity"],
                              "unkeyed_sha256_not_signed")
+            expected_tracker[0] = "botsort.yaml"
+            with patch.dict(sys.modules, {"av": av, "ultralytics": ultra}):
+                bot = aqt.run_video(video, weights, root / "outputs",
+                                    "botsort_test", "S1", "TOP",
+                                    tracker="botsort.yaml")
+            self.assertEqual(bot["tracker_config"], "botsort.yaml")
+            self.assertEqual(bot["n_decoded_frames"], 3)
             with patch.dict(sys.modules, {"av": av, "ultralytics": ultra}):
                 with self.assertRaisesRegex(FileExistsError,
                                             "existing video bundle"):
