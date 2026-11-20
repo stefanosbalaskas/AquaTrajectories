@@ -401,6 +401,10 @@ formats.
 
 - [`aqt_export_csv()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_export_csv.md)
   : Export canonical trajectories
+- [`aqt_frame_index_analyze()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_frame_index_analyze.md)
+  : Frame-indexed aquatic movement and group-geometry analysis
+- [`aqt_frame_index_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_frame_index_publish.md)
+  : Publish a frame-indexed observation-quality and movement report
 - [`aqt_frame_manifest()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_frame_manifest.md)
   : Validate an independently exported video frame timing manifest
 - [`aqt_import_csv()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_csv.md)
@@ -913,7 +917,7 @@ Source data digest recording and verification.
   Choose a video, 3D, behavioural, benchmarking or ACI pipeline with
   inputs, outputs and qualification limits.
 
-- [Atlas of all 165 R
+- [Atlas of all 167 R
   functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md):
 
   A complete categorized, linked map to all public native R functions

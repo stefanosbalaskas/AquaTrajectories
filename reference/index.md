@@ -7,6 +7,10 @@ formats.
 
 - [`aqt_export_csv()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_export_csv.md)
   : Export canonical trajectories
+- [`aqt_frame_index_analyze()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_frame_index_analyze.md)
+  : Frame-indexed aquatic movement and group-geometry analysis
+- [`aqt_frame_index_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_frame_index_publish.md)
+  : Publish a frame-indexed observation-quality and movement report
 - [`aqt_frame_manifest()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_frame_manifest.md)
   : Validate an independently exported video frame timing manifest
 - [`aqt_import_csv()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_csv.md)
