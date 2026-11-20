@@ -1,0 +1,46 @@
+name: "Milestone 09 - physical and biological evidence-intake contract"
+on:
+  push:
+    branches: [main]
+    paths:
+      - "inst/python/aqt_m09_external_physical_gate.py"
+      - "tests/python/test_m09_external_physical_gate.py"
+      - "inst/extdata/m09_validation_templates/**"
+      - "docs/M09_EXTERNAL_VALIDATION_READINESS.md"
+      - ".github/workflows/m09-external-physical-evidence.yml"
+  pull_request:
+    paths:
+      - "inst/python/aqt_m09_external_physical_gate.py"
+      - "tests/python/test_m09_external_physical_gate.py"
+      - "inst/extdata/m09_validation_templates/**"
+      - "docs/M09_EXTERNAL_VALIDATION_READINESS.md"
+      - ".github/workflows/m09-external-physical-evidence.yml"
+jobs:
+  stdlib-fail-closed-input-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Syntax check and exact fixture contracts
+        run: |
+          python -m py_compile inst/python/aqt_m09_external_physical_gate.py tests/python/test_m09_external_physical_gate.py
+          python -m unittest discover -s tests/python -p "test_m09_external_physical_gate.py" -v
+      - name: Fail-closed validations also hold under Python optimize
+        run: python -O -m unittest discover -s tests/python -p "test_m09_external_physical_gate.py" -v
+      - name: Template headers are present and evidence data remain absent
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('inst/extdata/m09_validation_templates')
+          expect={'holdout_survey_template.csv','reconstruction_predictions_template.csv',
+                  'calibration_holdout_split_template.csv','exposure_markers_template.csv',
+                  'independent_fish_ID_review_template.csv'}
+          assert set(x.name for x in p.glob('*.csv'))==expect
+          for x in p.glob('*.csv'):
+              rows=x.read_text(encoding='utf-8').splitlines()
+              assert len(rows)==1 and ',' in rows[0],f'No source data are shipped: {x}'
+          print('M09_EXTERNAL_EVIDENCE_INTAKE_CONTRACT_PASS; PHYSICAL_CERTIFICATION=NOT_ESTABLISHED')
+          PY
