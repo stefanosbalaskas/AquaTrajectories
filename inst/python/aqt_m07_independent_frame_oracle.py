@@ -177,7 +177,8 @@ def publish(input_dir,out):
                     ax.set_xlabel('Normalized x-bin');ax.set_ylabel('Normalized y-bin')
                 ax.set_title(('Published reference' if path=='reference' else 'Actual model/ByteTrack')+f' — {seq}')
                 ax.xaxis.set_major_locator(MaxNLocator(nbins=6))
-            for ext in ('svg','pdf','png'):                target=out/'figures'/f'{seq}_{kind}.{ext}'
+            for ext in ('svg','pdf','png'):
+                target=out/'figures'/f'{seq}_{kind}.{ext}'
                 fig.savefig(target,dpi=160)
             plt.close(fig)
             catalog.append({'sequence':seq,'family':kind,'files':f'figures/{seq}_{kind}.svg;figures/{seq}_{kind}.pdf;figures/{seq}_{kind}.png'})
