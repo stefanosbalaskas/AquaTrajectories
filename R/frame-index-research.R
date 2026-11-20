@@ -164,7 +164,7 @@ aqt_frame_index_analyze <- function(frames,observations,
   bins <- as.integer(occupancy_bins)
   a <- pmin(bins-1L,floor(o$x/f$width_px[ix]*bins))
   b <- pmin(bins-1L,floor(o$y/f$height_px[ix]*bins))
-  occupancy <- aggregate(rep(1L,nrow(o)),
+  occupancy <- stats::aggregate(rep(1L,nrow(o)),
     by=list(data_path=o$data_path,session_id=o$session_id,
             camera_id=o$camera_id,bin_x=a,bin_y=b),FUN=sum)
   names(occupancy)[ncol(occupancy)] <- "n_observations"
