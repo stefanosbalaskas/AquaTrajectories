@@ -4,9 +4,17 @@ from pathlib import Path
 import unittest,sys,tempfile,csv,json,hashlib
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'inst'/'python'))
-from aqt_m08_reference_measurement import assign,run,SCHEMA
-from aqt_m08_independent_oracle import box_iou
+# The repository also runs a standard-library-only suite. Optional numeric
+# backends are tested in the dedicated M08 scientific-dependencies workflow.
+try:
+    from aqt_m08_reference_measurement import assign,run,SCHEMA
+    SCIENTIFIC_BACKEND = True
+except ModuleNotFoundError as exc:
+    if exc.name not in ('numpy','scipy','matplotlib'):
+        raise
+    SCIENTIFIC_BACKEND = False
 
+@unittest.skipUnless(SCIENTIFIC_BACKEND, 'M08 requires the dedicated NumPy/SciPy CI environment')
 class ReferenceConditionalTest(unittest.TestCase):
     def box(self,identity,x,y,frame=0,path='reference'):
         return {'track_id':identity,'bbox_left':str(x-5),'bbox_top':str(y-5),
