@@ -104,3 +104,30 @@ aqt_reference_measurement_publish(study,"~/Documents/AquaTrajectories_M08_NATIVE
 ```
 
 This last local R replay is not automatically certified by the Linux CI's synthetic fixtures. The user must compare the reported full-denominator sequence summaries against the independently archived Python values before declaring real R/Python M08 parity.
+
+
+## Post-merge real-source native R replay (20 November 2026)
+
+The original investigator subsequently installed AquaTrajectories on Windows R 4.6.1
+and executed `scripts/m08_real_reference_parity.R` on the original five
+BrackishMOT real-data paths. The execution log reported:
+
+```text
+M08_REAL_NATIVE_R_PYTHON_PARITY_PASS 65 comparisons 5 sequences
+M08 FINAL REAL-DATA R/PYTHON VALIDATION: PASS
+Comparisons: 65
+```
+
+The R source report's five exported artifacts were independently SHA-256 verified
+against `M08_R_OUTPUT_MANIFEST.json`. The reference step ledger independently
+reconciled 6,498 adjacent reference steps: 265 identity-continuous matched
+pairs, one different-model-ID pair and 6,232 steps lacking one or both matched
+model endpoints. The 65-cell R/Python parity CSV was **not** among the uploaded
+review files, so parity is log-confirmed, not independently re-read cell by
+cell. PR #98 was already merged; this is an evidence-status update only.
+The validation certifies arithmetic consistency of image-space measurements
+conditional on the published annotations, **not** fish biological IDs,
+surveyed underwater XYZ, measured physical time or feeding/welfare effects.
+
+The broader external-data handoff for physical-survey/ID/tank evidence is in
+[Milestone 09 external validation readiness](M09_EXTERNAL_VALIDATION_READINESS.md).
