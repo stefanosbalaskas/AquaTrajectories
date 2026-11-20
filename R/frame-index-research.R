@@ -348,7 +348,7 @@ aqt_frame_index_publish <- function(study,directory) {
       collapse="\n")
   }
   notes <- study$diagnostics
-  md <- c("# AquaTrajectories — real BrackishMOT dual-path research demonstration","",
+  md <- c("# AquaTrajectories - real BrackishMOT dual-path research demonstration","",
     "**Descriptive frame-indexed analysis. Not animal identity accuracy certification or an experiment.**","",
     "## Research inputs","",
     "Path A uses publisher fish annotations (not independently readjudicated). Path B uses genuine frozen fish-model and ByteTrack outputs. Same five source recordings; different track-ID namespaces.","",
@@ -360,7 +360,7 @@ aqt_frame_index_publish <- function(study,directory) {
     "## Figures","",
     "Each publication figure provides a source-reference and model-track panel; absent observations remain absent. Occupancy is not corrected for detector missed fish.","",
     unlist(lapply(seq_len(nrow(catalogue)),function(i){
-      z <- catalogue[i,];paste0("- [",z$figure,"](",z$pdf,") — [SVG](",z$svg,")")
+      z <- catalogue[i,];paste0("- [",z$figure,"](",z$pdf,") - [SVG](",z$svg,")")
     })),"",
     "## Evidence contracts","",
     "Upstream source and model input hashes are validated by the Python handoff. Derived table SHA-256 values are recorded in M07_SCIENCE_MANIFEST.json. Neither this report nor its figures are independent manual verification of biological fish ID.","")
@@ -389,9 +389,9 @@ aqt_frame_index_publish <- function(study,directory) {
   },character(1))
   html <- c('<!doctype html><html lang="en"><head><meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
-    '<title>AquaTrajectories — real fish frame-index analysis</title>',
+    '<title>AquaTrajectories - real fish frame-index analysis</title>',
     '<style>body{max-width:1100px;margin:3rem auto;padding:0 1rem;font:16px/1.6 system-ui,sans-serif;color:#24323c}h1,h2,h3{line-height:1.2}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px;border-bottom:1px solid #ccd7db;text-align:left}section{padding:1rem 0;border-bottom:1px solid #dde5e8}svg{max-width:100%;height:auto}.warning{border-left:3px solid #a64;padding-left:1rem}small{color:#53666f}</style></head><body>',
-    '<h1>AquaTrajectories — real fish dual-path analysis</h1>',
+    '<h1>AquaTrajectories - real fish dual-path analysis</h1>',
     '<p class="warning"><b>Frame-indexed observational demonstration only.</b> Published identities are not independently readjudicated; model identities are not biologically certified. No measured timestamps, calibration, feeding events, treatment inference or welfare claims.</p>',
     '<h2>Source denominators and conditional observed movement</h2>',
     to_html_table(study$summary),'<h2>Scientific limitations</h2><ul>',
