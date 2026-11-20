@@ -70,6 +70,8 @@ reference:
       - aqt_qc_review
       - aqt_qc_derive
       - aqt_qc_report
+      - aqt_reference_measurement_publish
+      - aqt_reference_measurement_validate
       - aqt_tracking_match
       - aqt_tracking_metrics
       - aqt_tracking_observations
