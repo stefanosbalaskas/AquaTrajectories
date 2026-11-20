@@ -1,2 +1,1 @@
-<PARSED TEXT FOR SHEET: 1 / 1 TABS
-TAB NAME: inst__extdata__m09_validation_templates__exposure_markers_template.csv>index,experiment_id,session_id,camera_id,marker_id,exposure_time_s,external_reference_time_s,marker_source_sha256
+experiment_id,session_id,camera_id,marker_id,exposure_time_s,external_reference_time_s,marker_source_sha256
