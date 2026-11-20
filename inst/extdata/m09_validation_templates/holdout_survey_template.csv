@@ -1,0 +1,2 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: inst__extdata__m09_validation_templates__holdout_survey_template.csv>index,experiment_id,session_id,board_pose_id,landmark_id,reference_x_mm,reference_y_mm,reference_z_mm,reference_uncertainty_mm,reference_method,reference_operator_id,source_evidence_sha256
