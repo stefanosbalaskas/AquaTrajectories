@@ -1,0 +1,1 @@
+experiment_id,session_id,camera_id,frame_id,original_frame_source_sha256,fish_reference_id,annotator_id,annotation_pass,blind_to_prediction,bbox_left_px,bbox_top_px,bbox_width_px,bbox_height_px,uncertain_identity
