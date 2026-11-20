@@ -83,11 +83,14 @@ def assign(g,p,threshold=0.5):
     if not g or not p:return []
     matrix=iou_matrix(g,p)
     m,n=matrix.shape
-    # A valid candidate always beats a dummy, and invalid never beats dummy.
-    # Dummy cost 2, invalid cost 3, valid cost at most 1. Tiny lexical
-    # perturbation makes tied solutions deterministic without changing score.
-    costs=np.full((m,n+m),2.0,dtype=float)
-    costs[:,:n]=np.where(matrix>=threshold,1.0-matrix,3.0)
+    # A maximum-cardinality assignment is always preferred over any smaller
+    # assignment even when doing so changes the IoUs of many other pairs.
+    # With m source boxes, all valid IoU costs sum to at most m. A dummy
+    # costs m+1; invalid edges cost 2*(m+1). Within cardinality the optimum
+    # maximizes total IoU. This is stronger than a constant 2 dummy penalty.
+    penalty=float(m+1)
+    costs=np.full((m,n+m),penalty,dtype=float)
+    costs[:,:n]=np.where(matrix>=threshold,1.0-matrix,2*penalty)
     costs[:,:n]+=np.arange(n,dtype=float)[None,:]*1e-12
     row,col=linear_sum_assignment(costs)
     result=[(int(i),int(j),float(matrix[i,j])) for i,j in zip(row,col)
