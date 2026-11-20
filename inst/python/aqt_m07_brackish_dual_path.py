@@ -177,7 +177,8 @@ def prepare(holdout,run,out):
             observation_rows.append(make_observation("model",seq,f,identity,*box,width,height,conf,"model_generated_not_biologically_adjudicated"))
             npred+=1
         coverage.append({"sequence":seq,"n_frames":nframes,"reference_rows":nref,"model_track_rows":npred})
-        original_reference_rows+=nref        selected=next(z for z in proto["selected_sequences"] if z["name"]==seq)
+        original_reference_rows+=nref
+        selected=next(z for z in proto["selected_sequences"] if z["name"]==seq)
         if nref!=selected["fish_gt_rows"]:
             raise ValueError("Published fish reference row count changed")
     if original_reference_rows!=6621 or len(model)!=2830:
