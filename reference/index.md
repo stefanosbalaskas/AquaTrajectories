@@ -91,6 +91,11 @@ annotations.
   : Calculate audited movement only from reviewed, eligible observations
 - [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
   : Export a complete, immutable, provenance-linked trajectory QC audit
+- [`aqt_reference_measurement_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.md)
+  : Export numerical source-linked fish measurement validation
+- [`aqt_reference_measurement_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.md)
+  : Validate fish trajectory measurements against declared reference
+  annotations
 - [`aqt_tracking_match()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_match.md)
   : Match separately observed fish positions to reference tracks
 - [`aqt_tracking_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_metrics.md)

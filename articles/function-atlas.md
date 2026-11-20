@@ -1,4 +1,4 @@
-# Atlas of all 167 R functions
+# Atlas of all 169 R functions
 
 ## Complete R function atlas
 
@@ -8,7 +8,7 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 167 exported functions in 14 mutually exclusive research
+**Coverage:** 169 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -45,7 +45,7 @@ formats.
 - [`aqt_tracks_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)
 - [`aqt_video_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_video_bundle_import.md)
 
-### 2. Detection, tracking and annotation validation (20)
+### 2. Detection, tracking and annotation validation (22)
 
 Detector and identity metrics against explicitly defined reference
 annotations.
@@ -66,6 +66,8 @@ annotations.
 - [`aqt_qc_review()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_review.md)
 - [`aqt_qc_derive()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_derive.md)
 - [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
+- [`aqt_reference_measurement_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.md)
+- [`aqt_reference_measurement_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.md)
 - [`aqt_tracking_match()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_match.md)
 - [`aqt_tracking_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_metrics.md)
 - [`aqt_tracking_observations()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_observations.md)

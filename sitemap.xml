@@ -146,6 +146,8 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reconstruct_3d.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reconstruction_pixel_uncertainty.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reconstruction_quality.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_refractive_camera.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_refractive_landmark_qc.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_refractive_rays.html</loc></url>
