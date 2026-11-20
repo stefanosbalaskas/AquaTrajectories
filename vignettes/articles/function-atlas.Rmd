@@ -1,5 +1,5 @@
 ---
-title: "Atlas of all 165 R functions"
+title: "Atlas of all 167 R functions"
 description: "A complete categorized, linked map to all public native R functions and their source-generated help manuals."
 ---
 
@@ -7,15 +7,17 @@ description: "A complete categorized, linked map to all public native R function
 
 Every public R function in this development branch is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
 
-**Coverage:** 165 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
+**Coverage:** 167 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
 
-## 1. Data models, import and export (17)
+## 1. Data models, import and export (19)
 
 Canonical track objects, synthetic examples and interoperable data formats.
 
 - [`aqt_export_csv()`](../reference/aqt_export_csv.html)
+- [`aqt_frame_index_analyze()`](../reference/aqt_frame_index_analyze.html)
+- [`aqt_frame_index_publish()`](../reference/aqt_frame_index_publish.html)
 - [`aqt_frame_manifest()`](../reference/aqt_frame_manifest.html)
 - [`aqt_import_csv()`](../reference/aqt_import_csv.html)
 - [`aqt_import_idtracker()`](../reference/aqt_import_idtracker.html)

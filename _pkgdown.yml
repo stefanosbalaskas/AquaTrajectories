@@ -33,6 +33,8 @@ reference:
     desc: "Canonical track objects, synthetic examples and interoperable data formats."
   - contents:
       - aqt_export_csv
+      - aqt_frame_index_analyze
+      - aqt_frame_index_publish
       - aqt_frame_manifest
       - aqt_import_csv
       - aqt_import_idtracker
