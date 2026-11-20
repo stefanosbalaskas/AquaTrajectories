@@ -133,3 +133,24 @@ software makes those limitations visible.
 The existing M03–M05 research-workflow, QC and publication APIs remain in place
 for recordings with genuine source timestamps. This new source-adapted branch
 fills an explicitly missing research need without weakening their time gates.
+
+
+## One-command native R + independent Python replay on Windows
+
+From a local checkout of this feature branch, with the previously frozen M06
+sources already in the user's Documents directory, run:
+
+~~~powershell
+powershell -ExecutionPolicy Bypass -File ".\scripts\m07_real_brackish_windows.ps1"
+~~~
+
+The launcher checks the previous evidence is present, refuses existing
+destinations, authenticates source hashes, creates both separate analysis paths,
+executes `scripts/m07_real_brackish_native.R` on real data, builds native
+R publication figures and an independent Python report, then runs
+`aqt_m07_cross_language_parity.py` on ten real source/sequence scopes.
+Only a successful result from the *local* original M06 evidence may be reported
+as real-data R/Python parity; no CI fixture can substitute for this gate.
+
+Use `Rscript --vanilla scripts/m07_real_brackish_native.R INPUT_DIR NEW_OUTPUT_DIR`
+to re-run the R phase after the authenticated input stage if needed.
