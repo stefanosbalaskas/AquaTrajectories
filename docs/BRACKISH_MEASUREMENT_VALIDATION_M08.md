@@ -36,6 +36,30 @@ Diagnostic sensitivity:
 
 **Scientific conclusion:** The tested external fish detector/tracker does not supply sufficiently accurate and continuous real fish observations to support general fish-level behavioral trajectory measurement. AquaTrajectories' mathematical operators remain usable on sufficiently reliable externally supplied trajectories, subject to their own assumptions. Numeric package correctness is **not** empirical accuracy of the upstream model.
 
+## Boundary-clipped original-reference sensitivity
+
+The original M06 source audit preserved the original MOT text and recorded **six
+partially out-of-image fish boxes** in sequence 55 (original left x = -2 px).
+Only their derived evaluation geometry was clipped to x = 0; each retained
+more than 98% of its original area. These six reference fish positions were
+**not** matched by the model at IoU 0.50, and all **eight** original adjacent
+reference steps touching them were already marked missing-model-endpoint.
+
+A separate read-only `aqt_m08_source_clip_sensitivity.py` gate checked the
+exact six source records and their original M06 anomaly audit SHA-256. With
+those source rows excluded solely for sensitivity accounting (not from the
+frozen primary dataset), the matched-reference fraction changes from
+**374/6,621 = 5.6487%** to **374/6,615 = 5.6538%**, and eligible-paired-step
+coverage from **265/6,498 = 4.0782%** to **265/6,490 = 4.0832%**.
+The 374 matched-center errors and 265 paired-step errors are unchanged.
+No source observations were overwritten.
+
+To repeat when the original M06 freeze folder is available, run:
+
+```powershell
+& $py inst/python/aqt_m08_source_clip_sensitivity.py --input $src --result $out --m06-anomalies "$env:USERPROFILE\Documents\AquaTrajectories_M06_BRACKISH_FROZEN_TEST_V2\SOURCE_ANNOTATION_ANOMALIES.csv" --out "$env:USERPROFILE\Documents\M08_M06_SOURCE_CLIP_SENSITIVITY.json"
+```
+
 ## Independent audit status
 
 The independent audit passed **374/374** source-based IoU/position checks, **6,498/6,498** original adjacent-step checks and **85/85** supported group-radius checks. It performed **2,133** sparse maximum-cardinality checks (at declared IoU thresholds where both source paths have observations) and confirmed the published ledgers and all report file hashes.
