@@ -2,7 +2,7 @@
 # No inference/training, no video extraction, no fabricated frame times.
 # All newly generated folders must be absent to protect existing evidence.
 $ErrorActionPreference = 'Stop'
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $documents = Join-Path $env:USERPROFILE 'Documents'
 $py = Join-Path $documents 'AQT_M06_FISH_ENV\Scripts\python.exe'
 $holdout = Join-Path $documents 'AquaTrajectories_M06_BRACKISH_FROZEN_TEST_V2'
@@ -33,7 +33,7 @@ Write-Host 'M07 SOURCE INTAKE: verifying all original 906 frozen files and V4 pr
   --holdout $holdout --model-run $model --out $input
 if ($LASTEXITCODE -ne 0) {throw 'M07 source proof failed'}
 Write-Host 'M07 NATIVE R: real data descriptive scientific analysis and vector-figure publication'
-& $rbin --vanilla (Join-Path $root 'run_m07_native.R') $root $input $rOutput
+& $rbin --vanilla (Join-Path $root 'scripts\m07_real_brackish_native.R') $root $input $rOutput
 if ($LASTEXITCODE -ne 0) {throw 'M07 native R analysis failed; preserve full console log'}
 Write-Host 'M07 INDEPENDENT PYTHON NUMERICAL ORACLE (separate output, no R results used)'
 & $py (Join-Path $root 'inst\python\aqt_m07_independent_frame_oracle.py') `
