@@ -1,0 +1,16 @@
+{
+  "schema": "AQT_M08_EXTERNAL_BIOLOGICAL_PHYSICAL_EVIDENCE_GATES_V1",
+  "reference_based_image_pixel_agreement": "COMPUTED_CONDITIONAL_ON_PUBLISHER_ANNOTATIONS",
+  "independent_human_adjudicated_biological_identification": "BLOCKED_MISSING_EXTERNAL_DATA",
+  "independent_surveyed_underwater_xyz_metrology": "BLOCKED_MISSING_EXTERNAL_DATA",
+  "authenticated_camera_exposure_timestamps": "BLOCKED_MISSING_EXTERNAL_DATA",
+  "reference_synchronized_feeding_or_stress_events": "BLOCKED_MISSING_EXTERNAL_DATA",
+  "independent_tank_replication_for_treatment_contrast": "BLOCKED_MISSING_EXTERNAL_DATA",
+  "minimum_requirements": {
+    "human_identification": ["original_video", "independent_reviewer_ID_annotations", "adjudication_provenance", "per_frame_review_scope", "held_out_reviewer_blind_status"],
+    "underwater_3d_metrology": ["synchronized_multiview_videos", "time_base", "intrinsics_and_extrinsics", "water_air_refraction_model", "independent_xyz_target_measurements", "target_holdout_protocol"],
+    "behavioral_events": ["externally_timed_event_log", "camera_event_clock_alignment", "source_frame_pts", "behavioral_outcome_definition"],
+    "experimental_inference": ["tank_treatment_assignment", "replicated_independent_tanks_per_arm", "predeclared_analysis_plan", "missingness_and_outlier_decisions"]
+  },
+  "prohibited_claims_until_evidence_supplied": ["cm/s", "3D_xyz_accuracy", "stable_biological_identity", "feeding_effect", "stress_or_welfare_state", "causal_treatment_effect"]
+}
