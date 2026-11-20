@@ -1,2 +1,1 @@
-<PARSED TEXT FOR SHEET: 1 / 1 TABS
-TAB NAME: inst__extdata__m09_validation_templates__calibration_holdout_split_template.csv>index,experiment_id,board_pose_id,split_role
+experiment_id,board_pose_id,split_role
