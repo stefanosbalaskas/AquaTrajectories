@@ -65,6 +65,48 @@ The R package already imports \`digest\` and \`jsonlite\`. Published example
 outputs are new-only and transaction-staged to avoid partial data.
 Run each command with a new destination; never force-overwrite evidence.
 
+
+## Actual measured release performance baselines (21 November 2026)
+
+The following are **observed median elapsed time**, from three \`bench::mark\`
+iterations on each of the three actual CI operating systems, for the
+**20,000-row fixture (five simulated fish, 4,000 input frames)**. Each
+benchmark independently checks the expected movement/geometry/QC output,
+and records actual memory allocated by R rather than inferring memory use
+from input-file size.
+
+| Workload | Dimensions | Linux median (s) | Windows median (s) | macOS median (s) | R allocated (MiB) |
+|:--|--:|--:|--:|--:|--:|
+| Per-fish path summary | 2D | 0.0458 | 0.0388 | 0.0321 | 37.24 |
+| Group geometry | 2D | 3.2856 | 2.2616 | 2.0713 | 45.91 |
+| QC2 source-row lineage | 2D | 0.2287 | 0.1375 | 0.1506 | 78.52 |
+| Publication figure spec | 2D | 0.4530 | 0.2005 | 0.2925 | 61.94 |
+| Per-fish path summary | 3D | 0.0495 | 0.0427 | 0.0343 | 39.53 |
+| Group geometry | 3D | 3.3782 | 2.3079 | 1.9424 | 48.20 |
+| QC2 source-row lineage | 3D | 0.2271 | 0.1427 | 0.1507 | 81.12 |
+| Publication XZ projection spec | 3D | 0.4561 | 0.2040 | 0.3015 | 63.01 |
+
+Actual source and output R object sizes and the additional 1,000-row
+and 5,000-row results are reported in the full benchmark CSVs retained
+as the cross-platform GitHub Actions qualification artifacts. Runner
+platforms used R 4.6.2. Measured source \`aqt_tracks\` object size for the
+20,000-row workload is approximately 1.28 MB (base R object size).
+The benchmark records R allocations (**not peak process resident memory**).
+
+This is evidence of performance on the specific runners, **not** evidence
+that Windows is universally faster than Linux or that any one OS is
+inherently superior; CPUs, runner loads, system libraries, and CRAN
+binary versions are uncontrolled. A reproducible performance regression
+should compare matched hardware and software environments.
+
+The successful initial 0.1.2 release-branch measured-coverage run recorded
+**89.33% actually executed R source coverage** (instrumented \`covr\`
+package tests), above the declared 80% release threshold. Exact final
+tag qualification re-runs the source/coverage check and archives per-line
+evidence rather than relying on this historical snapshot. Original
+qualification workflow:
+https://github.com/stefanosbalaskas/AquaTrajectories/actions/runs/44890364766
+
 ## Performance interpretation and baseline archiving
 
 The CI artifact \`release05-performance-<operating-system>\` records measured
