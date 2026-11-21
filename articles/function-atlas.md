@@ -1,4 +1,4 @@
-# Atlas of all 169 R functions
+# Atlas of all 171 R functions
 
 ## Complete R function atlas
 
@@ -8,7 +8,7 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 169 exported functions in 14 mutually exclusive research
+**Coverage:** 171 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -20,7 +20,7 @@ atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-at
 · [Scientific
 limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md)
 
-### 1. Data models, import and export (19)
+### 1. Data models, import and export (20)
 
 Canonical track objects, synthetic examples and interoperable data
 formats.
@@ -40,12 +40,13 @@ formats.
 - [`aqt_research_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_export.md)
 - [`aqt_research_figure_plan()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_figure_plan.md)
 - [`aqt_research_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_publish.md)
+- [`aqt_figure_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_figure_export.md)
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)
 - [`aqt_tracks_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)
 - [`aqt_video_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_video_bundle_import.md)
 
-### 2. Detection, tracking and annotation validation (22)
+### 2. Detection, tracking and annotation validation (23)
 
 Detector and identity metrics against explicitly defined reference
 annotations.
@@ -66,6 +67,7 @@ annotations.
 - [`aqt_qc_review()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_review.md)
 - [`aqt_qc_derive()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_derive.md)
 - [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
+- [`aqt_qc_sensitivity()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_sensitivity.md)
 - [`aqt_reference_measurement_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.md)
 - [`aqt_reference_measurement_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.md)
 - [`aqt_tracking_match()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_match.md)

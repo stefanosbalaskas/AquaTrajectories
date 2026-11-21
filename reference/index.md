@@ -38,6 +38,9 @@ formats.
 - [`aqt_research_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_research_publish.md)
   : Export actual scientific figures and a provenance-linked publication
   report
+- [`aqt_figure_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_figure_export.md)
+  : Export a source-linked publication figure without altering the
+  source data
 - [`aqt_simulate_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.md)
   : Simulate deterministic mathematical fish paths
 - [`aqt_tracks()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks.md)
@@ -91,6 +94,8 @@ annotations.
   : Calculate audited movement only from reviewed, eligible observations
 - [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
   : Export a complete, immutable, provenance-linked trajectory QC audit
+- [`aqt_qc_sensitivity()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_sensitivity.md)
+  : Compare explicit QC policies on an existing 2D/3D trajectory dataset
 - [`aqt_reference_measurement_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.md)
   : Export numerical source-linked fish measurement validation
 - [`aqt_reference_measurement_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.md)
