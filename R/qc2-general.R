@@ -99,7 +99,7 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
     if (!all(needed %in% names(mapping)) ||
         any(!unname(mapping) %in% names(raw)))
       stop("Source columns are missing required mapped fields",call.=FALSE)
-    canonical <- as.data.frame(setNames(lapply(mapping,function(nm)raw[[nm]]),
+    canonical <- as.data.frame(stats::setNames(lapply(mapping,function(nm)raw[[nm]]),
                                       names(mapping)),stringsAsFactors=FALSE)
     if (!"session_id" %in% names(canonical)) canonical$session_id <- session_id
     if (!"camera_id" %in% names(canonical)) canonical$camera_id <- camera_id
