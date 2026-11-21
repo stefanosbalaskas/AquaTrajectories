@@ -24,7 +24,8 @@ is declared, and does not weaken the existing aqt_research_analyze() gate.
 ## Eight implemented improvements
 
 1. **Estimator sensitivity:** aqt_compare_specifications() reports
-   pooled-step, fragment-equal and time-window-equal median outcomes,
+   pooled-step, audited-fragment-equal (when a fragment column is provided),
+   software-track-ID-equal, and time-window-equal median outcomes,
    separated by explicit QC policy when supplied. Sign-reversal flags,
    denominators and original data hashes are retained.
 2. **Measurement semantics:** aqt_measurement_contract() requires physical
@@ -38,7 +39,8 @@ is declared, and does not weaken the existing aqt_research_analyze() gate.
    recordings, equal time-window probabilities, minimum-support flags
    and Jensen-Shannon divergence only where both phases are supported.
 5. **Geometry diagnostics:** aqt_geometry_bias_audit() reports Spearman
-   correlations between apparent speed and bounding-box area and coverage
+   correlations between apparent speed and bounding-box area (plus optional
+   image position and detector confidence) and coverage
    in common area strata. This is not causal adjustment.
 6. **Falsification:** aqt_placebo_boundaries() produces within-recording
    time-window cut contrasts, never treating dependent cuts as p-values.

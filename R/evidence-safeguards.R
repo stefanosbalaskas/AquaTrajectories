@@ -12,9 +12,9 @@
   invisible(TRUE)
 }
 .aqt_ev_clean <- function(d,group_col,phase_col,time_col,value_col,
-                          track_col,eligible_col=NULL,policy_col=NULL) {
+                          track_col,fragment_col=NULL,eligible_col=NULL,policy_col=NULL) {
   cols <- c(group_col,phase_col,time_col,value_col,track_col,
-            eligible_col,policy_col)
+            fragment_col,eligible_col,policy_col)
   .aqt_ev_cols(d,cols)
   o <- data.frame(
     group=as.character(d[[group_col]]),
@@ -22,14 +22,15 @@
     time=as.numeric(d[[time_col]]),
     value=as.numeric(d[[value_col]]),
     track=as.character(d[[track_col]]),
+    fragment=if(is.null(fragment_col)) as.character(d[[track_col]]) else as.character(d[[fragment_col]]),
     policy=if(is.null(policy_col)) "default" else as.character(d[[policy_col]]),
     eligible=if(is.null(eligible_col)) TRUE else d[[eligible_col]],
     stringsAsFactors=FALSE)
   if(!is.logical(o$eligible) || anyNA(o$eligible))
     stop("Eligibility must be a nonmissing logical column",call.=FALSE)
   good <- o$eligible & stats::complete.cases(o[,c("group","phase","time",
-    "value","track","policy")]) & nzchar(o$group) & nzchar(o$phase) &
-    nzchar(o$track) & nzchar(o$policy)
+    "value","track","fragment","policy")]) & nzchar(o$group) & nzchar(o$phase) &
+    nzchar(o$track) & nzchar(o$fragment) & nzchar(o$policy)
   o[good,,drop=FALSE]
 }
 .aqt_ev_split <- function(d, cols) {
@@ -48,33 +49,41 @@
 #'
 #' @param data Data frame containing eligible or policy-tagged movement steps.
 #' @param group_col,phase_col,time_col,value_col,track_col Source column names.
+#' @param fragment_col Optional audited continuous fragment identifier. When
+#'   absent, the software track identifier is weighted equally instead;
+#'   that is never silently described as fragment-equal weighting.
 #' @param eligible_col Optional logical step eligibility column.
 #' @param policy_col Optional QC policy identifier; policies remain separate.
 #' @param window_widths Positive widths in declared source-time units.
 #' @param reference_phase Explicit reference phase label.
 #' @param min_steps Minimum eligible rows per recording/phase/policy.
+#' @param min_steps_per_window Minimum rows per window included in the
+#'   time-balanced estimator; unsupported windows are omitted.
 #' @return List with estimates, contrasts, sign-stability flags, and provenance.
 #' @export
 aqt_compare_specifications <- function(data,group_col="recording",
     phase_col="phase",time_col="time_s",value_col="speed",
-    track_col="track_id",eligible_col=NULL,policy_col=NULL,
-    window_widths=c(1,3,6),reference_phase="Before",min_steps=3L) {
+    track_col="track_id",fragment_col=NULL,eligible_col=NULL,policy_col=NULL,
+    window_widths=c(1,3,6),reference_phase="Before",min_steps=3L,
+    min_steps_per_window=1L) {
   if(!is.numeric(window_widths) || !length(window_widths) ||
      anyNA(window_widths) || any(!is.finite(window_widths)) ||
      any(window_widths<=0) || anyDuplicated(window_widths))
     stop("window_widths must contain distinct positive finite values",call.=FALSE)
   if(length(min_steps)!=1L || !is.finite(min_steps) || min_steps<1 ||
-     min_steps!=floor(min_steps))
-    stop("min_steps must be a positive integer",call.=FALSE)
+     min_steps!=floor(min_steps) ||
+     length(min_steps_per_window)!=1L || !is.finite(min_steps_per_window) ||
+     min_steps_per_window<1 || min_steps_per_window!=floor(min_steps_per_window))
+    stop("min_steps and min_steps_per_window must be positive integers",call.=FALSE)
   d <- .aqt_ev_clean(data,group_col,phase_col,time_col,value_col,
-                     track_col,eligible_col,policy_col)
+                     track_col,fragment_col,eligible_col,policy_col)
   if(!nrow(d))stop("No eligible finite movement steps",call.=FALSE)
   estimates <- list()
   for(ix in .aqt_ev_split(d,c("group","phase","policy"))) {
     z <- d[ix,,drop=FALSE]
     if(nrow(z)<min_steps)next
     key <- z[1,c("group","phase","policy"),drop=FALSE]
-    tracks <- .aqt_ev_split(z,c("track"))
+    tracks <- split(seq_len(nrow(z)),paste(z$track,z$fragment,sep="\r"))
     fragment_medians <- vapply(tracks,function(j)
       stats::median(z$value[j]),numeric(1L))
     make <- function(method,width,estimate,n_units) {
@@ -86,11 +95,14 @@ aqt_compare_specifications <- function(data,group_col="recording",
     estimates[[length(estimates)+1L]] <-
       make("pooled_steps",0,stats::median(z$value),nrow(z))
     estimates[[length(estimates)+1L]] <-
-      make("fragment_equal",0,stats::median(fragment_medians),
+      make(if(is.null(fragment_col)) "track_id_equal" else "fragment_equal",
+           0,stats::median(fragment_medians),
            length(fragment_medians))
     for(w in window_widths) {
       bin <- floor(z$time/w)
       cell <- split(z$value,as.character(bin),drop=TRUE)
+      cell <- Filter(function(v)length(v)>=min_steps_per_window,cell)
+      if(!length(cell))next
       vm <- vapply(cell,stats::median,numeric(1L))
       estimates[[length(estimates)+1L]] <-
         make("time_window_equal",w,stats::median(vm),length(vm))
@@ -132,8 +144,9 @@ aqt_compare_specifications <- function(data,group_col="recording",
     statement="Descriptive comparisons only; not independent animal/tank effects.",
     data_sha256=unname(digest::digest(data,algo="sha256")),
     config=list(window_widths=window_widths,reference_phase=reference_phase,
-      min_steps=min_steps,columns=c(group_col,phase_col,time_col,value_col,
-                                   track_col,eligible_col,policy_col))),
+      min_steps=min_steps,min_steps_per_window=min_steps_per_window,
+      columns=c(group_col,phase_col,time_col,value_col,track_col,
+                fragment_col,eligible_col,policy_col))),
     class="aqt_specification_audit")
 }
 
@@ -374,6 +387,8 @@ aqt_spatial_support <- function(data,group_col="recording",phase_col="phase",
 #'
 #' @param data Source step table.
 #' @param group_col,phase_col,speed_col,area_col Column names.
+#' @param x_col,y_col,confidence_col Optional image position and detector
+#'   confidence columns for additional descriptive Spearman correlations.
 #' @param reference_phase Phase defining the reference comparison.
 #' @param n_strata Number of pooled bounding-box-area quantile strata.
 #' @param min_per_stratum Minimum observations per phase in an overlap stratum.
@@ -381,24 +396,33 @@ aqt_spatial_support <- function(data,group_col="recording",phase_col="phase",
 #' @export
 aqt_geometry_bias_audit <- function(data,group_col="recording",
     phase_col="phase",speed_col="speed",area_col="bbox_area",
+    x_col=NULL,y_col=NULL,confidence_col=NULL,
     reference_phase="Before",n_strata=5L,min_per_stratum=10L) {
-  .aqt_ev_cols(data,c(group_col,phase_col,speed_col,area_col))
+  .aqt_ev_cols(data,c(group_col,phase_col,speed_col,area_col,
+                      x_col,y_col,confidence_col))
   if(length(n_strata)!=1L || n_strata<2 || n_strata!=floor(n_strata) ||
      length(min_per_stratum)!=1L || min_per_stratum<1)
     stop("Invalid stratum settings",call.=FALSE)
   d <- data.frame(group=as.character(data[[group_col]]),
     phase=as.character(data[[phase_col]]),
     speed=as.numeric(data[[speed_col]]),
-    area=as.numeric(data[[area_col]]))
-  d <- d[stats::complete.cases(d) & d$area>0,,drop=FALSE]
+    area=as.numeric(data[[area_col]]),
+    image_x=if(is.null(x_col)) NA_real_ else as.numeric(data[[x_col]]),
+    image_y=if(is.null(y_col)) NA_real_ else as.numeric(data[[y_col]]),
+    confidence=if(is.null(confidence_col)) NA_real_ else as.numeric(data[[confidence_col]]))
+  d <- d[stats::complete.cases(d[,c("group","phase","speed","area")]) & d$area>0,,drop=FALSE]
   if(!nrow(d))stop("No valid speed/bounding-box observations",call.=FALSE)
   corrs <- lapply(.aqt_ev_split(d,c("group","phase")),function(ix) {
     z <- d[ix,,drop=FALSE]
+    rho <- function(v) {
+      ok <- is.finite(v) & is.finite(z$speed)
+      if(sum(ok)<3L || length(unique(v[ok]))<2L ||
+         length(unique(z$speed[ok]))<2L)return(NA_real_)
+      suppressWarnings(stats::cor(z$speed[ok],v[ok],method="spearman"))
+    }
     data.frame(group=z$group[1],phase=z$phase[1],n=nrow(z),
-      spearman_rho=if(nrow(z)>2 && length(unique(z$area))>1 &&
-              length(unique(z$speed))>1)
-        suppressWarnings(stats::cor(z$speed,z$area,method="spearman"))
-      else NA_real_)
+      spearman_rho=rho(z$area),rho_image_x=rho(z$image_x),
+      rho_image_y=rho(z$image_y),rho_confidence=rho(z$confidence))
   })
   overlap <- list()
   for(g in unique(d$group)) {

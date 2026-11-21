@@ -29,6 +29,10 @@ test_that("known synthetic sign reversal is not concealed", {
   expect_equal(w$difference,-3)
   expect_equal(a$estimates$group[1],"11025")
   expect_true(all(a$estimates$n_steps>0))
+  expect_true("track_id_equal" %in% a$estimates$method)
+  z$fragment_id <- paste(z$track_id,seq_len(nrow(z)),sep="-")
+  f <- aqt_compare_specifications(z,fragment_col="fragment_id",window_widths=1)
+  expect_true("fragment_equal" %in% f$estimates$method)
   expect_error(aqt_compare_specifications(z,window_widths=c(0,3)),
                "window_widths")
 })
@@ -99,8 +103,11 @@ test_that("spatial coverage limits and unequal sampling are explicit", {
 
 test_that("geometry diagnostics do not mistake overlap for causal adjustment", {
   z <- .evidence_fixture()
-  g <- aqt_geometry_bias_audit(z,n_strata=3,min_per_stratum=1)
+  g <- aqt_geometry_bias_audit(z,n_strata=3,min_per_stratum=1,
+    x_col="x",y_col="y")
   expect_true(nrow(g$correlations)>=2)
+  expect_true(all(c("rho_image_x","rho_image_y","rho_confidence") %in%
+    names(g$correlations)))
   expect_true(all(c("reference_coverage","comparison_coverage",
                     "coverage_ok") %in% names(g$overlap)))
   expect_match(g$claim,"not causal")
