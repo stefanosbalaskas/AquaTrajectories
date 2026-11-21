@@ -71,6 +71,13 @@ for(const f of [...pages,...extras]) {
 }
 const home=read("index.html");
 assert.match(home,/official v0\.1\.2 release/i);
+// Scientific-safeguard homepage content must be qualified on the exact site artifact.
+for (const claim of [/188 R functions on main/,/15 reference categories/,/Tagged v0\.1\.2: 179 functions/,/Evidence safeguards/,/aqt_compare_specifications\.html/,/aqt_measurement_contract\.html/,/aqt_inference_readiness\.html/,/aqt_evidence_report\.html/]) {
+  assert.match(home, claim, "Missing scientific-safeguard or release-boundary content: " + claim);
+}
+for (const fn of ["aqt_compare_specifications", "aqt_measurement_contract", "aqt_inference_readiness", "aqt_evidence_report"]) {
+  assert.ok(fs.existsSync(path.join(site, "reference", fn + ".html")), "Missing safeguard reference page: " + fn);
+}
 assert.match(home,/10\.5281\/zenodo\.24262905/i);
 assert.match(home,/quickstart-five-minutes/);
 assert.match(home,/articles\/reproducible-research-release\.html/);
