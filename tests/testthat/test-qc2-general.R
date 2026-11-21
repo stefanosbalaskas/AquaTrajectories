@@ -35,6 +35,17 @@ test_that("2D/3D source representations agree after declared unit and clock conv
                native$lineage$retained_step_distance)
   expect_identical(alias$canonical_source_sha256,
                    native$canonical_source_sha256)
+  reversed <- d[nrow(d):1L,,drop=FALSE]
+  shuffled <- aqt_qc2_report(reversed,gap_limits_s=c(1.1,2.1),
+    speed_limits=c(1.2,5),units="cm",coordinate_system="tank")
+  expect_identical(shuffled$canonical_source_sha256,
+                   native$canonical_source_sha256)
+  expect_equal(shuffled$summary$path_length,native$summary$path_length)
+  from_tracks <- aqt_qc2_report(aqt_tracks(d,units="cm",
+                               coordinate_system="tank"),
+                               gap_limits_s=c(1.1,2.1),speed_limits=c(1.2,5))
+  expect_equal(from_tracks$summary$path_length,
+               native$summary$path_length)
   expect_equal(alias$analysis_units,"cm")
   expect_true(all(alias$lineage$coordinate_units=="cm"))
   expect_identical(alias$raw_source$source_row,d$source_row)
@@ -120,4 +131,8 @@ test_that("QC 2.0 exported evidence is complete, new-only and checksum-auditable
   altered$raw_source$x[1] <- -99
   expect_error(aqt_qc2_export(altered,tempfile("tamper-qc2-")),
                "modified after audit")
+  altered_lineage <- report
+  altered_lineage$lineage$retained_step_distance[2L] <- -99
+  expect_error(aqt_qc2_export(altered_lineage,tempfile("tamper-ledger-")),
+               "QC scientific evidence")
 })
