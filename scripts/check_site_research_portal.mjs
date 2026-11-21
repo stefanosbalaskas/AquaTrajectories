@@ -76,11 +76,11 @@ assert.match(home,/articles\/reproducible-research-release\.html/);
 assert.match(home,/experiment-starter-kit/);
 assert.match(home,/capabilities-and-validation/);
 const releaseGuide=read("articles/reproducible-research-release.html");
-for(const claim of [/89\\.33%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windows/,/Linux/,/v0\\.1\\.2/]) {
+for(const claim of [/89\.33%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windows/,/Linux/,/v0\.1\.2/]) {
   assert.match(releaseGuide, claim, "Missing exact-source release evidence: "+claim);
 }
 for(const page of ["articles/quickstart-five-minutes.html","articles/capabilities-and-validation.html","articles/scientific-status.html","articles/research-evidence-dashboard.html"]) {
-  assert.match(read(page),/v0\\.1\\.2/, "Stale published-release description: "+page);
+  assert.match(read(page),/v0\.1\.2/, "Stale published-release description: "+page);
 }
 const start=read("articles/aquaTrajectories.html");
 assert.match(start,/v0\.1\.2/);
