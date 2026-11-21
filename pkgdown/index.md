@@ -1,12 +1,14 @@
 <section class="aqt-hero">
-<p class="aqt-eyebrow">Open-source research software · official v0.1.1 release</p>
+<p class="aqt-eyebrow">Open-source research software · official v0.1.2 release</p>
 <h1>From aquatic observations to reproducible movement science</h1>
 <p>Track, reconstruct, analyze and visualize aquatic-animal trajectories with R, Python and browser tools. Start with documented synthetic examples, then supply independent annotations, camera calibration and real recording metadata for scientific measurements.</p>
 <div class="aqt-cta"><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
-<div class="aqt-badges"><span>155 documented R functions</span><span>14 reference categories</span><span>Official GitHub release v0.1.1</span><span>Zenodo archived</span></div>
+<div class="aqt-badges"><span>179 documented R functions</span><span>14 reference categories</span><span>Official GitHub release v0.1.2</span><span>prior v0.1.1 Zenodo archived</span></div>
 </section>
 
-<div class="aqt-note"><strong>Published software:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1">AquaTrajectories v0.1.1</a> is a public GitHub release, permanently archived as <a href="https://doi.org/10.5281/zenodo.24262905">10.5281/zenodo.24262905</a> on Zenodo. <a href="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg" alt="Zenodo DOI 10.5281/zenodo.24262905" loading="lazy"></a> CRAN qualification is in progress; this package is not yet published on CRAN.</div>
+<div class="aqt-note"><strong>Published software:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2">AquaTrajectories v0.1.2</a> is the reproducible GitHub software release. The previous v0.1.1 release (not the new v0.1.2 source) is permanently archived as <a href="https://doi.org/10.5281/zenodo.24262905">10.5281/zenodo.24262905</a> on Zenodo. <a href="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg" alt="Zenodo DOI 10.5281/zenodo.24262905" loading="lazy"></a> CRAN qualification is in progress; this package is not yet published on CRAN.</div>
+
+<div class="aqt-note"><strong>Reproducible Research 0.1.2:</strong> The locked 17-row synthetic trajectory-to-QC-to-report example reproduces 10 source-eligible steps (10 cm), has independent Python source-row and Euclidean auditing, and is measured for 2D/3D runtime/memory across Linux/Windows/macOS. <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md">Exact-source release protocol and evidence</a>. A new version-specific Zenodo DOI is not yet confirmed.</div>
 
 <div class="aqt-note"><strong>Scientific status:</strong> this release is engineering-qualified, but biological identity, underwater metrology, fish welfare inference, empirical interval coverage and real actuator safety are **not independently certified**. See the <a href="articles/scientific-status.html">evidence and limitations</a>.</div>
 
@@ -21,8 +23,8 @@
 </div>
 
 <div class="aqt-statusbar" role="group" aria-label="Current release and scientific evidence">
-  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1">v0.1.1</a> · MIT-licensed source</span></div>
-  <div><strong>Citable</strong><span><a href="https://doi.org/10.5281/zenodo.24262905">Zenodo DOI</a> · <a href="AquaTrajectories-v0.1.1.bib" download>BibTeX</a></span></div>
+  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2">v0.1.1</a> · MIT-licensed source</span></div>
+  <div><strong>Citable</strong><span><a href="https://doi.org/10.5281/zenodo.24262905">Prior v0.1.1 Zenodo DOI</a> · <a href="AquaTrajectories-v0.1.1.bib" download>BibTeX</a></span></div>
   <div><strong>Scientific validity</strong><span>Software contracts tested; <a href="articles/capabilities-and-validation.html">independent biological validation pending</a></span></div>
 </div>
 
@@ -66,7 +68,7 @@ These modules are research aids and synthetic teaching tools, **not** empirical 
 
 ## Scientific teaching: four interactive laboratories
 
-Explore deterministic examples that separate **what software computes** from **what real biological observations establish**. Each exercise runs locally in the browser, uses invented inputs, and links to the published v0.1.1 R documentation.
+Explore deterministic examples that separate **what software computes** from **what real biological observations establish**. Each exercise runs locally in the browser, uses invented inputs, and links to the published v0.1.2 R documentation.
 
 <div class="aqt-cardgrid aqt-teaching-grid">
 <a class="aqt-card" href="scientific-tracking-lab.html"><div class="aqt-kicker">01 · Evaluate</div><h3>Detector and tracker lab</h3><p>Move detection noise, missingness, false positives and ID switches; inspect computed synthetic precision, recall, F1 and identity changes.</p></a>
@@ -85,7 +87,7 @@ These are **synthetic teaching labs**, not real-video benchmark results or a ful
 <div class="aqt-steps">
 <div class="aqt-step"><strong>Start</strong><a href="articles/quickstart-five-minutes.html">Five-minute reproducible analysis</a></div>
 <div class="aqt-step"><strong>Explore</strong><a href="articles/workflows-atlas.html">Complete workflow atlas</a></div>
-<div class="aqt-step"><strong>Reference</strong><a href="articles/function-atlas.html">155-function guided index</a></div>
+<div class="aqt-step"><strong>Reference</strong><a href="articles/function-atlas.html">179-function guided index</a></div>
 <div class="aqt-step"><strong>Research</strong><a href="articles/research-evidence-dashboard.html">Evidence and validation status</a></div>
 </div>
 
@@ -94,7 +96,7 @@ These are **synthetic teaching labs**, not real-video benchmark results or a ful
 ```r
 # Install the official versioned GitHub release (not yet on CRAN)
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
 
 library(aquaTrajectories)
 x <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
@@ -125,7 +127,7 @@ The [five-figure reproducible workbook](articles/five-figure-workbook.html) exer
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
-- [Official v0.1.1 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-- [Version-specific Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Download BibTeX](AquaTrajectories-v0.1.1.bib)
-- [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs)
+- [Official v0.1.2 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+- [Historical v0.1.1 Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Download BibTeX](AquaTrajectories-v0.1.1.bib)
+- [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.2/docs)
 - [Function documentation](reference/index.html) · [Publication figures](articles/publication-figures.html)
