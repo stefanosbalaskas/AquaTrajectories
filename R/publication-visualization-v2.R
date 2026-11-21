@@ -442,9 +442,11 @@ aqt_viz2_export <- function(spec,directory,
 #' and provenance check, not a cryptographic authorship signature.
 #'
 #' @param directory Existing aqt_viz2_export() directory.
+#' @param source_file Optional original input file to recheck against the
+#'   recorded source SHA-256, including after figures have been published.
 #' @return TRUE invisibly or an error naming the failed file.
 #' @export
-aqt_viz2_verify <- function(directory) {
+aqt_viz2_verify <- function(directory,source_file=NULL) {
   if(!is.character(directory)||length(directory)!=1L||
      is.na(directory)||!dir.exists(directory))
     stop("Expected existing visualization export directory",call.=FALSE)
@@ -476,6 +478,14 @@ aqt_viz2_verify <- function(directory) {
                                colClasses=c(to_source_row="character",
                                             track_id="character"),
                                stringsAsFactors=FALSE)
+  if(!is.null(source_file)) {
+    expected<-m$data_provenance$source_file_sha256
+    if(is.null(expected)||!is.character(source_file)||
+       length(source_file)!=1L||is.na(source_file)||
+       !file.exists(source_file)||dir.exists(source_file)||
+       !identical(.aqt_viz2_file_sha(source_file),expected))
+      stop("External original source file SHA-256 mismatch",call.=FALSE)
+  }
   if(nrow(points)!=m$counts$n_source_rows ||
      nrow(edges)!=m$counts$n_eligible_steps ||
      nrow(decisions)!=m$counts$n_source_rows ||
