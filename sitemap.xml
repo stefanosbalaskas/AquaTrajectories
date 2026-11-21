@@ -56,6 +56,7 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_brown_undistort_tracks.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_candidate_rank.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_changepoint_event_delay.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_compare_specifications.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_correspondences_from_review.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_crossview_auto_associate.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_design_audit.html</loc></url>
@@ -73,6 +74,8 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evaluation_frames.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_event_epoch_summary.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_event_table.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evidence_export.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evidence_report.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_export_csv.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_figure_export.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_flatport_camera.html</loc></url>
@@ -87,6 +90,7 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_functional_longitudinal_fit.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_functional_longitudinal_prepare.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_functional_tank_contrast.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_geometry_bias_audit.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_group_metrics.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_group_pairwise_distances.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_group_spatial_edges.html</loc></url>
@@ -110,15 +114,18 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_idtracker.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_mot.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_import_yolo.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_inference_readiness.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_joint_event_sensitivity.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_joint_refractive_scenarios.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_joint_scene_cloud.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_joint_tank_sensitivity.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_kinematics.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_measurement_contract.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_mot_support_audit.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_multiview_global_fuse.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_multiview_holdout_protocol.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_path_summary.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_placebo_boundaries.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_calibration_comparison.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_changepoints.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_ensemble2d.html</loc></url>
@@ -173,9 +180,11 @@
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_rig_validate.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_scale_calibrate.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_simulate_tracks.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_source_3axis_preview.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_sparse_fpca_design_audit.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_sparse_fpca_fit.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_sparse_fpca_input.html</loc></url>
+<url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_spatial_support.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_state_changepoint.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_stereo_depth_audit.html</loc></url>
 <url><loc>https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_stereo_landmark_benchmark.html</loc></url>

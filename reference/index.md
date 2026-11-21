@@ -501,3 +501,34 @@ Source data digest recording and verification.
   : Create an immutable-input inventory for a fish-tracking analysis
 - [`aqt_provenance_verify()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_provenance_verify.md)
   : Recalculate file digests to check source integrity
+
+## Evidence safeguards and inferential readiness
+
+Estimator sensitivity, mixed-unit measurement contracts, independent
+units, spatial support, geometry bias, placebo controls, source-linked
+reporting.
+
+- [`aqt_compare_specifications()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_compare_specifications.md)
+  : Compare descriptive trajectory estimates across weighting and QC
+  specifications
+- [`aqt_evidence_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evidence_export.md)
+  : Export a sealed evidence report with tables, figure and SHA-256
+  ledger
+- [`aqt_evidence_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evidence_report.md)
+  : Assemble a claim-limited, machine-readable scientific evidence
+  summary
+- [`aqt_geometry_bias_audit()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_geometry_bias_audit.md)
+  : Diagnose camera-geometry association and common-support exclusions
+- [`aqt_inference_readiness()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_inference_readiness.md)
+  : Audit observational versus independent experimental units
+- [`aqt_measurement_contract()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_measurement_contract.md)
+  : Declare source-axis semantics without silently inferring physical
+  coordinates
+- [`aqt_placebo_boundaries()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_placebo_boundaries.md)
+  : Construct within-recording placebo boundaries, without
+  pseudo-p-values
+- [`aqt_source_3axis_preview()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_source_3axis_preview.md)
+  : Static three-axis observation plot, including explicitly mixed-unit
+  axes
+- [`aqt_spatial_support()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_spatial_support.md)
+  : Compare spatial occupancy with explicit equal-window coverage checks

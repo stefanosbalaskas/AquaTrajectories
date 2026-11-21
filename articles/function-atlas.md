@@ -1,4 +1,4 @@
-# Atlas of all 179 R functions
+# Atlas of all 188 R functions
 
 ## Complete R function atlas
 
@@ -8,10 +8,10 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 179 exported functions in 14 mutually exclusive research
-families. An automated website build audit compares the reference index
-against `NAMESPACE` and verifies that an `.Rd` manual exists for every
-export.
+**Coverage:** 188 exported functions in 15 mutually exclusive research
+families (including the nine new evidence safeguards). An automated
+website build audit compares the reference index against `NAMESPACE` and
+verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference
 index](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)
@@ -284,6 +284,23 @@ Source data digest recording and verification.
 
 - [`aqt_provenance_new()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_provenance_new.md)
 - [`aqt_provenance_verify()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_provenance_verify.md)
+
+### 15. Evidence safeguards and inferential readiness (9)
+
+Source-linked descriptive specification sensitivity and data-supported
+scientific claim restrictions. Unverified software IDs are not
+biological replicates; mixed-unit three-axis displays are not certified
+metric reconstruction.
+
+- [`aqt_compare_specifications()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_compare_specifications.md)
+- [`aqt_evidence_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evidence_export.md)
+- [`aqt_evidence_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_evidence_report.md)
+- [`aqt_geometry_bias_audit()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_geometry_bias_audit.md)
+- [`aqt_inference_readiness()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_inference_readiness.md)
+- [`aqt_measurement_contract()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_measurement_contract.md)
+- [`aqt_placebo_boundaries()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_placebo_boundaries.md)
+- [`aqt_source_3axis_preview()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_source_3axis_preview.md)
+- [`aqt_spatial_support()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_spatial_support.md)
 
 ------------------------------------------------------------------------
 
