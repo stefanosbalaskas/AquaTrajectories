@@ -27,6 +27,7 @@ const pages = [
   "articles/research-evidence-dashboard.html",
   "articles/reproducible-research-release.html",
   "articles/all-plot-functions.html",
+  "articles/publication-visualization-v2.html",
   "synthetic-explorer.html"
 ];
 const extras = [
@@ -138,6 +139,25 @@ for(let i=0;i<nEntries;i++){
  off+=46+len+extra+comment;
 }
 assert.ok(entries.has("starter-tracks.csv")&&entries.has("starter-README.txt"));
+// Ensure Publication Visualization 2.0 actually executes R chunks and publishes
+// all four native QC-aware figures; a syntactically valid but unknitted Rmd
+// must fail this gate rather than silently shipping raw chunk markup.
+const publicationV2=read("articles/publication-visualization-v2.html");
+assert.ok(!publicationV2.includes("~{r"),
+  "Publication V2 contains literal R Markdown chunk delimiters");
+assert.match(publicationV2, /<table\b/i,
+  "Publication V2 presets were not evaluated into an HTML table");
+const publicationImages=[...publicationV2.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/gi)]
+  .map(m=>m[1]);
+for (const figure of ["paths","speed","coverage","reasons"]) {
+  const match=publicationImages.find(src=>
+    src.includes("/figure-html/viz2-"+figure+"-") && /\.(?:png|svg)$/.test(src));
+  assert.ok(match, "Missing actual rendered Publication V2 figure: "+figure);
+  const file=path.join(site,"articles",match);
+  assert.ok(fs.existsSync(file) && fs.statSync(file).size > 1000,
+    "Missing/empty Publication V2 plot image file: "+match);
+}
+
 const gallery=read("articles/all-plot-functions.html");
 const galleryFunctions=Array.from(new Set(
   [...gallery.matchAll(/id="fig-(plot-[a-z0-9-]+)"/g)].map(m=>m[1])));
