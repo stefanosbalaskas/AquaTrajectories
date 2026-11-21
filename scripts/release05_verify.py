@@ -183,6 +183,11 @@ def verify(destination: Path) -> dict:
     require(float(expected["max_gap_s"]) == 1.01
             and float(expected["max_speed_cm_s"]) == 2.0,
             "QC policy changed from frozen example")
+    require(sha256(destination / "scripts/release05_example.R")
+            == m["producing_R_script_sha256"]
+            and sha256(destination / "scripts/release05_verify.py")
+            == m["independent_Python_verifier_sha256"],
+            "producer or independent verifier source bytes differ")
     check_hash_map(destination, m["output_sha256"])
     # Ensure no unrecorded derived file was inserted or silently left out.
     actual_files = {
