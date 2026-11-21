@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Cross-platform locked pixel-mask image regression for actual package plots.
-# 480x320 ragg device, no web, fixed deterministic synthetic fixtures.
+# 600x480 ragg device, no web, fixed deterministic synthetic fixtures.
 # Candidate mode emits actual pixel-mask RLE to be reviewed/frozen in Git.
 # Verify mode compares EVERY pixel to frozen Linux golden after checking
 # same-platform exact rerender; IoU bounds tolerate system font differences.
@@ -40,12 +40,12 @@ fit<-aqt_trajectory_grid_pca(
       n_grid=9,n_components=2,origin="start",max_gap_s=.13)
 plots[["grid_pca"]] <- function() aqt_plot_grid_pca(fit,component=1)
 render<-function(draw,path){
-  ragg::agg_png(filename=path,width=480,height=320,
+  ragg::agg_png(filename=path,width=600,height=480,
                 units="px",res=96,background="white")
   tryCatch(draw(),finally=grDevices::dev.off())
   x<-png::readPNG(path)
-  if(length(dim(x))!=3 || dim(x)[1L]!=320L ||
-     dim(x)[2L]!=480L || dim(x)[3L]<3L)
+  if(length(dim(x))!=3 || dim(x)[1L]!=480L ||
+     dim(x)[2L]!=600L || dim(x)[3L]<3L)
     stop("Unexpected golden raster device dimensions")
   # Actual per-pixel foreground mask, not a downsampled thumbnail hash.
   as.integer((x[,,1L]+x[,,2L]+x[,,3L])/3 < .9)
@@ -54,7 +54,7 @@ encode<-function(bits){
   r<-rle(bits)
   paste0(r$values[1L],";",paste(r$lengths,collapse=","))
 }
-decode<-function(s,n=480L*320L){
+decode<-function(s,n=600L*480L){
   pieces<-strsplit(s,";",fixed=TRUE)[[1L]]
   if(length(pieces)!=2L||!pieces[1L] %in% c("0","1"))
     stop("Malformed frozen pixel mask")
@@ -81,13 +81,13 @@ for(id in names(plots)) {
   rle_text<-encode(a)
   if(mode=="capture") {
     golden[[id]]<-data.frame(figure_id=id,
-      width_px=480L,height_px=320L,foreground_rle=rle_text)
+      width_px=600L,height_px=480L,foreground_rle=rle_text)
     # Read from Actions logs when original source baseline is approved.
     cat("NV2_FROZEN_CANDIDATE|",id,"|",rle_text,"\n",sep="")
     comparison<-c(pixel_disagreement=0,foreground_iou=1)
   } else {
     match<-reference[reference$figure_id==id,,drop=FALSE]
-    if(nrow(match)!=1L || match$width_px!=480L ||match$height_px!=320L)
+    if(nrow(match)!=1L || match$width_px!=600L ||match$height_px!=480L)
       stop("Missing/corrupt independent frozen golden reference for ",id)
     gold<-decode(match$foreground_rle)
     disagreement<-mean(a!=gold)
