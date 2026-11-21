@@ -89,7 +89,7 @@ The following code creates both vector and raster artwork, plus the
 input row, eligible-movement and full QC decision evidence. It refuses
 to overwrite an existing directory.
 
-~~~r
+```r
 aqt_viz2_export(paths, "manuscript_figure_1",
                 formats=c("pdf","svg","png","tiff"))
 stopifnot(aqt_viz2_verify("manuscript_figure_1"))
