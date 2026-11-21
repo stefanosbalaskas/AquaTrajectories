@@ -71,3 +71,14 @@ aqt_figure_export(function() aqt_plot_paths(tr),"paper_figure_01",
 - Future: compare statistically comparable results against independently implemented published algorithms, strengthen CI operating-system matrix, implement meaningful visual snapshot review, test large-scale memory use and refactor any duplicated QC/reporting logic only with behavior-preserving regression evidence.
 
 **No promise of physically validated fish, inference from videos or independently calibrated joint confidence intervals is implied by this workstream.**
+
+
+## Observed exact-source CI evidence — 21 November 2026
+
+The first Core 2.0 integration was merged as PR #100 following **12/12 green workflows**, including strict R CMD check with zero errors/warnings/notes; current main has **171** public R exports and v0.1.1 remains a separate immutable **155-export** tag. Python R-source/Rd audit matched all 171 exports. Deterministic mathematical known-answer and geometry invariance tests passed.
+
+The follow-up PR #101 executed genuine `covr::package_coverage(type="tests")` instrumentation on the exact source and measured **89.1173% overall executed code coverage across 7,223 instrumented records**; this is code-execution coverage rather than independently certified statistical correctness. The same QC, mathematical and figure tests passed on **macOS** and **Windows**, with known-answer 1,000-observation benchmarks. The original Ubuntu deterministic benchmark passed for **1,000 and 10,000** observation tracks; its 10,000-observation median elapsed time was **0.024 seconds** on the recorded GitHub runner (single track, no speed service-level guarantee). R object sizes are not peak-RSS measurements.
+
+The coverage artifact identified specific remaining internal test gaps: `.aqt_research_config` 36/53 instrumented expressions, `aqt_figure_export` 32/43, and `.aqt_publication_render` 10/16. Later development should prioritize these boundary cases, test optional PNG/PDF/SVG/TIFF device behaviour and investigate larger synthetic workloads before declaring performance or portability across all graphics backends.
+
+These are software qualification results only. They do not certify any trajectory's biological origin, independent metrology, calibrated statistical confidence coverage or generalize across computer-vision models.
