@@ -1,0 +1,81 @@
+name: Scientific Core 2.0 - API audit, 2D/3D QC, invariants, figures and benchmark
+on:
+  pull_request:
+    paths:
+      - "R/scientific-core2.R"
+      - "man/aqt_qc_sensitivity.Rd"
+      - "man/aqt_figure_export.Rd"
+      - "tests/testthat/test-scientific-core2.R"
+      - "scripts/scientific_core2_api_audit.py"
+      - "scripts/core2_benchmark.R"
+      - "scripts/core2_execution_coverage.R"
+      - "docs/SCIENTIFIC_CORE_2_0.md"
+      - "NAMESPACE"
+      - "_pkgdown.yml"
+      - ".github/workflows/scientific-core2.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/scientific-core2.R"
+      - "tests/testthat/test-scientific-core2.R"
+      - "scripts/scientific_core2_api_audit.py"
+      - ".github/workflows/scientific-core2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  api-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit every exact-source API, definition and manual
+        run: |
+          python -m py_compile scripts/scientific_core2_api_audit.py
+          python scripts/scientific_core2_api_audit.py --root . --out core2-api-audit --strict
+          test -s core2-api-audit/API_EVIDENCE_MATRIX.csv
+          test -s core2-api-audit/API_AUDIT_SUMMARY.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scientific-core2-api-inventory
+          path: core2-api-audit/
+          if-no-files-found: warn
+  scientific-qualification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+            any::roxygen2
+      - name: Exactly reproducible generated namespace and manuals
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Run actually executed scientific metamorphic and QC/figure tests
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories); testthat::test_file("tests/testthat/test-scientific-core2.R",reporter="summary",stop_on_failure=TRUE)'
+      - name: Run synthetic measured runtime and known-answer test
+        run: |
+          Rscript --vanilla scripts/core2_benchmark.R core2-benchmark-evidence 1000,10000
+          test -s core2-benchmark-evidence/CORE2_BENCHMARK.csv
+          test -s core2-benchmark-evidence/PERFORMANCE_MANIFEST.json
+      - name: No runtime qualification may mutate tracked source
+        run: |
+          git diff --exit-code -- R tests NAMESPACE man
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scientific-core2-known-answer-performance
+          path: core2-benchmark-evidence/
+          if-no-files-found: warn
