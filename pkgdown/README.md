@@ -3,7 +3,7 @@
 This directory holds **website source**. The project's existing scientific protocol files under `docs/` are never used as generated output.
 
 - `pkgdown/index.md`: independent landing page (preserves GitHub README).
-- `_pkgdown.yml`: Bootstrap 5 theme, all 179 exported R functions in 14 curated categories, article routing.
+- `_pkgdown.yml`: Bootstrap 5 theme, all currently exported R functions in curated categories (188 functions, 15 families on this feature branch), article routing.
 - `pkgdown/extra.css`: accessible navy/teal brand.
 - `pkgdown/assets/*.svg`: original illustrations; conceptual, not observations.
 - `pkgdown/assets/starter-*.csv`: downloadable synthetic or schema-only research starter files.
