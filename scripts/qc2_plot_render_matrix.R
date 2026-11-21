@@ -5,6 +5,8 @@ args <- commandArgs(trailingOnly=TRUE)
 if(length(args)!=1L || file.exists(args[[1L]]) ||
    !dir.exists(dirname(args[[1L]])))
   stop("Supply new output directory under existing parent")
+Sys.setenv(RGL_USE_NULL="TRUE")
+options(rgl.useNULL=TRUE)
 suppressPackageStartupMessages(library(aquaTrajectories))
 source <- readLines("vignettes/articles/all-plot-functions.Rmd",warn=FALSE)
 fence <- strrep(intToUtf8(96L),3L)
@@ -70,7 +72,7 @@ for(i in seq_along(names_in_atlas)) {
   }
 }
 if(requireNamespace("rgl",quietly=TRUE)) {
-  rgl::useNULL()
+  # NULL graphics mode configured before rgl is loaded (portable headless).
   for(fun in names(rgl_expr)) {
     rgl::open3d()
     fail <- tryCatch({eval(parse(text=rgl_expr[[fun]]),envir=env);NULL},
