@@ -83,6 +83,8 @@ test_that("VIZ2 all four formats and all-data SHA256 verification are transactio
   utils::write.csv(source_rows,f,row.names=FALSE)
   q<-aqt_qc2_report(f,gap_limits_s=1.01,units="cm",
                     coordinate_system="tank")
+  expect_error(aqt_viz2_spec(tr,figure="paths",gap_limit_s=1.01,
+     source_file=f),"requires a QC 2.0 report originally audited")
   fig<-aqt_viz2_spec(q,figure="paths",source_file=f,
                       preset="manuscript",caption="Synthetic source fixture")
   out<-tempfile("aqt-viz2-",tmpdir=tempdir())
