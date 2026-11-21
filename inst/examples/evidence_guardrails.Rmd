@@ -1,0 +1,45 @@
+---
+title: "AquaTrajectories — Evidence Safeguards Qualification"
+subtitle: "Synthetic known-truth execution fixture"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+# Scope
+
+This document verifies execution of the source-locked evidence-audit
+functions on a deliberately **synthetic** fragmented trajectory dataset.
+It is not a biological validation, a detector benchmark, a physical
+underwater reconstruction or a causal treatment evaluation.
+
+# Complete executable workflow
+
+The example constructs source observations, compares pooled and
+time-window-balanced estimators, verifies a designed sign reversal,
+audits measurement semantics and independent-unit support, calculates
+spatial and measurement-geometry diagnostics, runs placebo cuts, and
+exports a manifest-verified research report.
+
+~~~{r complete-example, echo=TRUE, results='hold'}
+example_file <- system.file("examples","evidence_guardrails.R",
+                           package="aquaTrajectories")
+stopifnot(nzchar(example_file),file.exists(example_file))
+source(example_file,local=TRUE)
+~~~
+
+# Interpretation
+
+The *positive pooled* and *negative time-balanced* results are
+constructed from the known fixture to verify that the software
+exposes analysis-specification sensitivity rather than concealing it.
+All animal- and tank-level inference remains blocked by default.
+Three source-variable axes can be visualized while physical 3D
+calibration remains unverified.
+
+# Reproducibility
+
+The script creates its results in a fresh temporary directory, hashes
+all emitted artifacts, confirms the manifest, and refuses to infer
+independent animals from software track IDs.
