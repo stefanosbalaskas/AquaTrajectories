@@ -1,5 +1,5 @@
 ---
-title: "Atlas of all 179 R functions"
+title: "Atlas of all 188 R functions"
 description: "A complete categorized, linked map to all public native R functions and their source-generated help manuals."
 ---
 
@@ -7,7 +7,7 @@ description: "A complete categorized, linked map to all public native R function
 
 Every public R function in this development branch is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
 
-**Coverage:** 179 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
+**Coverage:** 188 exported functions in 15 mutually exclusive research families (including the nine new evidence safeguards). An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
 
@@ -264,6 +264,20 @@ Source data digest recording and verification.
 
 - [`aqt_provenance_new()`](../reference/aqt_provenance_new.html)
 - [`aqt_provenance_verify()`](../reference/aqt_provenance_verify.html)
+
+## 15. Evidence safeguards and inferential readiness (9)
+
+Source-linked descriptive specification sensitivity and data-supported scientific claim restrictions. Unverified software IDs are not biological replicates; mixed-unit three-axis displays are not certified metric reconstruction.
+
+- [`aqt_compare_specifications()`](../reference/aqt_compare_specifications.html)
+- [`aqt_evidence_export()`](../reference/aqt_evidence_export.html)
+- [`aqt_evidence_report()`](../reference/aqt_evidence_report.html)
+- [`aqt_geometry_bias_audit()`](../reference/aqt_geometry_bias_audit.html)
+- [`aqt_inference_readiness()`](../reference/aqt_inference_readiness.html)
+- [`aqt_measurement_contract()`](../reference/aqt_measurement_contract.html)
+- [`aqt_placebo_boundaries()`](../reference/aqt_placebo_boundaries.html)
+- [`aqt_source_3axis_preview()`](../reference/aqt_source_3axis_preview.html)
+- [`aqt_spatial_support()`](../reference/aqt_spatial_support.html)
 
 ---
 

@@ -253,6 +253,18 @@ reference:
   - contents:
       - aqt_provenance_new
       - aqt_provenance_verify
+  - title: "Evidence safeguards and inferential readiness"
+    desc: "Estimator sensitivity, mixed-unit measurement contracts, independent units, spatial support, geometry bias, placebo controls, source-linked reporting."
+  - contents:
+      - aqt_compare_specifications
+      - aqt_evidence_export
+      - aqt_evidence_report
+      - aqt_geometry_bias_audit
+      - aqt_inference_readiness
+      - aqt_measurement_contract
+      - aqt_placebo_boundaries
+      - aqt_source_3axis_preview
+      - aqt_spatial_support
 articles:
   - title: "Start here"
     contents:
