@@ -6,13 +6,13 @@
 
 **Aquatic movement science · From video observations to reproducible research**
 
-An open-source **R + Python research toolkit** for fish and other aquatic-animal trajectories: timestamp-faithful video tracking interfaces, 2D/3D reconstruction, camera geometry, movement and schooling metrics, behavioural modelling, conditional uncertainty analysis and scientific visualization.
+An open-source **R-first scientific-analysis and visualization package for trajectories that researchers already have**: unit-aware 2D/3D movement, trajectory quality control, schooling geometry, functional and statistical methods, conditional uncertainty, publication figures and reproducibility. Optional Python video/tracker adapters are available but **no detector, tracker or video file is required to use the analytical core**.
 
 [![R](https://img.shields.io/badge/R-%E2%89%A5%204.1.0-276DC3?logo=r&logoColor=white)](DESCRIPTION)
 [![Official release](https://img.shields.io/badge/release-v0.1.1-169D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://doi.org/10.5281/zenodo.24262905)
 [![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
-[![Public API](https://img.shields.io/badge/exported%20R%20functions-169-147F97)](NAMESPACE)
+[![Public API](https://img.shields.io/badge/exported%20R%20functions-171-147F97)](NAMESPACE)
 [![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
 
 **[Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.1 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
@@ -45,9 +45,34 @@ An open-source **R + Python research toolkit** for fish and other aquatic-animal
 
 ### The research documentation portal
 
-The pkgdown site includes **169 exported R functions** in **14 scientific reference categories**, **22 research articles**, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
+The pkgdown site includes **171 exported R functions** in **14 scientific reference categories**, **22 research articles**, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
 
 **[All 22 plotting functions — illustrated](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.html)** · **[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
+
+## Scientific Core 2.0 — bring your own trajectory data (development main)
+
+The official **v0.1.1 tag remains immutable with 155 R exports**; current source-development `main` has **171 R exports** after this PR (no new tagged release). Video recording and fish detection are not prerequisites for analysis.
+
+```r
+library(aquaTrajectories)
+
+# An existing long CSV with session_id, camera_id, track_id, time_s, x, y
+tr <- aqt_import_csv("my_scientific_tracks.csv", units="cm",
+                     coordinate_system="tank")
+
+# Non-destructive sensitivity to explicit gap and movement thresholds
+qc <- aqt_qc_sensitivity(tr, gap_limits_s=c(.1,.2,.5),
+                         speed_limits=c(5,10))
+print(qc$summary)
+print(qc$ledger)  # all source rows retained per policy
+
+# Publication-ready vector/raster outputs; original CSV never modified
+aqt_figure_export(function() aqt_plot_paths(tr), "figure_01",
+                  formats=c("pdf","png"), width=7, height=5, dpi=300,
+                  source_file="my_scientific_tracks.csv")
+```
+
+See [Scientific Core 2.0 architecture, validation boundaries and tests](docs/SCIENTIFIC_CORE_2_0.md). QC sensitivity is **not** an empirically calibrated confidence interval; no original observations are silently imputed.
 
 ## Genuine fish-video research demonstration (Milestone 05)
 

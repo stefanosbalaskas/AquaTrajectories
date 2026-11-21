@@ -47,6 +47,7 @@ reference:
       - aqt_research_export
       - aqt_research_figure_plan
       - aqt_research_publish
+      - aqt_figure_export
       - aqt_simulate_tracks
       - aqt_tracks
       - aqt_tracks_validate
@@ -70,6 +71,7 @@ reference:
       - aqt_qc_review
       - aqt_qc_derive
       - aqt_qc_report
+      - aqt_qc_sensitivity
       - aqt_reference_measurement_publish
       - aqt_reference_measurement_validate
       - aqt_tracking_match
