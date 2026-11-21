@@ -6,6 +6,10 @@ on:
       - 'R/evidence-safeguards.R'
       - '.github/workflows/evidence-docgen-sync.yml'
 
+concurrency:
+  group: evidence-docgen-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -24,6 +28,11 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::roxygen2
+      - name: Use latest PR branch source
+        shell: bash
+        run: |
+          git fetch origin "${{ github.head_ref }}"
+          git reset --hard "origin/${{ github.head_ref }}"
       - name: Generate exact roxygen documentation
         run: Rscript -e 'roxygen2::roxygenise()'
       - name: Commit generated NAMESPACE and Rd on same-repo feature branch
@@ -34,5 +43,7 @@ jobs:
           git add NAMESPACE man
           if ! git diff --cached --quiet; then
             git commit -m "docs: sync evidence safeguards Rd and NAMESPACE"
-            git push origin HEAD:${{ github.head_ref }}
+          git fetch origin "${{ github.head_ref }}"
+          git rebase "origin/${{ github.head_ref }}"
+          git push origin HEAD:${{ github.head_ref }}
           fi
