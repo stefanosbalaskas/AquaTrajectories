@@ -14,8 +14,8 @@
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Scientific validation status and research limitations">
-<meta name="description" content="Current published v0.1.1 software release versus independent fish identity, underwater XYZ, and welfare evidence, with historical v0.1.0 qualification preserved.">
-<meta property="og:description" content="Current published v0.1.1 software release versus independent fish identity, underwater XYZ, and welfare evidence, with historical v0.1.0 qualification preserved.">
+<meta name="description" content="Current published v0.1.2 software release versus independent fish identity, underwater XYZ, and welfare evidence, with historical v0.1.0 qualification preserved.">
+<meta property="og:description" content="Current published v0.1.2 software release versus independent fish identity, underwater XYZ, and welfare evidence, with historical v0.1.0 qualification preserved.">
 <meta property="og:image" content="https://stefanosbalaskas.github.io/AquaTrajectories/logo.png">
 </head>
 <body>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">AquaTrajectories — aquatic movement science</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
 <li class="nav-item"><a class="nav-link" href="../synthetic-explorer.html">Interactive labs</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/scientific-teaching.html">Scientific teaching</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/research-laboratory.html">Research lab</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/reproducible-research-release.html">Reproducibility</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/plan-your-experiment.html">Plan an experiment</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
@@ -79,11 +80,11 @@
     
     
 <div class="section level2">
-<h2 id="scientific-status-of-the-published-v0-1-1-release">Scientific status of the published v0.1.1 release<a class="anchor" aria-label="anchor" href="#scientific-status-of-the-published-v0-1-1-release"></a>
+<h2 id="scientific-status-of-the-published-v0-1-2-release">Scientific status of the published v0.1.2 release<a class="anchor" aria-label="anchor" href="#scientific-status-of-the-published-v0-1-2-release"></a>
 </h2>
-<p><strong>AquaTrajectories v0.1.1 is a published, citable software
-release, not an independently certified fish-welfare or underwater
-physical metrology system.</strong></p>
+<p><strong>AquaTrajectories v0.1.2 is a published, engineering-qualified
+reproducibility release, not an independently certified fish-welfare or
+underwater physical metrology system.</strong></p>
 <p>The release includes tested R/Python/JavaScript contracts, synthetic
 integration tests, and a fail-closed scientific gate. Those are stronger
 than untested proof-of-concept scripts but are <strong>not</strong>
@@ -96,7 +97,7 @@ passes.
 <h3 id="what-the-engineering-release-establishes">What the engineering release establishes<a class="anchor" aria-label="anchor" href="#what-the-engineering-release-establishes"></a>
 </h3>
 <ul>
-<li>A documented public R API containing <strong>155 exported
+<li>A documented public R API containing <strong>179 exported
 functions</strong>.</li>
 <li>Native R software components for video outputs, trajectories,
 optics, movement, statistical utilities and figures.</li>
@@ -104,14 +105,18 @@ optics, movement, statistical utilities and figures.</li>
 interfaces.</li>
 <li>Tested conditional simulation and uncertainty scenarios with
 explicit assumptions.</li>
-<li>Whole-package release qualification, including source, tests and
-synthetic integration evidence.</li>
+<li>Whole-package release qualification: 89.33% measured instrumented R
+code coverage, 24 benchmark workloads per OS (Linux/Windows/macOS), and
+independent verification of a 17-row synthetic trajectory-to-report
+chain (10 valid steps, 10 cm). These are engineering tests, not
+biological validity rates.</li>
 </ul>
-<p><strong>Release citation:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1" class="external-link">v0.1.1
-on GitHub</a> · <a href="https://doi.org/10.5281/zenodo.24262905" class="external-link">Zenodo
-DOI: 10.5281/zenodo.24262905</a>. CRAN candidate 0.1.2 is a separate
-package-source qualification track, not the published version of this
-site.</p>
+<p><strong>Current software citation:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2" class="external-link">v0.1.2
+on GitHub</a> · <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/CITATION.cff" class="external-link">CITATION.cff</a>.
+<a href="https://doi.org/10.5281/zenodo.24262905" class="external-link">Zenodo DOI
+10.5281/zenodo.24262905</a> identifies <strong>historical
+v0.1.1</strong>, not v0.1.2. CRAN acceptance is not asserted. See the <a href="reproducible-research-release.html">complete v0.1.2
+reproducibility example</a>.</p>
 <p><strong>Historical evidence:</strong> v0.1.0 was tagged at commit
 <code>f63885411d55df764e452846758756114b90423a</code>. The original
 v0.1.0 qualification protocols below remain accessible as historical
@@ -209,8 +214,8 @@ protocol</a></li>
 <li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/RELEASE_CANDIDATE_0_1_0.md" class="external-link">source
 protocol</a></li>
 </ul>
-<p>See the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1" class="external-link">current
-v0.1.1 release</a> and the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs" class="external-link">historical
+<p>See the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2" class="external-link">current
+v0.1.2 release</a> and the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs" class="external-link">historical
 v0.1.0 source methods library</a>.</p>
 <p>The release is open-source research software. It is not a medical,
 animal-welfare diagnostic or independently safety-certified

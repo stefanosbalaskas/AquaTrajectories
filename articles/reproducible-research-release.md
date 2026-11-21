@@ -1,0 +1,120 @@
+# Reproducible Research v0.1.2 — complete trajectory-to-report
+
+## Reproduce the Scientific Core 2.0 software release
+
+**Official release:** [AquaTrajectories
+v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2),
+published **21 November 2026**. This is an engineering-qualified
+reproducibility release, not a claim of independently measured fish
+biology.
+
+**Public R API**179 documented exported functions
+
+**Executed R code coverage**89.33% measured; release gate at 80%
+
+**Cross-platform qualification**24 workloads per OS · Linux, Windows,
+macOS
+
+### Five milestones completed
+
+| Scientific Core 2.0 workstream | Implementation and evidence |
+|:---|:---|
+| 01 — Architecture and scientific API | Unit-aware 2D/3D analysis without obligatory video, [PRs \#100–102](https://github.com/stefanosbalaskas/AquaTrajectories/pull/102) |
+| 02 — General trajectory QC2 | Original-row eligibility, exclusions, missing data and sensitivity, [PR \#103](https://github.com/stefanosbalaskas/AquaTrajectories/pull/103) |
+| 03 — Numerical Validation 2.0 | Independent numerical oracles, metamorphic properties and failure fixtures, [PR \#104](https://github.com/stefanosbalaskas/AquaTrajectories/pull/104) |
+| 04 — Publication Visualization 2.0 | Gap-aware plots, provenance and SVG/PDF/PNG/TIFF journal output, [PR \#105](https://github.com/stefanosbalaskas/AquaTrajectories/pull/105) |
+| 05 — Reproducible Research Release | Measured source coverage and memory/runtime, exact three-OS gates and frozen example, [PR \#106](https://github.com/stefanosbalaskas/AquaTrajectories/pull/106) |
+
+These software qualifications do not require the user to run a detector
+or collect video. They do not validate every possible statistical
+estimator/input combination or any welfare claim.
+
+### The independent, locked numerical example
+
+The released synthetic fixture contains **17 rows** across three
+invented fish, with a deliberately missing observation, a frame
+discontinuity and an excessive displacement. The unchanged original data
+file has SHA-256:
+
+`b940aedc80b9ca0a2355b5fcc1912cc233ecf6318044bed4d7449ca7ee0be2bc`
+
+| Synthetic track | Raw observations | Eligible adjacent steps | Accepted distance |
+|:----------------|-----------------:|------------------------:|------------------:|
+| 0001            |                5 |                       3 |              3 cm |
+| 0002            |                6 |                       3 |              3 cm |
+| 0003            |                6 |                       4 |              4 cm |
+| **Total**       |           **17** |                  **10** |         **10 cm** |
+
+Check the original source at the immutable tag and rerun the entire
+chain:
+
+``` sh
+git clone --branch v0.1.2 --depth 1 https://github.com/stefanosbalaskas/AquaTrajectories.git
+cd AquaTrajectories
+R CMD INSTALL .
+Rscript scripts/release05_example.R release05-example
+python scripts/release05_verify.py --out release05-example
+```
+
+The R workflow exports an original-row QC ledger, **four publication
+figure types** in **SVG, PDF, PNG and TIFF**, an interpretable Markdown
+report, input/output hashes and figure-to-input provenance. The
+independent Python standard-library implementation re-derives the 10
+eligible movements and length from the source CSV and checks the
+exported evidence. It refuses altered source rows, numeric reports and
+figures. This is a controlled synthetic demonstration, not new fish
+measurements.
+
+### Measured performance, with explicit units and limits
+
+The release qualification recorded **89.33% instrumented R test
+coverage** using `covr`, above its 80% gate; coverage is not a
+percentage of scientific accuracy. The full benchmark exercised **24
+measured workloads per OS** on Linux, Windows and macOS (2D/3D, three
+dataset sizes, four operations). Median seconds for selected
+20,000-observation benchmarks:
+
+| Workload           |  Linux | Windows |  macOS |
+|:-------------------|-------:|--------:|-------:|
+| 2D path summary    | 0.0458 |  0.0388 | 0.0321 |
+| 2D school geometry | 3.2856 |  2.2616 | 2.0713 |
+| 2D QC2 lineage     | 0.2287 |  0.1375 | 0.1506 |
+| 3D school geometry | 3.3782 |  2.3079 | 1.9424 |
+
+These observed times were measured on different GitHub runners; they are
+**not** controlled speed comparisons across operating systems. The
+allocation-memory metric is R allocated memory, **not peak resident
+memory**. View [all benchmark tables and exact measurement
+definitions](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md).
+
+### Evidence and reproducibility links
+
+- [Official v0.1.2 GitHub release and attached qualification
+  archive](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+- [Exact-source 05 reproducibility
+  protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md)
+- [Three-OS release workflow and qualification
+  history](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/reproducible-research-release-v012.yml)
+- [QC2
+  methods](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/docs/QC2_GENERAL_TRAJECTORIES.md)
+  · [numerical validation
+  methods](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/docs/NUMERICAL_VALIDATION_2_0.md)
+  · [visualization
+  article](https://stefanosbalaskas.github.io/AquaTrajectories/articles/publication-visualization-v2.md)
+- [Full scientific evidence
+  dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)
+  · [capabilities and
+  limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)
+
+**Citation/version rule:** cite [v0.1.2
+CITATION.cff](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/CITATION.cff)
+and the versioned tag. Zenodo DOI
+[10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905)
+belongs specifically to **historical v0.1.1**; no v0.1.2 Zenodo DOI or
+CRAN availability is asserted.
+
+**Scientific limits:** independent fish detector/identity accuracy,
+calibrated underwater XYZ, empirical uncertainty coverage, stress or
+welfare diagnosis, real animal–computer-interaction safety and causal
+effects require separate external evidence. Synthetic software gates
+cannot certify those findings.

@@ -2,12 +2,14 @@
 
 ## What the package can and cannot establish
 
-The official [v0.1.1 GitHub
-release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-is **published and citable**. It is not an independently certified fish
-observation, welfare, metrology or device-control system. A software
-function existing and passing tests is **not** evidence that its
-biological prediction is accurate.
+The official [v0.1.2 GitHub
+release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+is **published and source-citable**. The [Zenodo v0.1.1
+DOI](https://doi.org/10.5281/zenodo.24262905) identifies an earlier,
+separate release and must not be attributed to v0.1.2. It is not an
+independently certified fish observation, welfare, metrology or
+device-control system. A software function existing and passing tests is
+**not** evidence that its biological prediction is accurate.
 
 The table below summarizes software capabilities and
 independent-evidence requirements, based on the repository’s [scientific
@@ -18,6 +20,9 @@ research-readiness matrix**, not a live certification service.
 
 | Capability | Implemented software / demonstration | Must be supplied externally | Independent scientific claim |
 |----|----|----|----|
+| Existing 2D/3D trajectories | Unit-aware R ingestion, QC2 source-row lineage, missing/exclusion and threshold sensitivity | Original coordinates, declared units, camera/track scopes, an explicit policy | **Software-qualified; conclusions conditional on recorded input** |
+| Numerical estimators | Known-answer/metamorphic tests for kinematics, geometry and advanced methods | Model assumptions, independent application-specific diagnostics and validated scientific endpoints | **Bounded software tests, not universal numerical certification** |
+| Research figures | Four QC-linked figure specifications and PDF/SVG/PNG/TIFF exports with hashes | Original input and caption/axis interpretation | **Source-linked reproducibility, not a physical validation result** |
 | Fish detections | Optional video runner and box metrics; public dataset probes | Fish-trained detector weights; held-out reviewed annotations | **Not certified** across tanks/species |
 | Within-camera tracks | Imports, camera-local track representation, identity metrics | Adjudicated fish IDs; occlusion/density evaluation | **Not certified** as permanent identities |
 | Multiview identity | Geometric association and reviewer/abstention contracts | Clock evidence, calibrated cameras and verified cross-view matches | **Not independently verified** |
@@ -41,7 +46,9 @@ research-readiness matrix**, not a live certification service.
     physical reference evidence supports a specified claim. **Not
     asserted for the system as a whole.**
 
-Read the [full evidence
+Read the [v0.1.2 fully reproducible trajectory-to-report
+guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
+and [full evidence
 dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)
 for links to the real source contracts and checks. The [scientific
 status
@@ -59,7 +66,9 @@ measures internal fit, not underwater target accuracy.
 ### Which guide should I use?
 
 - Have only CSV coordinates? [Five-minute quick
-  start](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)
+  start](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md),
+  [independent v0.1.2 reproducibility
+  guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
   and [movement and
   schooling](https://stefanosbalaskas.github.io/AquaTrajectories/articles/movement-and-schooling.md)
 - Have original fish footage and a detector? [Video-to-results

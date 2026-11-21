@@ -7,7 +7,9 @@ with R, Python and browser tools. Start with documented synthetic
 examples, then supply independent annotations, camera calibration and
 real recording metadata for scientific measurements.
 
-[Run a five-minute
+[Reproduce
+v0.1.2](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)[Run
+a five-minute
 example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)[Open
 interactive
 lab](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)[Plan
@@ -42,6 +44,15 @@ independently certified**. See the [evidence and
 limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md).
 
 ## Choose your path
+
+[](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
+
+Already have trajectories
+
+### Scientific Core 2.0: tracks to report
+
+Use 2D/3D CSVs without video or a tracker; review QC2 source rows,
+reproduce the independent numerical example, and export journal figures.
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)
 
@@ -89,6 +100,29 @@ DOI](https://doi.org/10.5281/zenodo.24262905) ·
 **Scientific validity**Software contracts tested; [independent
 biological validation
 pending](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)
+
+## Scientific Core 2.0 — independently reproducible research software
+
+The completed five-milestone roadmap is available in the published
+v0.1.2 GitHub release: stable 2D/3D scientific architecture;
+source-preserving QC2; numerical/metamorphic validation; QC-aware
+publication figures; and cross-platform reproducible research.
+
+**Measured release evidence:** 179 exported functions; **89.33% actual
+instrumented R test coverage**; **24 runtime and allocation-memory
+workloads on each of Linux, Windows and macOS**; and a **17-row
+synthetic dataset** with **10 eligible movement steps totaling 10 cm**,
+independently verified against an alternate Python implementation. These
+are bounded software tests and environment-dependent benchmarks, not
+biological-certification percentages or peak resident-memory
+measurements.
+
+**[Complete reproducible v0.1.2 research
+guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)**
+· **[Full versioned evidence
+archive](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)**
+· **[Current scientific evidence
+dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)**
 
 ## Discover the research workflows
 

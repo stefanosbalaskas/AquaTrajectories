@@ -12,6 +12,30 @@ accuracy.
 Use the linked function reference for precise arguments and return
 values.
 
+### Workflow 0 — Existing trajectory file to reproducible report
+
+**Inputs:** original 2D/3D trajectory CSV, declared physical/image
+units, time and source-row identifiers, and an explicit
+missingness/exclusion policy. No video, detector or tracker is required.
+
+1.  Import unchanged original observations with explicit source scope
+    and units.
+2.  Run QC2, retaining every original row and reason for missing,
+    non-estimable or excluded movement.
+3.  Assess 2D/3D kinematic and group quantities under documented gap and
+    speed policy limits.
+4.  Export QC-aware scientific figures as SVG/PDF/PNG/TIFF with source
+    and output SHA-256 evidence.
+5.  Verify the published synthetic source-to-report example with an
+    independent Python implementation.
+
+**Start here:** [Independently reproducible v0.1.2
+guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
+· [QC2
+reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc2_report.md)
+· [publication figure
+specification](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_spec.md).
+
 ### Workflow A — A single-camera experiment
 
 **Inputs:** original video, frame presentation timestamps, known
@@ -152,12 +176,12 @@ workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/aci-work
 |----|----|----|
 | One GoPro, no annotations | A + C | Independently annotated evaluation frames |
 | Two cameras, known calibration | B | Clock and physical XYZ holdouts |
-| Tracking CSV only | A (from import) | Missing-frame and ID QC |
+| Tracking CSV only | **0** | Units, source-row QC2 ledger, publication provenance |
 | Five fish, several tanks, event log | D | Confirm independent experimental tank count |
 | Time-dependent state measurements | E | Observational gaps, state assumptions and tanks |
 | Multiple uncertain fish identities | F | Sensitivity distributions, not certified intervals |
 | ACI choice/actuator logs | H | Operator authorization, safety, external behavioural review |
 
-The [source
-protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs)
+The [current v0.1.2 source
+protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.2/docs)
 provide further constraints and data schemas.

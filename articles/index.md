@@ -5,13 +5,13 @@
 - [Get started with
   AquaTrajectories](https://stefanosbalaskas.github.io/AquaTrajectories/articles/aquaTrajectories.md):
 
-  Install the official v0.1.1 GitHub release, follow a first
+  Install the official v0.1.2 GitHub release, follow a first
   reproducible analysis, and understand research evidence limits.
 
 - [Five-minute quick start: tracks to scientific
   outputs](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md):
 
-  Install released AquaTrajectories v0.1.1; generate explicitly
+  Install released AquaTrajectories v0.1.2; generate explicitly
   synthetic fish tracks; calculate kinematics, align an event, and
   export reproducible CSV outputs.
 
@@ -57,16 +57,22 @@
 - [Capability and scientific validation
   matrix](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md):
 
-  What AquaTrajectories v0.1.1 actually implements, what evidence is
+  What AquaTrajectories v0.1.2 actually implements, what evidence is
   required, and which fish detection, identity, stereo, uncertainty and
   ACI claims remain unverified.
+
+- [Reproducible Research v0.1.2 — complete
+  trajectory-to-report](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md):
+
+  Reproduce AquaTrajectories v0.1.2 independent synthetic QC2-to-figure
+  results and inspect its measured coverage, memory and three-OS
+  qualification.
 
 - [Research evidence, release and validation
   dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md):
 
-  Source-linked engineering qualification and honest empirical
-  validation gate status for the published AquaTrajectories v0.1.1
-  release.
+  Current AquaTrajectories v0.1.2 engineering release and independent
+  biological/physical research validation status.
 
 ### From pixels to trajectories
 
@@ -182,6 +188,6 @@
 - [Scientific validation status and research
   limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md):
 
-  Current published v0.1.1 software release versus independent fish
+  Current published v0.1.2 software release versus independent fish
   identity, underwater XYZ, and welfare evidence, with historical v0.1.0
   qualification preserved.

@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">AquaTrajectories — aquatic movement science</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
 <li class="nav-item"><a class="nav-link" href="../synthetic-explorer.html">Interactive labs</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/scientific-teaching.html">Scientific teaching</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/research-laboratory.html">Research lab</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/reproducible-research-release.html">Reproducibility</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/plan-your-experiment.html">Plan an experiment</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
@@ -89,6 +90,30 @@ validated accuracy.</p>
 Use the linked function reference for precise arguments and return
 values.
 </p>
+<div class="section level3">
+<h3 id="workflow-0-existing-trajectory-file-to-reproducible-report">Workflow 0 — Existing trajectory file to reproducible report<a class="anchor" aria-label="anchor" href="#workflow-0-existing-trajectory-file-to-reproducible-report"></a>
+</h3>
+<p><strong>Inputs:</strong> original 2D/3D trajectory CSV, declared
+physical/image units, time and source-row identifiers, and an explicit
+missingness/exclusion policy. No video, detector or tracker is
+required.</p>
+<ol style="list-style-type: decimal">
+<li>Import unchanged original observations with explicit source scope
+and units.</li>
+<li>Run QC2, retaining every original row and reason for missing,
+non-estimable or excluded movement.</li>
+<li>Assess 2D/3D kinematic and group quantities under documented gap and
+speed policy limits.</li>
+<li>Export QC-aware scientific figures as SVG/PDF/PNG/TIFF with source
+and output SHA-256 evidence.</li>
+<li>Verify the published synthetic source-to-report example with an
+independent Python implementation.</li>
+</ol>
+<p><strong>Start here:</strong> <a href="reproducible-research-release.html">Independently reproducible
+v0.1.2 guide</a> · <a href="../reference/aqt_qc2_report.html">QC2
+reference</a> · <a href="../reference/aqt_viz2_spec.html">publication
+figure specification</a>.</p>
+</div>
 <div class="section level3">
 <h3 id="workflow-a-a-single-camera-experiment">Workflow A — A single-camera experiment<a class="anchor" aria-label="anchor" href="#workflow-a-a-single-camera-experiment"></a>
 </h3>
@@ -247,8 +272,8 @@ workflows</a>.</p>
 </tr>
 <tr class="odd">
 <td>Tracking CSV only</td>
-<td>A (from import)</td>
-<td>Missing-frame and ID QC</td>
+<td><strong>0</strong></td>
+<td>Units, source-row QC2 ledger, publication provenance</td>
 </tr>
 <tr class="even">
 <td>Five fish, several tanks, event log</td>
@@ -272,8 +297,9 @@ workflows</a>.</p>
 </tr>
 </tbody>
 </table>
-<p>The <a href="https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs" class="external-link">source
-protocols</a> provide further constraints and data schemas.</p>
+<p>The <a href="https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.2/docs" class="external-link">current
+v0.1.2 source protocols</a> provide further constraints and data
+schemas.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

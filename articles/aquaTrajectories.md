@@ -7,20 +7,23 @@ movement and multiview trajectories. The public package is named
 `aquaTrajectories` (lowercase `a`); the repository is named
 `AquaTrajectories`.
 
-**Published release:**
-[v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1),
-archived on [Zenodo](https://doi.org/10.5281/zenodo.24262905). This is a
-normal GitHub software release, **not** an assertion of independently
-verified fish identity or underwater physical accuracy. The separate
-0.1.2 CRAN candidate should not be installed as a public CRAN release
-before CRAN acceptance.
+**Current published GitHub software:**
+[v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2),
+including a [fully reproducible scientific
+example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md).
+The [Zenodo DOI
+10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) is
+specific to historical **v0.1.1**, not v0.1.2. This source release is
+engineering-qualified but is not an independently certified
+fish-identification or underwater-metrology system. CRAN availability is
+not asserted.
 
 ### Install from GitHub
 
 ``` r
 
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ```
@@ -89,6 +92,9 @@ to a time interval does not prove that the intervention caused a change.
 For a guided script with checkable output shapes and CSV exports, follow
 the [five-minute quick
 start](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md).
+For the locked trajectory-to-QC2-to-report example and independent
+Python numerical verification, use the [reproducible v0.1.2 release
+guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md).
 For input file schemas and a reproducible tank-event example, use the
 [experiment starter
 kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-starter-kit.md).
@@ -97,7 +103,7 @@ kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-sta
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md)
 
-#### All 155 functions
+#### All 179 functions
 
 Find each documented function in 14 clearly defined families.
 

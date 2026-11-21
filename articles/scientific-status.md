@@ -1,10 +1,10 @@
 # Scientific validation status and research limitations
 
-## Scientific status of the published v0.1.1 release
+## Scientific status of the published v0.1.2 release
 
-**AquaTrajectories v0.1.1 is a published, citable software release, not
-an independently certified fish-welfare or underwater physical metrology
-system.**
+**AquaTrajectories v0.1.2 is a published, engineering-qualified
+reproducibility release, not an independently certified fish-welfare or
+underwater physical metrology system.**
 
 The release includes tested R/Python/JavaScript contracts, synthetic
 integration tests, and a fail-closed scientific gate. Those are stronger
@@ -19,22 +19,28 @@ passes.
 
 ### What the engineering release establishes
 
-- A documented public R API containing **155 exported functions**.
+- A documented public R API containing **179 exported functions**.
 - Native R software components for video outputs, trajectories, optics,
   movement, statistical utilities and figures.
 - Python video integration contracts and local JavaScript exploratory
   interfaces.
 - Tested conditional simulation and uncertainty scenarios with explicit
   assumptions.
-- Whole-package release qualification, including source, tests and
-  synthetic integration evidence.
+- Whole-package release qualification: 89.33% measured instrumented R
+  code coverage, 24 benchmark workloads per OS (Linux/Windows/macOS),
+  and independent verification of a 17-row synthetic
+  trajectory-to-report chain (10 valid steps, 10 cm). These are
+  engineering tests, not biological validity rates.
 
-**Release citation:** [v0.1.1 on
-GitHub](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-· [Zenodo DOI:
-10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905). CRAN
-candidate 0.1.2 is a separate package-source qualification track, not
-the published version of this site.
+**Current software citation:** [v0.1.2 on
+GitHub](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+·
+[CITATION.cff](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/CITATION.cff).
+[Zenodo DOI
+10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905)
+identifies **historical v0.1.1**, not v0.1.2. CRAN acceptance is not
+asserted. See the [complete v0.1.2 reproducibility
+example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md).
 
 **Historical evidence:** v0.1.0 was tagged at commit
 `f63885411d55df764e452846758756114b90423a`. The original v0.1.0
@@ -89,8 +95,8 @@ for a function-by-function and claim-by-claim orientation.
 - [source
   protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.0/docs/RELEASE_CANDIDATE_0_1_0.md)
 
-See the [current v0.1.1
-release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+See the [current v0.1.2
+release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
 and the [historical v0.1.0 source methods
 library](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.0/docs).
 

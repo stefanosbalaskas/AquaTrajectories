@@ -2,78 +2,86 @@
 
 ## Scientific evidence and release status
 
-**Evidence date:** The bundled [scientific gate
-registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/evidence/scientific-validation-gates.json)
-is dated **2026-11-12**. This page is *not a continuously updating live
-benchmark database*. Check linked GitHub Actions and release records for
-any newer verification.
+**Source-bound snapshot: 21 November 2026.** The [published v0.1.2
+GitHub
+release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+qualifies research software and a reproducible synthetic example. This
+page is not a continuously updated benchmark database. A successful
+software test is not independent measurement of fish biology.
 
-**Published source**[GitHub
-v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+**Published source**v0.1.2 · 179 public R functions
 
-**Permanent
-citation**[10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905)
+**Observed coverage**89.33% instrumented R tests
 
-**Independent science****Not certified** as a complete biological
-measurement system
+**Independent empirical system**Not certified
 
-### Live engineering workflow links
+### Scientific Core 2.0: five engineering milestones completed
 
-The badge destinations below take you to actual **GitHub Actions
-history**, which may include successful, failed, skipped, queued, or
-rerun jobs. A successful automated check is software evidence, not
-independent underwater accuracy.
+| Workstream | Bounded outcome | Evidence |
+|:---|:---|:---|
+| 01 — Architecture | Documented unit-aware 2D/3D scientific interfaces | [PRs \#100–102](https://github.com/stefanosbalaskas/AquaTrajectories/pull/102) |
+| 02 — QC 2.0 | Preserved original-row lineage, gap/missingness/exclusion reporting | [PR \#103](https://github.com/stefanosbalaskas/AquaTrajectories/pull/103) |
+| 03 — Numerical validation | Independent known-answer and metamorphic tests | [PR \#104](https://github.com/stefanosbalaskas/AquaTrajectories/pull/104) |
+| 04 — Visualization 2.0 | QC-linked journal figure specifications and four export formats | [PR \#105](https://github.com/stefanosbalaskas/AquaTrajectories/pull/105) |
+| 05 — Reproducible research | Frozen source-to-report, independent Python oracle, measured coverage and three-OS benchmarks | [PR \#106](https://github.com/stefanosbalaskas/AquaTrajectories/pull/106) |
 
-- [R
-  qualification](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/R-CMD-check.yaml)
-- [Research documentation
-  website](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/pkgdown-research-portal.yml)
-- [Full engineering and scientific-safeguard
-  gate](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/release-candidate-full-gate.yml)
-- [Source version and release
-  history](https://github.com/stefanosbalaskas/AquaTrajectories/releases)
-- [Open scientific
-  issues](https://github.com/stefanosbalaskas/AquaTrajectories/issues)
-- [CRAN candidate source review PR
-  \#79](https://github.com/stefanosbalaskas/AquaTrajectories/pull/79) —
-  **separate v0.1.2 candidate, not the published v0.1.1 tag**.
+The release-candidate coverage run measured **89.33% executed R source
+coverage**, above the 80% gate. **24 runtime and allocation-memory
+workloads were benchmarked per OS** on Linux, Windows and macOS. The
+independently recomputed synthetic example has **17 source observations,
+10 eligible movements and 10 cm of supported distance**. The [full
+reproducibility
+walkthrough](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
+states the commands, assumptions, provenance and measured performance;
+software coverage is not a numerical-certification percentage.
 
-### Independent empirical gates
+### Live qualification history
 
-The public registry records **scientific_certified = false** for each of
-these nine milestone areas. Software tests, real-format probes, and
-mathematical demonstrations remain useful but do not supply the absent
-external reference evidence.
+These links point to actual GitHub runs and may include successes,
+failures, skips or reruns:
 
-| Milestone | Source registry engineering state | Remaining evidence needed |
-|----|----|----|
-| Fish detection | Real-source qualified | Independently reviewed held-out boxes across tanks/species |
-| Fish identity | Real-source qualified | Held-out identity labels and official tracking association metrics |
-| Multi-camera exposure | Software contracts passed | Measured cross-camera physical exposure pulses |
-| Physical underwater XYZ | Software contracts passed | Independent surveyed target positions and error curves |
-| Joint uncertainty | Software contracts passed | Empirically measured error components and held-out coverage |
-| Behaviour and tank inference | Software contracts passed | External biological labels and independent tank replication |
-| Unified researcher explorer | Software contracts passed | Real multiview review and independent usability/evidence evaluation |
-| Physical ACI | Simulation-only | Ethics-approved device tests, hard stop, actual fish response |
-| Independent science release | Software contracts passed | External replication, biological metrology, rights and scientific review |
+- [Three-OS reproducibility release
+  workflow](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/reproducible-research-release-v012.yml)
+- [R package
+  checks](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/R-CMD-check.yaml)
+- [Website build, source parity and browser
+  tests](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/pkgdown-research-portal.yml)
+- [Scientific safeguard and overall release
+  gates](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/release-candidate-full-gate.yml)
+- [Archived v0.1.2 qualification
+  evidence](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
 
-**Do not convert these gates to passes based on synthetic tests.** New
-validated evidence should be incorporated only after checking its
-provenance and scope.
+### Biological and physical validation remains distinct
 
-### Evidence to include in a research paper
+The [nine-domain frozen scientific
+registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/inst/evidence/scientific-validation-gates.json),
+with underlying evidence recorded **12 November 2026**, has
+`scientific_certified = false` in all nine domains. Those flags were not
+silently promoted by the Scientific Core 2.0 engineering release.
 
-Use the published package tag/DOI; identify exact versions; record
-original video and reference-label hashes; document camera calibration
-and timing; separate training from holdouts; report real
-detection/tracking metrics; use independent tanks where appropriate; and
-distinguish unconditional coverage claims from scenario-based
-sensitivity. The [capabilities
+| Independent scientific claim | Remaining external evidence |
+|:---|:---|
+| Fish detection | Held-out, prediction-blind fish box labels across species, tanks and visibility conditions |
+| Fish identity | Adjudicated held-out identities and official association evaluation |
+| Multi-camera exposure timing | Independently measured shutter/exposure clock evidence |
+| Physical underwater XYZ | Surveyed independent 3D underwater targets and calibration holdouts |
+| Joint uncertainty | Observed detector/identity/calibration errors and empirical coverage |
+| Behaviour and tank inference | Ethological truth, independent tank replication and design validity |
+| Research explorer | Independent real multiview and usability review |
+| Physical ACI | Ethics-approved physical safety interlocks and independent fish outcomes |
+| Independent scientific release | Third-party replication and externally reviewed research-system claims |
+
+**Publication practice:** identify the exact software tag; record
+original input hashes, camera/track scopes, units, QC exclusions,
+figure-to-input lineage, independent tanks and separately validated
+physical/biological references. See the [capability
 matrix](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabilities-and-validation.md)
-and [scientific-status
-statement](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md)
-are the authoritative navigation entry points.
+and [scientific
+status](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md).
 
-For publication citations, download
+**Citation discipline:** v0.1.2 uses its [versioned GitHub source and
+CITATION.cff](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/CITATION.cff).
+The [Zenodo DOI
+10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) and
 [BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
-or use the [Zenodo record](https://doi.org/10.5281/zenodo.24262905).
+refer to historical **v0.1.1**, not v0.1.2.
