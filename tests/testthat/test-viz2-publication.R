@@ -95,6 +95,7 @@ test_that("VIZ2 all four formats and all-data SHA256 verification are transactio
   expect_true(all(file.exists(file.path(out,files))))
   expect_true(all(file.info(file.path(out,files))$size>0))
   expect_true(aqt_viz2_verify(out))
+  expect_true(aqt_viz2_verify(out,source_file=f))
   m<-jsonlite::fromJSON(file.path(out,"VIZ2_MANIFEST.json"),
                         simplifyVector=FALSE)
   expect_identical(m$data_provenance$source_file_sha256,
