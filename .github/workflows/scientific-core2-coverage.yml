@@ -1,0 +1,75 @@
+name: Scientific Core 2.0 - executed coverage and cross-platform R qualification
+on:
+  pull_request:
+    paths:
+      - "R/**"
+      - "tests/testthat/**"
+      - "scripts/core2_execution_coverage.R"
+      - "scripts/core2_benchmark.R"
+      - ".github/workflows/scientific-core2-coverage.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/**"
+      - "tests/testthat/**"
+      - "scripts/core2_execution_coverage.R"
+      - ".github/workflows/scientific-core2-coverage.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-executed-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::covr
+            any::testthat
+      - name: Instrument package code and execute actual test suite
+        run: |
+          Rscript --vanilla scripts/core2_execution_coverage.R core2-coverage-evidence
+          test -s core2-coverage-evidence/EXECUTED_COVERAGE.csv
+          test -s core2-coverage-evidence/EXECUTION_COVERAGE_SUMMARY.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scientific-core2-real-execution-coverage
+          path: core2-coverage-evidence/
+          if-no-files-found: warn
+  portability:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+      - name: Execute 2D/3D metamorphic, QC and figure tests on OS
+        shell: bash
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-scientific-core2.R",reporter="summary",stop_on_failure=TRUE)'
+      - name: Execute deterministic source-measurement benchmark
+        shell: bash
+        run: |
+          Rscript --vanilla scripts/core2_benchmark.R core2-platform-benchmark 1000
+          test -s core2-platform-benchmark/CORE2_BENCHMARK.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scientific-core2-${{ matrix.os }}-benchmark
+          path: core2-platform-benchmark/
+          if-no-files-found: warn
