@@ -35,7 +35,7 @@ aqt_viz2_presets <- function() {
     width_in=c(3.5,7.2,6.8,12),
     height_in=c(3.3,4.8,4.8,6.75),
     dpi=c(600L,300L,300L,150L),
-    pointsize=c(9,10,11,16),
+    pointsize=c(9,12,11,16),
     stringsAsFactors=FALSE)
 }
 
@@ -305,7 +305,8 @@ aqt_viz2_draw <- function(spec) {
   old <- graphics::par(no.readonly=TRUE)
   on.exit(graphics::par(old),add=TRUE)
   graphics::par(bg="white",mar=c(4.5,4.8,3.25,1.1),
-     cex.axis=.83,cex.lab=.95,cex.main=1)
+     cex.axis=.83,cex.lab=.95,cex.main=1,
+     ps=spec$preset$pointsize[[1L]])
   if(spec$figure=="paths") {
     pts <- pp[pp$observed,,drop=FALSE]
     ylim <- .aqt_viz2_range(pts$y)
