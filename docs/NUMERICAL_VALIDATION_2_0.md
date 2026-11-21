@@ -22,7 +22,7 @@ The fail-closed entrypoint `Rscript --vanilla scripts/nv2_reference_matrix.R NEW
 | Conditional trajectory uncertainty | Exact zero-error scenario, independent quantiles | RNG preservation, source equivalence | Invalid AR parameter, duplicate draw |
 | Sparse FPCA | Independent temporal-support counts, direct fdapace reference | Affine recording-clock change | Missing sparse design; inadequate observed support |
 
-The sparse adapter reference is a comparison to an external maintained **same estimator implementation**, not a second independently derived sparse FPCA estimator. A simulated rank-one-with-noise design checks finite nonnegative eigenvalues and observed sample retention; no frequentist confidence-interval coverage or biologically representative missingness is certified.
+The sparse adapter reference is a comparison to an external maintained **same estimator implementation**, not a second independently derived sparse FPCA estimator. A separate, independently specified 100-curve rank-one Gaussian process tests population mean-curve RMSE (<0.4 coordinate units) and sign-invariant leading-eigenfunction correlation (>0.7), alongside finite eigenvalues and explicit observed support. The data-generation process defines the truth independently of the PACE code, but it represents favourable independent observation schedules and does **not** establish frequentist interval coverage or robustness to nonrandom biological occlusion.
 
 The matrix is marked passed only when every source test file and pre-existing mathematical reference/backend test has actually executed without errors. Tests do **not** certify the full input domain of advanced estimators.
 
