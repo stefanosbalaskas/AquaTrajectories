@@ -14,8 +14,9 @@ if(!requireNamespace("ragg",quietly=TRUE)||
 suppressPackageStartupMessages(library(aquaTrajectories))
 tt<-0:15
 d<-do.call(rbind,lapply(1:3,function(i) {
-  yy<-i+cos(tt/2)*.4
-  xx<-i*.7+tt*.2+sin(tt/3)*.2
+  # Distinct per-fish velocities keep three actual data series legible.
+  yy<-i+cos(tt/2+i*.35)*(.30+.03*i)
+  xx<-i*.7+tt*(.12+.05*i)+sin(tt/3+i*.22)*.20
   if(i==3)xx[13L]<-xx[13L]+6
   observed<-!(i==2L & tt==5L)
   data.frame(session_id="PUBLISH",camera_id="TOP",
