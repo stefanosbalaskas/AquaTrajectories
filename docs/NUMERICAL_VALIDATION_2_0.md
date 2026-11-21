@@ -28,30 +28,67 @@ The matrix is marked passed only when every source test file and pre-existing ma
 
 ## Pixel-level visual regression
 
-`scripts/nv2_pixel_golden.R` renders three actual native package plots: paths, recurrence and dense-grid PCA, at 480 × 320 pixels using the reproducible `ragg` device. It:
+`scripts/nv2_pixel_golden.R` renders three actual native package plots: paths, recurrence and dense-grid PCA, at 600 × 480 pixels using the reproducible `ragg` device. It:
 
 1. Re-renders each plot and requires **exact identity at every decoded foreground pixel** within each operating system.
 2. Encodes a full-resolution binary foreground mask using run-length encoding, not a simple file hash or downsampled thumbnail.
-3. In verified mode, compares each of 153,600 foreground pixels per image to a **checked-in, frozen** source-control reference generated from a reviewed baseline run.
+3. In verified mode, compares each of 288,000 foreground pixels per image to a **checked-in, frozen** source-control reference generated from a reviewed baseline run.
 4. Records per-pixel disagreement and foreground intersection-over-union (IoU), allowing limited cross-operating-system font/antialiasing variance (at most 4% disagreeing pixels and foreground IoU at least .65).
 5. Writes actual PNGs, summary CSV and SHA-256 evidence.
 
-A first candidate-capture workflow is *not* cross-platform golden regression. Only after the candidate text is frozen as `tests/golden/nv2_pixel_masks.csv` and all Linux, Windows and macOS verification jobs succeed may the cross-platform golden stage be called qualified. Full RGBA byte-for-byte identity across OS is **not** required or claimed. The prior 22-function render execution coverage remains separate: these pixel-level golden tests select three representative renderers.
+The first successful Linux candidate was frozen under `tests/golden/nv2_pixel_masks.csv` on the PR branch; the cross-platform verification job is the release gate. Capture alone is not cross-platform evidence; only actual successful verification on all three systems qualifies the numerical mask comparison. Full RGBA byte-for-byte identity across OS is **not** required or claimed. The prior 22-function render execution coverage remains separate: these pixel-level golden tests select three representative renderers.
 
-## Real-world multi-fish performance (two A/B source sequences)
+## Real-world multi-fish performance (three original 3D-ZeF20 sequences)
 
-`scripts/nv2_fraunhofer_mot_to_csv.py` reads the actual official Fraunhofer HHI ricefish MOT A/B annotation ZIPs from:
+The original Fraunhofer HHI A/B archive URLs were probed in CI but returned
+`curl: (7) Could not connect to server`. A failed download is never
+represented as a completed real-world benchmark. The Fraunhofer adapter remains
+available for researchers possessing those original files, but is **not** used
+to claim results in this workflow.
 
-- https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip
-- https://cvg.hhi.fraunhofer.de/FishTrackingData/video_b/mot_b.zip
+The active real-data gate uses the Aalborg University Visual Analysis and
+Perception Lab **3D-ZeF** benchmark (Pedersen et al., CVPR 2020), sequences
+`ZebraFish-01`, `ZebraFish-04`, and `ZebraFish-08`, crossing train,
+validation and test splits. These are genuine manually annotated zebrafish
+recordings with a top and front GoPro view. The workflow downloads only original
+small per-sequence `gt/gt.txt` files over verified HTTPS from:
 
-It validates ZIP membership, missing/corrupt GT source, duplicate frame/track labels, finite bounding boxes and positive sizes. It extracts original MOT **bounding-box centres**, not tracker predictions, labeled biological identities or surveyed XYZ, into a canonical source-row-linked CSV. Original source ZIP SHA-256, native GT member digest and exact conversion rules are written to JSON.
+https://huggingface.co/datasets/vapaau/3D-ZeF
 
-**Important provenance limitation:** the original site has an invalid certificate chain on the GitHub runners. The existing Fraunhofer source workflow uses `curl --insecure`; new tests retain `transport_tls_peer_verified=false` and `origin_verified_by_independent_frozen_digest=false`. The downloaded annotation data are real provided the downloaded contents are genuine, but the transport alone does not authenticate them. Verify the original ZIPs against independent trusted digests before making strong provenance claims.
+Dataset license declared by the hosting original laboratory: MIT.
+Read the original 19-column schema before inferring coordinate semantics:
 
-The original MOT rows contain frame indices but not independently verified image-exposure timestamps. The package's time_s column therefore contains an **explicit ordinal frame proxy** solely to group simultaneous samples; it is **not a seconds measurement**. The profiler excludes movement speed, duration, path-length inference and biomechanical rate claims. Its `REAL_GROUP_PERFORMANCE.csv` records execution time, R object sizes, actual per-frame visible counts and real annotated input-row counts for multiple real-ID subsets. It independently recomputes sampled centroids and nearest-neighbor distances from base R Euclidean matrices. It does not measure full operating-system peak RSS, tracker throughput or statistically representative treatment effects.
+https://huggingface.co/datasets/vapaau/3D-ZeF/blob/main/data/ZebraFish-01/readme.txt
 
-Run manually with previously acquired genuine source annotation CSV and matching provenance JSON:
+The converter `scripts/nv2_zef_to_csv.py` explicitly takes
+`camT_x` and `camT_y`: **original top-view head-point image pixel
+annotations**, not derived 3D XYZ and not bounding-box centroids. It retains
+original fish IDs and row numbers, excludes invalid head annotations with an
+explicit exclusion table, and rejects duplicate frame/ID keys or malformed
+annotations. Its source digest, origin URL, frame and individual counts are
+included in `SOURCE_PROVENANCE.json`.
+
+**Original annotation accuracy limitation:** Manual 3D-ZeF head labels
+include estimated head locations when fish are occluded. An existing benchmark
+label is not an independent biological identity certification, and a 2D head
+point is not a physical underwater measurement.
+
+The original GT rows contain frame indices but not independent exposure
+timestamps. `time_s` is an **explicit ordinal frame proxy** used only
+to group simultaneous samples; it is **not a real seconds measurement**.
+The profiler therefore makes no claims about movement speeds, durations,
+physical path lengths or animal welfare. It calculates descriptive same-frame
+group geometry only. At each original recorded frame, the R analysis is
+separately checked against base-R centroids and nearest-neighbor Euclidean
+distances on the same real points.
+
+The `REAL_GROUP_PERFORMANCE.csv` files record runtime, `object.size`,
+original row count, original frame count, fish ID subsets and same-frame
+visibility. Rows are never generated to fill excluded time points or identities.
+This is a real external annotation computation benchmark with transparent
+provenance, **not** independent evidence of tracker or estimator accuracy.
+
+Run manually with the source CSV and matching provenance JSON:
 
 ~~~sh
 Rscript --vanilla scripts/nv2_real_group_profile.R \
@@ -60,14 +97,17 @@ Rscript --vanilla scripts/nv2_real_group_profile.R \
   /data/NEW_PROFILE_FOLDER
 ~~~
 
-No original copyrighted imagery, recordings or full annotation tables are uploaded as benchmark artifacts. GitHub Actions archives only aggregated performance/provenance evidence.
+No original imagery, recordings, raw annotation tables or separate full fish
+identities are republished in CI artifacts. Only aggregates and original
+source SHA-256 references are uploaded. A frame-proxy calculation must never
+be mislabeled as calibrated timing.
 
 ## Required qualification
 
 - Exact numerical and deliberate failure tests pass in a clean R environment with external fdapace/nlme installed.
 - Source-control image goldens are locked and all three OSes pass actual pixel-mask comparisons.
-- Real A/B annotation files are actually downloaded and passed through the separate converter and R profiler, or are explicitly reported **not run** (a synthetic substitute must never be relabeled real).
+- Original 3D-ZeF01/04/08 annotation files are actually downloaded over verified HTTPS and passed through the source converter and R profiler, or are explicitly reported **not run**; never substitute synthetic data.
 - No original input or existing source code is modified by the tests.
 - R CMD check, website/API registry and previously merged 173-function scientific baseline remain intact.
 
-Measured runtimes are local CI observations, **not** cross-machine latency service-level agreements. True real-world performance generalization still needs larger independent recordings, equipment and repeatability beyond the two short A/B source sequences.
+Measured runtimes are local CI observations, **not** cross-machine latency service-level agreements. True real-world performance generalization still needs larger independent recordings, equipment and repeatability beyond the three selected independent 3D-ZeF source sequences.
