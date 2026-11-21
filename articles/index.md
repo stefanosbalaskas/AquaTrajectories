@@ -48,7 +48,7 @@
   Choose a video, 3D, behavioural, benchmarking or ACI pipeline with
   inputs, outputs and qualification limits.
 
-- [Atlas of all 179 R
+- [Atlas of all 188 R
   functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md):
 
   A complete categorized, linked map to all public native R functions
