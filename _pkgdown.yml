@@ -281,6 +281,7 @@ articles:
     contents:
       - articles/visualization-gallery
       - articles/all-plot-functions
+      - articles/publication-visualization-v2
       - articles/five-figure-workbook
       - articles/publication-figures
       - articles/research-datasets
