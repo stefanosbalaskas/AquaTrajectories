@@ -70,7 +70,7 @@ for(i in seq_len(nrow(manifest)))
 fig <- tempfile("aqt_source_3axis_",fileext=".png")
 grDevices::png(fig,width=950,height=750)
 tryCatch({
-  aqt_plot_source_3axis(steps,measurement,max_points=1000L)
+  aqt_source_3axis_preview(steps,measurement,max_points=1000L)
 },finally=grDevices::dev.off())
 stopifnot(file.exists(fig),file.info(fig)$size>0L)
 unlink(fig)
