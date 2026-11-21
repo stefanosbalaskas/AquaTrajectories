@@ -1,5 +1,5 @@
 ---
-title: "Atlas of all 171 R functions"
+title: "Atlas of all 173 R functions"
 description: "A complete categorized, linked map to all public native R functions and their source-generated help manuals."
 ---
 
@@ -7,7 +7,7 @@ description: "A complete categorized, linked map to all public native R function
 
 Every public R function in this development branch is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
 
-**Coverage:** 171 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
+**Coverage:** 173 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
 
@@ -36,7 +36,7 @@ Canonical track objects, synthetic examples and interoperable data formats.
 - [`aqt_tracks_validate()`](../reference/aqt_tracks_validate.html)
 - [`aqt_video_bundle_import()`](../reference/aqt_video_bundle_import.html)
 
-## 2. Detection, tracking and annotation validation (23)
+## 2. Detection, tracking and annotation validation (25)
 
 Detector and identity metrics against explicitly defined reference annotations.
 
@@ -57,6 +57,8 @@ Detector and identity metrics against explicitly defined reference annotations.
 - [`aqt_qc_derive()`](../reference/aqt_qc_derive.html)
 - [`aqt_qc_report()`](../reference/aqt_qc_report.html)
 - [`aqt_qc_sensitivity()`](../reference/aqt_qc_sensitivity.html)
+- [`aqt_qc2_report()`](../reference/aqt_qc2_report.html)
+- [`aqt_qc2_export()`](../reference/aqt_qc2_export.html)
 - [`aqt_reference_measurement_publish()`](../reference/aqt_reference_measurement_publish.html)
 - [`aqt_reference_measurement_validate()`](../reference/aqt_reference_measurement_validate.html)
 - [`aqt_tracking_match()`](../reference/aqt_tracking_match.html)

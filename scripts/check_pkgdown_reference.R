@@ -6,7 +6,7 @@ api <- sub("^export\\(([^)]*)\\)$", "\\1", grep("^export\\(", ns, value = TRUE))
 cfg <- yaml::read_yaml("_pkgdown.yml")
 "%||%" <- function(x, y) if (is.null(x)) y else x
 grouped <- unlist(lapply(cfg$reference, function(x) x$contents %||% character()), use.names = FALSE)
-if (length(api) != 171L) stop("Expected 171 exported functions; actual: ", length(api))
+if (length(api) != 173L) stop("Expected 173 exported functions; actual: ", length(api))
 if (anyDuplicated(grouped)) stop("Duplicate function assignments: ", paste(unique(grouped[duplicated(grouped)]), collapse=", "))
 if (!setequal(api, grouped)) {
   stop("Missing functions: ", paste(setdiff(api, grouped), collapse=", "),
