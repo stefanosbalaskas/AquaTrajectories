@@ -127,6 +127,9 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
       if (any(canonical$observed!=present))
         stop("observed must agree with complete coordinate positions",call.=FALSE)
     }
+    canonical <- canonical[,c("session_id","camera_id","track_id",
+      "time_s","x","y",intersect(c("z","observed","frame_id","source_row"),
+                                 names(canonical))),drop=FALSE]
     data <- aqt_tracks(canonical,units=target_units,
                        coordinate_system=coordinate_system)
   }
@@ -141,8 +144,11 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
   if (anyNA(data$source_row) || any(!nzchar(data$source_row)) ||
       anyDuplicated(data$source_row))
     stop("source_row must uniquely identify each original row",call.=FALSE)
-  if(!from_tracks && !"source_row" %in% names(raw))
-    raw$source_row <- as.character(seq_len(nrow(raw)))
+  if(!from_tracks && !"source_row" %in% names(raw)) {
+    if ("source_row" %in% names(mapping))
+      raw$source_row <- as.character(raw[[mapping[["source_row"]]]])
+    else raw$source_row <- as.character(seq_len(nrow(raw)))
+  }
   qc <- aqt_qc_sensitivity(data,gap_limits_s=gap_limits_s,
                             speed_limits=speed_limits,
                             step_limits=step_limits)
@@ -188,10 +194,20 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
          ledger$track_id==summary$track_id[j]
     sum(ledger$step_status[z]=="excluded_by_policy")
   },integer(1L))
+  signature_columns <- intersect(
+    c("session_id","camera_id","track_id","time_s","x","y","z",
+      "observed","frame_id","source_row"),names(data))
+  normalized_signature <- data[,signature_columns,drop=FALSE]
+  for(axis in intersect(c("time_s","x","y","z"),names(normalized_signature)))
+    normalized_signature[[axis]] <- as.double(normalized_signature[[axis]])
+  canonical_signature_sha <- unname(digest::digest(list(
+    canonical=as.data.frame(normalized_signature),
+    units=qc$units,coordinate_system=qc$coordinate_system,
+    dimension=qc$dimension),algo="sha256"))
   result <- list(schema="AQT_QC2_GENERAL_LINEAGE_V1",
     tracks=data,raw_source=raw,policies=policy,summary=summary,
     exclusions=exclusions,lineage=ledger,
-    canonical_source_sha256=qc$source_sha256,
+    canonical_source_sha256=canonical_signature_sha,
     raw_table_sha256=unname(digest::digest(raw,algo="sha256")),
     source_file_sha256=source_file_sha,
     source_units=units,analysis_units=qc$units,
