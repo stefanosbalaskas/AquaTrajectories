@@ -316,7 +316,7 @@ aqt_viz2_draw <- function(spec) {
       xlim=.aqt_viz2_range(pts$x),ylim=ylim,asp=1,
       xlab=paste0(toupper(substr(spec$plane,1L,1L))," (",coords,")"),
       ylab=paste0(toupper(substr(spec$plane,2L,2L))," (",coords,")"),
-      main=paste0("Observed QC-qualified paths (",spec$plane,")"))
+      main=paste0("Source positions; QC-eligible edges (",spec$plane,")"))
     if(nrow(ss)) for(j in seq_len(nrow(ss)))
       graphics::segments(ss$x0[j],ss$y0[j],ss$x1[j],ss$y1[j],
         col=col[[ss$track_id[j]]],lwd=1.25)
@@ -349,10 +349,12 @@ aqt_viz2_draw <- function(spec) {
     not <- n-elig-rej
     values <- rbind(eligible=elig,policy_excluded=rej,not_estimable=not)
     graphics::barplot(values,col=c("#1F6D75","#C07C4C","#929CA4"),
+      ylim=c(0,max(1,colSums(values))*1.38),
       names.arg=id,las=2,ylab="Source rows",
       main=paste("QC coverage",name),cex.names=.68)
-    graphics::legend("topright",legend=rownames(values),
-      fill=c("#1F6D75","#C07C4C","#929CA4"),bty="n",cex=.7)
+    # Reserve an actual 27% top margin so legend cannot obscure evidence.
+    graphics::legend("topright",legend=c("Eligible","Policy excluded","Not estimable"),
+      fill=c("#1F6D75","#C07C4C","#929CA4"),bty="n",cex=.65)
     graphics::mtext(paste("All source rows retained;",spec$policy_id),
       side=3,line=.1,cex=.59)
   } else {
