@@ -1,5 +1,5 @@
 <section class="aqt-hero">
-<p class="aqt-eyebrow">Open-source aquatic movement science · v0.1.2 release + 188-function development branch</p>
+<p class="aqt-eyebrow">Open-source aquatic movement science · official v0.1.2 release + 188-function development branch</p>
 <h1>From aquatic observations to reproducible movement science</h1>
 <p>Analyze, validate and visualize 2D/3D aquatic-animal trajectories you already have with R. Video and Python tracker adapters are optional. Start with documented synthetic examples, then bring your own records, explicit units and—where applicable—independent calibration and identity evidence.</p>
 <div class="aqt-cta"><a href="articles/reproducible-research-release.html">Reproduce v0.1.2</a><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
