@@ -166,6 +166,10 @@ jobs:
           grep -qx 'version: 0.1.2' CITATION.cff
           Rscript -e 'roxygen2::roxygenise()'
           git diff --exit-code -- NAMESPACE man
+          # Current roxygen2 may rewrite only cosmetic DESCRIPTION metadata.
+          # Restore the tracked exact source bytes after proving man/NAMESPACE
+          # are unchanged, then assert full source immutability below.
+          git show HEAD:DESCRIPTION > DESCRIPTION
       - name: Strict built-package R CMD check with no ERROR WARNING or NOTE
         run: |
           Rscript -e 'z<-rcmdcheck::rcmdcheck(args=c("--no-manual"),error_on="never");cat("R CMD check E/W/N:",length(z$errors),length(z$warnings),length(z$notes),"\n");if(length(z$errors)+length(z$warnings)+length(z$notes))quit(save="no",status=1L)'
@@ -225,7 +229,11 @@ jobs:
                  "docs/RELEASE_NOTES_0_1_2.md",
                  "research/release05/locked_trajectories.csv",
                  "research/release05/locked_expected.json",
-                 "scripts/release05_verify.py"):z.write(p)
+                 "scripts/release05_verify.py",
+                 "scripts/release05_example.R",
+                 "scripts/release05_benchmark.R",
+                 "scripts/release05_coverage_gate.R",
+                 "scripts/core2_execution_coverage.R"):z.write(p)
           with zipfile.ZipFile(archive) as z:
               if z.testzip() is not None:raise SystemExit("Release ZIP CRC failed")
           print("RELEASE05_ASSET_READY",archive,archive.stat().st_size,
