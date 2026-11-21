@@ -273,3 +273,28 @@ test_that("NV2_UNCERTAINTY: zero-noise exactness, RNG isolation, quantile and fa
   expect_error(aqt_ensemble_summarize(repeat_values,"value"),
                "More than one")
 })
+
+
+test_that("NV2_UNCERTAINTY: independent AR(1) covariance and source-gap reset", {
+  x<-aqt_tracks(data.frame(session_id="S",camera_id="C",
+    track_id="F",time_s=c(0,1,2,5,6),
+    x=c(0,1,2,3,4),y=c(0,0,0,0,0),observed=TRUE),
+    units="cm",coordinate_system="tank")
+  set.seed(7);before<-.Random.seed
+  e<-aqt_trajectory_ensemble(x,sigma=.8,rho=.65,
+      systematic_sd=0,draws=1200,seed=313,max_gap_s=1.1)
+  expect_identical(.Random.seed,before)
+  residuals<-vapply(seq_len(nrow(x)),function(i)
+      e$positions[i,1,]-x$x[i],numeric(1200L))
+  # Analytic stationary AR(1) variance = sigma^2; lag-one corr = rho.
+  expect_lt(abs(stats::var(residuals[,1])-.8^2),.12)
+  expect_lt(abs(stats::var(residuals[,3])-.8^2),.12)
+  expect_lt(abs(stats::cor(residuals[,1],residuals[,2])-.65),.1)
+  # After the declared physical-time gap, the AR state MUST reset.
+  expect_lt(abs(stats::cor(residuals[,3],residuals[,4])),.12)
+  expect_equal(
+    e$positions,
+    aqt_trajectory_ensemble(x,sigma=.8,rho=.65,
+      systematic_sd=0,draws=1200,seed=313,max_gap_s=1.1)$positions,
+    tolerance=0)
+})
