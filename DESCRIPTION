@@ -7,7 +7,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports: stats, utils, graphics, grDevices, tools, jsonlite, digest
-Suggests: testthat (>= 3.0.0), rgl, roxygen2, fdapace, nlme
+Suggests: testthat (>= 3.0.0), rgl, roxygen2, fdapace, nlme, ragg, svglite
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 URL: https://stefanosbalaskas.github.io/AquaTrajectories/, https://github.com/stefanosbalaskas/AquaTrajectories
