@@ -83,6 +83,8 @@ jobs:
           packages: |
             local::.
             any::bench
+            any::ragg
+            any::svglite
             any::testthat
       - name: Validate exact installed R and Python identities
         shell: bash
