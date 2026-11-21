@@ -1,0 +1,58 @@
+{
+  "schema": "AQT_RELEASE05_LOCKED_SYNTHETIC_TRAJECTORY_V1",
+  "source_file": "research/release05/locked_trajectories.csv",
+  "source_file_sha256": "b940aedc80b9ca0a2355b5fcc1912cc233ecf6318044bed4d7449ca7ee0be2bc",
+  "units": "cm",
+  "coordinate_system": "tank",
+  "time_unit": "s",
+  "max_gap_s": 1.01,
+  "max_speed_cm_s": 2,
+  "n_original_source_rows": 17,
+  "n_observed_positions": 16,
+  "n_policy_excluded": 2,
+  "n_not_estimable": 5,
+  "n_eligible_steps": 10,
+  "per_track": [
+    {
+      "track_id": "0001",
+      "eligible_steps": 3,
+      "path_length_cm": 3,
+      "valid_duration_s": 3
+    },
+    {
+      "track_id": "0002",
+      "eligible_steps": 3,
+      "path_length_cm": 3,
+      "valid_duration_s": 3
+    },
+    {
+      "track_id": "0003",
+      "eligible_steps": 4,
+      "path_length_cm": 4,
+      "valid_duration_s": 4
+    }
+  ],
+  "exclusion_reasons": {
+    "nonadjacent_source_frame": [
+      "A4"
+    ],
+    "speed_threshold": [
+      "C3"
+    ],
+    "unobserved_current_position": [
+      "B2"
+    ],
+    "unobserved_previous_position": [
+      "B3"
+    ],
+    "first_record_in_track": [
+      "A0",
+      "B0",
+      "C0"
+    ]
+  },
+  "original_data": "synthetic_manual_ground_truth_example",
+  "source_clock_measured_externally": false,
+  "biological_accuracy_certified": false,
+  "notes": "Synthetic deterministic source coordinates; exact known-answer geometry, not validated physical swimming or biological identity."
+}

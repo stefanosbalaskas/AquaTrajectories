@@ -68,7 +68,7 @@ for(const f of [...pages,...extras]) {
   assert.ok(fs.statSync(path.join(site,f)).size > 0,"Empty site resource: "+f);
 }
 const home=read("index.html");
-assert.match(home,/official v0\.1\.1 release/i);
+assert.match(home,/official v0\.1\.2 release/i);
 assert.match(home,/10\.5281\/zenodo\.24262905/i);
 assert.match(home,/quickstart-five-minutes/);
 assert.match(home,/experiment-starter-kit/);
@@ -153,7 +153,7 @@ for(const id of ["one-camera","two-cameras","existing-recordings","before-record
 }
 assert.match(home,/plan-your-experiment/);
 assert.match(home,/synthetic-explorer/);
-assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.1.1:'),"Homepage concise description missing");
+assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.1.2:'),"Homepage concise description missing");
 assert.equal((home.match(/name="viewport"/g)||[]).length,1);
 assert.equal([...gallery.matchAll(/id="code-plot-[a-z0-9-]+"/g)].length,22);
 assert.equal([...gallery.matchAll(/data-code-link="true"/g)].length,22);

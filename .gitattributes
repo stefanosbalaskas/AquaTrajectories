@@ -1,0 +1,4 @@
+research/release05/** text eol=lf
+scripts/release05_* text eol=lf
+docs/RELEASE05* text eol=lf
+.github/workflows/reproducible-research-release-v012.yml text eol=lf

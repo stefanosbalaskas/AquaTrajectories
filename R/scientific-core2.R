@@ -167,12 +167,33 @@ aqt_figure_export <- function(draw,directory,
     path <- file.path(stage,paste0("figure.",fmt))
     if (fmt=="pdf")grDevices::pdf(path,width=width,height=height,
                                     useDingbats=FALSE)
-    if (fmt=="svg")grDevices::svg(path,width=width,height=height)
-    if (fmt=="png")grDevices::png(path,width=round(width*dpi),
-                                    height=round(height*dpi),res=dpi)
-    if (fmt=="tiff")grDevices::tiff(path,width=round(width*dpi),
-                                     height=round(height*dpi),res=dpi,
-                                     compression="lzw")
+    # Cairo/XQuartz can be unavailable on headless macOS. Prefer portable
+    # optional graphics devices while retaining the original grDevices path
+    # when the suggested libraries are not installed. These devices render
+    # original plot commands, never replace QC/measurement input data.
+    if(fmt=="svg") {
+      if(requireNamespace("svglite",quietly=TRUE))
+        svglite::svglite(path,width=width,height=height)
+      else
+        grDevices::svg(path,width=width,height=height)
+    }
+    if(fmt=="png") {
+      if(requireNamespace("ragg",quietly=TRUE))
+        ragg::agg_png(path,width=round(width*dpi),
+          height=round(height*dpi),units="px",res=dpi)
+      else
+        grDevices::png(path,width=round(width*dpi),
+          height=round(height*dpi),res=dpi)
+    }
+    if(fmt=="tiff") {
+      if(requireNamespace("ragg",quietly=TRUE))
+        ragg::agg_tiff(path,width=round(width*dpi),
+          height=round(height*dpi),units="px",res=dpi,
+          compression="lzw")
+      else
+        grDevices::tiff(path,width=round(width*dpi),
+          height=round(height*dpi),res=dpi,compression="lzw")
+    }
     tryCatch({draw()},finally=grDevices::dev.off())
     if(!file.exists(path) || is.na(file.info(path)$size) ||
        file.info(path)$size<=100L)
