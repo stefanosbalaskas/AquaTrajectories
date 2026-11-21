@@ -232,9 +232,10 @@ aqt_viz2_spec <- function(data,figure=c("paths","speed","qc_coverage","qc_reason
        is.na(source_file)||!file.exists(source_file)||
        dir.exists(source_file))
       stop("source_file must be an existing data file",call.=FALSE)
+    if(is.null(report$source_file_sha256))
+      stop("source_file requires a QC 2.0 report originally audited from the same CSV path; in-memory tracks cannot authenticate arbitrary external files",call.=FALSE)
     source_hash <- .aqt_viz2_file_sha(source_file)
-    if(!is.null(report$source_file_sha256) &&
-       !identical(source_hash,report$source_file_sha256))
+    if(!identical(source_hash,report$source_file_sha256))
       stop("source_file does not match QC 2.0 input file hash",call.=FALSE)
   } else source_hash <- report$source_file_sha256
   standard <- standards[standards$preset==preset,,drop=FALSE]
