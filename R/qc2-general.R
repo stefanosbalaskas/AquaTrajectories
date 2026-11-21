@@ -133,7 +133,6 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
     data <- aqt_tracks(canonical,units=target_units,
                        coordinate_system=coordinate_system)
   }
-  if (from_tracks) data <- data
   if (!"source_row" %in% names(data)) {
     # Sorting makes arbitrary original row numbers unrecoverable; for a
     # preconstructed aqt_tracks object its canonical row index is declared.
@@ -209,6 +208,9 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
     exclusions=exclusions,lineage=ledger,
     canonical_source_sha256=canonical_signature_sha,
     raw_table_sha256=unname(digest::digest(raw,algo="sha256")),
+    scientific_evidence_sha256=unname(digest::digest(list(
+      tracks=data,policies=policy,summary=summary,
+      exclusions=exclusions,lineage=ledger),algo="sha256")),
     source_file_sha256=source_file_sha,
     source_units=units,analysis_units=qc$units,
     seconds_per_source_time_unit=time_scale,
@@ -240,6 +242,12 @@ aqt_qc2_export <- function(report,directory) {
   if (!identical(unname(digest::digest(report$raw_source,algo="sha256")),
                  report$raw_table_sha256))
     stop("Original source table was modified after audit",call.=FALSE)
+  now <- unname(digest::digest(list(
+    tracks=report$tracks,policies=report$policies,
+    summary=report$summary,exclusions=report$exclusions,
+    lineage=report$lineage),algo="sha256"))
+  if (!identical(now,report$scientific_evidence_sha256))
+    stop("QC scientific evidence was modified after audit",call.=FALSE)
   stage <- tempfile(".aqt-qc2-",tmpdir=dirname(directory))
   if(!dir.create(stage))stop("Cannot create QC staging directory",call.=FALSE)
   on.exit(if(dir.exists(stage))unlink(stage,recursive=TRUE,force=TRUE),
@@ -267,6 +275,7 @@ aqt_qc2_export <- function(report,directory) {
   manifest <- list(schema=report$schema,
     canonical_source_sha256=report$canonical_source_sha256,
     raw_table_sha256=report$raw_table_sha256,
+    scientific_evidence_sha256=report$scientific_evidence_sha256,
     source_file_sha256=report$source_file_sha256,
     source_units=report$source_units,analysis_units=report$analysis_units,
     seconds_per_source_time_unit=report$seconds_per_source_time_unit,
