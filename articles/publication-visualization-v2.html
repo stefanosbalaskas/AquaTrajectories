@@ -79,17 +79,56 @@
 <p>Visualization 2.0 converts supplied 2D/3D trajectories into four
 journal-oriented plots with exact source-row and QC policy linkage. The
 example dataset below is <strong>synthetic</strong>, not measured fish
-movement.</p>
+movement. The four figures below are rendered by the package during the
+website build; the full executable R Markdown source is linked
+above.</p>
 <div class="section level2">
 <h2 id="journal-starting-point-presets">Journal starting-point presets<a class="anchor" aria-label="anchor" href="#journal-starting-point-presets"></a>
 </h2>
 <p>The returned journal-style widths and raster DPI are reproducible
 technical defaults, not a promise of compliance with a named
 publisher.</p>
-<p><sub></sub>~{r setup, include=FALSE} library(aquaTrajectories)
-knitr::opts_chunk$set(echo=TRUE,fig.width=8,fig.height=5,
-fig.align=“center”,warning=FALSE,message=FALSE) <sub></sub>~</p>
-<p><sub></sub>~{r presets} aqt_viz2_presets() <sub></sub>~</p>
+<table class="table">
+<caption>Reproducible figure-size and raster-resolution
+presets</caption>
+<thead><tr class="header">
+<th align="left">preset</th>
+<th align="right">width_in</th>
+<th align="right">height_in</th>
+<th align="right">dpi</th>
+<th align="right">pointsize</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">journal_single</td>
+<td align="right">3.5</td>
+<td align="right">3.30</td>
+<td align="right">600</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">journal_double</td>
+<td align="right">7.2</td>
+<td align="right">4.80</td>
+<td align="right">300</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">manuscript</td>
+<td align="right">6.8</td>
+<td align="right">4.80</td>
+<td align="right">300</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">presentation</td>
+<td align="right">12.0</td>
+<td align="right">6.75</td>
+<td align="right">150</td>
+<td align="right">16</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="one-reviewed-data-source-four-native-figures">One reviewed data source, four native figures<a class="anchor" aria-label="anchor" href="#one-reviewed-data-source-four-native-figures"></a>
@@ -97,48 +136,41 @@ fig.align=“center”,warning=FALSE,message=FALSE) <sub></sub>~</p>
 <p>The fish observations include a deliberately missing position and a
 source-frame discontinuity. Neither can form a movement line
 segment.</p>
-<p><sub></sub>~{r input} time &lt;- 0:12 rows &lt;-
-do.call(rbind,lapply(1:3,function(i) { x &lt;- .5<em>i + .2</em>time +
-.15<em>sin(time/2+i) y &lt;- i + .35</em>cos(time/2+i) observed &lt;-
-!(i==2L &amp; time==5L)
-data.frame(session_id=“SYNTHETIC”,camera_id=“TOP”,
-track_id=paste0(“fish”,i),frame_id=time+as.integer(time&gt;=8),
-time_s=time,x=ifelse(observed,x,NA_real_),
-y=ifelse(observed,y,NA_real_),observed=observed,
-source_row=paste0(i,“-”,time)) })) tracks &lt;-
-aqt_tracks(rows,units=“cm”,coordinate_system=“tank”) qc &lt;-
-aqt_qc2_report(tracks,gap_limits_s=1.01,speed_limits=2)
-stopifnot(nrow(qc$lineage)==nrow(rows)) <sub></sub>~</p>
 <div class="section level3">
 <h3 id="qc-eligible-spatial-path-segments">QC-eligible spatial path segments<a class="anchor" aria-label="anchor" href="#qc-eligible-spatial-path-segments"></a>
 </h3>
-<p><sub></sub>~{r viz2-paths, fig.alt=“Native observed-position
-trajectories, broken at missing and excluded steps”} paths &lt;-
-aqt_viz2_spec(qc,figure=“paths”,policy_id=“QC001”,
-preset=“journal_double”) aqt_viz2_draw(paths) <sub></sub>~</p>
+<div class="figure" style="text-align: center">
+<img src="publication-visualization-v2_files/figure-html/viz2-paths-1.png" class="r-plt" alt="Native observed-position trajectories, broken at missing and excluded steps" width="100%"><p class="caption">
+Observed synthetic positions with lines only for QC-eligible steps.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="only-eligible-speed-measurements">Only eligible speed measurements<a class="anchor" aria-label="anchor" href="#only-eligible-speed-measurements"></a>
 </h3>
-<p><sub></sub>~{r viz2-speed, fig.alt=“Observed speed from only valid
-source steps”} speed &lt;-
-aqt_viz2_spec(qc,figure=“speed”,policy_id=“QC001”) aqt_viz2_draw(speed)
-<sub></sub>~</p>
+<div class="figure" style="text-align: center">
+<img src="publication-visualization-v2_files/figure-html/viz2-speed-1.png" class="r-plt" alt="Observed speed from only valid source steps" width="100%"><p class="caption">
+Synthetic movement speeds calculated exclusively from QC-eligible steps.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="source-row-coverage">Source-row coverage<a class="anchor" aria-label="anchor" href="#source-row-coverage"></a>
 </h3>
-<p><sub></sub>~{r viz2-coverage, fig.alt=“Exact eligible, excluded and
-nonestimable source-row coverage”} coverage &lt;-
-aqt_viz2_spec(qc,figure=“qc_coverage”, policy_id=“QC001”)
-aqt_viz2_draw(coverage) <sub></sub>~</p>
+<div class="figure" style="text-align: center">
+<img src="publication-visualization-v2_files/figure-html/viz2-coverage-1.png" class="r-plt" alt="Exact eligible, excluded and nonestimable source-row coverage" width="100%"><p class="caption">
+Original source-row eligibility and missingness by synthetic track.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="complete-qc-reason-classification">Complete QC reason classification<a class="anchor" aria-label="anchor" href="#complete-qc-reason-classification"></a>
 </h3>
-<p><sub></sub>~{r viz2-reasons, fig.alt=“QC decision reason frequency
-for original rows”} reasons &lt;- aqt_viz2_spec(qc,figure=“qc_reasons”,
-policy_id=“QC001”) aqt_viz2_draw(reasons) <sub></sub>~</p>
+<div class="figure" style="text-align: center">
+<img src="publication-visualization-v2_files/figure-html/viz2-reasons-1.png" class="r-plt" alt="QC decision reason frequency for original rows" width="100%"><p class="caption">
+Exclusion and non-estimability reasons retained from the QC ledger.
+</p>
+</div>
 </div>
 </div>
 <div class="section level2">

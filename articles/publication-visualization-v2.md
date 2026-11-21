@@ -2,61 +2,56 @@
 
 Visualization 2.0 converts supplied 2D/3D trajectories into four
 journal-oriented plots with exact source-row and QC policy linkage. The
-example dataset below is **synthetic**, not measured fish movement.
+example dataset below is **synthetic**, not measured fish movement. The
+four figures below are rendered by the package during the website build;
+the full executable R Markdown source is linked above.
 
 ## Journal starting-point presets
 
 The returned journal-style widths and raster DPI are reproducible
 technical defaults, not a promise of compliance with a named publisher.
 
-~{r setup, include=FALSE} library(aquaTrajectories)
-knitr::opts_chunk\$set(echo=TRUE,fig.width=8,fig.height=5,
-fig.align=“center”,warning=FALSE,message=FALSE) ~
+| preset         | width_in | height_in | dpi | pointsize |
+|:---------------|---------:|----------:|----:|----------:|
+| journal_single |      3.5 |      3.30 | 600 |         9 |
+| journal_double |      7.2 |      4.80 | 300 |        12 |
+| manuscript     |      6.8 |      4.80 | 300 |        11 |
+| presentation   |     12.0 |      6.75 | 150 |        16 |
 
-~{r presets} aqt_viz2_presets() ~
+Reproducible figure-size and raster-resolution presets {.table}
 
 ## One reviewed data source, four native figures
 
 The fish observations include a deliberately missing position and a
 source-frame discontinuity. Neither can form a movement line segment.
 
-~{r input} time \<- 0:12 rows \<- do.call(rbind,lapply(1:3,function(i) {
-x \<- .5*i + .2*time + .15*sin(time/2+i) y \<- i + .35*cos(time/2+i)
-observed \<- !(i==2L & time==5L)
-data.frame(session_id=“SYNTHETIC”,camera_id=“TOP”,
-track_id=paste0(“fish”,i),frame_id=time+as.integer(time\>=8),
-time_s=time,x=ifelse(observed,x,NA_real\_),
-y=ifelse(observed,y,NA_real\_),observed=observed,
-source_row=paste0(i,“-”,time)) })) tracks \<-
-aqt_tracks(rows,units=“cm”,coordinate_system=“tank”) qc \<-
-aqt_qc2_report(tracks,gap_limits_s=1.01,speed_limits=2)
-stopifnot(nrow(qc\$lineage)==nrow(rows)) ~
-
 ### QC-eligible spatial path segments
 
-~{r viz2-paths, fig.alt=“Native observed-position trajectories, broken
-at missing and excluded steps”} paths \<-
-aqt_viz2_spec(qc,figure=“paths”,policy_id=“QC001”,
-preset=“journal_double”) aqt_viz2_draw(paths) ~
+![Native observed-position trajectories, broken at missing and excluded
+steps](publication-visualization-v2_files/figure-html/viz2-paths-1.png)
+
+Observed synthetic positions with lines only for QC-eligible steps.
 
 ### Only eligible speed measurements
 
-~{r viz2-speed, fig.alt=“Observed speed from only valid source steps”}
-speed \<- aqt_viz2_spec(qc,figure=“speed”,policy_id=“QC001”)
-aqt_viz2_draw(speed) ~
+![Observed speed from only valid source
+steps](publication-visualization-v2_files/figure-html/viz2-speed-1.png)
+
+Synthetic movement speeds calculated exclusively from QC-eligible steps.
 
 ### Source-row coverage
 
-~{r viz2-coverage, fig.alt=“Exact eligible, excluded and nonestimable
-source-row coverage”} coverage \<-
-aqt_viz2_spec(qc,figure=“qc_coverage”, policy_id=“QC001”)
-aqt_viz2_draw(coverage) ~
+![Exact eligible, excluded and nonestimable source-row
+coverage](publication-visualization-v2_files/figure-html/viz2-coverage-1.png)
+
+Original source-row eligibility and missingness by synthetic track.
 
 ### Complete QC reason classification
 
-~{r viz2-reasons, fig.alt=“QC decision reason frequency for original
-rows”} reasons \<- aqt_viz2_spec(qc,figure=“qc_reasons”,
-policy_id=“QC001”) aqt_viz2_draw(reasons) ~
+![QC decision reason frequency for original
+rows](publication-visualization-v2_files/figure-html/viz2-reasons-1.png)
+
+Exclusion and non-estimability reasons retained from the QC ledger.
 
 ## Transactional source-linked export
 
