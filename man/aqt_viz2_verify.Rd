@@ -4,10 +4,13 @@
 \alias{aqt_viz2_verify}
 \title{Verify a published figure's source-row evidence and file hashes}
 \usage{
-aqt_viz2_verify(directory)
+aqt_viz2_verify(directory, source_file = NULL)
 }
 \arguments{
 \item{directory}{Existing aqt_viz2_export() directory.}
+
+\item{source_file}{Optional original input file to recheck against the
+recorded source SHA-256, including after figures have been published.}
 }
 \value{
 TRUE invisibly or an error naming the failed file.
