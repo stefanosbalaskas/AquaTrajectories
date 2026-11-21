@@ -1,0 +1,43 @@
+name: Scientific Core 2.0 - extended deterministic scaling
+on:
+  pull_request:
+    paths:
+      - "scripts/core2_benchmark.R"
+      - "tests/testthat/test-scientific-core2-boundaries.R"
+      - ".github/workflows/scientific-core2-large-benchmark.yml"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/core2_benchmark.R"
+      - "tests/testthat/test-scientific-core2-boundaries.R"
+      - ".github/workflows/scientific-core2-large-benchmark.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  true-large-synthetic-research-trajectory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+      - name: Test scientific configuration, all available figure formats and QC failure modes
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-scientific-core2-boundaries.R",reporter="summary",stop_on_failure=TRUE)'
+      - name: Reproduce deterministic 100k and 1m row scientific arithmetic
+        run: |
+          Rscript --vanilla scripts/core2_benchmark.R core2-large-evidence 100000,1000000
+          test -s core2-large-evidence/CORE2_BENCHMARK.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scientific-core2-large-known-answer-performance
+          path: core2-large-evidence/
+          if-no-files-found: warn
