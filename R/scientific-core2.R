@@ -20,7 +20,7 @@
 #'   empirical measurement accuracy or inferential uncertainty.
 #' @export
 aqt_qc_sensitivity <- function(tracks, gap_limits_s,
-#'                               speed_limits=Inf, step_limits=Inf) {
+                              speed_limits=Inf, step_limits=Inf) {
   aqt_tracks_validate(tracks)
   check <- function(z,nm,allow_inf=FALSE) {
     if (!is.numeric(z) || !length(z) || anyNA(z) ||
