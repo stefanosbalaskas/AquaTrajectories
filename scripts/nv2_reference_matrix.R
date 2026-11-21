@@ -49,7 +49,9 @@ domains<-data.frame(
  stringsAsFactors=FALSE)
 test_path<-"tests/testthat/test-nv2-oracles.R"
 sparse_path<-"tests/testthat/test-nv2-sparse-fpca.R"
-if(!file.exists(test_path)||!file.exists(sparse_path))
+population_path<-"tests/testthat/test-nv2-sparse-population.R"
+if(!file.exists(test_path)||!file.exists(sparse_path)||
+   !file.exists(population_path))
   stop("Source oracle files absent")
 src<-paste(readLines(test_path,warn=FALSE),collapse="\n")
 for(name in paste0("NV2_",c("KINEMATICS","GROUP","DTW","RECURRENCE",
@@ -57,6 +59,7 @@ for(name in paste0("NV2_",c("KINEMATICS","GROUP","DTW","RECURRENCE",
   if(!grepl(name,src,fixed=TRUE))stop("Reference method absent: ",name)
 testthat::test_file(test_path,reporter="summary",stop_on_failure=TRUE)
 testthat::test_file(sparse_path,reporter="summary",stop_on_failure=TRUE)
+testthat::test_file(population_path,reporter="summary",stop_on_failure=TRUE)
 # Previously established independent oracles and external backend checks
 # remain first-class regression checks, rather than only new test mentions.
 testthat::test_file("tests/testthat/test-priority-a-independent-references.R",
@@ -79,9 +82,9 @@ meta<-list(schema="NV2_REFERENCE_MATRIX_V1",
   backend_agreement_not_independent_estimator_implementation=TRUE,
   real_biological_accuracy_certified=FALSE,
   source_sha256=as.list(stats::setNames(vapply(
-    c(test_path,sparse_path),function(f)
+    c(test_path,sparse_path,population_path),function(f)
       unname(digest::digest(f,file=TRUE,algo="sha256")),
-    character(1L)),c(basename(test_path),basename(sparse_path)))),
+    character(1L)),c(basename(test_path),basename(sparse_path),basename(population_path)))),
   matrix_sha256=unname(digest::digest(file,file=TRUE,algo="sha256")),
   package_version=as.character(utils::packageVersion("aquaTrajectories")),
   R_version=as.character(getRversion()),
