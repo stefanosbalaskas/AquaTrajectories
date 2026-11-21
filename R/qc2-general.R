@@ -174,7 +174,16 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
   ledger$step_status <- ifelse(ledger$step_eligible,"eligible",
     ifelse(ledger$reason=="unobserved_or_first_step","not_estimable",
            "excluded_by_policy"))
-  exclusions <- as.data.frame(table(ledger$policy_id,ledger$reason),
+  # Do not conflate a first sample with a missing current or prior sample.
+  ledger$reason_detail <- ledger$reason
+  unscorable <- ledger$reason=="unobserved_or_first_step"
+  first <- is.na(ledger$from_input_row)
+  ledger$reason_detail[unscorable & first] <- "first_record_in_track"
+  ledger$reason_detail[unscorable & !first & !ledger$position_observed] <-
+    "unobserved_current_position"
+  ledger$reason_detail[unscorable & !first & ledger$position_observed] <-
+    "unobserved_previous_position"
+  exclusions <- as.data.frame(table(ledger$policy_id,ledger$reason_detail),
                                stringsAsFactors=FALSE)
   names(exclusions) <- c("policy_id","reason","n_rows")
   exclusions <- exclusions[exclusions$n_rows>0L,,drop=FALSE]
