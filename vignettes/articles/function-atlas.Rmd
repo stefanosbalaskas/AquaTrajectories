@@ -36,7 +36,7 @@ Canonical track objects, synthetic examples and interoperable data formats.
 - [`aqt_tracks_validate()`](../reference/aqt_tracks_validate.html)
 - [`aqt_video_bundle_import()`](../reference/aqt_video_bundle_import.html)
 
-## 2. Detection, tracking and annotation validation (23)
+## 2. Detection, tracking and annotation validation (25)
 
 Detector and identity metrics against explicitly defined reference annotations.
 
