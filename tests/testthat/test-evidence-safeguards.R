@@ -52,7 +52,7 @@ test_that("source axis metadata forbids false metric 3D interpretation", {
   f <- tempfile(fileext=".pdf")
   grDevices::pdf(f)
   tryCatch({
-    expect_length(aqt_plot_source_3axis(
+    expect_length(aqt_source_3axis_preview(
       data.frame(x=seq_len(20),y=seq_len(20)*2,depth=seq_len(20)*3),
       mixed),20)
   },finally=grDevices::dev.off())
