@@ -23,7 +23,7 @@
 </div>
 
 <div class="aqt-statusbar" role="group" aria-label="Current release and scientific evidence">
-  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2">v0.1.1</a> · MIT-licensed source</span></div>
+  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2">v0.1.2</a> · MIT-licensed source</span></div>
   <div><strong>Citable</strong><span><a href="https://doi.org/10.5281/zenodo.24262905">Prior v0.1.1 Zenodo DOI</a> · <a href="AquaTrajectories-v0.1.1.bib" download>BibTeX</a></span></div>
   <div><strong>Scientific validity</strong><span>Software contracts tested; <a href="articles/capabilities-and-validation.html">independent biological validation pending</a></span></div>
 </div>
