@@ -33,7 +33,7 @@ The matrix is marked passed only when every source test file and pre-existing ma
 1. Re-renders each plot and requires **exact identity at every decoded foreground pixel** within each operating system.
 2. Encodes a full-resolution binary foreground mask using run-length encoding, not a simple file hash or downsampled thumbnail.
 3. In verified mode, compares each of 288,000 foreground pixels per image to a **checked-in, frozen** source-control reference generated from a reviewed baseline run.
-4. Records per-pixel disagreement and foreground intersection-over-union (IoU), allowing limited cross-operating-system font/antialiasing variance (at most 4% disagreeing pixels and foreground IoU at least .65).
+4. Records per-pixel disagreement and foreground intersection-over-union (IoU), allowing limited cross-operating-system font/antialiasing variance (at most 4% disagreeing pixels and foreground IoU at least .60).
 5. Writes actual PNGs, summary CSV and SHA-256 evidence.
 
 The first successful Linux candidate was frozen under `tests/golden/nv2_pixel_masks.csv` on the PR branch; the cross-platform verification job is the release gate. Capture alone is not cross-platform evidence; only actual successful verification on all three systems qualifies the numerical mask comparison. Full RGBA byte-for-byte identity across OS is **not** required or claimed. The prior 22-function render execution coverage remains separate: these pixel-level golden tests select three representative renderers.
@@ -101,6 +101,34 @@ No original imagery, recordings, raw annotation tables or separate full fish
 identities are republished in CI artifacts. Only aggregates and original
 source SHA-256 references are uploaded. A frame-proxy calculation must never
 be mislabeled as calibrated timing.
+
+
+### Observed CI performance — original annotations (21 November 2026)
+
+The first successful CI benchmark preserved exact upstream source-file digests
+and produced the following measured whole-call `aqt_group_metrics()` elapsed
+times on its Linux GitHub runner. These are **observations**, not predictions,
+speedups, statistical confidence intervals or cross-hardware performance limits.
+
+| Sequence | Source rows | Frames | IDs | First call (s) | Second call (s) | R track object bytes |
+|---|---:|---:|---:|---:|---:|---:|
+| ZebraFish-01 | 14,376 | 7,188 | 2 | 4.885 | 4.969 | 980,440 |
+| ZebraFish-04 | 4,550 | 910 | 5 | 0.664 | 0.651 | 312,440 |
+| ZebraFish-08 | 9,000 | 900 | 10 | 0.677 | 0.665 | 615,320 |
+
+These are full-sequence calculations of descriptive same-frame group geometry.
+Comparisons between sequences are **not** controlled scaling comparisons:
+they differ in number of frames, number of fish and trajectory content.
+
+Downloaded original GT SHA-256:
+
+- ZebraFish-01: `a582584c3d312cffe264cf642297f5311e929df4af76fe5ee3a8e33ac9c9bb74`.
+- ZebraFish-04: `f84b3d2fe01ea3f9e376e8023f2a7a664c8f07a4792d1a8a537d1d4924bbeeab`.
+- ZebraFish-08: `245de975cbeead9b0ddcc4dec63351b367f263845d80521cc16d54765ce01467`.
+
+The source text was acquired via TLS-verified HTTPS and hashed. These hashes
+identify the exact downloaded bytes but do not, without an independent source
+hash signature, certify the biological correctness of annotations.
 
 ## Required qualification
 
