@@ -188,7 +188,7 @@ aqt_measurement_contract <- function(axes,common_frame_verified=FALSE,
 #' @param max_points Maximum evenly indexed observations to display.
 #' @return Selected row indices, invisibly.
 #' @export
-aqt_plot_source_3axis <- function(data,contract,max_points=4000L) {
+aqt_source_3axis_preview <- function(data,contract,max_points=4000L) {
   if(!inherits(contract,"aqt_measurement_contract"))
     stop("Explicit measurement contract required",call.=FALSE)
   nm <- contract$axes$variable
@@ -207,7 +207,7 @@ aqt_plot_source_3axis <- function(data,contract,max_points=4000L) {
     if(diff(r)==0)r+c(-.5,.5) else r
   })
   pmat <- graphics::persp(x=span[[1]],y=span[[2]],
-    z=matrix(0,2L,2L),theta=38,phi=24,expand=.7,
+    z=matrix(mean(span[[3]]),2L,2L),zlim=span[[3]],theta=38,phi=24,expand=.7,
     xlab=paste0(contract$axes$axis[1]," (",contract$axes$unit[1],")"),
     ylab=paste0(contract$axes$axis[2]," (",contract$axes$unit[2],")"),
     zlab=paste0(contract$axes$axis[3]," (",contract$axes$unit[3],")"),
