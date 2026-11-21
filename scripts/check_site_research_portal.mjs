@@ -68,7 +68,7 @@ for(const f of [...pages,...extras]) {
   assert.ok(fs.statSync(path.join(site,f)).size > 0,"Empty site resource: "+f);
 }
 const home=read("index.html");
-assert.match(home,/official v0\.1\.1 release/i);
+assert.match(home,/official v0\.1\.2 release/i);
 assert.match(home,/10\.5281\/zenodo\.24262905/i);
 assert.match(home,/quickstart-five-minutes/);
 assert.match(home,/experiment-starter-kit/);
