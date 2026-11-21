@@ -79,6 +79,12 @@ test_that("QC 2.0 separates unobserved, first, rejected and eligible steps", {
     is.na(q$lineage$from_input_row)])))
   # A gap is not bridged over the unobserved third row.
   expect_false(q$lineage$step_eligible[q$lineage$to_source_row=="r4"])
+  expect_identical(q$lineage$reason_detail[q$lineage$to_source_row=="r1"],
+                   "first_record_in_track")
+  expect_identical(q$lineage$reason_detail[q$lineage$to_source_row=="r3"],
+                   "unobserved_current_position")
+  expect_identical(q$lineage$reason_detail[q$lineage$to_source_row=="r4"],
+                   "unobserved_previous_position")
   expect_equal(unique(q$lineage$coordinate_units),"px")
   expect_equal(q$summary$n_excluded_steps,0L)
 })
