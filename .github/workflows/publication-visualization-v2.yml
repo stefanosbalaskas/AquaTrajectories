@@ -5,7 +5,7 @@ on:
       - "R/publication-visualization-v2.R"
       - "man/aqt_viz2_*.Rd"
       - "tests/testthat/test-viz2-*.R"
-      - "tests/golden/viz2_pixel_masks.csv.gz.b64"
+      - "tests/golden/viz2_pixel_masks.csv"
       - "scripts/viz2_*.R"
       - "vignettes/articles/publication-visualization-v2.Rmd"
       - "docs/PUBLICATION_VISUALIZATION_2_0.md"
@@ -17,7 +17,7 @@ on:
     paths:
       - "R/publication-visualization-v2.R"
       - "tests/testthat/test-viz2-*.R"
-      - "tests/golden/viz2_pixel_masks.csv.gz.b64"
+      - "tests/golden/viz2_pixel_masks.csv"
       - "scripts/viz2_*.R"
       - ".github/workflows/publication-visualization-v2.yml"
   workflow_dispatch:
