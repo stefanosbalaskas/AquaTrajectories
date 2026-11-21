@@ -1,0 +1,37 @@
+name: Temporary evidence documentation synchronization
+
+on:
+  pull_request:
+    paths:
+      - 'R/evidence-safeguards.R'
+      - '.github/workflows/evidence-docgen-sync.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  generate-roxygen:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - name: Install roxygen2
+        run: Rscript -e 'install.packages("roxygen2", repos="https://cloud.r-project.org")'
+      - name: Generate exact roxygen documentation
+        run: Rscript -e 'roxygen2::roxygenise()'
+      - name: Commit generated NAMESPACE and Rd on same-repo feature branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add NAMESPACE man
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: sync evidence safeguards Rd and NAMESPACE"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
