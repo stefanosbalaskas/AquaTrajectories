@@ -1,0 +1,120 @@
+name: Publication Visualization 2.0 - public gallery, source-linked figures and pixel regression
+on:
+  pull_request:
+    paths:
+      - "R/publication-visualization-v2.R"
+      - "man/aqt_viz2_*.Rd"
+      - "tests/testthat/test-viz2-*.R"
+      - "tests/golden/viz2_pixel_masks.csv"
+      - "scripts/viz2_*.R"
+      - "vignettes/articles/publication-visualization-v2.Rmd"
+      - "docs/PUBLICATION_VISUALIZATION_2_0.md"
+      - "NAMESPACE"
+      - "_pkgdown.yml"
+      - ".github/workflows/publication-visualization-v2.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/publication-visualization-v2.R"
+      - "tests/testthat/test-viz2-*.R"
+      - "tests/golden/viz2_pixel_masks.csv"
+      - "scripts/viz2_*.R"
+      - ".github/workflows/publication-visualization-v2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-manuals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::roxygen2
+      - name: Independently regenerate all function manuals and verify exact Git state
+        run: |
+          Rscript --vanilla -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: viz2-exact-roxygen-generated-manuals
+          path: man/aqt_viz2_*.Rd
+          if-no-files-found: warn
+  native-format-and-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+            any::png
+      - name: Fail-closed QC figure evidence, source immutability and all four output formats
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-viz2-publication.R",reporter="summary",stop_on_failure=TRUE)'
+          git diff --exit-code -- R tests scripts NAMESPACE
+  full-gallery-and-real-scenes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::rgl
+            any::png
+      - name: Execute all 22 actual public plotting functions and 6 repeated native 3D scenes
+        env:
+          RGL_USE_NULL: "TRUE"
+          AQT_REQUIRE_RGL: "1"
+        run: |
+          Rscript --vanilla scripts/viz2_gallery_matrix.R viz2-gallery-evidence
+          test -s viz2-gallery-evidence/COMPLETE_PUBLIC_PLOT_GALLERY.csv
+          test -s viz2-gallery-evidence/SCENE_GEOMETRY.csv
+          test -s viz2-gallery-evidence/GALLERY_MANIFEST.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: viz2-native-22-gallery-and-6-scene-geometry
+          path: viz2-gallery-evidence/
+          if-no-files-found: warn
+  pixel-reference-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::ragg
+            any::png
+      - name: Render four actual native Publication 2.0 plots twice for source-reviewed reference masks
+        run: |
+          Rscript --vanilla scripts/viz2_pixel_golden.R capture viz2-pixel-candidate
+          test -s viz2-pixel-candidate/CANDIDATE_VIZ2_GOLDEN.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: viz2-actual-four-plot-golden-candidates
+          path: viz2-pixel-candidate/
+          if-no-files-found: warn
