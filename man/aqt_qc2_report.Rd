@@ -28,14 +28,14 @@ aqt_qc2_report(
 \item{step_limits}{Positive displacement thresholds in analysis units; Inf disables.}
 
 \item{column_map}{Optional named character vector: canonical field names
-  (track_id,time_s,x,y, plus optional session_id,camera_id,z,observed,
-  frame_id,source_row) mapped to source column names.}
+(track_id,time_s,x,y, plus optional session_id,camera_id,z,observed,
+frame_id,source_row) mapped to source column names.}
 
 \item{units}{Declared source coordinates: px, mm, cm or m. Inherited from
-  aqt_tracks if omitted.}
+aqt_tracks if omitted.}
 
 \item{target_units}{Analysis units: px, cm or m; defaults to source units,
-  except mm converts to cm. Inherited aqt_tracks cannot be rescaled here.}
+except mm converts to cm. Inherited aqt_tracks cannot be rescaled here.}
 
 \item{coordinate_system}{image or tank; inherited from aqt_tracks if omitted.}
 
