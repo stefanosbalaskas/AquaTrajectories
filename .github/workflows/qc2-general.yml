@@ -1,0 +1,84 @@
+name: QC 2.0 - general trajectory and scientific core qualification
+on:
+  pull_request:
+    paths:
+      - "R/qc2-general.R"
+      - "man/aqt_qc2_*.Rd"
+      - "tests/testthat/test-qc2-*.R"
+      - "scripts/qc2_*.R"
+      - "docs/QC2_GENERAL_TRAJECTORIES.md"
+      - "NAMESPACE"
+      - ".github/workflows/qc2-general.yml"
+  push:
+    branches: [main]
+    paths:
+      - "R/qc2-general.R"
+      - "tests/testthat/test-qc2-*.R"
+      - "scripts/qc2_*.R"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux-scientific-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+            any::roxygen2
+      - name: Exact-source export/manual congruence
+        run: |
+          Rscript --vanilla -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: QC2 input representation, exclusion and immutable provenance
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-qc2-general.R",reporter="summary",stop_on_failure=TRUE)'
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-qc2-methods.R",reporter="summary",stop_on_failure=TRUE)'
+      - name: Existing publication renderer and independent backend agreement
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-research-publication.R",reporter="summary",stop_on_failure=TRUE)'
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-priority-a-backend-agreement.R",reporter="summary",stop_on_failure=TRUE)'
+      - name: Measured synthetic multi-individual and plot coverage
+        run: |
+          Rscript --vanilla scripts/qc2_group_benchmark.R qc2-group-evidence
+          Rscript --vanilla scripts/qc2_plot_render_matrix.R qc2-plot-evidence
+          test -s qc2-group-evidence/GROUP_SCALING.csv
+          test -s qc2-plot-evidence/PLOT_RENDER_MATRIX.csv
+      - name: Verify tests did not change tracked research files
+        run: |
+          git diff --exit-code -- R tests man NAMESPACE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qc2-linux-numerical-render-group-evidence
+          path: |
+            qc2-group-evidence/
+            qc2-plot-evidence/
+          if-no-files-found: warn
+  portability:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+      - name: General QC2 and sparse/group numerical invariance on OS
+        shell: bash
+        run: |
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-qc2-general.R",reporter="summary",stop_on_failure=TRUE)'
+          Rscript --vanilla -e 'library(aquaTrajectories);testthat::test_file("tests/testthat/test-qc2-methods.R",reporter="summary",stop_on_failure=TRUE)'
