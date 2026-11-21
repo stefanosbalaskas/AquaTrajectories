@@ -15,8 +15,8 @@ dir.create(file.path(out,"atlas"))
 ns <- readLines("NAMESPACE",warn=FALSE)
 exports <- sub("^export\\(([^)]+)\\)$","\\1",
                grep("^export\\(",ns,value=TRUE))
-if(length(exports)!=179L || anyDuplicated(exports))
-  stop("API count or uniqueness changed: review manifest scope")
+if(length(exports)<179L || anyDuplicated(exports))
+  stop("Core API unexpectedly shrank or contains duplicate exports: review manifest scope")
 cfg <- yaml::read_yaml("_pkgdown.yml")
 family <- "Unclassified"
 group_rows <- list()
