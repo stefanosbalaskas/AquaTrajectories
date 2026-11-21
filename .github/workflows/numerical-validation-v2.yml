@@ -1,0 +1,128 @@
+name: Numerical Validation 2.0 - independent oracles, pixel golden and real group profile
+on:
+  pull_request:
+    paths:
+      - "tests/testthat/test-nv2-*.R"
+      - "tests/python/test_nv2_*.py"
+      - "tests/golden/nv2_pixel_masks.csv"
+      - "scripts/nv2_*.R"
+      - "scripts/nv2_*.py"
+      - "docs/NUMERICAL_VALIDATION_2_0.md"
+      - ".github/workflows/numerical-validation-v2.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tests/testthat/test-nv2-*.R"
+      - "scripts/nv2_*.R"
+      - "tests/golden/nv2_pixel_masks.csv"
+      - ".github/workflows/numerical-validation-v2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-numerical-oracles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+            any::nlme
+            any::fdapace
+      - name: Execute all nine numerical method oracle, metamorphic and failure domains
+        run: |
+          Rscript --vanilla scripts/nv2_reference_matrix.R nv2-reference-evidence
+          test -s nv2-reference-evidence/NV2_REFERENCE_MATRIX.csv
+          test -s nv2-reference-evidence/NV2_REFERENCE_MANIFEST.json
+      - name: No test may edit source or numerical references
+        run: git diff --exit-code -- R NAMESPACE man tests scripts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nv2-independent-oracles
+          path: nv2-reference-evidence/
+          if-no-files-found: warn
+  pixel-golden-cross-platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::ragg
+            any::png
+      - name: Compare each pixel of three native figures with frozen reviewed source baseline
+        shell: bash
+        run: |
+          Rscript --vanilla scripts/nv2_pixel_golden.R verify nv2-pixel-evidence
+          test -s nv2-pixel-evidence/PIXEL_REGRESSION.csv
+          test -s nv2-pixel-evidence/PIXEL_MANIFEST.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nv2-frozen-pixel-golden-${{ matrix.os }}
+          path: nv2-pixel-evidence/
+          if-no-files-found: warn
+  source-real-group:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+      - name: Validate original MOT and 3D-ZeF converter failure cases
+        run: |
+          python -m unittest discover -s tests/python -p 'test_nv2_real_group.py' -v
+          python -m unittest discover -s tests/python -p 'test_nv2_zef.py' -v
+      - name: Download original 3D-ZeF annotations over VERIFIED HTTPS (no images)
+        shell: bash
+        run: |
+          for seq in 01 04 08; do
+            curl --proto '=https' --tlsv1.2 --fail --location --show-error --retry 3 \
+              --max-time 240 --max-filesize 20000000 \
+              "https://huggingface.co/datasets/vapaau/3D-ZeF/resolve/main/data/ZebraFish-$seq/gt/gt.txt" \
+              --output "$RUNNER_TEMP/nv2_zef_$seq.txt"
+            python scripts/nv2_zef_to_csv.py \
+              --gt "$RUNNER_TEMP/nv2_zef_$seq.txt" \
+              --sequence "$seq" --out "$RUNNER_TEMP/nv2_input_$seq"
+          done
+      - name: Measure original 3D-ZeF real-head-point group geometry and runtimes
+        shell: bash
+        run: |
+          mkdir -p nv2-real-evidence
+          for seq in 01 04 08; do
+            Rscript --vanilla scripts/nv2_real_group_profile.R \
+              "$RUNNER_TEMP/nv2_input_$seq/SOURCE_FRAME_CENTER_TRACKS.csv" \
+              "$RUNNER_TEMP/nv2_input_$seq/SOURCE_PROVENANCE.json" \
+              "nv2-real-evidence/sequence_$seq"
+            test -s "nv2-real-evidence/sequence_$seq/REAL_GROUP_PERFORMANCE.csv"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nv2-real-3d-zef-annotation-group-benchmark
+          path: nv2-real-evidence/
+          if-no-files-found: warn
