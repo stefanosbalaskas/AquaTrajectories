@@ -9,7 +9,9 @@ suppressPackageStartupMessages(library(aquaTrajectories))
 source <- readLines("vignettes/articles/all-plot-functions.Rmd",warn=FALSE)
 fence <- strrep(intToUtf8(96L),3L)
 extract <- function(tag) {
-  hit <- which(startsWith(source,tag))
+  # Exact chunk-name delimiter: "cloud" must not match "cloud3d".
+  hit <- which(startsWith(source,paste0(tag,",")) |
+               startsWith(source,paste0(tag,"}")))
   if(length(hit)!=1L)stop("Missing/duplicate gallery block ",tag)
   start <- hit+1L
   close <- which(source[seq.int(start,length(source))]==fence)[1L]
