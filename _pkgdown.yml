@@ -72,6 +72,8 @@ reference:
       - aqt_qc_derive
       - aqt_qc_report
       - aqt_qc_sensitivity
+      - aqt_qc2_report
+      - aqt_qc2_export
       - aqt_reference_measurement_publish
       - aqt_reference_measurement_validate
       - aqt_tracking_match
