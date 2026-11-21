@@ -30,7 +30,7 @@ is declared, and does not weaken the existing aqt_research_analyze() gate.
 2. **Measurement semantics:** aqt_measurement_contract() requires physical
    units, calibrated axes, a verified common spatial frame and named
    calibration evidence before *declaring* physical XYZ eligibility.
-   aqt_plot_source_3axis() permits mixed axes for display only.
+   aqt_source_3axis_preview() permits mixed axes for display only.
 3. **Inference readiness:** aqt_inference_readiness() distinguishes
    observation, animal and tank evidence. Numeric-looking recording codes
    are treated as identifiers. Verified tank contrasts remain associational.
