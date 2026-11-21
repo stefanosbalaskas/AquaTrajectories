@@ -1,0 +1,261 @@
+name: Reproducible Research Release 0.1.2 - locked oracle, measured coverage and 3-OS evidence
+on:
+  pull_request:
+    paths:
+      - "DESCRIPTION"
+      - "CITATION.cff"
+      - "NEWS.md"
+      - "README.md"
+      - "pkgdown/index.md"
+      - "research/release05/**"
+      - "scripts/release05_*"
+      - "docs/RELEASE05_REPRODUCIBLE_RESEARCH.md"
+      - "docs/RELEASE_NOTES_0_1_2.md"
+      - ".gitattributes"
+      - ".github/workflows/reproducible-research-release-v012.yml"
+  push:
+    branches: [main]
+    paths:
+      - "DESCRIPTION"
+      - "CITATION.cff"
+      - "NEWS.md"
+      - "research/release05/**"
+      - "scripts/release05_*"
+      - ".github/workflows/reproducible-research-release-v012.yml"
+  workflow_dispatch:
+concurrency:
+  group: reproducible-research-v012-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+
+jobs:
+  measured-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::covr
+            any::testthat
+      - name: Instrument real R package tests (not lexical function mentions)
+        run: |
+          Rscript --vanilla scripts/core2_execution_coverage.R release05-coverage-evidence
+          Rscript --vanilla scripts/release05_coverage_gate.R release05-coverage-evidence
+          test -s release05-coverage-evidence/EXECUTED_COVERAGE.csv
+          test -s release05-coverage-evidence/RELEASE05_COVERAGE_GATE.json
+      - name: Ensure source and tests remained unchanged by instrumentation
+        run: git diff --exit-code -- R tests DESCRIPTION NAMESPACE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release05-instrumented-coverage
+          path: release05-coverage-evidence/
+          if-no-files-found: warn
+
+  native-report-and-performance:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::bench
+            any::testthat
+      - name: Validate exact installed R and Python identities
+        shell: bash
+        run: |
+          grep -qx 'Version: 0.1.2' DESCRIPTION
+          grep -qx 'version: 0.1.2' CITATION.cff
+          python --version
+          Rscript -e 'stopifnot(as.character(packageVersion("aquaTrajectories"))=="0.1.2")'
+      - name: Run native R original trajectory through QC2, figures and full report
+        shell: bash
+        run: |
+          Rscript --vanilla scripts/release05_example.R release05-example-evidence
+          python scripts/release05_verify.py --out release05-example-evidence --report release05-independent-oracle.json
+          test -s release05-example-evidence/REPORT.md
+          test -s release05-example-evidence/RELEASE05_MANIFEST.json
+          test -s release05-independent-oracle.json
+      - name: Measure 24 actual 2D/3D runtime and allocated-memory workloads
+        shell: bash
+        run: |
+          Rscript --vanilla scripts/release05_benchmark.R release05-performance-evidence
+          test -s release05-performance-evidence/RELEASE05_BENCHMARK.csv
+          test -s release05-performance-evidence/BENCHMARK_MANIFEST.json
+      - name: Independent tamper rejection of source, results and exported graphic
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib,shutil,subprocess,sys,tempfile
+          original=pathlib.Path("release05-example-evidence")
+          for name in ("source","result","image"):
+              with tempfile.TemporaryDirectory(prefix="aqt05-corrupt-") as tmp:
+                  trial=pathlib.Path(tmp)/"report"
+                  shutil.copytree(original,trial)
+                  target={"source":trial/"input/locked_trajectories.csv",
+                          "result":trial/"RESULTS.csv",
+                          "image":trial/"figures/paths/figure.png"}[name]
+                  with target.open("ab") as h:h.write(b"ATTEMPTED_TAMPER")
+                  status=subprocess.run(
+                      [sys.executable,"scripts/release05_verify.py",
+                       "--out",str(trial)],
+                      stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+                  if status.returncode==0:
+                      raise SystemExit("Tampered "+name+" unexpectedly passed")
+                  print("RELEASE05_FAIL_CLOSED_PASS",name)
+          PY
+          git diff --exit-code -- research/release05 scripts/release05_example.R scripts/release05_verify.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release05-${{ matrix.os }}-trajectory-report-performance
+          path: |
+            release05-example-evidence/
+            release05-performance-evidence/
+            release05-independent-oracle.json
+          if-no-files-found: warn
+
+  strict-source-release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::roxygen2
+            any::rcmdcheck
+            any::testthat
+      - name: Regenerate exact-source documentation, verify release metadata
+        run: |
+          grep -qx 'Version: 0.1.2' DESCRIPTION
+          grep -qx 'version: 0.1.2' CITATION.cff
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Strict built-package R CMD check with no ERROR WARNING or NOTE
+        run: |
+          Rscript -e 'z<-rcmdcheck::rcmdcheck(args=c("--no-manual"),error_on="never");cat("R CMD check E/W/N:",length(z$errors),length(z$warnings),length(z$notes),"\n");if(length(z$errors)+length(z$warnings)+length(z$notes))quit(save="no",status=1L)'
+      - name: Scientific certification must remain explicitly prohibited
+        run: |
+          python - <<'PY'
+          import subprocess,sys
+          p=subprocess.run([sys.executable,"inst/python/aqt_feature_release_gate.py",
+             "--mode","scientific_release","--no-tests"],capture_output=True,text=True)
+          if p.returncode!=2:
+              print(p.stdout,p.stderr)
+              raise SystemExit("SCIENTIFIC_RELEASE_MUST_FAIL_CLOSED_CODE_2")
+          print("SCIENTIFIC_RELEASE_NOT_CERTIFIED_AS_REQUIRED")
+          PY
+      - name: Source and original input must remain immutable
+        run: git diff --exit-code -- R tests research/release05 DESCRIPTION CITATION.cff NAMESPACE man
+
+  publish-versioned-engineering-release:
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
+    needs: [measured-coverage, native-report-and-performance, strict-source-release-gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release05-*
+          path: release05-evidence
+          merge-multiple: false
+      - name: Check exact qualified main SHA and create complete evidence asset
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          grep -qx 'Version: 0.1.2' DESCRIPTION
+          grep -qx 'version: 0.1.2' CITATION.cff
+          test -s docs/RELEASE_NOTES_0_1_2.md
+          python - <<'PY'
+          import pathlib,zipfile,hashlib
+          root=pathlib.Path("release05-evidence")
+          expected=["release05-instrumented-coverage",
+              "release05-ubuntu-latest-trajectory-report-performance",
+              "release05-windows-latest-trajectory-report-performance",
+              "release05-macos-latest-trajectory-report-performance"]
+          if not all((root/x).is_dir() for x in expected):
+              raise SystemExit("Missing measured three-platform evidence")
+          names=sorted(p for p in root.rglob("*") if p.is_file())
+          if len(names)<20:raise SystemExit("Incomplete release evidence")
+          archive=pathlib.Path("AquaTrajectories_v0.1.2_Qualification_Evidence.zip")
+          with zipfile.ZipFile(archive,"w",zipfile.ZIP_DEFLATED,compresslevel=8) as z:
+              for p in names:z.write(p,p.as_posix())
+              for p in ("docs/RELEASE05_REPRODUCIBLE_RESEARCH.md",
+                 "docs/RELEASE_NOTES_0_1_2.md",
+                 "research/release05/locked_trajectories.csv",
+                 "research/release05/locked_expected.json",
+                 "scripts/release05_verify.py"):z.write(p)
+          with zipfile.ZipFile(archive) as z:
+              if z.testzip() is not None:raise SystemExit("Release ZIP CRC failed")
+          print("RELEASE05_ASSET_READY",archive,archive.stat().st_size,
+                "bytes",len(names),"original evidence files")
+          print("RELEASE05_ASSET_SHA256",
+                hashlib.sha256(archive.read_bytes()).hexdigest())
+          PY
+      - name: Create exact immutable annotated tag and GitHub v0.1.2 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin --tags
+          if git rev-parse --verify --quiet 'refs/tags/v0.1.2' >/dev/null; then
+            EXISTING="$(git rev-parse 'refs/tags/v0.1.2^{commit}')"
+            test "$EXISTING" = "$GITHUB_SHA" || {
+              echo "::error::v0.1.2 already tags another SHA; refusing mutation."
+              exit 1
+            }
+          else
+            git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              tag -a v0.1.2 -m 'AquaTrajectories 0.1.2 reproducible research engineering release'
+            git push origin refs/tags/v0.1.2
+          fi
+          if gh release view v0.1.2 >/dev/null 2>&1; then
+            echo "The exact tagged release already exists; refusing overwrite."
+          else
+            gh release create v0.1.2 AquaTrajectories_v0.1.2_Qualification_Evidence.zip \
+              --verify-tag --latest \
+              --title 'AquaTrajectories v0.1.2 — Reproducible Research Release' \
+              --notes-file docs/RELEASE_NOTES_0_1_2.md
+          fi
+          gh release view v0.1.2 --json name,tagName,isPrerelease,url
