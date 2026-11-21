@@ -69,10 +69,14 @@ golden_sha256<-"3c09d9bec4513d13c536435b12b6002a96f6113f8b34de99e5b1f275b5ad01da
 if(mode=="verify"&&!file.exists(golden_path))
   stop("Unreviewed/missing immutable pixel baseline")
 baseline<-if(mode=="verify") {
-  if(!identical(unname(digest::digest(golden_path,file=TRUE,algo="sha256")),
-                golden_sha256))
-    stop("Frozen golden image CSV source digest mismatched")
-  utils::read.csv(golden_path,stringsAsFactors=FALSE)
+  # Windows Git may check out text files as CRLF while Linux/macOS
+  # check out LF. Verify exact *canonical CSV text*, not checkout EOL bytes.
+  canonical_csv<-paste0(paste(readLines(golden_path,warn=FALSE),
+                              collapse="\n"),"\n")
+  if(!identical(unname(digest::digest(charToRaw(canonical_csv),
+                           serialize=FALSE,algo="sha256")),golden_sha256))
+    stop("Frozen golden image CSV canonical text digest mismatched")
+  utils::read.csv(text=canonical_csv,stringsAsFactors=FALSE)
 } else NULL
 dir.create(out)
 records<-list(); candidates<-list()
