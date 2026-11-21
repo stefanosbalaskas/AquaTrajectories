@@ -12,10 +12,10 @@ An open-source **R-first scientific-analysis and visualization package for traje
 [![Official release](https://img.shields.io/badge/release-v0.1.2-169D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://doi.org/10.5281/zenodo.24262905)
 [![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
-[![Public API](https://img.shields.io/badge/exported%20R%20functions-179-147F97)](NAMESPACE)
+[![Development API](https://img.shields.io/badge/main-188%20R%20functions-147F97)](NAMESPACE)
 [![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
 
-**[Historical v0.1.1 Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.2 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
+**[Evidence safeguards (main)](docs/EVIDENCE_SAFEGUARDS_V1.md)** · **[Historical v0.1.1 Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.2 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
 
 </div>
 
@@ -28,6 +28,34 @@ An open-source **R-first scientific-analysis and visualization package for traje
 > [!NOTE]
 > **The research documentation website is live:** [AquaTrajectories documentation](https://stefanosbalaskas.github.io/AquaTrajectories/). CRAN submission qualification is underway; the package is **not yet on CRAN**. Until CRAN accepts a source package, install the official tagged GitHub release below.
 
+## New on main — evidence safeguards for defensible trajectory research
+
+The **eight-part scientific-safeguards upgrade** was merged in [PR #109](https://github.com/stefanosbalaskas/AquaTrajectories/pull/109). The current `main` branch provides **188 exported R functions in 15 documented reference categories**, including **nine new public evidence functions**. The **official v0.1.2 release remains unchanged at 179 functions**; these additions are **not yet in a new tagged release**.
+
+| Scientific concern | Implemented safeguard |
+| :--- | :--- |
+| **Analysis choices change an answer** | `aqt_compare_specifications()` compares pooled, fragment-, track- and time-window-weighted estimates, with denominators and sign-reversal flags. |
+| **Axes have incompatible units** | `aqt_measurement_contract()` distinguishes pixels and source-reported measurements from calibrated XYZ; `aqt_source_3axis_preview()` offers display-only mixed-axis figures. |
+| **Pseudoreplication and unsupported inference** | `aqt_inference_readiness()` distinguishes recording, fragment, verified animal and independently replicated tank evidence. |
+| **Unequal spatial coverage** | `aqt_spatial_support()` checks common-grid, equal-window comparisons and minimum observation support. |
+| **Image-geometry confounding** | `aqt_geometry_bias_audit()` reports descriptive relationships with box geometry, position and confidence. |
+| **Apparent effects arise without intervention** | `aqt_placebo_boundaries()` checks within-recording contrasts without mislabelling them as independent hypothesis tests. |
+| **Figures lose their interpretive caveats** | `aqt_evidence_report()` and `aqt_evidence_export()` create cautious, source-linked summaries, outputs and SHA-256 manifests. |
+| **Examples break across environments** | The synthetic regression example is qualified through R scripts and R Markdown rendering on Windows, Linux and macOS. |
+
+**[Methods, assumptions and synthetic worked example](docs/EVIDENCE_SAFEGUARDS_V1.md)** · **[Evidence functions in the R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Merged implementation and tests (PR #109)](https://github.com/stefanosbalaskas/AquaTrajectories/pull/109)**
+
+To use the **post-release development functions**, explicitly install from `main` rather than the v0.1.2 tag:
+
+```r
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "main")
+library(aquaTrajectories)
+source(system.file("examples", "evidence_guardrails.R",
+                   package = "aquaTrajectories"))  # SYNTHETIC data
+```
+
+**Scope:** these safeguards identify sensitivity, inadequate support and measurement limitations; they do not authenticate fish identities, validate physical 3D measurements, or establish feeding causality. No original SmartFish research workbooks, video, proprietary results or manuscript were published.
+
 ## Explore the toolkit
 
 | Research workflow | Included analysis and interfaces | Research guide |
@@ -37,6 +65,7 @@ An open-source **R-first scientific-analysis and visualization package for traje
 | **Movement and fish schools** | Paths, kinematics, school distances and geometry, voxel occupancy and tank views | [School geometry](docs/SCHOOL_SPATIAL_METHODS.md) |
 | **Events and behavioural models** | Event alignment, independently tank-replicated analysis, functional curves, changepoints and conditional HMMs | [Event inference](docs/EVENT_INFERENCE_CONTRACT.md) · [Functional curves](docs/FUNCTIONAL_EVENT_TANK_CURVES.md) |
 | **Scientific validation** | Detection and identity metrics, independently reviewed fish annotations, surveyed XYZ targets and explicit uncertainty scenarios | [Validation contract](docs/VALIDATION_CONTRACT.md) · [Underwater benchmarks](docs/UNDERWATER_REFERENCE_TARGET_PROTOCOL.md) |
+| **Evidence safeguards (main)** | Estimator robustness, unit contracts, experimental-unit audits, spatial support, geometry bias, falsification and source-linked reports | [Evidence safeguards](docs/EVIDENCE_SAFEGUARDS_V1.md) · [PR #109](https://github.com/stefanosbalaskas/AquaTrajectories/pull/109) |
 | **Visualization and ACI** | Publication figure families, 3D storyboard views, synthetic browser explorer and descriptive animal–computer interaction telemetry | [Figure guide](docs/PUBLICATION_VISUALIZATION_SUITE.md) · [ACI measurements](docs/ACI_CLOSED_LOOP_TELEMETRY.md) |
 
 <p align="center">
@@ -45,7 +74,7 @@ An open-source **R-first scientific-analysis and visualization package for traje
 
 ### The research documentation portal
 
-The pkgdown site includes **179 exported R functions** in **14 scientific reference categories**, reproducible research articles, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
+The current-main pkgdown site documents **188 exported R functions** in **15 scientific reference categories** (official v0.1.2 tag: 179 functions), reproducible research articles, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
 
 **[All 22 plotting functions — illustrated](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.html)** · **[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
 
@@ -146,7 +175,7 @@ For real footage, independently validate detection weights, original video times
 
 | Scope | Current meaning |
 | :--- | :--- |
-| **Public R API** | 179 exported functions with exact-source reference documentation and measured covr execution coverage |
+| **Public R API** | 188 documented exports on main (179 in tagged v0.1.2); measured covr coverage applies to the separately qualified release baseline |
 | **Visualizations** | Five publication figure families, descriptive 2D/3D plotting, tank storyboards and explicitly synthetic demonstrations |
 | **Video ingestion** | Optional runner and native R import/benchmark contracts; model training and real-video detector accuracy are not supplied or certified |
 | **Multiview reconstruction** | Calibrated-geometry and refraction-aware algorithms; independent underwater XYZ accuracy and reliable biological ID recovery remain unverified |
