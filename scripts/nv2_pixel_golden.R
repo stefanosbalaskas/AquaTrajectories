@@ -100,7 +100,7 @@ for(id in names(plots)) {
            ": pixel difference=",disagreement," foreground IoU=",overlap)
   }
   records[[id]]<-data.frame(figure_id=id,
-    width_px=480L,height_px=320L,
+    width_px=600L,height_px=480L,
     reference_mode=mode,
     identical_second_render=TRUE,
     pixel_disagreement=comparison[1L],
