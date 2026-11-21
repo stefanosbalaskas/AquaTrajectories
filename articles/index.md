@@ -48,7 +48,7 @@
   Choose a video, 3D, behavioural, benchmarking or ACI pipeline with
   inputs, outputs and qualification limits.
 
-- [Atlas of all 171 R
+- [Atlas of all 179 R
   functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md):
 
   A complete categorized, linked map to all public native R functions
@@ -151,6 +151,9 @@
   All 22 exported aqt_plot\_\* functions: native base-R example output,
   synthetic input projections for optional rgl plots, reproducible
   source code, and scientific limitations.
+
+- [Publication Visualization 2.0: reviewed figures and
+  provenance](https://stefanosbalaskas.github.io/AquaTrajectories/articles/publication-visualization-v2.md):
 
 - [Five native publication figure families — reproducible synthetic
   workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.md):

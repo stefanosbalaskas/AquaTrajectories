@@ -16,6 +16,7 @@ articles:
   articles/multiview-3d: multiview-3d.html
   articles/plan-your-experiment: plan-your-experiment.html
   articles/publication-figures: publication-figures.html
+  articles/publication-visualization-v2: publication-visualization-v2.html
   articles/quickstart-five-minutes: quickstart-five-minutes.html
   articles/real-fish-data-walkthrough: real-fish-data-walkthrough.html
   articles/research-datasets: research-datasets.html
@@ -29,7 +30,7 @@ articles:
   articles/video-tracking: video-tracking.html
   articles/visualization-gallery: visualization-gallery.html
   articles/workflows-atlas: workflows-atlas.html
-last_built: 2026-11-20T17:45Z
+last_built: 2026-11-21T09:17Z
 urls:
   reference: https://stefanosbalaskas.github.io/AquaTrajectories/reference
   article: https://stefanosbalaskas.github.io/AquaTrajectories/articles

@@ -1,0 +1,73 @@
+# Construct a source-linked, gap-aware publication figure specification
+
+Use either validated aqt_tracks with a \*declared finite gap_limit_s\*,
+or an existing QC 2.0 report with an explicit policy_id when multiple
+policies were audited. Trajectory positions remain visible as original
+samples, while line segments and speed points derive solely from
+eligible consecutive QC movement steps; neither missing nor excluded
+steps connect. For 3D data, xz and yz are explicitly 2D projections, not
+3D scenes. Position coordinates must be comparable within one
+session/camera scope.
+
+## Usage
+
+``` r
+aqt_viz2_spec(
+  data,
+  figure = c("paths", "speed", "qc_coverage", "qc_reasons"),
+  gap_limit_s = NULL,
+  policy_id = NULL,
+  session_id = NULL,
+  camera_id = NULL,
+  plane = c("xy", "xz", "yz"),
+  preset = "journal_double",
+  caption = "",
+  source_file = NULL
+)
+```
+
+## Arguments
+
+- data:
+
+  aqt_tracks or an unmodified aqt_qc2_report.
+
+- figure:
+
+  paths, speed, qc_coverage or qc_reasons.
+
+- gap_limit_s:
+
+  Finite positive maximum intersample time (seconds), required for raw
+  aqt_tracks; an existing QC 2.0 report owns its policies.
+
+- policy_id:
+
+  Exact QC policy ID; required if report has \>1 policy.
+
+- session_id, camera_id:
+
+  Optional scope selectors, mandatory for multi-session or multi-camera
+  input.
+
+- plane:
+
+  xy, xz or yz. Non-xy planes require actual 3D tank input.
+
+- preset:
+
+  Generic figure size/dpi preset from aqt_viz2_presets().
+
+- caption:
+
+  Researcher-supplied descriptive caption.
+
+- source_file:
+
+  Optional immutable existing source CSV/data file; SHA-256 recorded and
+  checked at export, and must match a QC2 CSV source digest.
+
+## Value
+
+Sealed aqt_viz2_spec with original row IDs, eligible segments, all QC
+decisions, plot source hashes, units, and figure metadata.

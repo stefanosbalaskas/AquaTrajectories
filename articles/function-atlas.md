@@ -1,4 +1,4 @@
-# Atlas of all 173 R functions
+# Atlas of all 179 R functions
 
 ## Complete R function atlas
 
@@ -8,7 +8,7 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 173 exported functions in 14 mutually exclusive research
+**Coverage:** 179 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -238,7 +238,7 @@ Recorded ACI choice, fairness, latency and feedback-loop telemetry.
 - [`aqt_aci_loop_metrics()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_aci_loop_metrics.md)
 - [`aqt_aci_trials()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_aci_trials.md)
 
-### 13. Visualizations and publication figures (22)
+### 13. Visualizations and publication figures (28)
 
 Static publication plots, trajectory storyboards and optional 3D views.
 
@@ -264,6 +264,19 @@ Static publication plots, trajectory storyboards and optional 3D views.
 - [`aqt_plot_tank_scene3d()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_tank_scene3d.md)
 - [`aqt_plot_trajectory_storyboard3d()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_trajectory_storyboard3d.md)
 - [`aqt_plot_voxel3d()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_voxel3d.md)
+
+#### Publication Visualization 2.0: QC-linked journal figures (6)
+
+The six functions below supplement the 22 public `aqt_plot_*` functions
+with source-row-verified, gap-aware manuscript exports. They do not
+substitute for independently validated biological data.
+
+- [`aqt_viz2_presets()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_presets.md)
+- [`aqt_viz2_gallery()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_gallery.md)
+- [`aqt_viz2_spec()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_spec.md)
+- [`aqt_viz2_draw()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_draw.md)
+- [`aqt_viz2_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_export.md)
+- [`aqt_viz2_verify()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_verify.md)
 
 ### 14. Provenance and source traceability (2)
 

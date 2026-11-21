@@ -478,6 +478,20 @@ Static publication plots, trajectory storyboards and optional 3D views.
   : Publication-style four-panel 3D fish trajectory storyboard
 - [`aqt_plot_voxel3d()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_voxel3d.md)
   : Plot 3D occupancy voxels as an observed-sample point cloud
+- [`aqt_viz2_presets()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_presets.md)
+  : Retrieve reproducible generic manuscript figure presets
+- [`aqt_viz2_gallery()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_gallery.md)
+  : Inventory the entire public native and optional 3D plot gallery
+- [`aqt_viz2_spec()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_spec.md)
+  : Construct a source-linked, gap-aware publication figure
+  specification
+- [`aqt_viz2_draw()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_draw.md)
+  : Draw a QC-aware publication specification on the current R graphics
+  device
+- [`aqt_viz2_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_export.md)
+  : Export audited publication figures and exact plotted-data evidence
+- [`aqt_viz2_verify()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_verify.md)
+  : Verify a published figure's source-row evidence and file hashes
 
 ## Provenance and source traceability
 

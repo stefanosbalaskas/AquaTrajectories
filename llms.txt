@@ -872,6 +872,20 @@ Static publication plots, trajectory storyboards and optional 3D views.
   : Publication-style four-panel 3D fish trajectory storyboard
 - [`aqt_plot_voxel3d()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_plot_voxel3d.md)
   : Plot 3D occupancy voxels as an observed-sample point cloud
+- [`aqt_viz2_presets()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_presets.md)
+  : Retrieve reproducible generic manuscript figure presets
+- [`aqt_viz2_gallery()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_gallery.md)
+  : Inventory the entire public native and optional 3D plot gallery
+- [`aqt_viz2_spec()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_spec.md)
+  : Construct a source-linked, gap-aware publication figure
+  specification
+- [`aqt_viz2_draw()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_draw.md)
+  : Draw a QC-aware publication specification on the current R graphics
+  device
+- [`aqt_viz2_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_export.md)
+  : Export audited publication figures and exact plotted-data evidence
+- [`aqt_viz2_verify()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_viz2_verify.md)
+  : Verify a published figure's source-row evidence and file hashes
 
 ## Provenance and source traceability
 
@@ -932,7 +946,7 @@ Source data digest recording and verification.
   Choose a video, 3D, behavioural, benchmarking or ACI pipeline with
   inputs, outputs and qualification limits.
 
-- [Atlas of all 173 R
+- [Atlas of all 179 R
   functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md):
 
   A complete categorized, linked map to all public native R functions
@@ -1035,6 +1049,9 @@ Source data digest recording and verification.
   All 22 exported aqt_plot\_\* functions: native base-R example output,
   synthetic input projections for optional rgl plots, reproducible
   source code, and scientific limitations.
+
+- [Publication Visualization 2.0: reviewed figures and
+  provenance](https://stefanosbalaskas.github.io/AquaTrajectories/articles/publication-visualization-v2.md):
 
 - [Five native publication figure families — reproducible synthetic
   workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.md):
