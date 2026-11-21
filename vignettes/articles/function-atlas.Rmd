@@ -1,5 +1,5 @@
 ---
-title: "Atlas of all 173 R functions"
+title: "Atlas of all 179 R functions"
 description: "A complete categorized, linked map to all public native R functions and their source-generated help manuals."
 ---
 
@@ -7,7 +7,7 @@ description: "A complete categorized, linked map to all public native R function
 
 Every public R function in this development branch is documented by its generated `.Rd` help page. This atlas is a **navigation map** rather than a second implementation of API documentation. Each link opens the current pkgdown-rendered function reference, including the authoritative arguments, value description and examples drawn from the package source.
 
-**Coverage:** 173 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
+**Coverage:** 179 exported functions in 14 mutually exclusive research families. An automated website build audit compares the reference index against `NAMESPACE` and verifies that an `.Rd` manual exists for every export.
 
 [Browse the reference index](../reference/index.html) · [Workflow atlas](workflows-atlas.html) · [Scientific limitations](scientific-status.html)
 
@@ -220,7 +220,7 @@ Recorded ACI choice, fairness, latency and feedback-loop telemetry.
 - [`aqt_aci_loop_metrics()`](../reference/aqt_aci_loop_metrics.html)
 - [`aqt_aci_trials()`](../reference/aqt_aci_trials.html)
 
-## 13. Visualizations and publication figures (22)
+## 13. Visualizations and publication figures (28)
 
 Static publication plots, trajectory storyboards and optional 3D views.
 
@@ -246,6 +246,17 @@ Static publication plots, trajectory storyboards and optional 3D views.
 - [`aqt_plot_tank_scene3d()`](../reference/aqt_plot_tank_scene3d.html)
 - [`aqt_plot_trajectory_storyboard3d()`](../reference/aqt_plot_trajectory_storyboard3d.html)
 - [`aqt_plot_voxel3d()`](../reference/aqt_plot_voxel3d.html)
+
+### Publication Visualization 2.0: QC-linked journal figures (6)
+
+The six functions below supplement the 22 public `aqt_plot_*` functions with source-row-verified, gap-aware manuscript exports. They do not substitute for independently validated biological data.
+
+- [`aqt_viz2_presets()`](../reference/aqt_viz2_presets.html)
+- [`aqt_viz2_gallery()`](../reference/aqt_viz2_gallery.html)
+- [`aqt_viz2_spec()`](../reference/aqt_viz2_spec.html)
+- [`aqt_viz2_draw()`](../reference/aqt_viz2_draw.html)
+- [`aqt_viz2_export()`](../reference/aqt_viz2_export.html)
+- [`aqt_viz2_verify()`](../reference/aqt_viz2_verify.html)
 
 ## 14. Provenance and source traceability (2)
 
