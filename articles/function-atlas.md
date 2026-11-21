@@ -1,4 +1,4 @@
-# Atlas of all 171 R functions
+# Atlas of all 173 R functions
 
 ## Complete R function atlas
 
@@ -8,7 +8,7 @@ than a second implementation of API documentation. Each link opens the
 current pkgdown-rendered function reference, including the authoritative
 arguments, value description and examples drawn from the package source.
 
-**Coverage:** 171 exported functions in 14 mutually exclusive research
+**Coverage:** 173 exported functions in 14 mutually exclusive research
 families. An automated website build audit compares the reference index
 against `NAMESPACE` and verifies that an `.Rd` manual exists for every
 export.
@@ -46,7 +46,7 @@ formats.
 - [`aqt_tracks_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracks_validate.md)
 - [`aqt_video_bundle_import()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_video_bundle_import.md)
 
-### 2. Detection, tracking and annotation validation (23)
+### 2. Detection, tracking and annotation validation (25)
 
 Detector and identity metrics against explicitly defined reference
 annotations.
@@ -68,6 +68,8 @@ annotations.
 - [`aqt_qc_derive()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_derive.md)
 - [`aqt_qc_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_report.md)
 - [`aqt_qc_sensitivity()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_sensitivity.md)
+- [`aqt_qc2_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc2_report.md)
+- [`aqt_qc2_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc2_export.md)
 - [`aqt_reference_measurement_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.md)
 - [`aqt_reference_measurement_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.md)
 - [`aqt_tracking_match()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_tracking_match.md)

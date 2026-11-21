@@ -96,6 +96,11 @@ annotations.
   : Export a complete, immutable, provenance-linked trajectory QC audit
 - [`aqt_qc_sensitivity()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc_sensitivity.md)
   : Compare explicit QC policies on an existing 2D/3D trajectory dataset
+- [`aqt_qc2_report()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc2_report.md)
+  : Audit general 2D/3D trajectories with QC decisions and source-row
+  lineage
+- [`aqt_qc2_export()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_qc2_export.md)
+  : Export QC 2.0 inclusion, exclusion and lineage evidence
 - [`aqt_reference_measurement_publish()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_publish.md)
   : Export numerical source-linked fish measurement validation
 - [`aqt_reference_measurement_validate()`](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_reference_measurement_validate.md)
