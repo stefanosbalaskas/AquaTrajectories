@@ -81,6 +81,13 @@ on.exit(if(dir.exists(staging))unlink(staging,recursive=TRUE,force=TRUE),
         add=TRUE)
 dir.create(file.path(staging,"input"))
 dir.create(file.path(staging,"figures"))
+dir.create(file.path(staging,"scripts"))
+if(!file.copy("scripts/release05_example.R",
+              file.path(staging,"scripts","release05_example.R")) ||
+   !file.copy("scripts/release05_verify.py",
+              file.path(staging,"scripts","release05_verify.py")))
+  stop("Unable to embed exact producing and independent verification scripts",
+       call.=FALSE)
 if(!file.copy(source_path,file.path(staging,"input","locked_trajectories.csv")) ||
    !file.copy(expected_path,file.path(staging,"input","locked_expected.json")) ||
    !identical(sha(file.path(staging,"input","locked_trajectories.csv")),
