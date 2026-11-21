@@ -6,6 +6,10 @@
 #' @param max_gap_s Largest time step eligible for movement calculation.
 #' @return Data frame including dt_s, step_distance, vx/vy/vz, speed,
 #'   heading_rad, acceleration and turn_rate_rad_s.
+#' @examples
+#' fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20, fps = 10)
+#' movement <- aqt_kinematics(fish, max_gap_s = 0.2)
+#' head(movement[, c("track_id", "time_s", "speed")])
 #' @export
 aqt_kinematics <- function(tracks,max_gap_s=Inf) {
   aqt_tracks_validate(tracks)

@@ -1,0 +1,137 @@
+name: CRAN candidate - source build and as-cran cross-platform qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "DESCRIPTION"
+      - "R/**"
+      - "man/**"
+      - "tests/**"
+      - "inst/**"
+      - "NEWS.md"
+      - "CITATION.cff"
+      - ".Rbuildignore"
+      - "cran-comments.md"
+      - ".github/workflows/cran-qualification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cran-qualification-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-as-cran:
+    name: R ${{ matrix.r }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            r: devel
+          - os: windows-latest
+            r: release
+          - os: macos-latest
+            r: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-tinytex@v2
+      - name: Install current HTML Tidy for accurate CRAN HTML validation
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update -qq
+            sudo apt-get install -y tidy
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install tidy-html5
+          fi
+          command -v tidy
+          tidy -version
+      - name: Ensure TeX Live makeindex on Unix runners
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          echo "Pandoc:"; pandoc --version | head -n 1
+          echo "pdfLaTeX:"; command -v pdflatex; pdflatex --version | head -n 1
+          if ! command -v makeindex >/dev/null 2>&1; then
+            echo "Installing the TeX Live makeindex utility"
+            command -v tlmgr
+            tlmgr install makeindex
+          fi
+          command -v makeindex
+      - name: Ensure TeX Live makeindex on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          pandoc --version | Select-Object -First 1
+          $pdflatex = (Get-Command pdflatex.exe -ErrorAction Stop).Source
+          Write-Output "pdfLaTeX: $pdflatex"
+          $makeindex = Get-Command makeindex.exe -ErrorAction SilentlyContinue
+          if ($null -eq $makeindex) {
+            $tlmgr = Join-Path (Split-Path $pdflatex) 'tlmgr.bat'
+            if (!(Test-Path $tlmgr)) { throw "TeX Live manager missing: $tlmgr" }
+            Write-Output "Installing makeindex through Windows tlmgr.bat"
+            & $tlmgr install makeindex
+            if ($LASTEXITCODE -ne 0) { throw "tlmgr.bat makeindex install failed" }
+          }
+          $makeindex = Get-Command makeindex.exe -ErrorAction Stop
+          Write-Output "makeindex: $($makeindex.Source)"
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::roxygen2
+          extra-packages: any::rcmdcheck
+      - name: Verify generated help pages are committed
+        shell: bash
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+      - name: Build CRAN source archive
+        shell: bash
+        run: |
+          R CMD build .
+          test -s aquaTrajectories_0.1.2.tar.gz
+      - name: Check actual tarball under CRAN rules
+        shell: bash
+        run: |
+          # R may return a nonzero exit status for the expected first-submission
+          # NOTE; the audited check log is the authoritative result.
+          R CMD check --as-cran aquaTrajectories_0.1.2.tar.gz || true
+          cat aquaTrajectories.Rcheck/00check.log
+          Rscript --vanilla scripts/cran_check_gate.R aquaTrajectories.Rcheck/00check.log
+      - name: Print PDF/LaTeX diagnostics when CRAN checks fail
+        if: failure()
+        shell: bash
+        run: |
+          echo "Manual build diagnostics (if the runner retained them):"
+          find . -maxdepth 5 -type f -name '*manual*' -print || true
+          for f in aquaTrajectories.Rcheck/aquaTrajectories-manual.log aquaTrajectories-manual.log; do
+            if [ -f "$f" ]; then
+              echo "=== $f (last 120 lines) ==="
+              tail -n 120 "$f"
+            fi
+          done
+      - name: Preserve exact source tarball and CRAN check evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaTrajectories-0.1.2-cran-${{ matrix.os }}-${{ matrix.r }}
+          path: |
+            aquaTrajectories_0.1.2.tar.gz
+            aquaTrajectories.Rcheck/00check.log
+            aquaTrajectories.Rcheck/aquaTrajectories-manual.tex
+            aquaTrajectories.Rcheck/aquaTrajectories-manual.log
+          if-no-files-found: warn

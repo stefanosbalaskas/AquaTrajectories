@@ -27,3 +27,7 @@ exceed the declared gap. Explicitly unobserved or missing positions also
 split paths. Observed singletons are shown as points, not false movement
 segments. This is a visualization rule, not physical clock validation.
 }
+\examples{
+fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20)
+aqt_plot_paths(fish)
+}

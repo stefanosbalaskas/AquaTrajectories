@@ -2,6 +2,11 @@
 #' @param data Columns session_id, event_id, start_s, end_s.
 #'   Equal start and end times represent a point event.
 #' @return Validated event data frame.
+#' @examples
+#' events <- aqt_event_table(data.frame(
+#'   session_id = "S1", event_id = "feeding",
+#'   start_s = 3, end_s = 4))
+#' events
 #' @export
 aqt_event_table <- function(data) {
   if (!is.data.frame(data) ||

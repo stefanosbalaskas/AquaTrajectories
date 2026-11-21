@@ -50,6 +50,9 @@ aqt_triangulate_pairs <- function(xy1,xy2,P1,P2) {
 #'   in the supplied time_s units; defaults to Inf for legacy plotting.
 #'   Specify a finite threshold to prevent joining long unsampled intervals.
 #' @return Invisibly NULL, creating a base graphics plot.
+#' @examples
+#' fish <- aqt_simulate_tracks(n_fish = 2, n_frames = 20)
+#' aqt_plot_paths(fish)
 #' @export
 aqt_plot_paths <- function(tracks,...,max_gap_s=Inf) {
   aqt_tracks_validate(tracks)

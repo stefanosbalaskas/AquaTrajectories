@@ -16,3 +16,9 @@ Validated event data frame.
 \description{
 Validate a timestamped event table
 }
+\examples{
+events <- aqt_event_table(data.frame(
+  session_id = "S1", event_id = "feeding",
+  start_s = 3, end_s = 4))
+events
+}

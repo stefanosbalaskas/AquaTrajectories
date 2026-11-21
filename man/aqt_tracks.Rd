@@ -20,3 +20,9 @@ An aqt_tracks object. IDs only apply within session and camera.
 \description{
 Construct a validated aquatic-animal trajectory table
 }
+\examples{
+observations <- data.frame(session_id = "S1", camera_id = "top",
+                           track_id = "fish1", time_s = c(0, 1),
+                           x = c(10, 11), y = c(20, 20))
+aqt_tracks(observations, units = "cm", coordinate_system = "tank")
+}
