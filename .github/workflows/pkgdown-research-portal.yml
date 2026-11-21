@@ -136,6 +136,7 @@ jobs:
           test -s site/articles/video-to-results.html
           test -s site/articles/identity-occlusion-tutorial.html
           test -s site/articles/research-evidence-dashboard.html
+          test -s site/articles/reproducible-research-release.html
           test -s site/synthetic-explorer.html
           test -s site/synthetic-explorer.js
           test -s site/synthetic-lab.js

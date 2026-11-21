@@ -25,6 +25,7 @@ const pages = [
   "articles/experiment-starter-kit.html",
   "articles/identity-occlusion-tutorial.html",
   "articles/research-evidence-dashboard.html",
+  "articles/reproducible-research-release.html",
   "articles/all-plot-functions.html",
   "synthetic-explorer.html"
 ];
@@ -71,10 +72,18 @@ const home=read("index.html");
 assert.match(home,/official v0\.1\.2 release/i);
 assert.match(home,/10\.5281\/zenodo\.24262905/i);
 assert.match(home,/quickstart-five-minutes/);
+assert.match(home,/articles\/reproducible-research-release\.html/);
 assert.match(home,/experiment-starter-kit/);
 assert.match(home,/capabilities-and-validation/);
+const releaseGuide=read("articles/reproducible-research-release.html");
+for(const claim of [/89\\.33%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windows/,/Linux/,/v0\\.1\\.2/]) {
+  assert.match(releaseGuide, claim, "Missing exact-source release evidence: "+claim);
+}
+for(const page of ["articles/quickstart-five-minutes.html","articles/capabilities-and-validation.html","articles/scientific-status.html","articles/research-evidence-dashboard.html"]) {
+  assert.match(read(page),/v0\\.1\\.2/, "Stale published-release description: "+page);
+}
 const start=read("articles/aquaTrajectories.html");
-assert.match(start,/v0\.1\.1/);
+assert.match(start,/v0\.1\.2/);
 assert.doesNotMatch(start, /ref\s*=\s*(?:(?:<[^>]*>)*[\s"]*)?v0\.1\.0/, "Get-started guide still asks for old release");
 const demo=read("synthetic-explorer.html");
 for(const id of ["occlusion-demo","idswitch-demo","learningStatus","frame","fishfilters","lessonPreset","cameraXY","cameraXZ","speedChart","focusFish","quizYes","quizNo","exportCsv","exportSvg"]) {
