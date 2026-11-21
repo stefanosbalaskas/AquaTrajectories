@@ -221,7 +221,8 @@ def verify(destination: Path) -> dict:
         require(fish in numeric, "report introduced an unobserved track ID")
         truth = numeric[fish]
         for col in ("n_source_rows", "n_observed_positions", "n_eligible_steps"):
-            require(int(r[col]) == truth[col], "incorrect per-fish " + col)
+            independent_name = "eligible_steps" if col == "n_eligible_steps" else col
+            require(int(r[col]) == truth[independent_name], "incorrect per-fish " + col)
         for col in ("path_length_cm", "valid_duration_s"):
             require(math.isclose(float(r[col]), truth[col],
                                  abs_tol=1e-12, rel_tol=0),
