@@ -4,7 +4,7 @@
 
 **This workstream intentionally excludes detection, tracker training, video-to-3D, biological identity and claims of welfare measurement.** AquaTrajectories is a scientific numerical and visualization toolkit for researchers who already possess trajectory observations.
 
-The public v0.1.1 release and its DOI remain immutable. This change belongs to the source-development branch until a separately reviewed tagged release. Do not assign the 171-function development API to the 155-function v0.1.1 tag.
+The historical v0.1.1 release and its DOI remain immutable. **Scientific Core 2.0 is now included in the separately qualified and published GitHub v0.1.2 release (179 public R exports).** The 171-export first-development snapshot and 155-export v0.1.1 tag were historically separate states. Zenodo DOI 10.5281/zenodo.24262905 remains specific to v0.1.1, not v0.1.2.
 
 ## 01 — Architecture and public API
 
@@ -73,7 +73,7 @@ aqt_figure_export(function() aqt_plot_paths(tr),"paper_figure_01",
 **No promise of physically validated fish, inference from videos or independently calibrated joint confidence intervals is implied by this workstream.**
 
 
-## Observed exact-source CI evidence — 21 November 2026
+## Historical first-stage CI evidence — 21 November 2026 (PRs #100–101)
 
 The first Core 2.0 integration was merged as PR #100 following **12/12 green workflows**, including strict R CMD check with zero errors/warnings/notes; current main has **171** public R exports and v0.1.1 remains a separate immutable **155-export** tag. Python R-source/Rd audit matched all 171 exports. Deterministic mathematical known-answer and geometry invariance tests passed.
 
@@ -82,3 +82,15 @@ The follow-up PR #101 executed genuine `covr::package_coverage(type="tests")` in
 The coverage artifact identified specific remaining internal test gaps: `.aqt_research_config` 36/53 instrumented expressions, `aqt_figure_export` 32/43, and `.aqt_publication_render` 10/16. Later development should prioritize these boundary cases, test optional PNG/PDF/SVG/TIFF device behaviour and investigate larger synthetic workloads before declaring performance or portability across all graphics backends.
 
 These are software qualification results only. They do not certify any trajectory's biological origin, independent metrology, calibrated statistical confidence coverage or generalize across computer-vision models.
+
+
+## Final v0.1.2 Scientific Core 2.0 qualification (21 November 2026)
+
+The initial 171-export/89.1173% measurements above are **intermediate historical evidence**, not the final tagged source. Subsequent integrated milestones were merged as PRs #102–106 and released at [v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2), commit `69c8f73b3690325dd9c3b0278ba449395fa251e8`, with **179 exported R functions**.
+
+- QC 2.0: [source-row and policy audit](QC2_GENERAL_TRAJECTORIES.md), PR #103.
+- Numerical Validation 2.0: [numerical oracles and metamorphic tests](NUMERICAL_VALIDATION_2_0.md), PR #104.
+- Publication Visualization 2.0: [source-linked graphics and regression](PUBLICATION_VISUALIZATION_2_0.md), PR #105.
+- Reproducible Research Release: [exact-source protocol](RELEASE05_REPRODUCIBLE_RESEARCH.md), PR #106; **89.33% measured instrumented R execution coverage**, **24 benchmark workloads on each of Linux, Windows and macOS**, and the locked **17-row synthetic example** with 10 eligible movement steps totaling 10 cm.
+
+This is a qualified software-engineering and bounded synthetic numerical release, **not** external biological/physical scientific certification. The [current website release guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.html) links to primary evidence and gives complete reproduction commands.
