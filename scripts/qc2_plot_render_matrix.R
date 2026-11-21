@@ -46,7 +46,7 @@ for(i in seq_along(names_in_atlas)) {
   lines <- extract(paste0(fence,"{r gallery-plot-",chunk_names[i]))
   code <- paste(lines,collapse="\n")
   native <- !fun %in% names(rgl_expr)
-  if(native && !grepl(paste0("\\b",fun,"\\("),code))
+  if(native && !grepl(paste0(fun,"("),code,fixed=TRUE))
     stop("Native gallery chunk does not execute declared renderer: ",fun)
   if(native) {
     target <- file.path(figdir,paste0(fun,".pdf"))
