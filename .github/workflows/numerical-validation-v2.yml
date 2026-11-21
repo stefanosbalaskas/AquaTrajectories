@@ -1,0 +1,130 @@
+name: Numerical Validation 2.0 - independent oracles, pixel golden and real group profile
+on:
+  pull_request:
+    paths:
+      - "tests/testthat/test-nv2-*.R"
+      - "tests/python/test_nv2_*.py"
+      - "tests/golden/nv2_pixel_masks.csv"
+      - "scripts/nv2_*.R"
+      - "scripts/nv2_*.py"
+      - "docs/NUMERICAL_VALIDATION_2_0.md"
+      - ".github/workflows/numerical-validation-v2.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tests/testthat/test-nv2-*.R"
+      - "scripts/nv2_*.R"
+      - "tests/golden/nv2_pixel_masks.csv"
+      - ".github/workflows/numerical-validation-v2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-numerical-oracles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+            any::nlme
+            any::fdapace
+      - name: Execute all nine numerical method oracle, metamorphic and failure domains
+        run: |
+          Rscript --vanilla scripts/nv2_reference_matrix.R nv2-reference-evidence
+          test -s nv2-reference-evidence/NV2_REFERENCE_MATRIX.csv
+          test -s nv2-reference-evidence/NV2_REFERENCE_MANIFEST.json
+      - name: No test may edit source or numerical references
+        run: git diff --exit-code -- R NAMESPACE man tests scripts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nv2-independent-oracles
+          path: nv2-reference-evidence/
+          if-no-files-found: warn
+  pixel-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::ragg
+            any::png
+      - name: Render three actual native plots twice and capture pixel baseline candidate
+        run: |
+          Rscript --vanilla scripts/nv2_pixel_golden.R capture nv2-pixel-candidate
+          test -s nv2-pixel-candidate/CANDIDATE_GOLDEN.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nv2-actual-pixel-golden-candidates
+          path: nv2-pixel-candidate/
+          if-no-files-found: warn
+  source-real-group:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+      - name: Validate source converter numeric and security failure cases
+        run: |
+          python -m unittest discover -s tests/python -p 'test_nv2_real_group.py' -v
+      - name: Fetch real official Fraunhofer MOT annotation archives (UNVERIFIED TLS)
+        shell: bash
+        run: |
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_a/mot_a.zip" \
+            --output "$RUNNER_TEMP/nv2_real_A.zip"
+          curl --insecure --fail --location --show-error --retry 3 \
+            --max-time 360 --max-filesize 1000000000 \
+            "https://cvg.hhi.fraunhofer.de/FishTrackingData/video_b/mot_b.zip" \
+            --output "$RUNNER_TEMP/nv2_real_B.zip"
+          # TLS peer verification is false and recorded in both manifests.
+          python scripts/nv2_fraunhofer_mot_to_csv.py \
+            --zip "$RUNNER_TEMP/nv2_real_A.zip" --sequence A \
+            --out "$RUNNER_TEMP/nv2_input_A"
+          python scripts/nv2_fraunhofer_mot_to_csv.py \
+            --zip "$RUNNER_TEMP/nv2_real_B.zip" --sequence B \
+            --out "$RUNNER_TEMP/nv2_input_B"
+      - name: Profile actual A/B source group geometry, independent frame oracle and walltime
+        shell: bash
+        run: |
+          mkdir -p nv2-real-evidence
+          Rscript --vanilla scripts/nv2_real_group_profile.R \
+            "$RUNNER_TEMP/nv2_input_A/SOURCE_FRAME_CENTER_TRACKS.csv" \
+            "$RUNNER_TEMP/nv2_input_A/SOURCE_PROVENANCE.json" \
+            nv2-real-evidence/sequence_A
+          Rscript --vanilla scripts/nv2_real_group_profile.R \
+            "$RUNNER_TEMP/nv2_input_B/SOURCE_FRAME_CENTER_TRACKS.csv" \
+            "$RUNNER_TEMP/nv2_input_B/SOURCE_PROVENANCE.json" \
+            nv2-real-evidence/sequence_B
+          test -s nv2-real-evidence/sequence_A/REAL_GROUP_PERFORMANCE.csv
+          test -s nv2-real-evidence/sequence_B/REAL_GROUP_PERFORMANCE.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nv2-real-fraunhofer-annotation-group-benchmark
+          path: nv2-real-evidence/
+          if-no-files-found: warn
