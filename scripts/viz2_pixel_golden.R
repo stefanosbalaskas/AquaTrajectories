@@ -64,18 +64,15 @@ render<-function(s,path){
    stop("Wrong PNG raster geometry")
  as.integer((image[,,1L]+image[,,2L]+image[,,3L])/3<.9)
 }
-golden_path<-"tests/golden/viz2_pixel_masks.csv.gz.b64"
-golden_sha256<-"c1f67902c693ed107a152e07fedd22b9ba4d2e8f568b951c835346d48c6b84eb"
+golden_path<-"tests/golden/viz2_pixel_masks.csv"
+golden_sha256<-"3c09d9bec4513d13c536435b12b6002a96f6113f8b34de99e5b1f275b5ad01da"
 if(mode=="verify"&&!file.exists(golden_path))
   stop("Unreviewed/missing immutable pixel baseline")
 baseline<-if(mode=="verify") {
-  packed<-paste(readLines(golden_path,warn=FALSE),collapse="")
-  reference_bytes<-memDecompress(jsonlite::base64_dec(packed),type="gzip")
-  if(!identical(unname(digest::digest(reference_bytes,
-        algo="sha256",serialize=FALSE)),golden_sha256))
+  if(!identical(unname(digest::digest(golden_path,file=TRUE,algo="sha256")),
+                golden_sha256))
     stop("Frozen golden image CSV source digest mismatched")
-  utils::read.csv(text=rawToChar(reference_bytes),
-                  stringsAsFactors=FALSE)
+  utils::read.csv(golden_path,stringsAsFactors=FALSE)
 } else NULL
 dir.create(out)
 records<-list(); candidates<-list()
