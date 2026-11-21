@@ -198,7 +198,7 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
     c("session_id","camera_id","track_id","time_s","x","y","z",
       "observed","frame_id","source_row"),names(data))
   normalized_signature <- data[,signature_columns,drop=FALSE]
-  for(axis in intersect(c("time_s","x","y","z"),names(normalized_signature)))
+  for(axis in intersect(c("time_s","x","y","z","frame_id"),names(normalized_signature)))
     normalized_signature[[axis]] <- as.double(normalized_signature[[axis]])
   canonical_signature_sha <- unname(digest::digest(list(
     canonical=as.data.frame(normalized_signature),
