@@ -24,7 +24,7 @@ jobs:
         with:
           extra-packages: any::rmarkdown, any::knitr
       - name: Install the exact checkout
-        run: R CMD INSTALL .
+        run: Rscript -e "install.packages('.', repos=NULL, type='source')"
       - name: Complete synthetic trajectory-to-evidence regression
         run: Rscript inst/examples/evidence_guardrails.R
       - name: Render executable evidence report
