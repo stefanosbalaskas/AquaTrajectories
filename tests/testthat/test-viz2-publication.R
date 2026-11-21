@@ -57,6 +57,7 @@ test_that("VIZ2 gap policy, frame skip, projection and multi-camera errors fail 
   g<-tr
   more<-as.data.frame(g)
   more$camera_id<-"SIDE"
+  more$source_row<-paste0("SIDE-",more$source_row)
   both<-aqt_tracks(rbind(as.data.frame(g),more),
                    units="cm",coordinate_system="tank")
   expect_error(aqt_viz2_spec(both,figure="paths",gap_limit_s=1.01),
@@ -77,7 +78,9 @@ test_that("VIZ2 all four formats and all-data SHA256 verification are transactio
   tr<-.viz2_fixture()
   f<-tempfile(fileext=".csv")
   on.exit(unlink(f),add=TRUE)
-  utils::write.csv(as.data.frame(tr),f,row.names=FALSE)
+  source_rows<-as.data.frame(tr)
+  source_rows$z<-NULL # preserve 2D column types on CSV reimport
+  utils::write.csv(source_rows,f,row.names=FALSE)
   q<-aqt_qc2_report(f,gap_limits_s=1.01,units="cm",
                     coordinate_system="tank")
   fig<-aqt_viz2_spec(q,figure="paths",source_file=f,
@@ -115,7 +118,9 @@ test_that("VIZ2 source-file change is blocked and measured 3D is projection-only
   tr<-.viz2_fixture()
   file<-tempfile(fileext=".csv")
   on.exit(unlink(file),add=TRUE)
-  utils::write.csv(as.data.frame(tr),file,row.names=FALSE)
+  source_rows<-as.data.frame(tr)
+  source_rows$z<-NULL
+  utils::write.csv(source_rows,file,row.names=FALSE)
   q<-aqt_qc2_report(file,gap_limits_s=1.1,units="cm",
                     coordinate_system="tank")
   s<-aqt_viz2_spec(q,"paths",source_file=file)
