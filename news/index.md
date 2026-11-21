@@ -1,5 +1,43 @@
 # Changelog
 
+## aquaTrajectories 0.1.2 (Reproducible Research Release; 2026-11-21)
+
+This is a **versioned software-engineering and research-reproducibility
+release**, not a claim that independently validated biological fish
+identity, physical underwater accuracy, welfare or uncertainty coverage
+is established.
+
+- 179 public R exports spanning core 2D/3D movement, school geometry,
+  quality-control and publication visualization.
+- Complete QC 2.0 source-row exclusion lineage, original-data
+  preservation and source-bound trajectory plotting; 22 public native
+  plots and six headless 3D scene regression tests with four cross-OS
+  pixel-golden tests.
+- Independent numerical-validation matrix for nine scientific method
+  groups, including synthetic oracles, metamorphic properties and
+  negative cases.
+- Locked **17-row synthetic trajectory-to-report** example with
+  annotated missing observation, nonadjacent frame and speed exclusion,
+  verified by independent stdlib Python recomputation of 10 eligible
+  Euclidean steps (total 10 cm); source/input/report/figure SHA-256
+  manifests.
+- Actual instrumented `covr` execution coverage (80% minimum for this
+  release), recorded function/source lineage and measured R
+  runtime/memory allocation for 2D/3D workloads on Windows, Linux and
+  macOS; the numeric correctness of benchmarks is a gate, not claims
+  about speed superiority.
+- Strict built `R CMD check`, three-platform benchmark/provenance tests,
+  Python numerical oracle, artifact checks and release-only version
+  guards.
+- Publish a new immutable `v0.1.2` GitHub source release only from a
+  qualified merged commit. A version-specific Zenodo DOI **must not** be
+  carried forward from v0.1.1 unless a new archive record is issued.
+
+The locked example is synthetic and publicly redistributable. Real fish
+video, external ground truth, model weights and calibration data are
+neither included nor fabricated. No automatic empirical-scientific
+certification is implied.
+
 ## aquaTrajectories 0.1.1 (documentation and citation release)
 
 Documentation-focused engineering-preview update to the existing 0.1.0

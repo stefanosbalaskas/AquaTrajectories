@@ -1,6 +1,6 @@
 # From aquatic observations to reproducible movement science
 
-Open-source research software · official v0.1.1 release
+Open-source research software · official v0.1.2 release
 
 Track, reconstruct, analyze and visualize aquatic-animal trajectories
 with R, Python and browser tools. Start with documented synthetic
@@ -14,17 +14,26 @@ lab](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)[
 your
 experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md)
 
-155 documented R functions14 reference categoriesOfficial GitHub release
-v0.1.1Zenodo archived
+179 documented R functions14 reference categoriesOfficial GitHub release
+v0.1.2prior v0.1.1 Zenodo archived
 
 **Published software:** [AquaTrajectories
-v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-is a public GitHub release, permanently archived as
+v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+is the reproducible GitHub software release. The previous v0.1.1 release
+(not the new v0.1.2 source) is permanently archived as
 [10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) on
 Zenodo. [![Zenodo DOI
 10.5281/zenodo.24262905](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)
 CRAN qualification is in progress; this package is not yet published on
 CRAN.
+
+**Reproducible Research 0.1.2:** The locked 17-row synthetic
+trajectory-to-QC-to-report example reproduces 10 source-eligible steps
+(10 cm), has independent Python source-row and Euclidean auditing, and
+is measured for 2D/3D runtime/memory across Linux/Windows/macOS.
+[Exact-source release protocol and
+evidence](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md).
+A new version-specific Zenodo DOI is not yet confirmed.
 
 **Scientific status:** this release is engineering-qualified, but
 biological identity, underwater metrology, fish welfare inference,
@@ -70,10 +79,11 @@ Interactive laboratory
 Five invented tracks, two camera projections, occlusions, identity
 switches, event markers and exportable teaching outputs.
 
-**Released**[v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+**Released**[v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
 · MIT-licensed source
 
-**Citable**[Zenodo DOI](https://doi.org/10.5281/zenodo.24262905) ·
+**Citable**[Prior v0.1.1 Zenodo
+DOI](https://doi.org/10.5281/zenodo.24262905) ·
 [BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
 
 **Scientific validity**Software contracts tested; [independent
@@ -248,7 +258,7 @@ interpreter from a public CDN only after you choose to initialize it.
 Explore deterministic examples that separate **what software computes**
 from **what real biological observations establish**. Each exercise runs
 locally in the browser, uses invented inputs, and links to the published
-v0.1.1 R documentation.
+v0.1.2 R documentation.
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/scientific-tracking-lab.md)
 
@@ -306,7 +316,7 @@ analysis](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstar
 **Explore**[Complete workflow
 atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md)
 
-**Reference**[155-function guided
+**Reference**[179-function guided
 index](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md)
 
 **Research**[Evidence and validation
@@ -318,7 +328,7 @@ status](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-ev
 
 # Install the official versioned GitHub release (not yet on CRAN)
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
 
 library(aquaTrajectories)
 x <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
@@ -379,14 +389,14 @@ interpretation limits.
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
-- [Official v0.1.1 GitHub
-  release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-- [Version-specific Zenodo DOI:
+- [Official v0.1.2 GitHub
+  release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+- [Historical v0.1.1 Zenodo DOI:
   10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) ·
   [Download
   BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
 - [Scientific methods and validation
-  protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.1/docs)
+  protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.2/docs)
 - [Function
   documentation](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)
   · [Publication
