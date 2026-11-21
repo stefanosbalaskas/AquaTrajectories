@@ -3,7 +3,7 @@
 This directory holds **website source**. The project's existing scientific protocol files under `docs/` are never used as generated output.
 
 - `pkgdown/index.md`: independent landing page (preserves GitHub README).
-- `_pkgdown.yml`: Bootstrap 5 theme, all 155 exported R functions in 14 curated categories, article routing.
+- `_pkgdown.yml`: Bootstrap 5 theme, all 179 exported R functions in 14 curated categories, article routing.
 - `pkgdown/extra.css`: accessible navy/teal brand.
 - `pkgdown/assets/*.svg`: original illustrations; conceptual, not observations.
 - `pkgdown/assets/starter-*.csv`: downloadable synthetic or schema-only research starter files.
@@ -26,11 +26,11 @@ Neither the website nor any generated figure is evidence of independently certif
 
 ## Website-only research improvements
 
-Do not change the CRAN candidate or existing GitHub release to publish website content. The homepage shows the current *published* GitHub version, v0.1.1. The CRAN candidate 0.1.2 is not advertised as released. The new pages are: five-minute onboarding, capability matrix, video-to-results workflow, tank experiment starter kit, identity/occlusion explanation, and evidence dashboard. All illustrative files are synthetic, metadata examples, or empty schemas. Maintain source Rmd and pkgdown/index.md as the authority; never hand-edit generated HTML on gh-pages.
+Website source updates must not overwrite immutable version tags or imply CRAN publication. The homepage shows the currently published **v0.1.2 GitHub software release**; the v0.1.1 Zenodo DOI is historical and version-specific. The early website pages were: five-minute onboarding, capability matrix, video-to-results workflow, tank experiment starter kit, identity/occlusion explanation, and evidence dashboard. All illustrative files are synthetic, metadata examples, or empty schemas. Maintain source Rmd and pkgdown/index.md as the authority; never hand-edit generated HTML on gh-pages.
 
 ## Phase 1 usability
 
-Main-branch website source adds visible lab/experiment routes, 22 direct plot-to-code/function help/version-pinned implementation links, accessible deep-link expansion and keyboard focus styles, and a source-only metadata normalizer after pkgdown builds. Review the PR preview artifact; the official v0.1.1 software release is unchanged.
+Main-branch website source adds visible lab/experiment routes, 22 direct plot-to-code/function help/version-pinned implementation links, accessible deep-link expansion and keyboard focus styles, and a source-only metadata normalizer after pkgdown builds. Review the PR preview artifact; the official historical v0.1.1 software release is unchanged.
 
 ## Phase 2 scientific teaching (website only)
 
@@ -43,3 +43,8 @@ New `research-*.html` modules in pkgdown assets demonstrate single-interface abo
 ## Website v2 independent qualification
 
 The site build now publishes to GitHub Pages only after its **exact build artifact** completes a separate Chromium Playwright gate testing interactive controls, original-source file privacy, WCAG axe-core rules, bounded local-CSV processing, mobile layout and opt-in real webR execution. Cross-language R/JavaScript numerical parity and CVAT converter fixture checks run in an additional independent workflow. The browser can source byte-identical v0.1.1 R functions (`aqt_tracks`, `aqt_kinematics`, `aqt_group_metrics`) on demand; no whole-package WebAssembly installation is claimed. Original DIGI4ECO videos must be downloaded and processed locally under CC BY 4.0 and are never committed to the website.
+
+
+## Scientific Core 2.0 documentation refresh
+
+The site now explains the v0.1.2 engineering release and its 179-function API, actual 89.33% instrumented source coverage, cross-platform workload measurements and independent locked 17-row trajectory-to-report proof. The historical browser-parity v0.1.1 native-R source files and historical DOI remain deliberately pinned; they do not claim to be v0.1.2 native source. The new release guide is tested in site CI before gh-pages publication.

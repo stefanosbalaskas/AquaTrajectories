@@ -13,7 +13,7 @@ template:
     code_font: {google: "JetBrains Mono"}
 navbar:
   structure:
-    left: [intro, labs, science, research, plan, reference, articles, news]
+    left: [intro, labs, science, research, evidence, plan, reference, articles, news]
     right: [search, github, lightswitch]
   components:
     labs:
@@ -25,6 +25,9 @@ navbar:
     research:
       text: "Research lab"
       href: "articles/research-laboratory.html"
+    evidence:
+      text: "Reproducibility"
+      href: "articles/reproducible-research-release.html"
     plan:
       text: "Plan an experiment"
       href: "articles/plan-your-experiment.html"
@@ -262,6 +265,7 @@ articles:
       - articles/workflows-atlas
       - articles/function-atlas
       - articles/capabilities-and-validation
+      - articles/reproducible-research-release
       - articles/research-evidence-dashboard
   - title: "From pixels to trajectories"
     contents:

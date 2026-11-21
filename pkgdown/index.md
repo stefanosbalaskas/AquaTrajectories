@@ -2,7 +2,7 @@
 <p class="aqt-eyebrow">Open-source research software · official v0.1.2 release</p>
 <h1>From aquatic observations to reproducible movement science</h1>
 <p>Track, reconstruct, analyze and visualize aquatic-animal trajectories with R, Python and browser tools. Start with documented synthetic examples, then supply independent annotations, camera calibration and real recording metadata for scientific measurements.</p>
-<div class="aqt-cta"><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
+<div class="aqt-cta"><a href="articles/reproducible-research-release.html">Reproduce v0.1.2</a><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
 <div class="aqt-badges"><span>179 documented R functions</span><span>14 reference categories</span><span>Official GitHub release v0.1.2</span><span>prior v0.1.1 Zenodo archived</span></div>
 </section>
 
@@ -16,6 +16,7 @@
 ## Choose your path
 
 <div class="aqt-cardgrid aqt-entrygrid">
+<a class="aqt-card" href="articles/reproducible-research-release.html"><div class="aqt-kicker">Already have trajectories</div><h3>Scientific Core 2.0: tracks to report</h3><p>Use 2D/3D CSVs without video or a tracker; review QC2 source rows, reproduce the independent numerical example, and export journal figures.</p></a>
 <a class="aqt-card" href="articles/quickstart-five-minutes.html"><div class="aqt-kicker">New to R</div><h3>Try a complete analysis</h3><p>Five minutes: synthetic tracks → movement → event alignment → CSV exports. Confirm expected row counts.</p></a>
 <a class="aqt-card" href="articles/video-to-results.html"><div class="aqt-kicker">Working with footage</div><h3>Plan video → results</h3><p>Original PTS, externally trained detector, reviewable IDs, camera geometry, explicit scientific gates.</p></a>
 <a class="aqt-card" href="articles/plan-your-experiment.html"><div class="aqt-kicker">Planning an experiment</div><h3>Choose your recording setup</h3><p>One camera, two cameras, or existing footage: match the workflow to the evidence your study can support.</p></a>
@@ -27,6 +28,14 @@
   <div><strong>Citable</strong><span><a href="https://doi.org/10.5281/zenodo.24262905">Prior v0.1.1 Zenodo DOI</a> · <a href="AquaTrajectories-v0.1.1.bib" download>BibTeX</a></span></div>
   <div><strong>Scientific validity</strong><span>Software contracts tested; <a href="articles/capabilities-and-validation.html">independent biological validation pending</a></span></div>
 </div>
+
+## Scientific Core 2.0 — independently reproducible research software
+
+The completed five-milestone roadmap is available in the published v0.1.2 GitHub release: stable 2D/3D scientific architecture; source-preserving QC2; numerical/metamorphic validation; QC-aware publication figures; and cross-platform reproducible research.
+
+**Measured release evidence:** 179 exported functions; **89.33% actual instrumented R test coverage**; **24 runtime and allocation-memory workloads on each of Linux, Windows and macOS**; and a **17-row synthetic dataset** with **10 eligible movement steps totaling 10 cm**, independently verified against an alternate Python implementation. These are bounded software tests and environment-dependent benchmarks, not biological-certification percentages or peak resident-memory measurements.
+
+**[Complete reproducible v0.1.2 research guide](articles/reproducible-research-release.html)** · **[Full versioned evidence archive](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)** · **[Current scientific evidence dashboard](articles/research-evidence-dashboard.html)**
 
 ## Discover the research workflows
 

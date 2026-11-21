@@ -94,7 +94,7 @@ Actual `covr` execution coverage and 24 measured two-/three-dimensional
 runtime and memory-allocation workloads on Linux, Windows and macOS are
 retained as GitHub Actions evidence. The measurements are **environment-specific
 performance baselines, not promises of elapsed time on all hardware**.
-[Release05 protocol, original source, limitations and qualification](docs/RELEASE05_REPRODUCIBLE_RESEARCH.md).
+[Release05 protocol, original source, limitations and qualification](docs/RELEASE05_REPRODUCIBLE_RESEARCH.md) · [Fully reproducible v0.1.2 website walkthrough](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.html).
 
 ## Genuine fish-video research demonstration (Milestone 05)
 
