@@ -9,18 +9,18 @@
 An open-source **R-first scientific-analysis and visualization package for trajectories that researchers already have**: unit-aware 2D/3D movement, trajectory quality control, schooling geometry, functional and statistical methods, conditional uncertainty, publication figures and reproducibility. Optional Python video/tracker adapters are available but **no detector, tracker or video file is required to use the analytical core**.
 
 [![R](https://img.shields.io/badge/R-%E2%89%A5%204.1.0-276DC3?logo=r&logoColor=white)](DESCRIPTION)
-[![Official release](https://img.shields.io/badge/release-v0.1.1-169D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
+[![Official release](https://img.shields.io/badge/release-v0.1.2-169D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://doi.org/10.5281/zenodo.24262905)
 [![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
-[![Public API](https://img.shields.io/badge/exported%20R%20functions-173-147F97)](NAMESPACE)
+[![Public API](https://img.shields.io/badge/exported%20R%20functions-179-147F97)](NAMESPACE)
 [![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
 
-**[Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.1 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
+**[Historical v0.1.1 Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.2 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
 
 </div>
 
 > [!NOTE]
-> **Official research-software release v0.1.1, archived on Zenodo.** [Permanent DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Versioned GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1) · [Citation metadata](CITATION.cff).
+> **Official research-software release v0.1.2, independently reproducible synthetic trajectory-to-report example.** [Historical v0.1.1 Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Versioned GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2) · [Citation metadata](CITATION.cff).
 
 > [!IMPORTANT]
 > **Scientific accuracy and welfare claims require independent validation.** Implemented software and synthetic checks do **not** establish independently verified fish identities, real-video accuracy across species, physically calibrated underwater XYZ accuracy, biological welfare or stress states, empirically validated joint uncertainty, or safe hardware actuation. The video runner requires **externally supplied fish-trained weights**; multiview workflows require measured calibration, clock evidence and justified correspondences. Read the [scientific roadmap](docs/SCIENTIFIC_ROADMAP.md) and [release audit](docs/RELEASE_CANDIDATE_0_1_0.md).
@@ -45,13 +45,13 @@ An open-source **R-first scientific-analysis and visualization package for traje
 
 ### The research documentation portal
 
-The pkgdown site includes **173 exported R functions** in **14 scientific reference categories**, **22 research articles**, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
+The pkgdown site includes **179 exported R functions** in **14 scientific reference categories**, reproducible research articles, original scientific illustrations, and a **browser-only five-fish synthetic explorer with a teachable identity/occlusion mode** with XY, XZ, YZ and conceptual 3D views. Synthetic examples demonstrate software behaviour, not real fish-tracking accuracy or tank measurement precision.
 
 **[All 22 plotting functions — illustrated](https://stefanosbalaskas.github.io/AquaTrajectories/articles/all-plot-functions.html)** · **[All functions](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.html)** · **[Workflows](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.html)** · **[Five-figure workbook](https://stefanosbalaskas.github.io/AquaTrajectories/articles/five-figure-workbook.html)** · **[Dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)**
 
-## Scientific Core 2.0 — bring your own trajectory data (development main)
+## Scientific Core 2.0 — bring your own trajectory data
 
-The official **v0.1.1 tag remains immutable with 155 R exports**; the QC 2.0 development branch proposes **173 R exports** (not a new tagged release) (no new tagged release). Video recording and fish detection are not prerequisites for analysis.
+The historical **v0.1.1 tag remains immutable with 155 R exports**. The engineering-qualified **v0.1.2 release contains 179 R exports**, including QC2, publication visualization and independently reproducible numerical examples. Video recording and fish detection are not prerequisites for analysis.
 
 ```r
 library(aquaTrajectories)
@@ -73,6 +73,28 @@ aqt_figure_export(function() aqt_plot_paths(tr), "figure_01",
 ```
 
 See [Scientific Core 2.0 architecture, validation boundaries and tests](docs/SCIENTIFIC_CORE_2_0.md). QC sensitivity is **not** an empirically calibrated confidence interval; no original observations are silently imputed.
+
+## v0.1.2 — independently reproducible source-to-report
+
+The release contains a **locked, publicly redistributable 17-row synthetic
+trajectory example**, including explicit missing samples, nonadjacent source
+frames and an excessive displacement. Native R QC and publication graphics
+produce **10 eligible steps, 10 cm** of independently known Euclidean movement
+across three fish. A separate stdlib-only Python implementation recomputes
+the eligible source pairs from the original CSV and verifies every export
+hash and plotting decision. No real fish, hardware or proprietary data are needed.
+
+```bash
+Rscript scripts/release05_example.R release05-example
+python scripts/release05_verify.py --out release05-example
+Rscript scripts/release05_benchmark.R release05-benchmark
+```
+
+Actual `covr` execution coverage and 24 measured two-/three-dimensional
+runtime and memory-allocation workloads on Linux, Windows and macOS are
+retained as GitHub Actions evidence. The measurements are **environment-specific
+performance baselines, not promises of elapsed time on all hardware**.
+[Release05 protocol, original source, limitations and qualification](docs/RELEASE05_REPRODUCIBLE_RESEARCH.md).
 
 ## Genuine fish-video research demonstration (Milestone 05)
 
@@ -101,11 +123,11 @@ authentic model inference run rather than claiming a new model forward pass.
 
 ## Quick start
 
-Install the published **v0.1.1 GitHub release** (CRAN submission is being prepared; CRAN installation is not yet available):
+Install the published **v0.1.2 GitHub release** (CRAN submission is being prepared; CRAN installation is not yet available):
 
 ~~~r
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.1")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
 
 library(aquaTrajectories)
 
@@ -124,7 +146,7 @@ For real footage, independently validate detection weights, original video times
 
 | Scope | Current meaning |
 | :--- | :--- |
-| **Public R API** | 169 exported functions with reference documentation and automated coverage audit |
+| **Public R API** | 179 exported functions with exact-source reference documentation and measured covr execution coverage |
 | **Visualizations** | Five publication figure families, descriptive 2D/3D plotting, tank storyboards and explicitly synthetic demonstrations |
 | **Video ingestion** | Optional runner and native R import/benchmark contracts; model training and real-video detector accuracy are not supplied or certified |
 | **Multiview reconstruction** | Calibrated-geometry and refraction-aware algorithms; independent underwater XYZ accuracy and reliable biological ID recovery remain unverified |
@@ -135,7 +157,7 @@ For real footage, independently validate detection weights, original video times
 
 ## Research materials
 
-**[Release notes](NEWS.md)** · **[Scientific roadmap](docs/SCIENTIFIC_ROADMAP.md)** · **[Release evidence](docs/RELEASE_CANDIDATE_0_1_0.md)** · **[Public dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)** · **[Issues](https://github.com/stefanosbalaskas/AquaTrajectories/issues)**
+**[v0.1.2 reproducible release protocol](docs/RELEASE05_REPRODUCIBLE_RESEARCH.md)** · **[Release notes](NEWS.md)** · **[Scientific roadmap](docs/SCIENTIFIC_ROADMAP.md)** · **[Release evidence](docs/RELEASE_CANDIDATE_0_1_0.md)** · **[Public dataset structures](docs/REAL_DATASET_STRUCTURE_AUDIT.md)** · **[Issues](https://github.com/stefanosbalaskas/AquaTrajectories/issues)**
 
 This **MIT-licensed research software** repository excludes private animal videos, private annotations, proprietary detector weights, access credentials and third-party datasets unless explicitly distributable under their own licenses.
 
