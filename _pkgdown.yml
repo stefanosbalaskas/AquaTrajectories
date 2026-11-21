@@ -239,6 +239,12 @@ reference:
       - aqt_plot_tank_scene3d
       - aqt_plot_trajectory_storyboard3d
       - aqt_plot_voxel3d
+      - aqt_viz2_presets
+      - aqt_viz2_gallery
+      - aqt_viz2_spec
+      - aqt_viz2_draw
+      - aqt_viz2_export
+      - aqt_viz2_verify
   - title: "Provenance and source traceability"
     desc: "Source data digest recording and verification."
   - contents:
@@ -275,6 +281,7 @@ articles:
     contents:
       - articles/visualization-gallery
       - articles/all-plot-functions
+      - articles/publication-visualization-v2
       - articles/five-figure-workbook
       - articles/publication-figures
       - articles/research-datasets
