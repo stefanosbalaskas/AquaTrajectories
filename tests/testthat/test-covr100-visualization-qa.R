@@ -23,7 +23,9 @@ test_that("publication presets and explicitly scoped evidence are necessary", {
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,session_id=""),
                "nonempty strings")
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,session_id="S2"),
-               "Selected session/camera")
+               "Specify camera_id")
+  expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,
+               session_id="S2",camera_id="C1"),"Selected session/camera")
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,source_file="missing_source.csv"),
                "requires a QC 2.0 report")
   q <- aqt_qc2_report(x,gap_limits_s=.6)
