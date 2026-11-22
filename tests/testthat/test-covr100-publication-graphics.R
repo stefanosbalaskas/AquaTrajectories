@@ -9,8 +9,10 @@ test_that("published speed-response graphics require units and paired tanks", {
  d <- .cov100_pub_speed()
  grDevices::pdf(tempfile(fileext=".pdf"))
  on.exit(grDevices::dev.off(),add=TRUE)
- call <- function(x=d,...)aqt_plot_speed_response(x,event_time_s=0,
-    baseline_s=c(-3,0),response_s=c(0,4),speed_unit="cm/s",...)
+ call <- function(x=d,event_time_s=0,baseline_s=c(-3,0),
+                 response_s=c(0,4),speed_unit="cm/s",...)
+    aqt_plot_speed_response(x,event_time_s=event_time_s,
+      baseline_s=baseline_s,response_s=response_s,speed_unit=speed_unit,...)
  expect_error(call(baseline_s=0),"finite increasing pairs")
  expect_error(call(response_s=c(2,1)),"finite increasing pairs")
  expect_error(call(response_s=c(Inf,3)),"finite increasing pairs")
