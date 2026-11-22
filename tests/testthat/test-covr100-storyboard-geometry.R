@@ -18,7 +18,7 @@ test_that("four-panel 3D storyboard fails closed on coordinates, scope and time"
        aqt_tracks(bad,units="cm",coordinate_system="tank")),
        "real physical XYZ")
  expect_error(aqt_plot_trajectory_storyboard3d(aqt_tracks(as.data.frame(tr)[FALSE,,drop=FALSE],units="cm",coordinate_system="tank")),
-              "No fish observations")
+              "real physical XYZ")
  expect_error(aqt_plot_trajectory_storyboard3d(tr,session_id=""),
               "nonempty scalar character")
  expect_error(aqt_plot_trajectory_storyboard3d(tr,camera_id=NA_character_),
@@ -49,7 +49,7 @@ test_that("four-panel 3D storyboard fails closed on coordinates, scope and time"
  empty$x<-NA_real_;empty$y<-NA_real_;empty$z<-NA_real_
  expect_error(aqt_plot_trajectory_storyboard3d(aqt_tracks(empty,
               units="cm",coordinate_system="tank")),
-              "No genuine observed XYZ")
+              "real physical XYZ")
  singleton <- aqt_tracks(as.data.frame(tr)[1,,drop=FALSE],units="cm",coordinate_system="tank")
  expect_error(aqt_plot_trajectory_storyboard3d(singleton),
               "more than one timestamp")
