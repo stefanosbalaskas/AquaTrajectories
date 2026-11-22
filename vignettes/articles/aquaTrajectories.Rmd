@@ -1,19 +1,19 @@
 ---
 title: "Get started with AquaTrajectories"
-description: "Install the official v0.1.2 GitHub release, follow a first reproducible analysis, and understand research evidence limits."
+description: "Install the official v0.2.0 GitHub release, follow a first reproducible analysis, and understand research evidence limits."
 ---
 
 # Get started
 
 AquaTrajectories is an open-source research software toolkit for aquatic movement and multiview trajectories. The public package is named `aquaTrajectories` (lowercase `a`); the repository is named `AquaTrajectories`.
 
-**Current published GitHub software:** [v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2), including a [fully reproducible scientific example](reproducible-research-release.html). The [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) is specific to historical **v0.1.1**, not v0.1.2. This source release is engineering-qualified but is not an independently certified fish-identification or underwater-metrology system. CRAN availability is not asserted.
+**Current published GitHub software:** [v0.2.0](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.0), with 188 public R functions, evidence safeguards and [versioned qualification evidence](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/RELEASE_CANDIDATE_0_2_0.md). The [historical v0.1.2 synthetic example](reproducible-research-release.html) remains available. The [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) is specific to historical **v0.1.1**, not v0.2.0. This source release is engineering-qualified but is not an independently certified fish-identification or underwater-metrology system. CRAN availability is not asserted.
 
 ## Install from GitHub
 
 ```r
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.0")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ```
@@ -69,7 +69,7 @@ For a guided script with checkable output shapes and CSV exports, follow the [fi
 ## Navigating the package
 
 <div class="aqt-cardgrid">
-<a class="aqt-card" href="function-atlas.html"><h3>All 179 functions</h3><p>Find each documented function in 14 clearly defined families.</p></a>
+<a class="aqt-card" href="function-atlas.html"><h3>All 188 functions</h3><p>Find each documented function in 15 clearly defined families.</p></a>
 <a class="aqt-card" href="workflows-atlas.html"><h3>Research pipelines</h3><p>Follow the inputs, validation gates and outputs of each workflow.</p></a>
 <a class="aqt-card" href="visualization-gallery.html"><h3>Figure gallery</h3><p>Runnable synthetic plots and publication-style rendering ideas.</p></a>
 </div>
