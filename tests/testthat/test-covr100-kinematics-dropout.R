@@ -83,7 +83,7 @@ test_that("descriptive scenario path summaries retain empty source and observed 
               "Expected detection dropout scenarios")
  dropout <- aqt_detection_dropout_scenarios(tr,p_missing=1,
             draws=1,seed=15)
- ev <- data.frame(session_id="S",event_id="E",start_s=2,end_s=2)
+ ev <- data.frame(session_id="UNOBSERVED",event_id="E",start_s=2,end_s=2)
  expect_error(aqt_detection_event_sensitivity(dropout,ev,
        outcome="speed",min_points=1),
        "No estimable event outcome in dropout draw")

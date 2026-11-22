@@ -47,5 +47,5 @@ test_that("volume occupancy validates physical XYZ, grid limits and dimension la
 })
 test_that("voxel-reconstruction diagnostic does not assert calibration truth",{
  tr <- .cov100_voxel_tracks()
- expect_error(aqt_plot_reconstruction_qc(tr),"reprojection|reconstruction")
+ expect_error(aqt_plot_reconstruction_qc(tr),"Expected reconstructed 3D tracks")
 })

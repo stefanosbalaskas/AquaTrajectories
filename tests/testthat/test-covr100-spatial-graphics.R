@@ -9,7 +9,7 @@
 .cov100_use_null_rgl <- function() {
  if (!requireNamespace("rgl",quietly=TRUE))testthat::skip("Optional rgl unavailable")
  options(rgl.useNULL=TRUE)
- rgl::rgl.useNULL(TRUE)
+ # rgl::rgl.useNULL() queries this option; it is not a setter.
 }
 test_that("2D conditional scenario plots enforce scope and stable graphic bounds",{
  source <- as.data.frame(.cov100_viz3d())
