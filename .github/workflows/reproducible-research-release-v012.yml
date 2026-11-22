@@ -1,27 +1,8 @@
 name: Reproducible Research Release 0.1.2 - locked oracle, measured coverage and 3-OS evidence
+# Historical v0.1.2 workflow is retained for reproducibility.
+# It must NOT run on later-version DESCRIPTION/NEWS changes or re-tag v0.1.2.
+# For exact historical reproduction, dispatch this workflow at tag v0.1.2.
 on:
-  pull_request:
-    paths:
-      - "DESCRIPTION"
-      - "CITATION.cff"
-      - "NEWS.md"
-      - "README.md"
-      - "pkgdown/index.md"
-      - "research/release05/**"
-      - "scripts/release05_*"
-      - "docs/RELEASE05_REPRODUCIBLE_RESEARCH.md"
-      - "docs/RELEASE_NOTES_0_1_2.md"
-      - ".gitattributes"
-      - ".github/workflows/reproducible-research-release-v012.yml"
-  push:
-    branches: [main]
-    paths:
-      - "DESCRIPTION"
-      - "CITATION.cff"
-      - "NEWS.md"
-      - "research/release05/**"
-      - "scripts/release05_*"
-      - ".github/workflows/reproducible-research-release-v012.yml"
   workflow_dispatch:
 concurrency:
   group: reproducible-research-v012-${{ github.ref }}

@@ -313,16 +313,33 @@ aqt_frame_index_publish <- function(study,directory) {
     name <- paste0(seq,"_",family)
     render <- function(fmt) {
       dest <- file.path(directory,"figures",paste0(name,".",fmt))
-      if(fmt=="svg") grDevices::svg(dest,width=11,height=5.4,pointsize=10)
-      else if(fmt=="pdf") grDevices::pdf(dest,width=11,height=5.4,
+      if(fmt=="svg") {
+        # Base Cairo SVG is not reliably available on headless macOS runners.
+        # svglite is suggested, never imported unconditionally; the fallback
+        # remains available when a working system Cairo device is present.
+        if(requireNamespace("svglite",quietly=TRUE))
+          svglite::svglite(file=dest,width=11,height=5.4,
+                           pointsize=10,bg="white")
+        else grDevices::svg(dest,width=11,height=5.4,pointsize=10)
+      } else if(fmt=="pdf") grDevices::pdf(dest,width=11,height=5.4,
                                             useDingbats=FALSE)
+      else if(fmt=="png" && requireNamespace("ragg",quietly=TRUE))
+        ragg::agg_png(dest,width=2200,height=1080,units="px",res=200)
       else grDevices::png(dest,width=2200,height=1080,res=200)
       tryCatch({
         graphics::par(mfrow=c(1,length(paths)),oma=c(2.4,0,0,0))
         plot_one(seq,family)
       },finally=grDevices::dev.off())
-      if(!file.exists(dest) || file.info(dest)$size<100)
+      if(!file.exists(dest) || is.na(file.info(dest)$size) ||
+         file.info(dest)$size<100)
         stop("Incomplete scientific figure: ",dest,call.=FALSE)
+      if(fmt=="svg") {
+        svg_text <- paste(readLines(dest,warn=FALSE,encoding="UTF-8"),
+                          collapse="\n")
+        if(!grepl("<svg",svg_text,fixed=TRUE) ||
+           !grepl("</svg>",svg_text,fixed=TRUE))
+          stop("Malformed SVG scientific figure: ",dest,call.=FALSE)
+      }
       dest
     }
     for(fmt in c("svg","pdf","png"))render(fmt)

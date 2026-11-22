@@ -1,8 +1,8 @@
 Package: aquaTrajectories
 Title: Aquatic Animal Movement and Multiview Trajectories
-Version: 0.1.2
-Authors@R: person("Stefanos", "Balaskas", email = "56984563+stefanosbalaskas@users.noreply.github.com", role = c("aut", "cre"))
-Description: Development-stage tools for validated two- and three-dimensional aquatic animal trajectories, movement and group metrics, event alignment, synchronization, and calibrated stereo geometry and observed 3D voxel occupancy, reviewer-gated cross-view hypotheses, and conditional pixel-error propagation. Provisional automatic geometric cross-camera identity hypotheses and a configured fish-video-to-refractive-3D software bridge are implemented using externally supplied camera calibration, clocks, and detector weights. Independently validated biological identities, underwater physical metrology, fish detector training, and externally certified measurement-error inference remain outstanding.
+Version: 0.2.0
+Authors@R: person("Stefanos", "Balaskas", email = "s.balaskas@ac.upatras.gr", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2444-9796"))
+Description: Provides functions to import and validate time-stamped two- and three-dimensional aquatic-animal trajectories; compute swimming and group movement measures; align trajectories to experimental events; and compare detections and track identities with external reference annotations. Implements camera synchronization, calibration-aware multiview reconstruction, refractive geometry, trajectory models, and conditional measurement-error scenarios. Optional integration scripts support externally configured video trackers. Provides source-preserving trajectory quality-control, estimator sensitivity, measurement-unit contracts, checks of independent experimental units, spatial-support diagnostics, geometry-association and placebo analyses, and reproducible evidence reports. Simulated movement and software benchmarks cannot independently establish biological identities, physical underwater accuracy, causal feeding effects or welfare outcomes.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)

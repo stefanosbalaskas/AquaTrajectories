@@ -9,8 +9,8 @@ if(!requireNamespace("bench",quietly=TRUE))
   stop("Measured memory allocation requires bench; do not report unrun benchmarks",
        call.=FALSE)
 suppressPackageStartupMessages(library(aquaTrajectories))
-if(as.character(utils::packageVersion("aquaTrajectories"))!="0.1.2")
-  stop("Release05 benchmark requires exact package version 0.1.2",
+if(!as.character(utils::packageVersion("aquaTrajectories")) %in% c("0.1.2","0.2.0"))
+  stop("Locked benchmark is qualified only for v0.1.2/v0.2.0",
        call.=FALSE)
 make_tracks<-function(n,three=FALSE){
   if(n %% 5L)stop("Benchmark sizes must be divisible by five")
@@ -51,7 +51,7 @@ perform<-function(fun,name,t,n,three,repeats=3L) {
     source_object_sha256=sha(list(as.data.frame(t),
         units=attr(t,"aqt_units"),dimension=attr(t,"aqt_dimension"))),
     os=Sys.info()[["sysname"]],R_version=as.character(getRversion()),
-    package_version="0.1.2",
+    package_version=as.character(utils::packageVersion("aquaTrajectories")),
     stringsAsFactors=FALSE)
 }
 results<-list();k<-0L
@@ -124,7 +124,8 @@ dir.create(args[[1L]])
 out<-args[[1L]]
 file<-file.path(out,"RELEASE05_BENCHMARK.csv")
 utils::write.csv(table,file,row.names=FALSE,na="")
-writeLines(c("# AquaTrajectories v0.1.2 performance baseline",
+writeLines(c(paste0("# AquaTrajectories v", as.character(utils::packageVersion("aquaTrajectories")),
+        " performance baseline"),
  "Actual bench::mark measurements, 3 iterations per workload.",
  "24 workloads: 2 dimensions x 3 source sizes x 4 actual scientific APIs.",
  "median_seconds and min_seconds are elapsed times reported by bench.",
@@ -147,7 +148,7 @@ manifest<-list(schema="AQT_RELEASE05_PERFORMANCE_BASELINE_V1",
   scientific_dimensions=c(2L,3L),
   iterations=3L,n_runs=nrow(table),
   os=Sys.info()[["sysname"]],
-  package_version="0.1.2",
+  package_version=as.character(utils::packageVersion("aquaTrajectories")),
   run_not_cross_hardware_SLA=TRUE,
   measured_allocation_not_peak_rss=TRUE,
   benchmark_source_sha256=sha_file("scripts/release05_benchmark.R"),
