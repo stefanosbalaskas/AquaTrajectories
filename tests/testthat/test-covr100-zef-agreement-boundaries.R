@@ -158,7 +158,7 @@ test_that("3D-ZeF does not silently accept source frames claiming absent match r
   b$matches <- b$matches[FALSE,,drop=FALSE]
   b <- .cov100_zef_seal(b)
   expect_error(aqt_3dzef_agreement_import(b$root),
-               "Match table is empty but reported frame matches are not")
+               "3D-ZeF agreement frame or match counts mismatch")
 })
 test_that("3D-ZeF rejects mathematically impossible negative identity totals",{
   .cov100_zef_reject(function(b){
