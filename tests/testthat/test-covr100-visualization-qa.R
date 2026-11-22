@@ -20,8 +20,8 @@ test_that("publication presets and explicitly scoped evidence are necessary", {
                "caption must")
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,policy_id="wrong"),
                "policy_id not present")
-  expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,session_id=""),
-               "nonempty strings")
+  expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,
+               session_id="",camera_id="C1"),"nonempty strings")
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,session_id="S2"),
                "Specify camera_id")
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,
