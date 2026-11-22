@@ -111,3 +111,52 @@ test_that("video bundle import rejects missing files, schema drift, and mixed-ru
  expect_error(aqt_video_bundle_import(dir,z$prefix),
               "all four outputs are required")
 })
+
+
+test_that("verified runner files reject malformed independent metadata, frame, and class schemas",{
+  dir <- tempfile("cov100_vid_negative_")
+  dir.create(dir)
+  on.exit(unlink(dir,recursive=TRUE,force=TRUE),add=TRUE)
+  remake <- function() .cov100_zero_video_bundle(dir)
+  save_meta <- function(x,source=NULL) {
+    if(!is.null(source))
+      x$output_sha256[[source]] <- unname(digest::digest(
+         file.path(dir,x$outputs[[source]]),file=TRUE,algo="sha256"))
+    jsonlite::write_json(x,file.path(dir,x$outputs$metadata),
+                         pretty=TRUE,auto_unbox=TRUE)
+  }
+  z <- remake()
+  bad <- z$metadata;bad$output_sha256$frames <- NULL
+  save_meta(bad)
+  expect_error(aqt_video_bundle_import(dir,z$prefix),
+               "Missing or malformed SHA-256")
+  z <- remake()
+  bad <- z$metadata;bad$session_id <- ""
+  save_meta(bad)
+  expect_error(aqt_video_bundle_import(dir,z$prefix),
+               "recording scope must be complete")
+  z <- remake()
+  f <- z$frames
+  names(f)[1] <- "unregistered_field"
+  utils::write.csv(f,file.path(dir,z$files$frames),row.names=FALSE)
+  save_meta(z$metadata,"frames")
+  expect_error(aqt_video_bundle_import(dir,z$prefix),
+               "Unexpected video frame manifest columns")
+  z <- remake()
+  side <- data.frame(frame_id=numeric(0),track_id=character(0),
+                    not_a_class=character(0))
+  utils::write.csv(side,file.path(dir,z$files$classes),row.names=FALSE)
+  save_meta(z$metadata,"classes")
+  expect_error(aqt_video_bundle_import(dir,z$prefix),
+               "Unexpected video class sidecar columns")
+  z <- remake()
+  bad <- z$metadata;bad$n_tracked_box_rows <- 1L
+  save_meta(bad)
+  expect_error(aqt_video_bundle_import(dir,z$prefix),
+               "MOT, class sidecar and run metadata")
+  z <- remake()
+  bad <- z$metadata;bad$camera_id <- "WRONG"
+  save_meta(bad)
+  expect_error(aqt_video_bundle_import(dir,z$prefix),
+               "Runner frame count, scope")
+});
