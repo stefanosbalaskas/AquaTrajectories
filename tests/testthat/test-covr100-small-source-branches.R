@@ -12,7 +12,11 @@ test_that("explicit fish_id rather than track_id is accepted without renumbering
  source <- data.frame(session_id="S",camera_id="C",
     fish_id=c("009","009"),time_s=c(0,.1),
     x=c(1,2),y=c(2,3),stringsAsFactors=FALSE)
- tr <- aqt_tracks(source)
+ path <- tempfile(fileext=".csv")
+ on.exit(unlink(path),add=TRUE)
+ source$x_px <- source$x;source$y_px <- source$y
+ utils::write.csv(source,path,row.names=FALSE)
+ tr <- aqt_import_yolo(path,session_id="S",camera_id="C")
  expect_identical(tr$track_id,c("009","009"))
  expect_identical(tr$fish_id,c("009","009"))
  expect_identical(attr(tr,"aqt_coordinate_system"),"image")

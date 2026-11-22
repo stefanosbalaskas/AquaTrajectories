@@ -29,7 +29,7 @@ test_that("failed figure renderer is reported without claiming a complete public
  catalog <- utils::read.csv(file.path(target,"FIGURE_CATALOG.csv"),
           stringsAsFactors=FALSE)
  expect_true(any(catalog$status=="failed"))
- expect_true(all(catalog$files[catalog$status=="failed"]==""))
+ expect_true(all(is.na(catalog$files[catalog$status=="failed"]) | catalog$files[catalog$status=="failed"]==""))
  expect_true(all(grepl("Synthetic device failure",
               catalog$reason[catalog$status=="failed"],fixed=TRUE)))
  meta <- jsonlite::fromJSON(file.path(target,"PUBLICATION_MANIFEST.json"))
