@@ -145,6 +145,7 @@ test_that("spatial support reports no-data and single-phase boundaries", {
 
 test_that("image-geometry diagnostics identify missing and common-support strata", {
   z <- .cov100_ev_data()
+  z$speed <- seq_len(nrow(z)) %% 9 + 1
   expect_error(aqt_geometry_bias_audit(z,n_strata=1),"stratum")
   expect_error(aqt_geometry_bias_audit(z,min_per_stratum=0),"stratum")
   bad <- z
