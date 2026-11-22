@@ -323,6 +323,9 @@ aqt_frame_index_publish <- function(study,directory) {
         else grDevices::svg(dest,width=11,height=5.4,pointsize=10)
       } else if(fmt=="pdf") grDevices::pdf(dest,width=11,height=5.4,
                                             useDingbats=FALSE)
+      else if(requireNamespace("ragg",quietly=TRUE))
+        ragg::agg_png(filename=dest,width=2200,height=1080,
+                      units="px",res=200,background="white")
       else grDevices::png(dest,width=2200,height=1080,res=200)
       tryCatch({
         graphics::par(mfrow=c(1,length(paths)),oma=c(2.4,0,0,0))
