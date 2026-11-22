@@ -27,7 +27,7 @@ test_that("publication presets and explicitly scoped evidence are necessary", {
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,
                session_id="S2",camera_id="C1"),"Selected session/camera")
   expect_error(aqt_viz2_spec(x,"paths",gap_limit_s=.6,source_file="missing_source.csv"),
-               "requires a QC 2.0 report")
+               "source_file must be an existing data file")
   q <- aqt_qc2_report(x,gap_limits_s=.6)
   expect_error(aqt_viz2_spec(q,"paths",gap_limit_s=.6),"already owns its gap")
   s <- aqt_viz2_spec(q,"paths",caption="synthetic",plane="xy")
