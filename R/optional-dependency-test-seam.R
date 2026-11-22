@@ -12,3 +12,7 @@ requireNamespace <- NULL
 dir.create <- NULL
 file.rename <- NULL
 file.copy <- NULL
+
+# Missing output-files can be modelled deterministically within only our
+# package namespace, rather than deleting source files or overriding base.
+file.exists <- NULL

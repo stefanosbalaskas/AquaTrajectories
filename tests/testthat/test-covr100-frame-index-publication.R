@@ -83,3 +83,21 @@ test_that("frame-index plot refuses silently broken source adjacency and cleans 
               "Adjacent-frame source segment cannot be reconstructed")
  expect_false(dir.exists(dest))
 })
+
+test_that("frame-index renderer detects missing scientific SVG after a device completes",{
+  if(!base::requireNamespace("svglite",quietly=TRUE))
+     testthat::skip("Portable headless SVG backend not installed")
+  study <- .cov100_frame_index_study()
+  parent <- tempfile("cov100_fi_deleted_");base::dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  dest <- file.path(parent,"publication")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_frame_index_publish(study,dest),
+                 "Incomplete scientific figure")
+  },file.exists=function(path) {
+    out <- base::file.exists(path)
+    out[grepl("\\.svg$",path)] <- FALSE
+    out
+  },.package="aquaTrajectories")
+  expect_false(dir.exists(dest))
+})
