@@ -48,7 +48,7 @@ test_that("MOT adapter rejects missing source frames, invalid labels and swapped
  bad <- z$mot;bad$top[1] <- -1
  expect_error(call(m=bad),"nonnegative top-left")
  bad <- z$mot;bad$confidence[2] <- 2
- expect_error(call(m=bad),"within [0,1]")
+ expect_error(call(m=bad),"prediction confidence must be within")
  bad <- z$mot;bad$left[1] <- 98
  expect_error(call(m=bad),"outside recorded image")
  bad <- z$mot;bad$frame[2] <- 3
