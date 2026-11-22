@@ -15,6 +15,8 @@ physical underwater 3D measurement, feeding causality, fish welfare or hardware 
 - Independent-unit readiness, spatial-support diagnostics, bounding-box/
   image-geometry associations, within-recording placebo boundaries and
   conservative source-linked evidence reporting with SHA-256 manifests.
+- Portable vector SVG output for frame-index research reports, using
+  optional svglite and verifying nonempty, structurally complete SVG files.
 - Known-truth synthetic regressions and executable cross-platform R Markdown
   reports for the added evidence functions; no original SmartFish empirical
   recordings, analytical workbooks or manuscript are distributed.
