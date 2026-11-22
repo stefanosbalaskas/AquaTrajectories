@@ -1,0 +1,311 @@
+name: v0.2.0 candidate source qualification and guarded GitHub release
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "DESCRIPTION"
+      - "CITATION.cff"
+      - "NEWS.md"
+      - "NAMESPACE"
+      - ".Rbuildignore"
+      - "R/**"
+      - "man/**"
+      - "inst/**"
+      - "tests/**"
+      - "research/release05/**"
+      - "scripts/release05_*"
+      - "scripts/release_v020_audit.py"
+      - "docs/RELEASE_NOTES_0_2_0.md"
+      - "docs/RELEASE_CANDIDATE_0_2_0.md"
+      - ".github/workflows/release-v020.yml"
+  push:
+    branches: [main]
+    paths:
+      - "DESCRIPTION"
+      - "CITATION.cff"
+      - "NEWS.md"
+      - ".Rbuildignore"
+      - "R/**"
+      - "man/**"
+      - "research/release05/**"
+      - "scripts/release05_*"
+      - "scripts/release_v020_audit.py"
+      - ".github/workflows/release-v020.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aqt-v020-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source-archive:
+    name: Exact-source tarball and API/provenance gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::roxygen2
+      - name: Verify exact version and 188-function source
+        run: |
+          python scripts/release_v020_audit.py --output v020_source_manifest.json
+      - name: Check exact roxygen-export and Rd parity
+        shell: bash
+        run: |
+          Rscript -e 'roxygen2::roxygenise()'
+          git diff --exit-code -- NAMESPACE man
+          git show HEAD:DESCRIPTION > DESCRIPTION
+          git diff --exit-code -- DESCRIPTION R tests inst research/release05
+      - name: Build and verify distributable source tarball
+        shell: bash
+        run: |
+          R CMD build .
+          test -s aquaTrajectories_0.2.0.tar.gz
+          python scripts/release_v020_audit.py --tarball aquaTrajectories_0.2.0.tar.gz --output v020_source_manifest.json
+          python -m py_compile scripts/release_v020_audit.py scripts/release05_verify.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v020-exact-source
+          path: |
+            aquaTrajectories_0.2.0.tar.gz
+            v020_source_manifest.json
+          if-no-files-found: error
+
+  cross-platform:
+    name: Source check + numerical oracles (${{ matrix.os }})
+    needs: source-archive
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::testthat
+            any::rmarkdown
+            any::knitr
+            any::bench
+      - uses: actions/download-artifact@v4
+        with:
+          name: v020-exact-source
+          path: .
+      - name: Check the SAME R source archive on this operating system
+        shell: bash
+        run: |
+          python scripts/release_v020_audit.py --tarball aquaTrajectories_0.2.0.tar.gz --output v020_os_source_manifest.json
+          R CMD check --no-manual aquaTrajectories_0.2.0.tar.gz
+          Rscript --vanilla -e 'x<-readLines("aquaTrajectories.Rcheck/00check.log",warn=FALSE); if(!any(trimws(x)=="Status: OK")) stop("R CMD check not zero-E/W/N")'
+          R CMD INSTALL aquaTrajectories_0.2.0.tar.gz
+          Rscript -e 'stopifnot(as.character(packageVersion("aquaTrajectories")) == "0.2.0")'
+      - name: Known-truth QC + independent Python numerical oracle
+        shell: bash
+        run: |
+          Rscript --vanilla scripts/release05_example.R v020-locked-example
+          python scripts/release05_verify.py --out v020-locked-example --report v020-independent-oracle.json
+          test -s v020-locked-example/RELEASE05_MANIFEST.json
+          test -s v020-independent-oracle.json
+      - name: Synthetic evidence sensitivity, measurement, inference and provenance
+        shell: bash
+        run: |
+          Rscript --vanilla inst/examples/evidence_guardrails.R
+          Rscript --vanilla -e 'rmarkdown::render("inst/examples/evidence_guardrails.Rmd", output_file="v020-evidence.html", output_dir=tempdir(), quiet=TRUE)'
+      - name: Re-measure 24 2D/3D runtime and allocation workloads
+        shell: bash
+        run: |
+          Rscript --vanilla scripts/release05_benchmark.R v020-performance
+          test -s v020-performance/RELEASE05_BENCHMARK.csv
+      - name: Record exact platform evidence without empirical overclaims
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,pathlib,platform
+          sha=lambda p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+          out={"schema":"AQT_V020_PLATFORM_QUALIFICATION_V1",
+               "commit_sha":os.environ["GITHUB_SHA"] if os.environ.get("GITHUB_EVENT_NAME")=="push" else os.environ["GITHUB_HEAD_REF_SHA"],
+               "platform":platform.platform(),
+               "system":platform.system(),
+               "package_version":"0.2.0",
+               "source_tarball_sha256":sha("aquaTrajectories_0.2.0.tar.gz"),
+               "source_check":"PASS_STATUS_OK",
+               "historical_synthetic_oracle":"PASS",
+               "scientific_evidence_synthetic_R_Rmd":"PASS",
+               "measured_24_workloads":"PASS",
+               "empirical_animal_accuracy_certified":False}
+          pathlib.Path("v020_platform_evidence.json").write_text(json.dumps(out,indent=2)+"\n")
+          PY
+          git diff --exit-code -- R tests research/release05 inst
+        env:
+          GITHUB_HEAD_REF_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v020-os-${{ matrix.os }}
+          path: |
+            v020_platform_evidence.json
+            v020-independent-oracle.json
+            v020_os_source_manifest.json
+            v020-locked-example/RELEASE05_MANIFEST.json
+            v020-performance/RELEASE05_BENCHMARK.csv
+            aquaTrajectories.Rcheck/00check.log
+          if-no-files-found: warn
+
+  measured-coverage:
+    name: Measured instrumented R execution coverage
+    needs: source-archive
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::.
+            any::covr
+            any::testthat
+      - uses: actions/download-artifact@v4
+        with:
+          name: v020-exact-source
+          path: .
+      - name: Install exact candidate source and measure real executed coverage
+        shell: bash
+        run: |
+          R CMD INSTALL aquaTrajectories_0.2.0.tar.gz
+          Rscript --vanilla scripts/core2_execution_coverage.R v020-coverage
+          Rscript --vanilla scripts/release05_coverage_gate.R v020-coverage
+          git diff --exit-code -- R tests NAMESPACE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v020-measured-coverage
+          path: |
+            v020-coverage/EXECUTED_COVERAGE.csv
+            v020-coverage/RELEASE05_COVERAGE_GATE.json
+          if-no-files-found: error
+
+  publish-immutable-release:
+    name: Publish v0.2.0 only after exact-main qualification
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [source-archive, cross-platform, measured-coverage]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: v020-*
+          path: v020-ci-evidence
+          merge-multiple: false
+      - name: Require exact main revision and complete evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          grep -qx 'Version: 0.2.0' DESCRIPTION
+          grep -qx 'version: 0.2.0' CITATION.cff
+          test -s docs/RELEASE_NOTES_0_2_0.md
+          test -s v020-ci-evidence/v020-exact-source/aquaTrajectories_0.2.0.tar.gz
+          test -s v020-ci-evidence/v020-measured-coverage/RELEASE05_COVERAGE_GATE.json
+          for os in ubuntu-latest windows-latest macos-latest; do
+            test -s "v020-ci-evidence/v020-os-$os/v020_platform_evidence.json"
+          done
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile
+          root=pathlib.Path("v020-ci-evidence")
+          declared=json.loads((root/"v020-exact-source/v020_source_manifest.json").read_text())
+          assert declared["commit_sha"] == pathlib.Path(".git/HEAD").read_text().strip() or declared["commit_sha"] == __import__("subprocess").check_output(["git","rev-parse","HEAD"],text=True).strip()
+          tar=root/"v020-exact-source/aquaTrajectories_0.2.0.tar.gz"
+          digest=hashlib.sha256(tar.read_bytes()).hexdigest()
+          assert declared["tarball_sha256"] == digest
+          for os in ("ubuntu-latest","windows-latest","macos-latest"):
+              j=json.loads((root/f"v020-os-{os}/v020_platform_evidence.json").read_text())
+              assert j["commit_sha"] == declared["commit_sha"]
+              assert j["source_tarball_sha256"] == digest
+              assert j["empirical_animal_accuracy_certified"] is False
+          z=pathlib.Path("AquaTrajectories_v0.2.0_Qualification_Evidence.zip")
+          with zipfile.ZipFile(z,"w",zipfile.ZIP_DEFLATED,compresslevel=7) as out:
+              for p in sorted(root.rglob("*")):
+                  if p.is_file():out.write(p,p.as_posix())
+              for p in ("docs/RELEASE_CANDIDATE_0_2_0.md","docs/RELEASE_NOTES_0_2_0.md",
+                        "docs/EVIDENCE_SAFEGUARDS_V1.md",
+                        "inst/examples/evidence_guardrails.R"):
+                  out.write(p)
+          with zipfile.ZipFile(z) as check:
+              assert check.testzip() is None
+          pathlib.Path("SHA256SUMS_v0.2.0.txt").write_text(
+              digest+"  aquaTrajectories_0.2.0.tar.gz\n"+
+              hashlib.sha256(z.read_bytes()).hexdigest()+"  "+z.name+"\n")
+          print("AQT_V020_QUALIFIED_EVIDENCE_PASS",digest)
+          PY
+          cp v020-ci-evidence/v020-exact-source/aquaTrajectories_0.2.0.tar.gz .
+      - name: Create one immutable v0.2.0 tag and GitHub release; never modify existing releases
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin --tags
+          if git rev-parse --verify --quiet 'refs/tags/v0.2.0' >/dev/null; then
+            EXISTING="$(git rev-parse 'refs/tags/v0.2.0^{commit}')"
+            test "$EXISTING" = "$GITHUB_SHA" || {
+              echo "::error::v0.2.0 tags a different SHA; refusing modification"
+              exit 1
+            }
+          else
+            git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              tag -a v0.2.0 -m 'AquaTrajectories 0.2.0: source-qualified scientific evidence safeguards'
+            git push origin refs/tags/v0.2.0
+          fi
+          if gh release view v0.2.0 >/dev/null 2>&1; then
+            echo "Exact tagged release already exists; refusing replacement."
+          else
+            gh release create v0.2.0 \
+              aquaTrajectories_0.2.0.tar.gz \
+              AquaTrajectories_v0.2.0_Qualification_Evidence.zip \
+              SHA256SUMS_v0.2.0.txt \
+              --verify-tag --latest \
+              --title 'AquaTrajectories v0.2.0 — Scientific Evidence Safeguards' \
+              --notes-file docs/RELEASE_NOTES_0_2_0.md
+          fi
+          gh release view v0.2.0 --json name,tagName,isPrerelease,url
