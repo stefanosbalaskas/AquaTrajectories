@@ -61,7 +61,7 @@ test_that("acquisition QC rejects false physical axes and incomplete source meta
   expect_true(all(good$row_audit$automatically_eligible))
   bad$observed[3] <- "unknown"
   flagged <- aqt_trajectory_qc(bad,z$frames)
-  expect_true(flagged$row_audit$flag_observed_conflict[3])
+  expect_true(flagged$row_audit$flag_invalid_observed[3])
 })
 
 test_that("partly missing camera clocks block physical-speed rules and derivation", {
