@@ -245,3 +245,24 @@ test_that("evidence export handles optional placebo and absent comparisons", {
   expect_false(file.exists(file.path(dest,"specification_contrasts.png")))
   expect_true(file.exists(file.path(dest,"sha256_manifest.csv")))
 })
+
+test_that("evidence export refuses a concurrently inserted reserved checksum manifest",{
+  d <- .cov100_ev_data()
+  d <- d[d$phase=="Before",,drop=FALSE]
+  s <- aqt_compare_specifications(d,window_widths=1)
+  ready <- aqt_inference_readiness(d)
+  report <- aqt_evidence_report(s,ready)
+  parent <- tempfile("cov100_manifest_race_");base::dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  dest <- file.path(parent,"evidence")
+  old <- digest::digest(report,algo="sha256")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_evidence_export(report,dest),"Manifest collision")
+  },dir.create=function(path,...) {
+    created <- base::dir.create(path,...)
+    if(created)
+       writeLines("external collision",file.path(path,"sha256_manifest.csv"))
+    created
+  },.package="aquaTrajectories")
+  expect_identical(digest::digest(report,algo="sha256"),old)
+})
