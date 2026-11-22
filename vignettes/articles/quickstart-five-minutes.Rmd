@@ -1,6 +1,6 @@
 ---
 title: "Five-minute quick start: tracks to scientific outputs"
-description: "Install released AquaTrajectories v0.1.2; generate explicitly synthetic fish tracks; calculate kinematics, align an event, and export reproducible CSV outputs."
+description: "Install released AquaTrajectories v0.2.0; generate explicitly synthetic fish tracks; calculate kinematics, align an event, and export reproducible CSV outputs."
 ---
 
 # Five-minute reproducible R analysis
@@ -9,11 +9,11 @@ description: "Install released AquaTrajectories v0.1.2; generate explicitly synt
 
 ## Step 1 — Install the published release
 
-Use R 4.1 or later. Until CRAN acceptance is independently confirmed, install the **published GitHub tag v0.1.2**; do not assume a CRAN binary is available.
+Use R 4.1 or later. Until CRAN acceptance is independently confirmed, install the **published GitHub tag v0.2.0**; do not assume a CRAN binary is available.
 
 ~~~r
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.0")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ~~~
