@@ -321,8 +321,7 @@ aqt_frame_index_publish <- function(study,directory) {
           svglite::svglite(file=dest,width=11,height=5.4,
                            pointsize=10,bg="white")
         else grDevices::svg(dest,width=11,height=5.4,pointsize=10)
-      }
-      else if(fmt=="pdf") grDevices::pdf(dest,width=11,height=5.4,
+      } else if(fmt=="pdf") grDevices::pdf(dest,width=11,height=5.4,
                                             useDingbats=FALSE)
       else grDevices::png(dest,width=2200,height=1080,res=200)
       tryCatch({
