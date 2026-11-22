@@ -35,7 +35,7 @@ test_that("stereo pixel uncertainty rejects invalid stochastic inputs",{
  expect_false("confidence_interval" %in% names(exact))
  noisy <- fun(sigma_px=c(.01,.03),draws=40)
  expect_equal(noisy$n_valid_draws,40)
- expect_true(all(is.finite(noisy[,c("sd_x","sd_y","sd_z")])))
+ expect_true(all(vapply(noisy[c("sd_x","sd_y","sd_z")],function(v) all(is.finite(v)),logical(1))))
  expect_identical(.Random.seed,prior)
  expect_equal(attr(noisy,"aqt_conditional_model")$sigma_px,c(.01,.03))
  empty <- fun(a=matrix(numeric(0),ncol=2),b=matrix(numeric(0),ncol=2))
