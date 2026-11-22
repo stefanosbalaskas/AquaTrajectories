@@ -75,7 +75,7 @@ test_that("functional event grid preserves missingness and forbids gap bridging"
 })
 test_that("functional independent-tank contrasts enforce replication and per-tank coverage", {
  g <- .cov100_func_grid()
- call <- function(x=g,...)aqt_functional_tank_contrast(x,draws=100,...)
+ call <- function(x=g,draws=100,...)aqt_functional_tank_contrast(x,draws=draws,...)
  expect_error(call(x=data.frame()),"requires an event grid")
  expect_error(call(treatment_levels="control"),"two distinct treatment_levels")
  expect_error(call(treatment_levels=c("control","control")),"two distinct treatment_levels")
@@ -92,7 +92,8 @@ test_that("functional independent-tank contrasts enforce replication and per-tan
  expect_error(call(x=bad),"One independent event/session per tank")
  bad <- rbind(g,g[1,,drop=FALSE]);class(bad) <- class(g)
  expect_error(call(x=bad),"Duplicate fish/grid")
- bad <- g[-1,,drop=FALSE];class(bad) <- class(g)
+ bad <- g[!(g$tank_id=="C1" & g$time_relative_s==-5),,drop=FALSE]
+ class(bad) <- class(g)
  expect_error(call(x=bad),"Inconsistent functional time support")
  bad <- g;bad$supported[bad$tank_id=="C1" & bad$time_relative_s==0] <- FALSE
  expect_error(call(x=bad),"Insufficient independent-tank fish coverage")
