@@ -110,3 +110,21 @@ test_that("M08 unmatched/reference-only cases retain undefined scientific denomi
  expect_identical(readRDS(file.path(out,"M08_SCIENTIFIC_ANALYSIS.rds"))$source_data,
                   study$source_data)
 })
+
+test_that("M08 keys distinguish source fish and do not bridge unobserved frame gaps", {
+  key <- aquaTrajectories:::.aqt_m08_key
+  d <- data.frame(session_id=c("S","S"),camera_id=c("TOP","TOP"),
+                  frame_id=c(2L,2L),track_id=c("0001","0002"))
+  expect_identical(key(d),c("S\rTOP\r2","S\rTOP\r2"))
+  expect_identical(key(d,track=TRUE),
+                   c("S\rTOP\r2\r0001","S\rTOP\r2\r0002"))
+  z <- .cov100_m08_source()
+  z$frames$frame_id[z$frames$frame_id==1] <- 2
+  z$obs$frame_id[z$obs$frame_id==1] <- 2
+  z$matched$frame_id[z$matched$frame_id==1] <- 2
+  result <- aqt_reference_measurement_validate(
+     z$frames,z$obs,z$matched,iou_threshold=.5)
+  expect_equal(nrow(result$adjacent_reference_steps),0L)
+  expect_equal(result$summary$n_reference_adjacent_steps,0L)
+  expect_equal(result$summary$n_matched,2L)
+})
