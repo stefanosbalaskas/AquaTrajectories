@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 const path="site/index.html";
 assert.ok(fs.existsSync(path),"Run pkgdown build before metadata cleanup");
 let s=fs.readFileSync(path,"utf8");
-const desc="AquaTrajectories v0.1.2: R tools for aquatic movement, synthetic fish-tracking labs, multiview workflows, figures and transparent scientific evidence.";
+const desc="AquaTrajectories v0.2.0: 188 R functions for aquatic trajectories, QC, evidence safeguards, reproducible analyses, multiview workflows and scientific visualization.";
 const meta=/<meta name="description" content="[^"]*"\s*\/?\s*>/i;
 const og=/<meta property="og:description" content="[^"]*"\s*\/?\s*>/i;
 assert.ok(meta.test(s)&&og.test(s),"Expected homepage metadata");

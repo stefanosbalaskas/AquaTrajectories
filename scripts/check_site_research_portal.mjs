@@ -70,9 +70,9 @@ for(const f of [...pages,...extras]) {
   assert.ok(fs.statSync(path.join(site,f)).size > 0,"Empty site resource: "+f);
 }
 const home=read("index.html");
-assert.match(home,/official v0\.1\.2 release/i);
+assert.match(home,/official v0\.2\.0 release/i);
 // Scientific-safeguard homepage content must be qualified on the exact site artifact.
-for (const claim of [/188 R functions on main/,/15 reference categories/,/Tagged v0\.1\.2: 179 functions/,/Evidence safeguards/,/aqt_compare_specifications\.html/,/aqt_measurement_contract\.html/,/aqt_inference_readiness\.html/,/aqt_evidence_report\.html/]) {
+for (const claim of [/Published v0\.2\.0: 188 functions/,/15 reference categories/,/89\.15% measured R coverage/,/Evidence safeguards/,/aqt_compare_specifications\.html/,/aqt_measurement_contract\.html/,/aqt_inference_readiness\.html/,/aqt_evidence_report\.html/]) {
   assert.match(home, claim, "Missing scientific-safeguard or release-boundary content: " + claim);
 }
 for (const fn of ["aqt_compare_specifications", "aqt_measurement_contract", "aqt_inference_readiness", "aqt_evidence_report"]) {
@@ -88,10 +88,10 @@ for(const claim of [/89\.33%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windows/
   assert.match(releaseGuide, claim, "Missing exact-source release evidence: "+claim);
 }
 for(const page of ["articles/quickstart-five-minutes.html","articles/capabilities-and-validation.html","articles/scientific-status.html","articles/research-evidence-dashboard.html"]) {
-  assert.match(read(page),/v0\.1\.2/, "Stale published-release description: "+page);
+  assert.match(read(page),/v0\.2\.0/, "Stale published-release description: "+page);
 }
 const start=read("articles/aquaTrajectories.html");
-assert.match(start,/v0\.1\.2/);
+assert.match(start,/v0\.2\.0/);
 assert.doesNotMatch(start, /ref\s*=\s*(?:(?:<[^>]*>)*[\s"]*)?v0\.1\.0/, "Get-started guide still asks for old release");
 const demo=read("synthetic-explorer.html");
 for(const id of ["occlusion-demo","idswitch-demo","learningStatus","frame","fishfilters","lessonPreset","cameraXY","cameraXZ","speedChart","focusFish","quizYes","quizNo","exportCsv","exportSvg"]) {
@@ -189,7 +189,7 @@ for(const id of ["one-camera","two-cameras","existing-recordings","before-record
 }
 assert.match(home,/plan-your-experiment/);
 assert.match(home,/synthetic-explorer/);
-assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.1.2:'),"Homepage concise description missing");
+assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.2.0:'),"Homepage concise description missing");
 assert.equal((home.match(/name="viewport"/g)||[]).length,1);
 assert.equal([...gallery.matchAll(/id="code-plot-[a-z0-9-]+"/g)].length,22);
 assert.equal([...gallery.matchAll(/data-code-link="true"/g)].length,22);

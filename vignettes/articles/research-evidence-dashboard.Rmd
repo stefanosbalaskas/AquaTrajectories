@@ -1,19 +1,19 @@
 ---
 title: "Research evidence, release and validation dashboard"
-description: "Current AquaTrajectories v0.1.2 engineering release and independent biological/physical research validation status."
+description: "Current AquaTrajectories v0.2.0 engineering release and independent biological/physical research validation status."
 ---
 
 # Scientific evidence and release status
 
-**Source-bound snapshot: 21 November 2026.** The [published v0.1.2 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2) qualifies research software and a reproducible synthetic example. This page is not a continuously updated benchmark database. A successful software test is not independent measurement of fish biology.
+**Source-bound snapshot: 22 November 2026.** The [published v0.2.0 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.0) qualifies research software with 188 R functions, evidence safeguards and reproducible synthetic examples. This page is not a continuously updated benchmark database. A successful software test is not independent measurement of fish biology.
 
 <div class="aqt-statusbar" role="group" aria-label="Release qualification summary">
-<div><strong>Published source</strong><span>v0.1.2 · 179 public R functions</span></div>
-<div><strong>Observed coverage</strong><span>89.33% instrumented R tests</span></div>
+<div><strong>Published source</strong><span>v0.2.0 · 188 public R functions</span></div>
+<div><strong>Observed coverage</strong><span>89.15% instrumented R source coverage</span></div>
 <div><strong>Independent empirical system</strong><span>Not certified</span></div>
 </div>
 
-## Scientific Core 2.0: five engineering milestones completed
+## Scientific Core 2.0 and evidence safeguards: qualified software releases
 
 | Workstream | Bounded outcome | Evidence |
 |:--|:--|:--|
@@ -23,17 +23,18 @@ description: "Current AquaTrajectories v0.1.2 engineering release and independen
 | 04 — Visualization 2.0 | QC-linked journal figure specifications and four export formats | [PR #105](https://github.com/stefanosbalaskas/AquaTrajectories/pull/105) |
 | 05 — Reproducible research | Frozen source-to-report, independent Python oracle, measured coverage and three-OS benchmarks | [PR #106](https://github.com/stefanosbalaskas/AquaTrajectories/pull/106) |
 
-The release-candidate coverage run measured **89.33% executed R source coverage**, above the 80% gate. **24 runtime and allocation-memory workloads were benchmarked per OS** on Linux, Windows and macOS. The independently recomputed synthetic example has **17 source observations, 10 eligible movements and 10 cm of supported distance**. The [full reproducibility walkthrough](reproducible-research-release.html) states the commands, assumptions, provenance and measured performance; software coverage is not a numerical-certification percentage.
+The v0.2.0 release measured **89.15% executed R source coverage**, above the 80% gate, and passed **24 runtime and allocation-memory workloads per OS** on Linux, Windows and macOS. Historical v0.1.2 measured 89.33% on its separate source revision. The independently recomputed synthetic example has **17 source observations, 10 eligible movements and 10 cm of supported distance**. The [full reproducibility walkthrough](reproducible-research-release.html) states the commands, assumptions, provenance and measured performance; software coverage is not a numerical-certification percentage.
 
 ## Live qualification history
 
 These links point to actual GitHub runs and may include successes, failures, skips or reruns:
 
-- [Three-OS reproducibility release workflow](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/reproducible-research-release-v012.yml)
+- [v0.2.0 source qualification and guarded release workflow](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/release-v020.yml)
+- [Historical v0.1.2 three-OS reproducibility workflow](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/reproducible-research-release-v012.yml)
 - [R package checks](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/R-CMD-check.yaml)
 - [Website build, source parity and browser tests](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/pkgdown-research-portal.yml)
 - [Scientific safeguard and overall release gates](https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/release-candidate-full-gate.yml)
-- [Archived v0.1.2 qualification evidence](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+- [v0.2.0 qualification evidence](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.0) and [historical v0.1.2 evidence](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
 
 ## Biological and physical validation remains distinct
 
@@ -53,4 +54,4 @@ The [nine-domain frozen scientific registry](https://github.com/stefanosbalaskas
 
 **Publication practice:** identify the exact software tag; record original input hashes, camera/track scopes, units, QC exclusions, figure-to-input lineage, independent tanks and separately validated physical/biological references. See the [capability matrix](capabilities-and-validation.html) and [scientific status](scientific-status.html).
 
-**Citation discipline:** v0.1.2 uses its [versioned GitHub source and CITATION.cff](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/CITATION.cff). The [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) and [BibTeX](../AquaTrajectories-v0.1.1.bib) refer to historical **v0.1.1**, not v0.1.2.
+**Citation discipline:** v0.2.0 uses its [versioned GitHub source and CITATION.cff](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.0/CITATION.cff). The [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) and [BibTeX](../AquaTrajectories-v0.1.1.bib) refer to historical **v0.1.1**, not v0.2.0.
