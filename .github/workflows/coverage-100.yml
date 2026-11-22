@@ -42,6 +42,10 @@ jobs:
             any::testthat
             any::svglite
             any::ragg
+      - name: Assert all new boundary regressions before instrumentation
+        shell: bash
+        run: |
+          Rscript --vanilla -e 'testthat::test_local(filter="covr100", reporter="summary", stop_on_failure=TRUE)'
       - name: Measure ALL tracked R function expressions with covr
         shell: bash
         run: |
