@@ -1,11 +1,11 @@
 ---
 title: "Capability and scientific validation matrix"
-description: "What AquaTrajectories v0.1.2 actually implements, what evidence is required, and which fish detection, identity, stereo, uncertainty and ACI claims remain unverified."
+description: "What AquaTrajectories v0.2.0 actually implements, what evidence is required, and which fish detection, identity, stereo, uncertainty and ACI claims remain unverified."
 ---
 
 # What the package can and cannot establish
 
-The official [v0.1.2 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2) is **published and source-citable**. The [Zenodo v0.1.1 DOI](https://doi.org/10.5281/zenodo.24262905) identifies an earlier, separate release and must not be attributed to v0.1.2. It is not an independently certified fish observation, welfare, metrology or device-control system. A software function existing and passing tests is **not** evidence that its biological prediction is accurate.
+The official [v0.2.0 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.0) is **published and source-citable**, with 188 R exports and qualified evidence safeguards. The [Zenodo v0.1.1 DOI](https://doi.org/10.5281/zenodo.24262905) identifies an earlier, separate release and must not be attributed to v0.2.0. It is not an independently certified fish observation, welfare, metrology or device-control system. A software function existing and passing tests is **not** evidence that its biological prediction is accurate.
 
 The table below summarizes software capabilities and independent-evidence requirements, based on the repository's [scientific validation gate registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/evidence/scientific-validation-gates.json) (development evidence dated 2026-11-12). This is a **source-linked research-readiness matrix**, not a live certification service.
 
@@ -13,6 +13,7 @@ The table below summarizes software capabilities and independent-evidence requir
 |---|---|---|---|
 | Existing 2D/3D trajectories | Unit-aware R ingestion, QC2 source-row lineage, missing/exclusion and threshold sensitivity | Original coordinates, declared units, camera/track scopes, an explicit policy | **Software-qualified; conclusions conditional on recorded input** |
 | Numerical estimators | Known-answer/metamorphic tests for kinematics, geometry and advanced methods | Model assumptions, independent application-specific diagnostics and validated scientific endpoints | **Bounded software tests, not universal numerical certification** |
+| Evidence safeguards | Estimator-aggregation sensitivity, measurement contracts, inference readiness, spatial support, geometry associations, within-recording placebo boundaries and provenance-rich reports | Original source records, valid unit definitions, independent units and physical calibration where claimed | **Software-qualified; biological and causal effects not certified** |
 | Research figures | Four QC-linked figure specifications and PDF/SVG/PNG/TIFF exports with hashes | Original input and caption/axis interpretation | **Source-linked reproducibility, not a physical validation result** |
 | Fish detections | Optional video runner and box metrics; public dataset probes | Fish-trained detector weights; held-out reviewed annotations | **Not certified** across tanks/species |
 | Within-camera tracks | Imports, camera-local track representation, identity metrics | Adjudicated fish IDs; occlusion/density evaluation | **Not certified** as permanent identities |
@@ -33,7 +34,7 @@ The table below summarizes software capabilities and independent-evidence requir
 3. **Real-source assessed:** real data formats or controlled benchmark procedures exercised; this does not imply performance is certified.
 4. **Independently validated:** external held-out biological and physical reference evidence supports a specified claim. **Not asserted for the system as a whole.**
 
-Read the [v0.1.2 fully reproducible trajectory-to-report guide](reproducible-research-release.html) and [full evidence dashboard](research-evidence-dashboard.html) for links to the real source contracts and checks. The [scientific status statement](scientific-status.html) provides detailed wording guidance.
+Read the [historical v0.1.2 fully reproducible trajectory-to-report guide](reproducible-research-release.html) and [full evidence dashboard](research-evidence-dashboard.html) for links to the real source contracts and checks. The [scientific status statement](scientific-status.html) provides detailed wording guidance.
 
 ## Input-specific limitations
 
