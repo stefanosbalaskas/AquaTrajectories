@@ -28,7 +28,7 @@ aqt_tracking_observations <- function(data) {
   if (!is.numeric(d$x) || !is.numeric(d$y) ||
       any(!is.finite(d$x)) || any(!is.finite(d$y)))
     stop("Tracking coordinates must be finite numeric",call.=FALSE)
-  if (!"class_id" %in% names(d)) d$class_id <- "fish"
+  if (!"class_id" %in% names(d)) d$class_id <- rep("fish",nrow(d))
   if (anyNA(d$class_id) || any(!nzchar(as.character(d$class_id))))
     stop("class_id must be nonempty",call.=FALSE)
   d$class_id <- as.character(d$class_id)
