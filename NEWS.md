@@ -1,3 +1,31 @@
+# aquaTrajectories 0.2.0 (Scientific safeguards and reproducible research)
+
+This planned **software** release extends the qualified v0.1.2 analytical core.
+It is not a certification of empirical fish detection, persistent animal identity,
+physical underwater 3D measurement, feeding causality, fish welfare or hardware safety.
+
+- 188 documented public R functions across 15 scientific reference categories,
+  including nine post-v0.1.2 evidence-safeguard functions.
+- Source-preserving estimator specification comparisons: pooled, track-,
+  fragment- and equal-time-window sensitivity, numerical denominators and
+  explicit direction-reversal flags.
+- Explicit measurement contracts distinguishing image pixels, supplied
+  auxiliary measurements and independently calibrated physical XYZ; mixed-
+  axis plots are display-only until physical calibration evidence is supplied.
+- Independent-unit readiness, spatial-support diagnostics, bounding-box/
+  image-geometry associations, within-recording placebo boundaries and
+  conservative source-linked evidence reporting with SHA-256 manifests.
+- Known-truth synthetic regressions and executable cross-platform R Markdown
+  reports for the added evidence functions; no original SmartFish empirical
+  recordings, analytical workbooks or manuscript are distributed.
+- Preserve the v0.1.2 synthetic QC/independent-Python oracle and numerical
+  measurement workflows as reproducible baselines; any new qualification
+  statistics must come from the actual v0.2.0 source at its exact commit.
+- Historic v0.1.0, v0.1.1 and v0.1.2 tags and their source archives are immutable.
+
+See `docs/RELEASE_CANDIDATE_0_2_0.md` for six release gates and
+`docs/RELEASE_NOTES_0_2_0.md` for bounded public claims.
+
 # aquaTrajectories 0.1.2 (Reproducible Research Release; 2026-11-21)
 
 This is a **versioned software-engineering and research-reproducibility
