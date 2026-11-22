@@ -25,7 +25,7 @@ test_that("publication specification stops on failed atomic final commit",{
      base::file.rename(from,to)
   },.package="aquaTrajectories")
   expect_false(dir.exists(dest))
-  expect_false(spec$provenance$independent_biological_accuracy_certified)
+  expect_false(spec$provenance$independently_certified_biological_accuracy)
 })
 
 test_that("QC reporting refuses a failed final atomic publication",{
