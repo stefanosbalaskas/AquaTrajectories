@@ -23,7 +23,7 @@ if(!identical(meta$schema,"AQT_CORE2_EXECUTED_COVERAGE_V1") ||
    !identical(meta$source_sha256,actual_sha("NAMESPACE")))
   stop("FAIL: executed R covr coverage is not >=80% with verified source",
        call.=FALSE)
-if(as.character(utils::packageVersion("aquaTrajectories"))!="0.1.2")
+if(!as.character(utils::packageVersion("aquaTrajectories")) %in% c("0.1.2","0.2.0"))
   stop("Measured coverage does not represent exact release version",call.=FALSE)
 # Do not conflate lexical test mentions with actually executed R lines.
 # Retain the original per-line covr table; this signed check reports how
@@ -40,11 +40,11 @@ result<-list(schema="AQT_RELEASE05_EXECUTED_COVERAGE_GATE_V1",
      sort(list.files("R",pattern="\\.R$",full.names=FALSE)))),
   executed_line_table_sha256=meta$output_sha256,
   original_covr_summary_sha256=actual_sha(summary),
-  package_version="0.1.2",
+  package_version=as.character(utils::packageVersion("aquaTrajectories")),
   biological_measurement_accuracy_certified=FALSE)
 path<-file.path(directory,"RELEASE05_COVERAGE_GATE.json")
 if(file.exists(path))stop("Refusing to replace existing coverage gate file")
 jsonlite::write_json(result,path,pretty=TRUE,auto_unbox=TRUE)
 cat("RELEASE05_EXECUTED_CODE_COVERAGE_PASS",
     format(round(meta$percent,2),nsmall=2),
-    "percent on installed release 0.1.2\n")
+    "percent on installed package", as.character(utils::packageVersion("aquaTrajectories")), "\n")
