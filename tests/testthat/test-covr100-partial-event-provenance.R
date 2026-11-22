@@ -41,3 +41,15 @@ test_that("research event analysis keeps missing measurements as a visible statu
   expect_true(nzchar(row$reason))
   expect_null(out$events)
 })
+
+test_that("wholly out-of-window independent events are reported as skipped rather than imputed",{
+ review <- .cov100_partial_event_review()
+ event <- data.frame(session_id="S1",event_id="FUTURE",
+                     start_s=40,end_s=40)
+ report <- aqt_research_analyze(review,profiles="events",events=event,
+     config=list(event_clock="same_recording"))
+ line <- report$diagnostics[report$diagnostics$profile=="events",]
+ expect_identical(line$status,"skipped")
+ expect_match(line$reason,"No event-aligned observations")
+ expect_null(report$events)
+})
