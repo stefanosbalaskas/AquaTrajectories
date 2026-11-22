@@ -122,7 +122,7 @@ test_that("strict longitudinal design rejects incomplete or pseudoreplicated cur
  bad <- g;bad$event_id[1] <- "OTHER"
  expect_error(fun(x=bad),"stable tank, treatment and event")
  bad <- g;bad$session_id[1] <- "OTHER"
- expect_error(fun(x=bad),"one session and event")
+ expect_error(fun(x=bad),"identical complete event-relative grids|one session and event")
  bad <- g;bad$track_id[1] <- ""
  expect_error(fun(x=bad),"Fish, tank and event IDs")
  one_fish <- g[g$track_id=="F1",,drop=FALSE];class(one_fish) <- class(g)
