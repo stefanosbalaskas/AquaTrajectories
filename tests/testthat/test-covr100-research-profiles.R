@@ -49,12 +49,9 @@ test_that("research workflow distinguishes blocked, skipped and failed events",{
  out <- fun(events=no_event_epochs,profiles="events")
  expect_identical(out$diagnostics$status[
        out$diagnostics$profile=="events"],"skipped")
- bad_outcome <- fun(config=.cov100_research_cfg(event_outcome="z"),
-       profiles=c("events","functional"))
- expect_identical(bad_outcome$diagnostics$status[
-       bad_outcome$diagnostics$profile=="events"],"failed")
- expect_identical(bad_outcome$diagnostics$status[
-       bad_outcome$diagnostics$profile=="functional"],"failed")
+ expect_error(fun(config=.cov100_research_cfg(event_outcome="z"),
+       profiles=c("events","functional")),
+       "Event outcome must be an available source-derived")
  no_contrast <- fun(profiles="experimental")
  expect_identical(no_contrast$diagnostics$status[
        no_contrast$diagnostics$profile=="experimental"],"skipped")
