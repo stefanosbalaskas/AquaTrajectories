@@ -45,7 +45,7 @@ aqt_detection_boxes <- function(data,role=c("truth","prediction")) {
         any(!is.finite(d$confidence)) ||
         any(d$confidence<0 | d$confidence>1))
       stop("Predictions require confidence values within [0,1]",call.=FALSE)
-  } else if (!"confidence" %in% names(d)) d$confidence <- NA_real_
+  } else if (!"confidence" %in% names(d)) d$confidence <- rep(NA_real_,nrow(d))
   d$box_index <- seq_len(nrow(d))
   d
 }
