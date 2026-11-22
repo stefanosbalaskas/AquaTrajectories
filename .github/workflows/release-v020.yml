@@ -39,7 +39,7 @@ permissions:
 
 concurrency:
   group: aqt-v020-release-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   source-archive:
@@ -64,7 +64,7 @@ jobs:
             any::roxygen2
       - name: Verify exact version and 188-function source
         run: |
-          python scripts/release_v020_audit.py --output v020_source_manifest.json
+          python scripts/release_v020_audit.py --output "$RUNNER_TEMP/v020_preflight_manifest.json"
       - name: Check exact roxygen-export and Rd parity
         shell: bash
         run: |
