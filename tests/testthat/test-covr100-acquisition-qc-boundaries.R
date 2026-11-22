@@ -37,7 +37,7 @@ test_that("acquisition QC produces a valid empty source-track coverage ledger",{
  expect_equal(nrow(q$raw),0L)
  expect_equal(nrow(q$per_track_coverage),0L)
  expect_equal(nrow(q$camera_coverage),1L)
- expect_equal(q$camera_coverage$n_frames_with_eligible_track,0L)
+ expect_equal(q$camera_coverage$n_frames_with_eligible_positions,0L)
  review <- aqt_qc_review(q)
  expect_equal(review$n_original,0L)
  expect_equal(review$n_review_eligible,0L)

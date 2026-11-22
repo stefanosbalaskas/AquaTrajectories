@@ -65,7 +65,7 @@ test_that("publication emits a complete versioned report and no fabricated sourc
  expect_true(all(catalog$files[catalog$status=="skipped"]==""))
  report <- readLines(file.path(output,"REPORT.md"),warn=FALSE)
  expect_true(any(grepl("Declared data origin: synthetic",report,fixed=TRUE)))
- expect_true(any(grepl("not independently validated",report,fixed=TRUE)))
+ expect_true(any(grepl("not an independently validated biological study",report,fixed=TRUE)))
  manifest <- jsonlite::fromJSON(file.path(output,"PUBLICATION_MANIFEST.json"),
                                  simplifyVector=FALSE)
  expect_identical(manifest$declared_data_origin,"synthetic")
