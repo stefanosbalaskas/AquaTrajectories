@@ -101,3 +101,22 @@ test_that("frame-index renderer detects missing scientific SVG after a device co
   },.package="aquaTrajectories")
   expect_false(dir.exists(dest))
 })
+
+test_that("frame-index publisher rejects malformed serialized SVG rather than trusting device success",{
+ if(!base::requireNamespace("svglite",quietly=TRUE) ||
+    !base::requireNamespace("ragg",quietly=TRUE))
+   testthat::skip("Portable SVG and PNG backends unavailable")
+ study <- .cov100_frame_index_study()
+ parent <- tempfile("cov100_fi_bad_svg_");base::dir.create(parent)
+ on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+ dest <- file.path(parent,"publication")
+ testthat::with_mocked_bindings({
+   expect_error(aqt_frame_index_publish(study,dest),
+                "Malformed SVG scientific figure")
+ },readLines=function(con,...) {
+    if(is.character(con) && length(con)==1L && grepl("\\.svg$",con))
+       return("<svg malformed>")
+    base::readLines(con,...)
+ },.package="aquaTrajectories")
+ expect_false(dir.exists(dest))
+})

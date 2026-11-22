@@ -16,3 +16,9 @@ file.copy <- NULL
 # Missing output-files can be modelled deterministically within only our
 # package namespace, rather than deleting source files or overriding base.
 file.exists <- NULL
+
+# Additional test-only namespace seams for SVG header reads, public
+# namespace inventory and failed file-metadata reads; base R remains normal.
+readLines <- NULL
+getNamespaceExports <- NULL
+file.info <- NULL

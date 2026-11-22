@@ -54,3 +54,24 @@ test_that("conditional sensitivity drawing caps labels at 35, with raw rows unch
  expect_error(aquaTrajectories:::.aqt_publication_draw(bad,row),
               "No finite plotting values")
 })
+
+test_that("publication figure device reports a missing PDF instead of success",{
+ study <- .cov100_pub_minimal()
+ row <- data.frame(kind="sensitivity",session_id="S",camera_id="C")
+ file <- tempfile("cov100_missing_device_",fileext=".pdf")
+ on.exit(unlink(file),add=TRUE)
+ checked <- 0L
+ testthat::with_mocked_bindings({
+   output <- aquaTrajectories:::.aqt_publication_render(
+      study,row,file,"pdf",7,5,200)
+   expect_false(output$ok)
+   expect_match(output$reason,"did not emit a usable file")
+ },file.exists=function(path) {
+   if(identical(path,file)) {
+     checked <<- checked+1L
+     if(checked==1L) return(FALSE)
+   }
+   base::file.exists(path)
+ },.package="aquaTrajectories")
+ expect_gt(checked,0L)
+})
