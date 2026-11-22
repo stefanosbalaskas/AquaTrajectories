@@ -45,7 +45,7 @@ test_that("M08 refuses invalid reference source tables and unmeasured clocks",{
  expect_error(call(o=bad),"Invalid source observation geometry")
  bad <- z$obs;bad$bbox_width[2] <- -1
  expect_error(call(o=bad),"Invalid source observation geometry")
- bad <- z$frames;bad$frame_id[2] <- bad$frame_id[1]
+ bad <- z$frames;bad$frame_id[3] <- bad$frame_id[1]
  expect_error(call(f=bad),"Missing or duplicate original acquisition")
  bad <- z$obs;bad$track_id[2] <- bad$track_id[1]
  bad$frame_id[2] <- bad$frame_id[1]
