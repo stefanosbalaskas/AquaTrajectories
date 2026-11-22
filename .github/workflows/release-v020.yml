@@ -116,6 +116,7 @@ jobs:
             any::rmarkdown
             any::knitr
             any::bench
+            any::svglite
       - uses: actions/download-artifact@v4
         with:
           name: v020-exact-source
