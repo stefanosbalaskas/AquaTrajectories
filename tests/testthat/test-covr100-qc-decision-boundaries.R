@@ -133,7 +133,7 @@ test_that("annotated metrics require true source-frame and annotation support", 
 test_that("review decisions must identify original rows and justified actions", {
   z <- .cov100_qc_fixture()
   q <- aqt_trajectory_qc(z$raw,z$frames)
-  expect_error(aqt_qc_review(list()),"Expected an aqt_trajectory_qc")
+  expect_error(aqt_qc_review(list()),"Expected aqt_trajectory_qc object")
   expect_error(aqt_qc_review(q,data.frame(x=1)),"Review decisions require")
   d <- data.frame(raw_row=c(1,1),decision="exclude",
                   reason="review")
