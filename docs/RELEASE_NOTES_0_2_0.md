@@ -8,7 +8,7 @@ AquaTrajectories is R-first research software for existing 2D/3D trajectories, s
 - `aqt_inference_readiness()` identifies the independently supported level of inference; `aqt_spatial_support()` checks uneven spatial coverage; `aqt_geometry_bias_audit()` reports descriptive geometry associations; `aqt_placebo_boundaries()` assesses internal recording stability without spurious p-values.
 - `aqt_evidence_report()` and `aqt_evidence_export()` integrate conservative interpretation, publication figures and SHA-256 source-linked manifests.
 - A synthetic known-truth regression suite and a complete R/R Markdown evidence workflow exercise those scientific safeguards on Linux, Windows and macOS.
-- The frame-index research publisher now prefers the optional `svglite` vector backend on headless platforms and validates that output contains a complete SVG document.
+- The frame-index research publisher prefers optional `svglite` and `ragg` for portable vector SVG and high-resolution PNG output on headless systems. SVG content must be structurally complete.
 - Source and test history for the original v0.1.2 release remain intact; no historical tag is modified.
 
 ## Evidence and reproducibility
