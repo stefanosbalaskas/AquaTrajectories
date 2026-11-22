@@ -58,7 +58,7 @@ test_that("HMM event posterior checks state, window, source identities and model
  ev <- f$events[-1,,drop=FALSE]
  expect_error(call(ev=ev),"one externally logged event")
  ev <- rbind(f$events,f$events[1,,drop=FALSE])
- expect_error(call(ev=ev),"one externally logged event")
+ expect_error(call(ev=ev),"Duplicate event per session")
  bad <- f$decoded;bad$hmm_p2[] <- NA_real_
  expect_error(call(d=bad),"No observed fish state epochs|Each fish requires supported")
  bad <- f$decoded[
