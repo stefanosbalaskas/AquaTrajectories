@@ -92,3 +92,15 @@ test_that("base SVG fallback works when native Cairo graphics is available", {
     path,formats="svg",width=3,height=3))
   expect_gt(file.info(file.path(path,"figure.svg"))$size,100)
 })
+
+test_that("figure exporter rejects unavailable temporary staging before drawing", {
+  parent <- tempfile("cov100_disk_gate_");base::dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  out <- file.path(parent,"figure")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_figure_export(
+       function() graphics::plot(1:3,1:3),out,formats="pdf"),
+       "Could not create staging directory")
+  },dir.create=function(...) FALSE,.package="aquaTrajectories")
+  expect_false(dir.exists(out))
+})

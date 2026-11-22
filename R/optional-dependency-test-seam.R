@@ -5,3 +5,10 @@
 # binding and restores it automatically. It never changes loaded libraries,
 # installed packages, science data, or the coverage gate.
 requireNamespace <- NULL
+
+# These non-function bindings likewise leave ordinary production lookup
+# unchanged. Tests can locally simulate directory creation, copying and
+# atomic rename failures without altering OS permissions or global base APIs.
+dir.create <- NULL
+file.rename <- NULL
+file.copy <- NULL

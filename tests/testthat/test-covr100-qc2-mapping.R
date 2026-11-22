@@ -95,3 +95,22 @@ test_that("QC2 exported lineages refuse mutated source and scientific evidence",
   copied$lineage$step_status[2] <- "fabricated"
   expect_error(aqt_qc2_export(copied,tempfile("qc2_ledger_")),"QC scientific evidence")
 })
+
+test_that("QC2 evidence export fails closed on staging and atomic rename failures", {
+  audited <- aqt_qc2_report(.cov100_qc2_raw(),2,
+             units="cm",coordinate_system="tank")
+  parent <- tempfile("cov100_qc2_fs_");base::dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  first <- file.path(parent,"no-stage")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_qc2_export(audited,first),
+                 "Cannot create QC staging directory")
+  },dir.create=function(...) FALSE,.package="aquaTrajectories")
+  expect_false(dir.exists(first))
+  second <- file.path(parent,"no-commit")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_qc2_export(audited,second),
+                 "Cannot finalize QC 2.0 evidence directory")
+  },file.rename=function(...) FALSE,.package="aquaTrajectories")
+  expect_false(dir.exists(second))
+})

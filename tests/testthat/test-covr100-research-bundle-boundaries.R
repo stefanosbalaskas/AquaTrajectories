@@ -149,3 +149,25 @@ test_that("byte-preserving export refuses invalid and changed provenance", {
   expect_error(aqt_research_bundle_export(invalid,tempfile("out_")),
                "provenance changed")
 })
+
+test_that("byte-preserving bundle exporter rejects failed copy and atomic publication", {
+  b <- .cov100_bundle()
+  on.exit(unlink(b$root,recursive=TRUE,force=TRUE),add=TRUE)
+  b <- .cov100_bundle_seal(b)
+  verified <- aqt_research_bundle_import(b$root)
+  parent <- tempfile("cov100_bundle_fs_");base::dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  copyout <- file.path(parent,"copy-failed")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_research_bundle_export(verified,copyout),
+                 "Could not copy complete research bundle")
+  },file.copy=function(...) FALSE,.package="aquaTrajectories")
+  expect_false(dir.exists(copyout))
+  moveout <- file.path(parent,"rename-failed")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_research_bundle_export(verified,moveout),
+                 "Could not commit byte-preserved research bundle")
+  },file.rename=function(...) FALSE,.package="aquaTrajectories")
+  expect_false(dir.exists(moveout))
+  expect_true(verified$output_sha256_verified)
+})

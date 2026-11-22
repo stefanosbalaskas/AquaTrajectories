@@ -133,3 +133,18 @@ test_that("scientific-analysis export preserves source hashes and refuses tamper
   expect_error(aqt_research_export(tampered,file.path(parent,"bad")),
         "Unverifiable scientific")
 })
+
+test_that("scientific analysis atomic export failure preserves original review and source hash", {
+  x <- .cov100_research_review()
+  result <- aqt_research_analyze(x$review,profiles="movement")
+  raw_sha <- result$review$original_source_sha256
+  parent <- tempfile("cov100_scientific_fs_");base::dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  dest <- file.path(parent,"noncommitted")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_research_export(result,dest),
+                 "Unable to publish complete scientific analysis output")
+  },file.rename=function(...) FALSE,.package="aquaTrajectories")
+  expect_false(dir.exists(dest))
+  expect_identical(result$review$original_source_sha256,raw_sha)
+})
