@@ -99,7 +99,7 @@ aqt_qc_sensitivity <- function(tracks, gap_limits_s,
     })
     if(length(out))summaries[[j]] <- do.call(rbind,out)
   }
-  ledger <- if(length(ledgers))do.call(rbind,ledgers) else data.frame()
+  ledger <- do.call(rbind,ledgers)
   summary <- if(length(Filter(Negate(is.null),summaries)))
     do.call(rbind,Filter(Negate(is.null),summaries)) else data.frame()
   rownames(ledger) <- NULL

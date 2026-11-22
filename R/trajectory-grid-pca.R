@@ -59,7 +59,6 @@ aqt_trajectory_grid_pca <- function(
       stats::approx(x=rel,y=z,xout=grid,ties="ordered",
                     rule=1)$y
     },numeric(n_grid))
-    if (!is.matrix(fitted)) fitted <- matrix(fitted,ncol=dimn)
     if (any(!is.finite(fitted)))
       stop("A trajectory cannot be interpolated onto the full grid",
            call.=FALSE)

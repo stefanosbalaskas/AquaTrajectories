@@ -116,7 +116,6 @@ aqt_plot_trajectory_storyboard3d <- function(
            call.=FALSE)
 
   n <- nrow(d)
-  if (n>1L) {
     delta_t <- diff(d$time_s)
     valid_pair <- good[-n] & good[-1L] &
       delta_t>0 & delta_t<=max_gap_s
@@ -128,10 +127,6 @@ aqt_plot_trajectory_storyboard3d <- function(
     segments <- data.frame(i=i,j=j,
       end_s=d$time_s[j],length=distance,
       speed=distance/delta_t[i])
-  } else {
-    segments <- data.frame(i=integer(),j=integer(),end_s=numeric(),
-                           length=numeric(),speed=numeric())
-  }
   frame_metrics <- lapply(seq_along(times_s),function(k) {
     t <- times_s[k]
     used <- which(segments$end_s<=t)

@@ -78,7 +78,6 @@ aqt_trajectory_ensemble <- function(tracks,sigma=.1,rho=0,systematic_sd=0,
   for (b in seq_len(draws)) {
     y <- base
     for (idx in indices) {
-      if (!length(idx)) next
       offset <- stats::rnorm(dd,sd=systematic_sd)
       state <- numeric(dd)
       prior <- NA_integer_

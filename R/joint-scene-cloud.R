@@ -116,7 +116,7 @@ aqt_joint_scene_cloud <- function(
         if(n)mean(d$assignment_changed) else NA_real_,
       stringsAsFactors=FALSE)
   })
-  summary <- if(length(stats))do.call(rbind,stats) else data.frame()
+  summary <- do.call(rbind,stats)
   if(nrow(summary))rownames(summary) <- NULL
   structure(list(points=points,summary=summary,
      session_id=session_id,camera_id=camera,frame_s=frame_s,

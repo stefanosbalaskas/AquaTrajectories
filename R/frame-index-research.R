@@ -114,7 +114,6 @@ aqt_frame_index_analyze <- function(frames,observations,
   for(idx in split(seq_len(nrow(o)),track_scope)) {
     if(length(idx)<2L)next
     frame_gap <- diff(o$frame_id[idx])
-    if(any(frame_gap<=0))stop("Nonincreasing frame within scoped track",call.=FALSE)
     end <- idx[-1L]
     o$previous_frame_id[end] <- o$frame_id[idx[-length(idx)]]
     o$missing_intervening_observations[end] <- frame_gap>1

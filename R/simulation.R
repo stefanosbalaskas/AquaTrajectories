@@ -28,7 +28,6 @@ aqt_simulate_tracks <- function(n_fish=5L,n_frames=200L,fps=30,
   res <- lapply(seq_len(n_fish),function(i) {
     steps <- matrix(stats::rnorm(n_frames*dimension,sd=0.3),ncol=dimension)
     coords <- apply(steps,2L,cumsum)
-    if (!is.matrix(coords)) coords <- matrix(coords,ncol=dimension)
     data.frame(session_id="S01",camera_id="SIM",track_id=paste0("fish",i),
       time_s=(seq_len(n_frames)-1)/fps,x=coords[,1L],y=coords[,2L],
       z=if (dimension==3L) coords[,3L] else NA_real_)
