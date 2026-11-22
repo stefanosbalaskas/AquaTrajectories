@@ -90,8 +90,8 @@ test_that("scientific inferential pathways cannot count one camera as independen
           functional_contrast=TRUE))
  expect_identical(two$diagnostics$status[
        two$diagnostics$profile=="experimental"],"complete")
- expect_s3_class(two$statistical_models$functional_contrast,
-       "aqt_functional_tank_contrast")
+ expect_true(is.list(two$statistical_models$functional_contrast))
+ expect_true(is.data.frame(two$statistical_models$functional_contrast$curve))
  expect_false(two$statistical_models$functional_contrast$causal_identification)
  invalid_model <- aqt_research_analyze(f$review,
        profiles=c("functional","experimental"),events=f$events,
