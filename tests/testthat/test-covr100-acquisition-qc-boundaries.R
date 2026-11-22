@@ -52,10 +52,10 @@ test_that("review and reporting preserve original tracker rows under nonuniform 
  qc <- aqt_trajectory_qc(raw,frames,max_gap_s=.15,
            max_jump_px=1.5,min_detection_confidence=.8)
  expect_identical(serialize(raw,NULL),source)
- expect_true(all(qc$flags$automatically_eligible))
- expect_true(sum(qc$flags$large_gap)>=2L)
+ expect_true(all(qc$row_audit$automatically_eligible))
+ expect_true(sum(qc$row_audit$flag_gap_boundary)>=2L)
  review <- aqt_qc_review(qc)
- derived <- aqt_qc_derived(review)
+ derived <- aqt_qc_derive(review)
  expect_true(is.data.frame(derived$kinematics))
  parent <- tempfile("cov100_acquisition_")
  dir.create(parent)
