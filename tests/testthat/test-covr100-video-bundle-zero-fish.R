@@ -160,3 +160,23 @@ test_that("verified runner files reject malformed independent metadata, frame, a
   expect_error(aqt_video_bundle_import(dir,z$prefix),
                "Runner frame count, scope")
 });
+
+# A verified source bundle is not sufficient for benchmark eligibility:
+# the independent manual-annotation denominator must also be nonzero.
+test_that("a video benchmark does not score zero fully annotated frames", {
+  parent <- tempfile("cov100_no_annotation_")
+  dir.create(parent)
+  on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+  source <- .cov100_zero_video_bundle(parent)
+  bundle <- aqt_video_bundle_import(parent,source$prefix)
+  zero_eval <- data.frame(session_id=character(),camera_id=character(),
+                          frame_id=numeric(),annotation_status=character())
+  boxes <- data.frame(session_id=character(),camera_id=character(),
+     frame_id=numeric(),class_id=character(),xmin=numeric(),
+     ymin=numeric(),xmax=numeric(),ymax=numeric())
+  tracks <- data.frame(session_id=character(),camera_id=character(),
+     frame_id=numeric(),track_id=character(),x=numeric(),y=numeric(),
+     class_id=character())
+  expect_error(aqt_video_bundle_benchmark(bundle,boxes,tracks,zero_eval),
+               "At least one fully annotated evaluation frame is required")
+})
