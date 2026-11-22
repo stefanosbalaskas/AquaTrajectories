@@ -76,3 +76,17 @@ test_that("Research Bundle import detects changed source bytes before numerical 
  expect_error(aqt_research_bundle_import(root),
              "Research bundle integrity mismatch")
 })
+
+
+test_that("unknown camera time forbids experimental tank mapping before inference",{
+ root <- tempfile("cov100_bundle_no_clock_design_")
+ on.exit(unlink(root,recursive=TRUE,force=TRUE),add=TRUE)
+ .cov100_research_bundle(root,time_status="unknown")
+ bundle <- aqt_research_bundle_import(root)
+ review <- aqt_qc_review(aqt_trajectory_qc(bundle,max_gap_s=.11))
+ design <- data.frame(session_id="S",camera_id="TOP",
+                      tank_id="T",treatment="control")
+ expect_error(aqt_research_analyze(review,profiles="experimental",
+                  design=design),
+              "Design analysis requires time-qualified reviewed trajectories")
+})
