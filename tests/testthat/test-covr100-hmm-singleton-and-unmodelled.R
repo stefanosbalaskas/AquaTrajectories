@@ -31,8 +31,14 @@ test_that("HMM decoding of a single sample and zero-likelihood sequence fails ex
 })
 test_that("HMM summary refuses an entirely unclassified source fish",{
  src <- .cov100_hmm_direct()
+ expect_error(aqt_hmm_decode(src,state_means=c(0,8),
+             state_sds=c(.5,.5),transition=matrix(c(.9,.1,.1,.9),2,2,byrow=TRUE),
+             max_gap_s=.5,min_segment=4),
+              "No contiguous observed fish segments meet min_segment")
  decoded <- aqt_hmm_decode(src,state_means=c(0,8),
-             state_sds=c(.5,.5),transition=matrix(c(.9,.1,.1,.9),2,2,byrow=TRUE),max_gap_s=.5,min_segment=4)
+             state_sds=c(.5,.5),transition=matrix(c(.9,.1,.1,.9),2,2,byrow=TRUE),
+             max_gap_s=1.1,min_segment=4)
+ decoded$hmm_state[] <- NA_integer_
  expect_error(aqt_hmm_state_summary(decoded),
               "No decoded fish states")
  # A second fish can be unclassified while valid fish keep their own denominator.
