@@ -81,3 +81,24 @@ test_that("HMM event posterior checks state, window, source identities and model
  expect_false(result$causal_identification)
  expect_true(result$posterior_sample_weighted)
 })
+
+test_that("HMM event windows without observations fail before treatment interpretation",{
+ f <- .cov100_he_fixture()
+ expect_error(aqt_hmm_event_tank_epochs(
+    f$decoded,f$events,state=2L,
+    baseline_window_s=c(-600,-500),
+    response_window_s=c(500,600),min_points=3L),
+    "No observed fish state epochs in declared event windows")
+})
+
+test_that("HMM event audit rejects fish absent from both observed event epochs",{
+ f <- .cov100_he_fixture()
+ d <- f$decoded
+ absent <- d$tank_id=="T1" & d$track_id=="F1"
+ d$time_s[absent] <- d$time_s[absent]+1000
+ expect_error(aqt_hmm_event_tank_epochs(
+    d,f$events,state=2L,
+    baseline_window_s=c(-6,0),
+    response_window_s=c(0,6),min_points=3L),
+    "Every scoped fish must have both event epochs")
+})
