@@ -9,5 +9,5 @@ test_that("unmatched independent event sessions cannot create functional fish cu
  expect_error(aqt_functional_event_grid(
        measurements,events,outcome="speed",grid_s=seq(-1,1,by=.5),
        max_gap_s=1.1),
-       "No fish sessions match the supplied event log")
+       "All supplied fish sessions require an explicitly logged event")
 })
