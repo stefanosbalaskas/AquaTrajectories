@@ -22,9 +22,9 @@ if(!identical(source_hash,
               "AQT_RELEASE05_LOCKED_SYNTHETIC_TRAJECTORY_V1"))
   stop("LOCKED_SOURCE_SHA256_MISMATCH: refusing to regenerate derived results",
        call.=FALSE)
-if(!identical(as.character(utils::packageVersion("aquaTrajectories")),
-              "0.1.2"))
-  stop("Release05 example must use installed aquaTrajectories version 0.1.2",
+if(!as.character(utils::packageVersion("aquaTrajectories")) %in%
+       c("0.1.2", "0.2.0"))
+  stop("Release05 fixture is qualified only for package versions 0.1.2/0.2.0",
        call.=FALSE)
 # Explicitly read from original CSV bytes in the report API; no inferred FPS.
 qc <- aqt_qc2_report(source_path,gap_limits_s=expected$max_gap_s,
@@ -143,7 +143,8 @@ utils::write.csv(totals,file.path(staging,"QC_TOTALS.csv"),
                  row.names=FALSE,na="")
 # Generated report uses ONLY validated derived values and immutable input.
 lines <- c(
- "# AquaTrajectories 0.1.2 — locked trajectory-to-report example","",
+ paste0("# AquaTrajectories ", as.character(utils::packageVersion("aquaTrajectories")),
+        " — locked trajectory-to-report example"),"",
  "**Data origin: synthetic, manually constructed and frozen.** This is a",
  "reproducible mathematical/software illustration, not real fish tracking",
  "accuracy, fish welfare, underwater metrology or a causal biological result.","",
@@ -205,7 +206,8 @@ file_sha <- as.list(stats::setNames(vapply(rel,function(x)
   sha(file.path(staging,x)),character(1L)),rel))
 manifest <- list(
  schema="AQT_RELEASE05_TRAJECTORY_REPORT_V1",
- release_version="0.1.2",dataset_origin="synthetic",
+ release_version=as.character(utils::packageVersion("aquaTrajectories")),
+ dataset_origin="synthetic",
  locked_source_file="input/locked_trajectories.csv",
  original_source_sha256=source_hash,
  original_expected_sha256=sha(expected_path),
