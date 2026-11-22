@@ -22,9 +22,11 @@
 }
 test_that("HMM event posterior checks state, window, source identities and model metadata",{
  f <- .cov100_he_fixture()
- call <- function(d=f$decoded,ev=f$events,state=2,...)
+ call <- function(d=f$decoded,ev=f$events,state=2,
+                    baseline_window_s=c(-6,0),response_window_s=c(0,6),...)
    aqt_hmm_event_tank_epochs(d,ev,state=state,
-     baseline_window_s=c(-6,0),response_window_s=c(0,6),...)
+     baseline_window_s=baseline_window_s,
+     response_window_s=response_window_s,...)
  expect_error(call(d=list()),"Expected decoded HMM fish states")
  bad <- f$decoded;attr(bad,"aqt_hmm_model") <- NULL
  expect_error(call(d=bad),"Missing Gaussian HMM state metadata")
