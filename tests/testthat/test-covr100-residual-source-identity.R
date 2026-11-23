@@ -48,3 +48,21 @@ test_that("3D storyboard cannot reinterpret unobserved physical XYZ as evidence"
   expect_error(aqt_plot_trajectory_storyboard3d(xyz),
                "No genuine observed XYZ positions")
 })
+
+test_that("YOLO track_id takes precedence over alternate fish_id without losing leading zeros", {
+  path <- tempfile("cov100_track_id_precedence_",fileext=".csv")
+  on.exit(unlink(path),add=TRUE)
+  raw <- data.frame(track_id=c("0007","0007"),
+                    fish_id=c("wrong_A","wrong_B"),
+                    x_px=c(11,12),y_px=c(21,22),time_s=c(0,.1),
+                    stringsAsFactors=FALSE)
+  utils::write.csv(raw,path,row.names=FALSE,quote=TRUE)
+  result <- aqt_import_yolo(path,session_id="S",camera_id="TOP")
+  expect_identical(as.character(result$track_id),c("0007","0007"))
+  expect_identical(as.character(result$session_id),c("S","S"))
+  expect_identical(as.character(result$camera_id),c("TOP","TOP"))
+  expect_equal(result$x,c(11,12))
+  expect_equal(result$y,c(21,22))
+  expect_equal(result$time_s,c(0,.1))
+  expect_false(any(result$track_id %in% raw$fish_id))
+})
