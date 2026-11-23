@@ -180,3 +180,32 @@ test_that("a video benchmark does not score zero fully annotated frames", {
   expect_error(aqt_video_bundle_benchmark(bundle,boxes,tracks,zero_eval),
                "At least one fully annotated evaluation frame is required")
 })
+
+test_that("video importer detects mismatch between original MOT rows and adapter result",{
+  dir <- tempfile("cov100_mot_count_");base::dir.create(dir)
+  on.exit(unlink(dir,recursive=TRUE,force=TRUE),add=TRUE)
+  z <- .cov100_zero_video_bundle(dir)
+  testthat::with_mocked_bindings({
+    expect_error(aqt_video_bundle_import(dir,z$prefix),
+                 "Imported fish track count differs from original MOT rows")
+  },aqt_import_mot=function(...) {
+    aqt_tracks(data.frame(session_id="S",camera_id="TOP",
+      track_id="SYNT",time_s=0,x=1,y=1))
+  },.package="aquaTrajectories")
+})
+
+test_that("MOT ingest does not silently accept unreadable export file size",{
+  dir <- tempfile("cov100_mot_meta_");base::dir.create(dir)
+  on.exit(unlink(dir,recursive=TRUE,force=TRUE),add=TRUE)
+  z <- .cov100_zero_video_bundle(dir)
+  frame <- aqt_frame_manifest(z$frames)
+  mot <- file.path(dir,z$files$mot)
+  testthat::with_mocked_bindings({
+    expect_error(aqt_import_mot(mot,frame,"S","TOP"),
+                 "Cannot inspect MOT export file size")
+  },file.info=function(path,...) {
+    original <- base::file.info(path,...)
+    original$size[] <- NA_real_
+    original
+  },.package="aquaTrajectories")
+})

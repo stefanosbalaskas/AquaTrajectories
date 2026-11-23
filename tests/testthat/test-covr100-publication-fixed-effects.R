@@ -37,3 +37,22 @@ test_that("research publisher serializes synthetic matrix fixed effects without 
  expect_identical(manifest$declared_data_origin,"synthetic")
  expect_false(manifest$independent_data_origin_verified)
 })
+
+test_that("publication stops when source SHA metadata mutates during report rendering",{
+ study <- .cov100_fixed_effect_study()
+ study$audit <- list2env(study$audit,parent=emptyenv())
+ parent <- tempfile("cov100_pub_mutation_");base::dir.create(parent)
+ on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+ target <- file.path(parent,"blocked")
+ original <- aquaTrajectories:::.aqt_pub_report_lines
+ testthat::with_mocked_bindings({
+   expect_error(aqt_research_publish(study,target,formats="pdf",
+        data_origin="synthetic"),
+        "Source lineage changed during publication")
+ },.aqt_pub_report_lines=function(study,catalog,data_origin) {
+   output <- original(study,catalog,data_origin)
+   study$audit$source_sha256 <- "DELIBERATE BROKEN LINEAGE"
+   output
+ },.package="aquaTrajectories")
+ expect_false(dir.exists(target))
+})

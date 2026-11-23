@@ -66,3 +66,20 @@ test_that("stereo uncertainty propagation refuses invalid original view provenan
  expect_equal(uncertain$sd_z,0,tolerance=1e-8)
  expect_false(attr(uncertain,"aqt_rig")$calibration_qualified)
 })
+
+test_that("pixel-only stereo sensitivity rejects valid but refractive camera rigs",{
+ z <- .cov100_mc_data()
+ trA <- aqt_tracks(data.frame(session_id="S",camera_id="A",
+       track_id="a",time_s=0,x=0,y=0))
+ trB <- aqt_tracks(data.frame(session_id="S",camera_id="B",
+       track_id="b",time_s=0,x=-.4,y=0))
+ rig <- aqt_rig_new(list(A=z$p1,B=z$p2),optical_path="air_only")
+ match <- data.frame(session_id="S",id_a="a",id_b="b",
+       time_a_s=0,time_b_s=0,fish_id="fish")
+ fitted <- aqt_reconstruct_3d(trA,trB,match,rig)
+ changed <- attr(fitted,"aqt_rig")
+ changed$optical_path <- "refractive_interface"
+ attr(fitted,"aqt_rig") <- changed
+ expect_error(aqt_reconstruction_pixel_uncertainty(fitted,trA,trB),
+              "requires an explicitly nonrefractive rig")
+})

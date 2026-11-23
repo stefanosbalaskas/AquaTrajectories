@@ -266,3 +266,23 @@ test_that("evidence export refuses a concurrently inserted reserved checksum man
   },.package="aquaTrajectories")
   expect_identical(digest::digest(report,algo="sha256"),old)
 })
+
+test_that("evidence exporter catches in-place mutation of reference-backed reports",{
+ source <- .cov100_ev_data()
+ source <- source[source$phase=="Before",,drop=FALSE]
+ spec <- aqt_compare_specifications(source,window_widths=1)
+ readiness <- aqt_inference_readiness(source)
+ valid <- aqt_evidence_report(spec,readiness)
+ changed <- list2env(unclass(valid),parent=emptyenv())
+ class(changed) <- "aqt_evidence_report"
+ parent <- tempfile("cov100_mutated_evidence_");base::dir.create(parent)
+ on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+ target <- file.path(parent,"evidence")
+ testthat::with_mocked_bindings({
+   expect_error(aqt_evidence_export(changed,target),
+                "Evidence report changed during export")
+ },writeLines=function(text,con,...) {
+   base::writeLines(text,con,...)
+   changed$statements <- "DELIBERATE MUTATION DURING EXPORT"
+ },.package="aquaTrajectories")
+})

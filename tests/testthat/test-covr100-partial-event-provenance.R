@@ -53,3 +53,16 @@ test_that("wholly out-of-window independent events are reported as skipped rathe
  expect_match(line$reason,"No event-aligned observations")
  expect_null(report$events)
 })
+
+test_that("invalid externally declared event windows are a visible failed profile",{
+ review <- .cov100_partial_event_review()
+ event <- data.frame(session_id="S1",event_id="E1",
+     start_s=.2,end_s=.3)
+ out <- aqt_research_analyze(review,profiles="events",events=event,
+    config=list(event_clock="same_recording",
+      event_windows=list(baseline=c(-.3,.2),response=c(0,.4))))
+ record <- out$diagnostics[out$diagnostics$profile=="events",,drop=FALSE]
+ expect_identical(record$status,"failed")
+ expect_match(record$reason,"Epoch windows must not overlap")
+ expect_null(out$events)
+})

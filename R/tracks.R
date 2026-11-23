@@ -108,9 +108,10 @@ aqt_import_csv <- function(path, units="px", coordinate_system="image") {
 #' @export
 aqt_import_yolo <- function(path,session_id,camera_id,fps=NULL,frame_origin=0) {
   d <- .aqt_read_csv_preserving_ids(path,c("track_id","fish_id"))
-  id <- if ("track_id" %in% names(d)) "track_id" else if ("fish_id" %in% names(d)) "fish_id" else ""
-  if (!nzchar(id) || !all(c("x_px","y_px") %in% names(d)))
+  id <- intersect(c("track_id","fish_id"),names(d))
+  if (!length(id) || !all(c("x_px","y_px") %in% names(d)))
     stop("Expected track_id/fish_id, x_px and y_px",call.=FALSE)
+  id <- id[[1L]]
   if (!"time_s" %in% names(d)) {
     if (is.null(fps) || length(fps)!=1L || !is.finite(fps) || fps<=0 || !"frame" %in% names(d))
       stop("Supply time_s or frame and a positive fps",call.=FALSE)

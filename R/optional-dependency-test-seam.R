@@ -22,3 +22,9 @@ file.exists <- NULL
 readLines <- NULL
 getNamespaceExports <- NULL
 file.info <- NULL
+
+# Controlled mathematical and report-writing fault injection: ordinary
+# calls still resolve to base implementations, never to mocked behavior.
+svd <- NULL
+max <- NULL
+writeLines <- NULL

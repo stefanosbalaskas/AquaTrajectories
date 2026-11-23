@@ -201,7 +201,7 @@ aqt_tracking_metrics <- function(truth,pred,max_distance,class_aware=TRUE,
       }
       assigned <- .aqt_max_assignment(W)
       valid_assign <- which(!is.na(assigned))
-      idtp <- if (length(valid_assign)) sum(W[cbind(valid_assign,assigned[valid_assign])]) else 0
+      idtp <- sum(W[cbind(valid_assign,assigned[valid_assign])])
     } else idtp <- 0
     idfp <- npred-idtp; idfn <- ntruth-idtp
     idf1 <- if (2*idtp+idfp+idfn>0) 2*idtp/(2*idtp+idfp+idfn) else NA_real_

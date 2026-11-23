@@ -51,3 +51,18 @@ test_that("HMM summary refuses an entirely unclassified source fish",{
  expect_identical(unique(s$track_id),"A")
  expect_false(attr(s,"aqt_hmm_independent_tank_test"))
 });
+
+test_that("HMM transition learning fails on a nonfinite pairwise normalizer",{
+ d <- rbind(.cov100_hmm_direct(),transform(.cov100_hmm_direct(),
+                       track_id="B",speed=speed+.02))
+ previous <- aquaTrajectories:::.aqt_hmm_lse
+ testthat::with_mocked_bindings({
+   expect_error(aqt_hmm_transition_fit(d,state_means=c(0,8),
+      state_sds=c(.5,.5),max_gap_s=1.1,min_segment=3L,
+      max_iter=2L),
+      "Nonfinite HMM pairwise posterior")
+ },.aqt_hmm_lse=function(x) {
+   if(length(x)==4L) return(-Inf)
+   previous(x)
+ },.package="aquaTrajectories")
+})

@@ -57,3 +57,58 @@ test_that("synthetic translation-only optimizer retains heldout raw XYZ and fixe
  expect_false(result$calibration_certified)
  expect_true(result$heldout_independence_requires_external_design)
 })
+
+test_that("flatport optimizer penalizes rejected candidate-camera constructions",{
+  f <- .cov100_refine_fixture()
+  original <- digest::digest(f$xyz,algo="sha256")
+  testthat::with_mocked_bindings({
+    expect_error(aqt_flatport_refine_center(
+       f$camera,f$pixels,f$xyz,1:8,9:10,maxit=25L),
+       "synthetic rejected candidate")
+  },aqt_flatport_camera=function(...) stop("synthetic rejected candidate"),
+    .package="aquaTrajectories")
+  expect_identical(digest::digest(f$xyz,algo="sha256"),original)
+})
+test_that("flatport optimizer penalizes nonfinite proposal scores before interpreting fit",{
+  f <- .cov100_refine_fixture()
+  initial <- f$camera$center
+  real_qc <- aquaTrajectories::aqt_refractive_landmark_qc
+  scored_invalid <- FALSE
+  injected <- function(camera,pixels,world,...) {
+    if(any(abs(camera$center-initial)>1e-15)) {
+      scored_invalid <<- TRUE
+      return(list(n_valid=0L,rmse=NA_real_))
+    }
+    real_qc(camera,pixels,world,...)
+  }
+  testthat::with_mocked_bindings({
+    result <- tryCatch(aqt_flatport_refine_center(
+       f$camera,f$pixels,f$xyz,1:8,9:10,maxit=25L),
+       error=function(e)e)
+    expect_true(scored_invalid)
+    if(inherits(result,"error"))
+      expect_true(nzchar(conditionMessage(result)))
+    else expect_false(result$calibration_certified)
+  },aqt_refractive_landmark_qc=injected,
+    .package="aquaTrajectories")
+})
+test_that("flatport fitting rejects final holdout loss after valid initial and training targets",{
+  f <- .cov100_refine_fixture()
+  real_qc <- aquaTrajectories::aqt_refractive_landmark_qc
+  heldout_calls <- 0L
+  injected <- function(camera,pixels,world,...) {
+    if(nrow(pixels)==2L) {
+      heldout_calls <<- heldout_calls+1L
+      if(heldout_calls>=2L)
+        return(list(n_valid=0L,rmse=NA_real_))
+    }
+    real_qc(camera,pixels,world,...)
+  }
+  testthat::with_mocked_bindings({
+    expect_error(aqt_flatport_refine_center(
+       f$camera,f$pixels,f$xyz,1:8,9:10,maxit=25L),
+       "Fitted camera no longer sees all heldout physical targets")
+  },aqt_refractive_landmark_qc=injected,
+    .package="aquaTrajectories")
+  expect_gte(heldout_calls,2L)
+})
