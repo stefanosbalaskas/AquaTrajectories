@@ -70,9 +70,9 @@ def main() -> None:
     desc = (ROOT / "DESCRIPTION").read_text(encoding="utf-8")
     cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     news = (ROOT / "NEWS.md").read_text(encoding="utf-8")
-    require(re.search(r"^Version: 0\.2\.0$", desc, re.M) is not None,
+    require(re.search(r"^Version: 0\.2\.1$", desc, re.M) is not None,
             "DESCRIPTION release version mismatch")
-    require(re.search(r"^version: 0\.2\.0$", cff, re.M) is not None,
+    require(re.search(r"^version: 0\.2\.1$", cff, re.M) is not None,
             "CITATION.cff release version mismatch")
     require("date-released:" not in cff,
             "future candidate must not invent published release date")
