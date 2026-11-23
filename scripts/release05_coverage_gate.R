@@ -23,7 +23,7 @@ if(!identical(meta$schema,"AQT_CORE2_EXECUTED_COVERAGE_V1") ||
    !identical(meta$source_sha256,actual_sha("NAMESPACE")))
   stop("FAIL: executed R covr coverage is not >=80% with verified source",
        call.=FALSE)
-if(!as.character(utils::packageVersion("aquaTrajectories")) %in% c("0.1.2","0.2.0"))
+if(!as.character(utils::packageVersion("aquaTrajectories")) %in% c("0.1.2","0.2.0","0.2.1"))
   stop("Measured coverage does not represent exact release version",call.=FALSE)
 # Do not conflate lexical test mentions with actually executed R lines.
 # Retain the original per-line covr table; this signed check reports how
