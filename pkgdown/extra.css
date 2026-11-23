@@ -10,16 +10,25 @@ h1,h2,h3{letter-spacing:-.028em}
 .aqt-hero h1{color:#fff;font-size:clamp(2.3rem,5vw,4.4rem);max-width:760px;line-height:1.08;margin:.8rem 0}
 .aqt-hero p{color:#deedf5;font-size:1.12rem;max-width:680px}
 .aqt-cta{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.4rem}
-.aqt-cta a{display:inline-block;border-radius:12px;padding:.65rem 1.05rem;background:#41d2dc;color:#092d3a;font-weight:800;text-decoration:none}
-.aqt-cta a+ a{border:1px solid #8cb9c7;background:transparent;color:#fff}
+.aqt-cta a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid #41d2dc;border-radius:12px;padding:.65rem 1.05rem;background:#41d2dc;color:#092d3a;font-weight:800;line-height:1.35;text-align:center;text-decoration:none;overflow-wrap:break-word}
+.aqt-cta a+a{border:1px solid #27869b;background:transparent;color:var(--bs-body-color,#19334a)}
+/* Only secondary buttons on the dark hero have light text. Other CTAs sit on a light surface. */
+.aqt-hero .aqt-cta a+a{border-color:#a9d4df;color:#fff}
+.aqt-cta a:hover{background:#2ac0cd;border-color:#20aebd;color:#092d3a}
+.aqt-cta a+a:hover{background:rgba(25,140,160,.09);border-color:#147f97;color:var(--bs-body-color,#19334a)}
+.aqt-hero .aqt-cta a+a:hover{background:rgba(255,255,255,.13);border-color:#fff;color:#fff}
+[data-bs-theme="dark"] .aqt-cta a+a{border-color:#6bc8d6;color:var(--bs-body-color,#e9f5f7)}
+[data-bs-theme="dark"] .aqt-cta a+a:hover{background:rgba(107,200,214,.15);color:var(--bs-body-color,#e9f5f7)}
+[data-bs-theme="dark"] .aqt-hero .aqt-cta a+a,
+[data-bs-theme="dark"] .aqt-hero .aqt-cta a+a:hover{color:#fff}
 .aqt-badges{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.4rem;font-size:.84rem;color:#bde8ee}
 .aqt-badges span{background:#ffffff14;border:1px solid #ffffff33;padding:.28rem .75rem;border-radius:100px}
 .aqt-section-title{margin-top:2rem;margin-bottom:1rem}
 .aqt-cardgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1rem 0 2rem}
 .aqt-card{display:block;border:1px solid #cfe1e9;border-radius:1rem;padding:1.15rem;background:var(--bs-body-bg,#fff);box-shadow:0 3px 22px #113c5310;text-decoration:none!important;color:inherit!important}
 .aqt-card:hover{border-color:#5daaba;box-shadow:0 8px 28px #113c5325;transform:translateY(-2px)}
-.aqt-card h3{font-size:1.03rem;font-weight:800;margin:0 0 .4rem}
-.aqt-card p{font-size:.92rem;color:var(--bs-secondary-color,#54687a);margin:0}
+.aqt-card h3{font-size:1.07rem;font-weight:750;line-height:1.4;letter-spacing:normal;word-spacing:normal;overflow-wrap:break-word;margin:0 0 .55rem}
+.aqt-card p{font-size:.94rem;line-height:1.6;color:var(--bs-secondary-color,#54687a);margin:0}
 .aqt-kicker{font-size:.76rem;color:#088d99;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 .aqt-figure{border-radius:1rem;border:1px solid #cbdee7;background:#0f2b40;padding:.5rem;margin:1.1rem 0 1.75rem;overflow:hidden}
 .aqt-figure img{display:block;width:100%;height:auto}
