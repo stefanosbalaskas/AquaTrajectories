@@ -9,18 +9,18 @@
 An open-source **R-first scientific-analysis and visualization package for trajectories that researchers already have**: unit-aware 2D/3D movement, trajectory quality control, schooling geometry, functional and statistical methods, conditional uncertainty, publication figures and reproducibility. Optional Python video/tracker adapters are available but **no detector, tracker or video file is required to use the analytical core**.
 
 [![R](https://img.shields.io/badge/R-%E2%89%A5%204.1.0-276DC3?logo=r&logoColor=white)](DESCRIPTION)
-[![Official release](https://img.shields.io/badge/release-v0.1.2-169D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+[![Official release](https://img.shields.io/badge/release-v0.2.1-169D91)](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://doi.org/10.5281/zenodo.24262905)
 [![License](https://img.shields.io/badge/license-MIT-177D82)](LICENSE)
 [![Development API](https://img.shields.io/badge/main-188%20R%20functions-147F97)](NAMESPACE)
 [![Site](https://img.shields.io/badge/docs-pkgdown%20website-1E647F)](https://stefanosbalaskas.github.io/AquaTrajectories/)
 
-**[Evidence safeguards (main)](docs/EVIDENCE_SAFEGUARDS_V1.md)** · **[Historical v0.1.1 Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.1.2 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
+**[Evidence safeguards (main)](docs/EVIDENCE_SAFEGUARDS_V1.md)** · **[Historical v0.1.1 Zenodo DOI](https://doi.org/10.5281/zenodo.24262905)** · **[GitHub v0.2.1 release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)** · **[Cite this software](CITATION.cff)** · **[Documentation website](https://stefanosbalaskas.github.io/AquaTrajectories/)** · **[R reference](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.html)** · **[Research articles](https://stefanosbalaskas.github.io/AquaTrajectories/articles/index.html)** · **[Interactive synthetic explorer](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.html)** · **[Release](https://github.com/stefanosbalaskas/AquaTrajectories/releases)**
 
 </div>
 
 > [!NOTE]
-> **Official research-software release v0.1.2, independently reproducible synthetic trajectory-to-report example.** [Historical v0.1.1 Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Versioned GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2) · [Citation metadata](CITATION.cff).
+> **Research-software release v0.2.1: source-qualified code and an independently reproducible synthetic trajectory-to-report example (not biological validation).** [Historical v0.1.1 Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Versioned GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1) · [Citation metadata](CITATION.cff).
 
 > [!IMPORTANT]
 > **Scientific accuracy and welfare claims require independent validation.** Implemented software and synthetic checks do **not** establish independently verified fish identities, real-video accuracy across species, physically calibrated underwater XYZ accuracy, biological welfare or stress states, empirically validated joint uncertainty, or safe hardware actuation. The video runner requires **externally supplied fish-trained weights**; multiview workflows require measured calibration, clock evidence and justified correspondences. Read the [scientific roadmap](docs/SCIENTIFIC_ROADMAP.md) and [release audit](docs/RELEASE_CANDIDATE_0_1_0.md).
