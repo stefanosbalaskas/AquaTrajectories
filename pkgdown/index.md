@@ -93,7 +93,7 @@ These modules are research aids and synthetic teaching tools, **not** empirical 
 
 ## Scientific teaching: four interactive laboratories
 
-Explore deterministic examples that separate **what software computes** from **what real biological observations establish**. Each exercise runs locally in the browser, uses invented inputs, and links to the published v0.1.2 R documentation.
+Explore deterministic examples that separate **what software computes** from **what real biological observations establish**. Each exercise runs locally in the browser, uses invented inputs, and links to the current v0.2.1 R documentation. Browser simulations remain separate from the installed package.
 
 <div class="aqt-cardgrid aqt-teaching-grid">
 <a class="aqt-card" href="scientific-tracking-lab.html"><div class="aqt-kicker">01 · Evaluate</div><h3>Detector and tracker lab</h3><p>Move detection noise, missingness, false positives and ID switches; inspect computed synthetic precision, recall, F1 and identity changes.</p></a>
@@ -112,7 +112,7 @@ These are **synthetic teaching labs**, not real-video benchmark results or a ful
 <div class="aqt-steps">
 <div class="aqt-step"><strong>Start</strong><a href="articles/quickstart-five-minutes.html">Five-minute reproducible analysis</a></div>
 <div class="aqt-step"><strong>Explore</strong><a href="articles/workflows-atlas.html">Complete workflow atlas</a></div>
-<div class="aqt-step"><strong>Reference</strong><a href="articles/function-atlas.html">188-function main-branch guided index</a></div>
+<div class="aqt-step"><strong>Reference</strong><a href="articles/function-atlas.html">188-function v0.2.1 guided index</a></div>
 <div class="aqt-step"><strong>Research</strong><a href="articles/research-evidence-dashboard.html">Evidence and validation status</a></div>
 </div>
 
@@ -121,7 +121,7 @@ These are **synthetic teaching labs**, not real-video benchmark results or a ful
 ```r
 # Install the official versioned GitHub release (not yet on CRAN)
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")
 
 library(aquaTrajectories)
 x <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
@@ -152,7 +152,7 @@ The [five-figure reproducible workbook](articles/five-figure-workbook.html) exer
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
-- [Official v0.1.2 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+- [Official v0.2.1 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
 - [Historical v0.1.1 Zenodo DOI: 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) · [Download BibTeX](AquaTrajectories-v0.1.1.bib)
-- [Scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.2/docs)
+- [Current scientific methods and validation protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.2.1/docs)
 - [Function documentation](reference/index.html) · [Publication figures](articles/publication-figures.html)
