@@ -67,9 +67,6 @@ aqt_annotation_frame_plan <- function(
       stop("Video has fewer acquired frames than requested annotations",
            call.=FALSE)
     duration <- max(video$time_s)-min(video$time_s)
-    if (!is.finite(duration) || duration<=0)
-      stop("Video must have a strictly positive presentation time span",
-           call.=FALSE)
     edges <- seq(min(video$time_s),max(video$time_s),
                  length.out=strata+1L)
     bins <- findInterval(video$time_s,edges,

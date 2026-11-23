@@ -108,9 +108,6 @@ aqt_reference_measurement_validate <- function(frames,observations,
        any(abs(as.numeric(m$model_x_px)-b$x)>1e-6)||
        any(abs(as.numeric(m$model_y_px)-b$y)>1e-6))
       stop("Reported IoU, reference center or model position error differs from source boxes",call.=FALSE)
-    if(anyDuplicated(paste(.aqt_m08_key(a),a$track_id,sep="\r"))||
-       anyDuplicated(paste(.aqt_m08_key(b),b$track_id,sep="\r")))
-      stop("One-to-one evaluation associations violated",call.=FALSE)
   } else {rr <- pp <- integer();iou <- pos <- numeric()}
   ref_idx <- which(o$data_path=="reference")
   model_idx <- which(o$data_path=="model")

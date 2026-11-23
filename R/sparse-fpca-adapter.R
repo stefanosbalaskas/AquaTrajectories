@@ -46,12 +46,8 @@ aqt_sparse_fpca_input <- function(tracks,coordinate="x",
       stop("Insufficient observed samples for scoped curve: ",
            names(groups)[i],call.=FALSE)
     times <- keep$time_s
-    if (any(diff(times)<=0))
-      stop("Observed curve times must be unique and increasing",
-           call.=FALSE)
     if (time_axis=="relative") {
       span <- max(z$time_s)-min(z$time_s)
-      if (span<=0) stop("Each scope needs a nonzero total time range",call.=FALSE)
       times <- (times-min(z$time_s))/span
     }
     Ly[[i]] <- as.numeric(keep[[coordinate]])

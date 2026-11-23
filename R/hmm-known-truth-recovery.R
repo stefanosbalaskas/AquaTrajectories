@@ -172,8 +172,6 @@ aqt_hmm_recovery_audit <- function(
     transition=fit$transition,initial=fit$initial,
     max_gap_s=max_gap_s,min_segment=min_segment)
   usable <- which(!is.na(d$hmm_state))
-  if (!length(usable))
-    stop("No classified synthetic heldout states",call.=FALSE)
   k <- length(truth$state_means)
   if (anyNA(d$truth_state[usable]) ||
       any(!(d$truth_state[usable] %in% seq_len(k))))

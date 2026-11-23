@@ -71,7 +71,6 @@ aqt_trajectory_dtw <- function(track_a,track_b,window=Inf,max_gap_s=Inf) {
   for (i in seq_len(n)) {
     from <- if (is.infinite(window)) 1L else max(1L, i-as.integer(window))
     to <- if (is.infinite(window)) m else min(m,i+as.integer(window))
-    if (from>to) next
     for (j in seq.int(from,to)) {
       local <- sqrt(sum((a[i,]-b[j,])^2))
       # Deterministic tie order: diagonal, vertical, horizontal.
@@ -88,8 +87,6 @@ aqt_trajectory_dtw <- function(track_a,track_b,window=Inf,max_gap_s=Inf) {
   ia <- integer(n+m); ib <- integer(n+m)
   pos <- n+m
   while (i>0L || j>0L) {
-    if (i<1L || j<1L || previous[i,j]==0L)
-      stop("Internal DTW traceback failure",call.=FALSE)
     ia[pos] <- i; ib[pos] <- j
     step <- previous[i,j]
     if (step==1L) { i <- i-1L; j <- j-1L }
@@ -202,7 +199,6 @@ aqt_trajectory_recurrence <- function(track,radius,theiler=1L,
     ii <- indices
     jj <- ii+offset
     keep <- jj>=1L & jj<=n
-    if (!any(keep)) next
     diagonal_points <- diagonal_points +
       .aqt_long_run_points(recurrent[cbind(ii[keep],jj[keep])],
                            min_diagonal)

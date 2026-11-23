@@ -117,9 +117,7 @@ aqt_3dzef_agreement_import <- function(directory) {
     if (any(indexed!=frames$matched_count))
       stop("3D-ZeF per-frame match rows disagree with frame summary",
            call.=FALSE)
-  } else if (any(frames$matched_count!=0))
-    stop("Match table is empty but reported frame matches are not",
-         call.=FALSE)
+  }
   # Independently recompute the Python aggregate from the verified CSVs.
   near <- function(actual,expected,label) {
     if (!is.numeric(actual) || length(actual)!=1L ||

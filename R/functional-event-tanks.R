@@ -63,7 +63,6 @@ aqt_functional_event_grid <- function(data,events,outcome="speed",
   for (index in groups) {
     d <- data[index,,drop=FALSE]
     event <- ev[ev$session_id==as.character(d$session_id[1L]),,drop=FALSE]
-    if (!nrow(event)) next
     for (field in intersect(c("tank_id","treatment"),names(d)))
       if (length(unique(as.character(d[[field]])))!=1L)
         stop("Tank and treatment cannot change within a fish recording",
@@ -114,7 +113,6 @@ aqt_functional_event_grid <- function(data,events,outcome="speed",
       record[[field]] <- as.character(d[[field]][1L])
     result[[k]] <- record
   }
-  if (!k) stop("No fish sessions match the supplied event log",call.=FALSE)
   result <- do.call(rbind,result[seq_len(k)])
   rownames(result) <- NULL
   class(result) <- c("aqt_functional_event_grid","data.frame")
@@ -227,7 +225,6 @@ aqt_functional_tank_contrast <- function(
       z <- d[d$tank_id==id,,drop=FALSE]
       z$value[match(times,z$time_relative_s)]
     },numeric(length(times)))
-    if (!is.matrix(v)) v <- matrix(v,ncol=length(ids))
     v
   })
   estimate <- rowMeans(groups[[2L]])-rowMeans(groups[[1L]])

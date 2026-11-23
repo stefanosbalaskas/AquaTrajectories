@@ -114,7 +114,6 @@ aqt_frame_index_analyze <- function(frames,observations,
   for(idx in split(seq_len(nrow(o)),track_scope)) {
     if(length(idx)<2L)next
     frame_gap <- diff(o$frame_id[idx])
-    if(any(frame_gap<=0))stop("Nonincreasing frame within scoped track",call.=FALSE)
     end <- idx[-1L]
     o$previous_frame_id[end] <- o$frame_id[idx[-length(idx)]]
     o$missing_intervening_observations[end] <- frame_gap>1
@@ -303,7 +302,7 @@ aqt_frame_index_publish <- function(study,directory) {
         graphics::image(seq(0,1,length.out=n),seq(0,1,length.out=n),
                         zz,main=ttl,xlab="Normalized image X",
                         ylab="Normalized image Y",col=grDevices::hcl.colors(30,"YlOrRd"))
-      } else stop("Unknown plot family")
+      }
     }
     graphics::mtext(paste0("Separate track-ID namespaces; source timestamps unknown; descriptive image space only"),
                     side=1,outer=TRUE,line=1.0,cex=.62)

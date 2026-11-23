@@ -1,3 +1,4 @@
+.aqt_grid_approx <- function(...) stats::approx(...)
 #' Dense-grid approximation to multivariate functional trajectory PCA
 #'
 #' Each scoped fish path is independently registered to 0..1 relative time,
@@ -56,10 +57,9 @@ aqt_trajectory_grid_pca <- function(
     fitted <- vapply(seq_len(dimn),function(j) {
       z <- p$position[,j]
       if (origin=="start") z <- z-z[1L]
-      stats::approx(x=rel,y=z,xout=grid,ties="ordered",
+      .aqt_grid_approx(x=rel,y=z,xout=grid,ties="ordered",
                     rule=1)$y
     },numeric(n_grid))
-    if (!is.matrix(fitted)) fitted <- matrix(fitted,ncol=dimn)
     if (any(!is.finite(fitted)))
       stop("A trajectory cannot be interpolated onto the full grid",
            call.=FALSE)

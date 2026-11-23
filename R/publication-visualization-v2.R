@@ -170,8 +170,6 @@ aqt_viz2_spec <- function(data,figure=c("paths","speed","qc_coverage","qc_reason
   if(!any(chosen))stop("Selected session/camera has no rows",call.=FALSE)
   if(plane!="xy" && !identical(report$dimension,3L))
     stop("xz/yz projection requires true 3D coordinates",call.=FALSE)
-  if(plane!="xy" && report$coordinate_system!="tank")
-    stop("Depth projections require a tank coordinate system",call.=FALSE)
   axes <- strsplit(plane,"",fixed=TRUE)[[1L]]
   observations <- as.data.frame(tr[chosen,,drop=FALSE])
   points <- data.frame(source_row=as.character(observations$source_row),

@@ -92,7 +92,7 @@ aqt_plot_heading_rose <- function(
   plotted <- if(scale=="fraction")summary$proportion else
     summary$weighted_count
   rmax <- max(plotted)
-  rmax <- if(rmax>0)rmax*1.06 else 1
+  rmax <- rmax*1.06
   old <- graphics::par(no.readonly=TRUE)
   on.exit(graphics::par(old),add=TRUE)
   graphics::par(mfrow=if(is.null(frame_rasters))

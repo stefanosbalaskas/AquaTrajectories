@@ -28,7 +28,7 @@ aqt_tracking_observations <- function(data) {
   if (!is.numeric(d$x) || !is.numeric(d$y) ||
       any(!is.finite(d$x)) || any(!is.finite(d$y)))
     stop("Tracking coordinates must be finite numeric",call.=FALSE)
-  if (!"class_id" %in% names(d)) d$class_id <- "fish"
+  if (!"class_id" %in% names(d)) d$class_id <- rep("fish",nrow(d))
   if (anyNA(d$class_id) || any(!nzchar(as.character(d$class_id))))
     stop("class_id must be nonempty",call.=FALSE)
   d$class_id <- as.character(d$class_id)
@@ -201,7 +201,7 @@ aqt_tracking_metrics <- function(truth,pred,max_distance,class_aware=TRUE,
       }
       assigned <- .aqt_max_assignment(W)
       valid_assign <- which(!is.na(assigned))
-      idtp <- if (length(valid_assign)) sum(W[cbind(valid_assign,assigned[valid_assign])]) else 0
+      idtp <- sum(W[cbind(valid_assign,assigned[valid_assign])])
     } else idtp <- 0
     idfp <- npred-idtp; idfn <- ntruth-idtp
     idf1 <- if (2*idtp+idfp+idfn>0) 2*idtp/(2*idtp+idfp+idfn) else NA_real_

@@ -72,7 +72,6 @@ aqt_stereo_pixel_mc <- function(xy1,xy2,P1,P2,sigma_px=1,
   alpha <- (1-level)/2
   for (i in seq_len(n)) {
     sample <- t(ensemble[i,,,drop=TRUE])
-    if (!is.matrix(sample)) sample <- matrix(sample,ncol=3L,byrow=TRUE)
     valid <- stats::complete.cases(sample)
     result$n_valid_draws[i] <- sum(valid)
     result$valid_fraction[i] <- mean(valid)

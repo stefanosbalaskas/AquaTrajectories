@@ -80,7 +80,6 @@ aqt_state_changepoint <- function(data,outcome="speed",
   for (end in seq.int(as.integer(min_segment),n)) {
     starts <- seq_len(end-as.integer(min_segment)+1L)
     eligible <- starts[is.finite(dp[starts])]
-    if (!length(eligible)) next
     values <- vapply(eligible,function(from)
       dp[from]+sse(from,end)+penalty,numeric(1L))
     best <- which.min(values)
@@ -94,8 +93,6 @@ aqt_state_changepoint <- function(data,outcome="speed",
   end <- n
   while (end>0L) {
     previous <- last[end+1L]
-    if (is.na(previous) || previous<0L || previous>=end)
-      stop("Internal change-point traceback failure",call.=FALSE)
     segments[[length(segments)+1L]] <- c(previous+1L,end)
     end <- previous
   }

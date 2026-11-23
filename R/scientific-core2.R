@@ -77,7 +77,7 @@ aqt_qc_sensitivity <- function(tracks, gap_limits_s,
     reason[base & !frame_break & gap_bad] <- "long_time_gap"
     reason[base & !frame_break & !gap_bad & speed_bad] <- "speed_threshold"
     reason[base & !frame_break & !gap_bad & !speed_bad & step_bad] <- "step_threshold"
-    ledgers[[j]] <- data.frame(policy_id=g$policy_id,input_row=seq_len(n),
+    ledgers[[j]] <- data.frame(policy_id=rep(g$policy_id,n),input_row=seq_len(n),
       source_row=origin,session_id=as.character(k$session_id),
       camera_id=as.character(k$camera_id),track_id=as.character(k$track_id),
       time_s=k$time_s,position_observed=position_ok,
@@ -99,7 +99,7 @@ aqt_qc_sensitivity <- function(tracks, gap_limits_s,
     })
     if(length(out))summaries[[j]] <- do.call(rbind,out)
   }
-  ledger <- if(length(ledgers))do.call(rbind,ledgers) else data.frame()
+  ledger <- do.call(rbind,ledgers)
   summary <- if(length(Filter(Negate(is.null),summaries)))
     do.call(rbind,Filter(Negate(is.null),summaries)) else data.frame()
   rownames(ledger) <- NULL

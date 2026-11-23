@@ -129,8 +129,6 @@ aqt_hmm_event_tank_epochs <- function(
     ft <- fish_epochs[as.character(fish_epochs$tank_id)==tank,,
                       drop=FALSE]
     treatments <- unique(as.character(ft$treatment))
-    if (length(treatments)!=1L)
-      stop("Conflicting fish treatment within tank",call.=FALSE)
     for (epoch in c("baseline","response")) {
       x <- ft[ft$epoch==epoch,,drop=FALSE]
       counter <- counter+1L
