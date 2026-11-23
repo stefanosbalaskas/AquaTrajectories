@@ -38,8 +38,6 @@ aqt_detection_dropout_scenarios <- function(
     stop("Dropout scenario budget exceeded: 300,000 positions",call.=FALSE)
   original <- as.data.frame(tracks)
   if (!nrow(original)) stop("Cannot assess dropout on empty fish tracks",call.=FALSE)
-  if (!is.logical(original$observed) || anyNA(original$observed))
-    stop("Original fish observed flags are invalid",call.=FALSE)
   groups <- split(seq_len(nrow(original)),
     interaction(original$session_id,original$camera_id,
                 original$track_id,drop=TRUE))

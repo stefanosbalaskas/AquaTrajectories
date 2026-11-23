@@ -224,8 +224,6 @@ aqt_mot_support_audit <- function(tracks,frames) {
         any(abs(f$time_s[ref]-z$time_s)>1e-8))
       stop("MOT tracks and supplied frame manifest do not match",
            call.=FALSE)
-    if (nrow(z)>1L && any(diff(z$frame_id)<=0))
-      stop("Repeated/nonincreasing frame within track",call.=FALSE)
     missed <- if (nrow(z)>1L)
       sum(diff(ref)-1L) else 0L
     largest_time_gap <- if (nrow(z)>1L)

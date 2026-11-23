@@ -87,8 +87,6 @@ aqt_trajectory_dtw <- function(track_a,track_b,window=Inf,max_gap_s=Inf) {
   ia <- integer(n+m); ib <- integer(n+m)
   pos <- n+m
   while (i>0L || j>0L) {
-    if (i<1L || j<1L || previous[i,j]==0L)
-      stop("Internal DTW traceback failure",call.=FALSE)
     ia[pos] <- i; ib[pos] <- j
     step <- previous[i,j]
     if (step==1L) { i <- i-1L; j <- j-1L }

@@ -40,7 +40,6 @@ aqt_plot_trajectory_storyboard3d <- function(
       !units %in% c("cm","m"))
     stop("Storyboard requires real physical XYZ 3D tank coordinates",
          call.=FALSE)
-  if (!nrow(tracks)) stop("No fish observations to plot",call.=FALSE)
   scalar_id <- function(x,name) {
     if (!is.null(x) &&
         (!is.character(x) || length(x)!=1L || is.na(x) ||

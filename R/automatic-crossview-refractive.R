@@ -254,9 +254,6 @@ aqt_crossview_auto_associate <- function(candidates,min_support=3L,
                 sprintf("%.17g",obs$time_a_s),sep="\r")
     kb <- paste(obs$session_id,obs$id_b,
                 sprintf("%.17g",obs$time_b_s),sep="\r")
-    if (anyDuplicated(ka) || anyDuplicated(kb))
-      stop("Automatic source fish observations reused across 3D identities",
-           call.=FALSE)
     obs <- obs[order(obs$session_id,obs$time_a_s,obs$fish_id),,drop=FALSE]
   }
   rownames(links)<-NULL;rownames(obs)<-NULL

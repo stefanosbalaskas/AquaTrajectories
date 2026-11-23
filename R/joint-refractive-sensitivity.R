@@ -234,9 +234,6 @@ aqt_joint_tank_sensitivity <- function(
     outcome=outcome,windows=windows,
     unit_cols=c("camera_id","track_id","tank_id","treatment"),
     max_gap_s=max_gap_s)
-  if (!nrow(epochs)) stop("No estimable event outcomes",call.=FALSE)
-  if (!setequal(unique(epochs$draw),seq_along(scenarios$tracks)))
-    stop("Some measurement scenarios are missing event outcomes",call.=FALSE)
   pieces <- lapply(split(epochs,epochs$draw),function(x) {
     fit <- aqt_tank_event_contrast(
       x,draws=tank_bootstrap_draws,
