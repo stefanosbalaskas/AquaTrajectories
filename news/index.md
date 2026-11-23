@@ -1,5 +1,32 @@
 # Changelog
 
+## aquaTrajectories 0.2.1 (Source-frozen engineering qualification; 2026-11-23)
+
+This is a patch release of the existing analytical API, not a claim of
+independent fish-detection, animal-identity, physical XYZ or welfare
+validation.
+
+- Incorporates the complete source and regression suite merged in
+  [PR](https://github.com/stefanosbalaskas/AquaTrajectories/pull/113)
+  [\#113](https://github.com/stefanosbalaskas/AquaTrajectories/issues/113):
+  boundary and failure-path handling, strict tests and publication
+  workflows.
+- Retains 188 documented R exports and all v0.2.0 scientific safeguards.
+- Requires exact-source, three-OS, zero-error/warning/note R CMD check,
+  the locked synthetic source-row/Python oracle, evidence workflows and
+  24 measured 2D/3D benchmark workloads on each platform.
+- Requires 100.0000% instrumented R code coverage AND zero unexecuted
+  expression records. Coverage denominators across revisions may differ.
+- Creates immutable v0.2.1 only from a fully qualified main SHA,
+  preserving the v0.2.0 tag/release and all other historical tags.
+- Assets include R source, SHA-256 checksums, cross-platform evidence
+  and complete actual covr instrumented-expression audits.
+
+See `docs/RELEASE_CANDIDATE_0_2_1.md` and `docs/RELEASE_NOTES_0_2_1.md`.
+Software coverage and synthetic tests do NOT certify biological
+detection, persistent fish identity, physical XYZ, independent animal
+replication, welfare, causal inference or device safety.
+
 ## aquaTrajectories 0.2.0 (Scientific safeguards and reproducible research)
 
 This planned **software** release extends the qualified v0.1.2
