@@ -183,9 +183,13 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
     "unobserved_current_position"
   ledger$reason_detail[unscorable & !first & ledger$position_observed] <-
     "unobserved_previous_position"
-  exclusions <- as.data.frame(table(ledger$policy_id,ledger$reason_detail),
-                               stringsAsFactors=FALSE)
-  names(exclusions) <- c("policy_id","reason","n_rows")
+  exclusions <- if (nrow(ledger)) {
+    counts <- as.data.frame(table(ledger$policy_id,ledger$reason_detail),
+                            stringsAsFactors=FALSE)
+    names(counts) <- c("policy_id","reason","n_rows")
+    counts
+  } else data.frame(policy_id=character(),reason=character(),
+                    n_rows=integer(),stringsAsFactors=FALSE)
   exclusions <- exclusions[exclusions$n_rows>0L,,drop=FALSE]
   rownames(exclusions) <- NULL
   policy <- qc$policies
