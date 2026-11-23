@@ -70,28 +70,36 @@ for(const f of [...pages,...extras]) {
   assert.ok(fs.statSync(path.join(site,f)).size > 0,"Empty site resource: "+f);
 }
 const home=read("index.html");
-assert.match(home,/official v0\.1\.2 release/i);
+assert.match(home,/current qualified release v0\.2\.1/i);
+assert.doesNotMatch(home,/official v0\.1\.2 release/i, "Homepage must not promote historical v0.1.2 as current");
 // Scientific-safeguard homepage content must be qualified on the exact site artifact.
-for (const claim of [/188 R functions on main/,/15 reference categories/,/Tagged v0\.1\.2: 179 functions/,/Evidence safeguards/,/aqt_compare_specifications\.html/,/aqt_measurement_contract\.html/,/aqt_inference_readiness\.html/,/aqt_evidence_report\.html/]) {
+for (const claim of [/v0\.2\.1 · 188 documented R exports/,/15 reference categories/,/100% measured R expression coverage/,/Evidence safeguards/,/aqt_compare_specifications\.html/,/aqt_measurement_contract\.html/,/aqt_inference_readiness\.html/,/aqt_evidence_report\.html/]) {
   assert.match(home, claim, "Missing scientific-safeguard or release-boundary content: " + claim);
 }
 for (const fn of ["aqt_compare_specifications", "aqt_measurement_contract", "aqt_inference_readiness", "aqt_evidence_report"]) {
   assert.ok(fs.existsSync(path.join(site, "reference", fn + ".html")), "Missing safeguard reference page: " + fn);
 }
+assert.match(home,/releases\/tag\/v0\.2\.1/, "Homepage must point to current published GitHub release");
+assert.match(home,/M10/, "Homepage must distinguish exact-version real-data replay");
+assert.match(home,/65\/65/, "Homepage must report bounded M10 R/Python checks");
 assert.match(home,/10\.5281\/zenodo\.24262905/i);
 assert.match(home,/quickstart-five-minutes/);
 assert.match(home,/articles\/reproducible-research-release\.html/);
 assert.match(home,/experiment-starter-kit/);
 assert.match(home,/capabilities-and-validation/);
 const releaseGuide=read("articles/reproducible-research-release.html");
-for(const claim of [/89\.33%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windows/,/Linux/,/v0\.1\.2/]) {
+for(const claim of [/100\.0000%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windows/,/Linux/,/v0\.2\.1/,/65\/65/]) {
   assert.match(releaseGuide, claim, "Missing exact-source release evidence: "+claim);
 }
 for(const page of ["articles/quickstart-five-minutes.html","articles/capabilities-and-validation.html","articles/scientific-status.html","articles/research-evidence-dashboard.html"]) {
-  assert.match(read(page),/v0\.1\.2/, "Stale published-release description: "+page);
+  assert.match(read(page),/v0\.2\.1/, "Expected current v0.2.1 release description: "+page);
+}
+const dashboard=read("articles/research-evidence-dashboard.html");
+for(const claim of [/v0\.2\.1/,/188/,/100\.0000%/,/65\/65/,/frozen/i,/underwater XYZ/i]) {
+  assert.match(dashboard,claim,"Research evidence dashboard missing bounded current-release statement: "+claim);
 }
 const start=read("articles/aquaTrajectories.html");
-assert.match(start,/v0\.1\.2/);
+assert.match(start,/v0\.2\.1/);
 assert.doesNotMatch(start, /ref\s*=\s*(?:(?:<[^>]*>)*[\s"]*)?v0\.1\.0/, "Get-started guide still asks for old release");
 const demo=read("synthetic-explorer.html");
 for(const id of ["occlusion-demo","idswitch-demo","learningStatus","frame","fishfilters","lessonPreset","cameraXY","cameraXZ","speedChart","focusFish","quizYes","quizNo","exportCsv","exportSvg"]) {
@@ -189,7 +197,7 @@ for(const id of ["one-camera","two-cameras","existing-recordings","before-record
 }
 assert.match(home,/plan-your-experiment/);
 assert.match(home,/synthetic-explorer/);
-assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.1.2:'),"Homepage concise description missing");
+assert.ok(home.includes('<meta name="description" content="AquaTrajectories v0.2.1:'),"Homepage concise description missing");
 assert.equal((home.match(/name="viewport"/g)||[]).length,1);
 assert.equal([...gallery.matchAll(/id="code-plot-[a-z0-9-]+"/g)].length,22);
 assert.equal([...gallery.matchAll(/data-code-link="true"/g)].length,22);

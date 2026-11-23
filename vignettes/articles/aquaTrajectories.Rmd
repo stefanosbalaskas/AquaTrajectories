@@ -1,19 +1,19 @@
 ---
 title: "Get started with AquaTrajectories"
-description: "Install the official v0.1.2 GitHub release, follow a first reproducible analysis, and understand research evidence limits."
+description: "Install the official v0.2.1 GitHub release, follow a first reproducible analysis, and understand research evidence limits."
 ---
 
 # Get started
 
 AquaTrajectories is an open-source research software toolkit for aquatic movement and multiview trajectories. The public package is named `aquaTrajectories` (lowercase `a`); the repository is named `AquaTrajectories`.
 
-**Current published GitHub software:** [v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2), including a [fully reproducible scientific example](reproducible-research-release.html). The [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) is specific to historical **v0.1.1**, not v0.1.2. This source release is engineering-qualified but is not an independently certified fish-identification or underwater-metrology system. CRAN availability is not asserted.
+**Current published GitHub software:** [v0.2.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1), including a [fully reproducible scientific example](reproducible-research-release.html). The [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) is specific to historical **v0.1.1**, not v0.2.1. This source release is engineering-qualified but is not an independently certified fish-identification or underwater-metrology system. CRAN availability is not asserted.
 
 ## Install from GitHub
 
 ```r
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ```
@@ -64,12 +64,12 @@ Event labels come from an **external log**. Merely aligning trajectories to a ti
 
 ## Five-minute self-check
 
-For a guided script with checkable output shapes and CSV exports, follow the [five-minute quick start](quickstart-five-minutes.html). For the locked trajectory-to-QC2-to-report example and independent Python numerical verification, use the [reproducible v0.1.2 release guide](reproducible-research-release.html). For input file schemas and a reproducible tank-event example, use the [experiment starter kit](experiment-starter-kit.html).
+For a guided script with checkable output shapes and CSV exports, follow the [five-minute quick start](quickstart-five-minutes.html). For the locked trajectory-to-QC2-to-report example and independent Python numerical verification, use the [reproducible v0.2.1 release guide](reproducible-research-release.html). For input file schemas and a reproducible tank-event example, use the [experiment starter kit](experiment-starter-kit.html).
 
 ## Navigating the package
 
 <div class="aqt-cardgrid">
-<a class="aqt-card" href="function-atlas.html"><h3>All 179 functions</h3><p>Find each documented function in 14 clearly defined families.</p></a>
+<a class="aqt-card" href="function-atlas.html"><h3>All 188 functions</h3><p>Find each documented R function in 15 scientific reference categories.</p></a>
 <a class="aqt-card" href="workflows-atlas.html"><h3>Research pipelines</h3><p>Follow the inputs, validation gates and outputs of each workflow.</p></a>
 <a class="aqt-card" href="visualization-gallery.html"><h3>Figure gallery</h3><p>Runnable synthetic plots and publication-style rendering ideas.</p></a>
 </div>

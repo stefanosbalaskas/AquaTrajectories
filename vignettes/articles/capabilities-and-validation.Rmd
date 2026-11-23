@@ -1,13 +1,13 @@
 ---
 title: "Capability and scientific validation matrix"
-description: "What AquaTrajectories v0.1.2 actually implements, what evidence is required, and which fish detection, identity, stereo, uncertainty and ACI claims remain unverified."
+description: "What AquaTrajectories v0.2.1 actually implements, what evidence is required, and which fish detection, identity, stereo, uncertainty and ACI claims remain unverified."
 ---
 
 # What the package can and cannot establish
 
-The official [v0.1.2 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2) is **published and source-citable**. The [Zenodo v0.1.1 DOI](https://doi.org/10.5281/zenodo.24262905) identifies an earlier, separate release and must not be attributed to v0.1.2. It is not an independently certified fish observation, welfare, metrology or device-control system. A software function existing and passing tests is **not** evidence that its biological prediction is accurate.
+The official [v0.2.1 GitHub release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1) is **published and source-citable**. The [Zenodo v0.1.1 DOI](https://doi.org/10.5281/zenodo.24262905) identifies an earlier, separate release and must not be attributed to v0.2.1. It is not an independently certified fish observation, welfare, metrology or device-control system. A software function existing and passing tests is **not** evidence that its biological prediction is accurate.
 
-The table below summarizes software capabilities and independent-evidence requirements, based on the repository's [scientific validation gate registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/evidence/scientific-validation-gates.json) (development evidence dated 2026-11-12). This is a **source-linked research-readiness matrix**, not a live certification service.
+The table below summarizes software capabilities and independent-evidence requirements, based on the repository's [scientific validation gate registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/inst/evidence/scientific-validation-gates.json) (development evidence dated 2026-11-12). This is a **source-linked research-readiness matrix**, not a live certification service.
 
 | Capability | Implemented software / demonstration | Must be supplied externally | Independent scientific claim |
 |---|---|---|---|
@@ -33,7 +33,7 @@ The table below summarizes software capabilities and independent-evidence requir
 3. **Real-source assessed:** real data formats or controlled benchmark procedures exercised; this does not imply performance is certified.
 4. **Independently validated:** external held-out biological and physical reference evidence supports a specified claim. **Not asserted for the system as a whole.**
 
-Read the [v0.1.2 fully reproducible trajectory-to-report guide](reproducible-research-release.html) and [full evidence dashboard](research-evidence-dashboard.html) for links to the real source contracts and checks. The [scientific status statement](scientific-status.html) provides detailed wording guidance.
+Read the [v0.2.1 reproducible trajectory-to-report guide](reproducible-research-release.html) and [full evidence dashboard](research-evidence-dashboard.html) for links to the real source contracts and checks. The [scientific status statement](scientific-status.html) provides detailed wording guidance.
 
 ## Input-specific limitations
 
@@ -41,7 +41,7 @@ A 2D fish track is a sequence of image- or tank-plane positions, not a biologica
 
 ## Which guide should I use?
 
-- Have only CSV coordinates? [Five-minute quick start](quickstart-five-minutes.html), [independent v0.1.2 reproducibility guide](reproducible-research-release.html) and [movement and schooling](movement-and-schooling.html)
+- Have only CSV coordinates? [Five-minute quick start](quickstart-five-minutes.html), [v0.2.1 reproducibility guide](reproducible-research-release.html) and [movement and schooling](movement-and-schooling.html)
 - Have original fish footage and a detector? [Video-to-results guide](video-to-results.html)
 - Have synchronized stereo recordings? [Multiview geometry and refraction](multiview-3d.html)
 - Planning repeated experimental recordings? [Experiment starter kit](experiment-starter-kit.html)

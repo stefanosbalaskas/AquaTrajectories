@@ -56,4 +56,4 @@ See [video to results](video-to-results.html), the [validation matrix](capabilit
 
 The [experiment starter kit](experiment-starter-kit.html) provides synthetic examples, event logs and **blank** physical reference-target templates. These are not real fish observations. The [interactive teaching lab](../synthetic-explorer.html) demonstrates camera viewpoints and identity errors with invented data.
 
-**Pinned software:** [AquaTrajectories v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1) · [Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905).
+**Current pinned software:** [AquaTrajectories v0.2.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1) · [Historical v0.1.1 Zenodo DOI 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905).

@@ -1,6 +1,6 @@
 ---
 title: "Five-minute quick start: tracks to scientific outputs"
-description: "Install released AquaTrajectories v0.1.2; generate explicitly synthetic fish tracks; calculate kinematics, align an event, and export reproducible CSV outputs."
+description: "Install released AquaTrajectories v0.2.1; generate explicitly synthetic fish tracks; calculate kinematics, align an event, and export reproducible CSV outputs."
 ---
 
 # Five-minute reproducible R analysis
@@ -9,11 +9,11 @@ description: "Install released AquaTrajectories v0.1.2; generate explicitly synt
 
 ## Step 1 — Install the published release
 
-Use R 4.1 or later. Until CRAN acceptance is independently confirmed, install the **published GitHub tag v0.1.2**; do not assume a CRAN binary is available.
+Use R 4.1 or later. Until CRAN acceptance is independently confirmed, install the **published GitHub tag v0.2.1**; do not assume a CRAN binary is available.
 
 ~~~r
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ~~~
@@ -88,4 +88,4 @@ These files are written to the current R working directory. Verify their names a
 
 For full API help, use the [reference index](../reference/index.html) and [scientific evidence dashboard](research-evidence-dashboard.html).
 
-The [independently reproducible v0.1.2 research workflow](reproducible-research-release.html) adds frozen-source QC2, publication outputs, SHA-256 provenance and a separate Python verification oracle.
+The [independently reproducible v0.2.1 research workflow](reproducible-research-release.html) adds frozen-source QC2, publication outputs, SHA-256 provenance and a separate Python verification oracle.
