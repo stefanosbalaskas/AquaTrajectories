@@ -9,8 +9,8 @@ if(!requireNamespace("bench",quietly=TRUE))
   stop("Measured memory allocation requires bench; do not report unrun benchmarks",
        call.=FALSE)
 suppressPackageStartupMessages(library(aquaTrajectories))
-if(!as.character(utils::packageVersion("aquaTrajectories")) %in% c("0.1.2","0.2.0"))
-  stop("Locked benchmark is qualified only for v0.1.2/v0.2.0",
+if(!as.character(utils::packageVersion("aquaTrajectories")) %in% c("0.1.2","0.2.0","0.2.1"))
+  stop("Locked benchmark is qualified only for v0.1.2/v0.2.0/v0.2.1",
        call.=FALSE)
 make_tracks<-function(n,three=FALSE){
   if(n %% 5L)stop("Benchmark sizes must be divisible by five")
