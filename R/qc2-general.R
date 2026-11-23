@@ -165,8 +165,8 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
   ledger$from_input_row <- prev[ix]
   ledger$from_source_row <- data$source_row[prev[ix]]
   ledger$to_source_row <- data$source_row[ix]
-  ledger$coordinate_units <- qc$units
-  ledger$time_units <- "s"
+  ledger$coordinate_units <- rep(qc$units,nrow(ledger))
+  ledger$time_units <- rep("s",nrow(ledger))
   if("frame_id" %in% names(data))
     ledger$frame_id <- data$frame_id[ix]
   ledger$x <- data$x[ix];ledger$y <- data$y[ix]
@@ -193,8 +193,8 @@ aqt_qc2_report <- function(data,gap_limits_s,speed_limits=Inf,
   policy$speed_units <- paste0(qc$units,"/s")
   policy$time_units <- "s"
   summary <- qc$summary
-  summary$coordinate_units <- qc$units
-  summary$time_units <- "s"
+  summary$coordinate_units <- rep(qc$units,nrow(summary))
+  summary$time_units <- rep("s",nrow(summary))
   summary$n_excluded_steps <- vapply(seq_len(nrow(summary)),function(j) {
     z <- ledger$policy_id==summary$policy_id[j] &
          ledger$session_id==summary$session_id[j] &
