@@ -26,7 +26,7 @@ Neither the website nor any generated figure is evidence of independently certif
 
 ## Website-only research improvements
 
-Website source updates must not overwrite immutable version tags or imply CRAN publication. The homepage shows the currently published **v0.1.2 GitHub software release**; the v0.1.1 Zenodo DOI is historical and version-specific. The early website pages were: five-minute onboarding, capability matrix, video-to-results workflow, tank experiment starter kit, identity/occlusion explanation, and evidence dashboard. All illustrative files are synthetic, metadata examples, or empty schemas. Maintain source Rmd and pkgdown/index.md as the authority; never hand-edit generated HTML on gh-pages.
+Website source updates must not overwrite immutable version tags or imply CRAN publication. The homepage shows the currently published **v0.2.1 GitHub software release**; the v0.1.1 Zenodo DOI is historical and version-specific. The early website pages were: five-minute onboarding, capability matrix, video-to-results workflow, tank experiment starter kit, identity/occlusion explanation, and evidence dashboard. All illustrative files are synthetic, metadata examples, or empty schemas. Maintain source Rmd and pkgdown/index.md as the authority; never hand-edit generated HTML on gh-pages.
 
 ## Phase 1 usability
 
@@ -47,4 +47,4 @@ The site build now publishes to GitHub Pages only after its **exact build artifa
 
 ## Scientific Core 2.0 documentation refresh
 
-The site now explains the v0.1.2 engineering release and its 179-function API, actual 89.33% instrumented source coverage, cross-platform workload measurements and independent locked 17-row trajectory-to-report proof. The historical browser-parity v0.1.1 native-R source files and historical DOI remain deliberately pinned; they do not claim to be v0.1.2 native source. The new release guide is tested in site CI before gh-pages publication.
+The site now explains the v0.2.1 engineering release and its 188-function API, actual 100.0000% instrumented expression coverage, cross-platform workload measurements and independent locked 17-row trajectory-to-report proof. The historical browser-parity v0.1.1 native-R source files and historical DOI remain deliberately pinned; they do not claim to be v0.1.2 native source. The new release guide is tested in site CI before gh-pages publication.
