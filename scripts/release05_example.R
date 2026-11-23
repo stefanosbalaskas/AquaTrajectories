@@ -23,8 +23,8 @@ if(!identical(source_hash,
   stop("LOCKED_SOURCE_SHA256_MISMATCH: refusing to regenerate derived results",
        call.=FALSE)
 if(!as.character(utils::packageVersion("aquaTrajectories")) %in%
-       c("0.1.2", "0.2.0"))
-  stop("Release05 fixture is qualified only for package versions 0.1.2/0.2.0",
+       c("0.1.2", "0.2.0", "0.2.1"))
+  stop("Release05 fixture is qualified only for package versions 0.1.2/0.2.0/0.2.1",
        call.=FALSE)
 # Explicitly read from original CSV bytes in the report API; no inferred FPS.
 qc <- aqt_qc2_report(source_path,gap_limits_s=expected$max_gap_s,
