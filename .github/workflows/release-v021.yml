@@ -252,8 +252,10 @@ jobs:
           grep -qx 'version: 0.2.1' CITATION.cff
           test -s docs/RELEASE_NOTES_0_2_1.md
           test -s v021-ci-evidence/v021-exact-source/aquaTrajectories_0.2.1.tar.gz
-          test -s v021-ci-evidence/v021-measured-coverage/RELEASE05_COVERAGE_GATE.json
-          test -s v021-ci-evidence/v021-measured-coverage/COVERAGE100_AUDIT.json
+          test -s v021-ci-evidence/v021-measured-coverage/v021-coverage/RELEASE05_COVERAGE_GATE.json
+          test -s v021-ci-evidence/v021-measured-coverage/v021-coverage100-report/COVERAGE100_AUDIT.json
+          # Two source directories were uploaded; Actions retains both relative paths.
+          find v021-ci-evidence/v021-measured-coverage -maxdepth 3 -type f -print
           for os in ubuntu-latest windows-latest macos-latest; do
             test -s "v021-ci-evidence/v021-os-$os/v021_platform_evidence.json"
           done
@@ -263,7 +265,7 @@ jobs:
           declared=json.loads((root/"v021-exact-source/v021_source_manifest.json").read_text())
           assert declared["commit_sha"] == pathlib.Path(".git/HEAD").read_text().strip() or declared["commit_sha"] == __import__("subprocess").check_output(["git","rev-parse","HEAD"],text=True).strip()
           tar=root/"v021-exact-source/aquaTrajectories_0.2.1.tar.gz"
-          covaudit=json.loads((root/"v021-measured-coverage/COVERAGE100_AUDIT.json").read_text())
+          covaudit=json.loads((root/"v021-measured-coverage/v021-coverage100-report/COVERAGE100_AUDIT.json").read_text())
           assert covaudit["status"] == "FULL_TARGET_PASS", "100-percent coverage not reached"
           assert covaudit["covr_measured_percent"] >= 100.0
           assert covaudit["unexecuted_expression_records"] == 0
