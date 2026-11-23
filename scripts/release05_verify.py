@@ -160,7 +160,7 @@ def verify(destination: Path) -> dict:
     require(manifest_path.is_file(), "missing locked output manifest")
     m = load_json(manifest_path)
     require(m["schema"] == SCHEMA
-            and m["release_version"] in ("0.1.2", "0.2.0")
+            and m["release_version"] in ("0.1.2", "0.2.0", "0.2.1")
             and m["package_version"] == m["release_version"]
             and m["dataset_origin"] == "synthetic"
             and m["external_biological_accuracy_certified"] is False,

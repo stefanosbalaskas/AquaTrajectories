@@ -1,37 +1,8 @@
 name: v0.2.0 candidate source qualification and guarded GitHub release
 
+# Historical v0.2.0 qualification is manual-only on ref v0.2.0.
+# Never republish an already-immutable tag on subsequent main commits.
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "DESCRIPTION"
-      - "CITATION.cff"
-      - "NEWS.md"
-      - "NAMESPACE"
-      - ".Rbuildignore"
-      - "R/**"
-      - "man/**"
-      - "inst/**"
-      - "tests/**"
-      - "research/release05/**"
-      - "scripts/release05_*"
-      - "scripts/release_v020_audit.py"
-      - "docs/RELEASE_NOTES_0_2_0.md"
-      - "docs/RELEASE_CANDIDATE_0_2_0.md"
-      - ".github/workflows/release-v020.yml"
-  push:
-    branches: [main]
-    paths:
-      - "DESCRIPTION"
-      - "CITATION.cff"
-      - "NEWS.md"
-      - ".Rbuildignore"
-      - "R/**"
-      - "man/**"
-      - "research/release05/**"
-      - "scripts/release05_*"
-      - "scripts/release_v020_audit.py"
-      - ".github/workflows/release-v020.yml"
   workflow_dispatch:
 
 permissions:

@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 title: "AquaTrajectories: Aquatic Animal Movement and Multiview Trajectories"
 type: software
-version: 0.2.0
+version: 0.2.1
 message: "If you use AquaTrajectories in research or teaching, please cite the software release you used."
 authors:
   - family-names: Balaskas
@@ -16,10 +16,11 @@ abstract: >-
   for aquatic animal 2D and 3D movement analysis, video-based fish-tracking
   interfaces, multiview reconstruction, camera geometry, behavioural methods,
   conditional uncertainty assessment and reproducible scientific visualization.
-  Version 0.2.0 adds evidence safeguards for estimator sensitivity, mixed
+  Version 0.2.0 added evidence safeguards for estimator sensitivity, mixed
   coordinate units, independent-unit interpretation, spatial support,
   measurement-geometry associations and descriptive falsification checks.
-  Its synthetic numerical oracles and cross-platform qualification do not
+  Version 0.2.1 includes 100-percent real executed-code coverage qualification
+  and expanded boundary regressions. Its synthetic numerical oracles and cross-platform qualification do not
   certify biological identity, real-video tracking generalization, physical
   underwater XYZ metrology, causal feeding responses, fish welfare outcomes
   or hardware safety.
