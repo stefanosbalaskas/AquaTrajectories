@@ -1,19 +1,16 @@
 <section class="aqt-hero">
-<p class="aqt-eyebrow">Open-source aquatic movement science · official v0.1.2 release + 188-function development branch</p>
+<p class="aqt-eyebrow">Open-source aquatic movement science · current qualified release v0.2.1</p>
 <h1>From aquatic observations to reproducible movement science</h1>
-<p>Analyze, validate and visualize 2D/3D aquatic-animal trajectories you already have with R. Video and Python tracker adapters are optional. Start with documented synthetic examples, then bring your own records, explicit units and—where applicable—independent calibration and identity evidence.</p>
-<div class="aqt-cta"><a href="articles/reproducible-research-release.html">Reproduce v0.1.2</a><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
-<div class="aqt-badges"><span>188 R functions on main</span><span>15 reference categories</span><span>Tagged v0.1.2: 179 functions</span><span>Evidence safeguards now in main</span></div>
+<p>Analyze, validate and visualize 2D/3D aquatic-animal trajectories already in hand, using R. Video and Python tracker adapters are optional. Start with source-linked synthetic examples, then supply original records, declared units and—where applicable—independent camera calibration and identity evidence.</p>
+<div class="aqt-cta"><a href="articles/reproducible-research-release.html">Reproduce v0.2.1</a><a href="articles/quickstart-five-minutes.html">Run a five-minute example</a><a href="synthetic-explorer.html">Open interactive lab</a><a href="articles/plan-your-experiment.html">Plan your experiment</a></div>
+<div class="aqt-badges"><span>v0.2.1 · 188 documented R exports</span><span>15 reference categories</span><span>100% measured R expression coverage</span><span>Linux · Windows · macOS qualified</span></div>
 </section>
 
-<div class="aqt-note"><strong>Published software:</strong> <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2">AquaTrajectories v0.1.2</a> is the reproducible GitHub software release. The previous v0.1.1 release (not the new v0.1.2 source) is permanently archived as <a href="https://doi.org/10.5281/zenodo.24262905">10.5281/zenodo.24262905</a> on Zenodo. <a href="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg" alt="Zenodo DOI 10.5281/zenodo.24262905" loading="lazy"></a> CRAN qualification is in progress; this package is not yet published on CRAN.</div>
+<div class="aqt-note"><strong>Current software:</strong> The <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1">AquaTrajectories v0.2.1 GitHub release</a> contains 188 documented R exports. Its exact source archive passed strict R package checks on Linux, Windows and macOS, with 100.0000% measured instrumented R code coverage and zero uncovered expressions. Download the source and qualification evidence from the versioned release; code coverage is not a measure of fish-detection or biological accuracy. The <a href="https://doi.org/10.5281/zenodo.24262905">Zenodo DOI 10.5281/zenodo.24262905</a> belongs to historical v0.1.1, not v0.2.1. Neither CRAN publication nor a new v0.2.1 DOI is claimed.</div>
 
-<div class="aqt-note"><strong>Reproducible Research 0.1.2:</strong> The locked 17-row synthetic trajectory-to-QC-to-report example reproduces 10 source-eligible steps (10 cm), has independent Python source-row and Euclidean auditing, and is measured for 2D/3D runtime/memory across Linux/Windows/macOS. <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md">Exact-source release protocol and evidence</a>. A new version-specific Zenodo DOI is not yet confirmed.</div>
+<div class="aqt-note"><strong>Real-data analytical replay (M10):</strong> An exact-v0.2.1 Windows R replay of frozen five-sequence BrackishMOT analytical inputs reproduced <strong>65/65 independent R–Python comparisons</strong>: 59 identical finite values and six jointly undefined values. The replay reused archived publisher-reference matching and external model/tracker observations; it did <strong>not</strong> rerun YOLO/ByteTrack inference, independently reannotate fish, or certify physical underwater 3D, camera exposure clocks, welfare or treatment effects. <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/M10_ANALYTICAL_V021_REPLAY_SUMMARY.md">Read the evidence scope and limitations</a> and <a href="articles/research-evidence-dashboard.html">research-evidence dashboard</a>. Source videos, model weights and restricted research inputs are not distributed by this site.</div>
 
-<div class="aqt-note"><strong>New on main:</strong> All eight evidence-safeguard improvements were merged through <a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/109">PR #109</a>. Current <code>main</code> has 188 documented R functions and 15 reference categories. <strong>These post-release additions are not part of the tagged v0.1.2 installation.</strong> The reproducible synthetic example and R Markdown analysis were qualified on Linux, Windows and macOS; original SmartFish source data and the manuscript are not hosted here. <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md">Read the scientific safeguards protocol</a>.</div>
-
-<div class="aqt-note"><strong>Scientific status:</strong> this release is engineering-qualified, but biological identity, underwater metrology, fish welfare inference, empirical interval coverage and real actuator safety are **not independently certified**. See the <a href="articles/scientific-status.html">evidence and limitations</a>.</div>
-
+<div class="aqt-note"><strong>Scientific safeguards:</strong> The eight-part safeguards upgrade from <a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/109">PR #109</a> is included in v0.2.1, including estimator-specification comparisons, measurement-unit contracts, independent-unit checks, spatial support and source-linked reporting. These diagnostics can reveal unsupported interpretation; they do not independently establish a fish's biological identity or a causal response. <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md">Methods and assumptions</a>.</div>
 
 ## Evidence safeguards — know what your trajectory data can support
 
@@ -27,14 +24,14 @@ The new evidence layer is designed to expose specification sensitivity, unverifi
 <a class="aqt-card" href="reference/aqt_evidence_report.html"><div class="aqt-kicker">05 · Reproduce</div><h3>Export evidence-aware reports</h3><p>Produce cautious interpretation statements, graphics and SHA-256 manifests from a source-linked synthetic research example.</p></a>
 </div>
 
-<div class="aqt-cta"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md">Read the evidence-safeguards guide</a><a href="reference/index.html">Browse all 188 development functions</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/109">View verified implementation</a></div>
+<div class="aqt-cta"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md">Read the evidence-safeguards guide</a><a href="reference/index.html">Browse all 188 released functions</a><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/109">View verified implementation</a></div>
 
-**Availability:** Install `main` explicitly for these development features (`remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "main")`). The official tagged v0.1.2 release is unchanged. The safeguards are scientific diagnostics—not certification of biological identity, causal feeding effects or physically validated underwater 3D kinematics.
+**Availability:** Install the immutable v0.2.1 release (`remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")`). Historical v0.1.1, v0.1.2 and v0.2.0 releases remain unchanged. The safeguards are scientific diagnostics—not certification of biological identity, causal feeding effects or physically validated underwater 3D kinematics.
 
 ## Choose your path
 
 <div class="aqt-cardgrid aqt-entrygrid">
-<a class="aqt-card" href="reference/aqt_compare_specifications.html"><div class="aqt-kicker">New on main · Evidence quality</div><h3>Evaluate whether results are robust</h3><p>Audit estimator choices, units, pseudoreplication, spatial support, placebo periods and research conclusions.</p></a>
+<a class="aqt-card" href="reference/aqt_compare_specifications.html"><div class="aqt-kicker">In v0.2.1 · Evidence quality</div><h3>Evaluate whether results are robust</h3><p>Audit estimator choices, units, pseudoreplication, spatial support, placebo periods and research conclusions.</p></a>
 <a class="aqt-card" href="articles/reproducible-research-release.html"><div class="aqt-kicker">Already have trajectories</div><h3>Scientific Core 2.0: tracks to report</h3><p>Use 2D/3D CSVs without video or a tracker; review QC2 source rows, reproduce the independent numerical example, and export journal figures.</p></a>
 <a class="aqt-card" href="articles/quickstart-five-minutes.html"><div class="aqt-kicker">New to R</div><h3>Try a complete analysis</h3><p>Five minutes: synthetic tracks → movement → event alignment → CSV exports. Confirm expected row counts.</p></a>
 <a class="aqt-card" href="articles/video-to-results.html"><div class="aqt-kicker">Working with footage</div><h3>Plan video → results</h3><p>Original PTS, externally trained detector, reviewable IDs, camera geometry, explicit scientific gates.</p></a>
@@ -43,18 +40,18 @@ The new evidence layer is designed to expose specification sensitivity, unverifi
 </div>
 
 <div class="aqt-statusbar" role="group" aria-label="Current release and scientific evidence">
-  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2">v0.1.2</a> · 179 exports; <a href="https://github.com/stefanosbalaskas/AquaTrajectories">main</a>: 188 exports</span></div>
-  <div><strong>Citable</strong><span><a href="https://doi.org/10.5281/zenodo.24262905">Prior v0.1.1 Zenodo DOI</a> · <a href="AquaTrajectories-v0.1.1.bib" download>BibTeX</a></span></div>
+  <div><strong>Released</strong><span><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1">v0.2.1</a> · 188 exported R functions</span></div>
+  <div><strong>Release evidence</strong><span>100% executed R coverage · <a href="articles/research-evidence-dashboard.html">M10: 65/65 R–Python checks</a></span></div>
   <div><strong>Scientific validity</strong><span>Software contracts tested; <a href="articles/capabilities-and-validation.html">independent biological validation pending</a></span></div>
 </div>
 
 ## Scientific Core 2.0 — independently reproducible research software
 
-The completed five-milestone roadmap is available in the published v0.1.2 GitHub release: stable 2D/3D scientific architecture; source-preserving QC2; numerical/metamorphic validation; QC-aware publication figures; and cross-platform reproducible research.
+The Scientific Core 2.0 milestones introduced in historical v0.1.2 are retained in the published v0.2.1 GitHub release: stable 2D/3D scientific architecture; source-preserving QC2; numerical/metamorphic validation; QC-aware publication figures; and cross-platform reproducible research.
 
-**Measured release evidence:** 179 exported functions; **89.33% actual instrumented R test coverage**; **24 runtime and allocation-memory workloads on each of Linux, Windows and macOS**; and a **17-row synthetic dataset** with **10 eligible movement steps totaling 10 cm**, independently verified against an alternate Python implementation. These are bounded software tests and environment-dependent benchmarks, not biological-certification percentages or peak resident-memory measurements.
+**Current release evidence:** 188 exported R functions; **100.0000% measured instrumented R code coverage** with zero uncovered expressions; strict source-archive checks on Linux, Windows and macOS; 24 measured 2D/3D workloads per operating system; and a 17-row synthetic trajectory example (10 eligible movements, 10 cm). M10 adds a bounded exact-v0.2.1 Windows replay of historical real analytical inputs (65/65 R–Python comparisons). These are distinct software and numerical-evidence claims, not biological accuracy percentages or measured peak resident memory.
 
-**[Complete reproducible v0.1.2 research guide](articles/reproducible-research-release.html)** · **[Full versioned evidence archive](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)** · **[Current scientific evidence dashboard](articles/research-evidence-dashboard.html)**
+**[Current reproducibility guide](articles/reproducible-research-release.html)** · **[v0.2.1 source and qualification evidence](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)** · **[Current scientific evidence dashboard](articles/research-evidence-dashboard.html)**
 
 ## Discover the research workflows
 
