@@ -112,7 +112,10 @@ CI does not download third-party videos.
 authors, CC BY 4.0.
 
 **Cite the software:** [AquaTrajectories
-v0.1.1](https://doi.org/10.5281/zenodo.24262905).
+v0.2.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
+when running this guide with that tag. The separate [historical v0.1.1
+Zenodo DOI](https://doi.org/10.5281/zenodo.24262905) must not be
+reassigned to v0.2.1.
 
 For the research context, see the [evidence and limitations
 dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md).

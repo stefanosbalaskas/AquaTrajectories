@@ -12,13 +12,13 @@ identification or tank measurements.
 ### Step 1 — Install the published release
 
 Use R 4.1 or later. Until CRAN acceptance is independently confirmed,
-install the **published GitHub tag v0.1.2**; do not assume a CRAN binary
+install the **published GitHub tag v0.2.1**; do not assume a CRAN binary
 is available.
 
 ``` r
 
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ```
@@ -114,7 +114,7 @@ index](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)
 and [scientific evidence
 dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md).
 
-The [independently reproducible v0.1.2 research
+The [independently reproducible v0.2.1 research
 workflow](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
 adds frozen-source QC2, publication outputs, SHA-256 provenance and a
 separate Python verification oracle.

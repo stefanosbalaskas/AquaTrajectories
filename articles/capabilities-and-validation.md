@@ -2,11 +2,11 @@
 
 ## What the package can and cannot establish
 
-The official [v0.1.2 GitHub
-release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+The official [v0.2.1 GitHub
+release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
 is **published and source-citable**. The [Zenodo v0.1.1
 DOI](https://doi.org/10.5281/zenodo.24262905) identifies an earlier,
-separate release and must not be attributed to v0.1.2. It is not an
+separate release and must not be attributed to v0.2.1. It is not an
 independently certified fish observation, welfare, metrology or
 device-control system. A software function existing and passing tests is
 **not** evidence that its biological prediction is accurate.
@@ -14,7 +14,7 @@ device-control system. A software function existing and passing tests is
 The table below summarizes software capabilities and
 independent-evidence requirements, based on the repository’s [scientific
 validation gate
-registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.1/inst/evidence/scientific-validation-gates.json)
+registry](https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/inst/evidence/scientific-validation-gates.json)
 (development evidence dated 2026-11-12). This is a **source-linked
 research-readiness matrix**, not a live certification service.
 
@@ -46,7 +46,7 @@ research-readiness matrix**, not a live certification service.
     physical reference evidence supports a specified claim. **Not
     asserted for the system as a whole.**
 
-Read the [v0.1.2 fully reproducible trajectory-to-report
+Read the [v0.2.1 reproducible trajectory-to-report
 guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
 and [full evidence
 dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)
@@ -67,7 +67,7 @@ measures internal fit, not underwater target accuracy.
 
 - Have only CSV coordinates? [Five-minute quick
   start](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md),
-  [independent v0.1.2 reproducibility
+  [v0.2.1 reproducibility
   guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)
   and [movement and
   schooling](https://stefanosbalaskas.github.io/AquaTrajectories/articles/movement-and-schooling.md)

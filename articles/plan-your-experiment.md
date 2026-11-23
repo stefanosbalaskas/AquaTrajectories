@@ -118,7 +118,7 @@ reference-target templates. These are not real fish observations. The
 lab](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)
 demonstrates camera viewpoints and identity errors with invented data.
 
-**Pinned software:** [AquaTrajectories
-v0.1.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.1)
-· [Zenodo DOI
+**Current pinned software:** [AquaTrajectories
+v0.2.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
+· [Historical v0.1.1 Zenodo DOI
 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905).

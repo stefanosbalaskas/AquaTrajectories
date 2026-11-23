@@ -8,12 +8,12 @@ movement and multiview trajectories. The public package is named
 `AquaTrajectories`.
 
 **Current published GitHub software:**
-[v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2),
+[v0.2.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1),
 including a [fully reproducible scientific
 example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md).
 The [Zenodo DOI
 10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) is
-specific to historical **v0.1.1**, not v0.1.2. This source release is
+specific to historical **v0.1.1**, not v0.2.1. This source release is
 engineering-qualified but is not an independently certified
 fish-identification or underwater-metrology system. CRAN availability is
 not asserted.
@@ -23,7 +23,7 @@ not asserted.
 ``` r
 
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")
 library(aquaTrajectories)
 packageVersion("aquaTrajectories")
 ```
@@ -93,7 +93,7 @@ For a guided script with checkable output shapes and CSV exports, follow
 the [five-minute quick
 start](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md).
 For the locked trajectory-to-QC2-to-report example and independent
-Python numerical verification, use the [reproducible v0.1.2 release
+Python numerical verification, use the [reproducible v0.2.1 release
 guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md).
 For input file schemas and a reproducible tank-event example, use the
 [experiment starter
@@ -103,9 +103,9 @@ kit](https://stefanosbalaskas.github.io/AquaTrajectories/articles/experiment-sta
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md)
 
-#### All 179 functions
+#### All 188 functions
 
-Find each documented function in 14 clearly defined families.
+Find each documented R function in 15 scientific reference categories.
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md)
 

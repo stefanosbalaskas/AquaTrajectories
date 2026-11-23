@@ -14,8 +14,8 @@
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Research evidence, release and validation dashboard">
-<meta name="description" content="Current AquaTrajectories v0.1.2 engineering release and independent biological/physical research validation status.">
-<meta property="og:description" content="Current AquaTrajectories v0.1.2 engineering release and independent biological/physical research validation status.">
+<meta name="description" content="AquaTrajectories v0.2.1 release qualification, M10 exact-version R analytical replay, and independent biological and physical validation boundaries.">
+<meta property="og:description" content="AquaTrajectories v0.2.1 release qualification, M10 exact-version R analytical replay, and independent biological and physical validation boundaries.">
 <meta property="og:image" content="https://stefanosbalaskas.github.io/AquaTrajectories/logo.png">
 </head>
 <body>
@@ -82,26 +82,130 @@
 <div class="section level2">
 <h2 id="scientific-evidence-and-release-status">Scientific evidence and release status<a class="anchor" aria-label="anchor" href="#scientific-evidence-and-release-status"></a>
 </h2>
-<p><strong>Source-bound snapshot: 21 November 2026.</strong> The <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2" class="external-link">published
-v0.1.2 GitHub release</a> qualifies research software and a reproducible
-synthetic example. This page is not a continuously updated benchmark
-database. A successful software test is not independent measurement of
-fish biology.</p>
-<div class="aqt-statusbar" role="group" aria-label="Release qualification summary">
+<p><strong>Evidence snapshot: 23 November 2026.</strong> The current
+published software is <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1" class="external-link">AquaTrajectories
+v0.2.1</a>. The source archive, qualification ZIP and SHA-256 checksums
+are versioned release assets. This page distinguishes cross-platform
+<strong>software qualification</strong> from the later <strong>M10
+real-data R analytical replay</strong>, and both from biological or
+physical validation.</p>
+<div class="aqt-statusbar" role="group" aria-label="Release and empirical numerical verification">
 <div>
-<strong>Published source</strong><span>v0.1.2 · 179 public R
+<strong>Official release</strong><span>v0.2.1 · 188 exported R
 functions</span>
 </div>
 <div>
-<strong>Observed coverage</strong><span>89.33% instrumented R
-tests</span>
+<strong>Measured R coverage</strong><span>100.0000% instrumented
+expressions · 0 uncovered</span>
 </div>
 <div>
-<strong>Independent empirical system</strong><span>Not certified</span>
+<strong>M10 frozen-input R replay</strong><span>65/65 R–Python
+comparisons · Windows</span>
 </div>
 </div>
 <div class="section level3">
-<h3 id="scientific-core-2-0-five-engineering-milestones-completed">Scientific Core 2.0: five engineering milestones completed<a class="anchor" aria-label="anchor" href="#scientific-core-2-0-five-engineering-milestones-completed"></a>
+<h3 id="what-the-exact-v0-2-1-source-release-establishes">1. What the exact v0.2.1 source release establishes<a class="anchor" aria-label="anchor" href="#what-the-exact-v0-2-1-source-release-establishes"></a>
+</h3>
+<p>The released source archive passed strict <code>R CMD check</code>
+without errors, warnings or notes on <strong>Ubuntu/Linux, Windows and
+macOS</strong>. The release gate also verified <strong>188 documented R
+exports</strong>, <strong>100.0000% covr-measured instrumented R
+expression coverage</strong> (zero uncovered expressions), a frozen
+<strong>17-row synthetic</strong> QC-to-report example independently
+recalculated by Python, and 24 measured 2D/3D workloads per operating
+system. Source and output hashes and executable qualification details
+are attached to the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1" class="external-link">official
+v0.2.1 release</a>.</p>
+<p>These are release-quality and numerical checks. <strong>100% code
+coverage is not 100% fish detection, biological accuracy, uncertainty
+calibration or proof that every statistical assumption holds.</strong>
+The earlier <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md" class="external-link">v0.1.2
+reproducibility protocol</a> describes the historical introduction of
+the 17-row example and earlier performance baselines; the
+current-release qualification is that of v0.2.1.</p>
+</div>
+<div class="section level3">
+<h3 id="m10-exact-version-historical-m07m08-r-analytical-replay">2. M10: exact-version historical M07–M08 R analytical replay<a class="anchor" aria-label="anchor" href="#m10-exact-version-historical-m07m08-r-analytical-replay"></a>
+</h3>
+<p>The M10 audit used the <strong>actual published v0.2.1 R
+package</strong> on a Windows 11/R 4.6.1 environment, reading frozen M07
+analytical source tables and archived M08 reference-matching records. It
+authenticated the published R source archive and original input hashes,
+recomputed the specified source-linked R movement and measurement
+summaries, and compared them against an independently implemented Python
+calculation.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">M10 property</th>
+<th align="right">Verified outcome</th>
+<th align="left">Important boundary</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">BrackishMOT original recordings</td>
+<td align="right">5 sequences; 868 acquisition frames</td>
+<td align="left">Five source sequences, not independent tanks</td>
+</tr>
+<tr class="even">
+<td align="left">Publisher-reference fish observations</td>
+<td align="right">6,621</td>
+<td align="left">Publisher source labels, not new blinded
+adjudication</td>
+</tr>
+<tr class="odd">
+<td align="left">External model/tracker observations</td>
+<td align="right">2,830</td>
+<td align="left">Frozen outputs, not newly rerun YOLO/ByteTrack
+inference</td>
+</tr>
+<tr class="even">
+<td align="left">IoU 0.50 reference positions matched to tracked
+boxes</td>
+<td align="right">374 / 6,621 (5.65%)</td>
+<td align="left">Conditional track-output reference coverage</td>
+</tr>
+<tr class="odd">
+<td align="left">Original adjacent reference fish-ID steps</td>
+<td align="right">6,498</td>
+<td align="left">Original denominator retained</td>
+</tr>
+<tr class="even">
+<td align="left">Same-model-ID eligible adjacent steps</td>
+<td align="right">265 / 6,498 (4.08%)</td>
+<td align="left">Most reference movement is not evaluable from model
+tracks</td>
+</tr>
+<tr class="odd">
+<td align="left">R–Python comparisons on exact v0.2.1</td>
+<td align="right"><strong>65 / 65 PASS</strong></td>
+<td align="left">59 matching numerical values; six jointly
+undefined</td>
+</tr>
+</tbody>
+</table>
+<p>The local replay reproduced the archived 65-row numerical comparison
+ledger exactly. It <strong>did not retrain a detector, rerun model
+inference, correct source identities, estimate physical swimming speed
+or certify underwater XYZ</strong>. Conditional position and step errors
+are based on the matched minority, not the whole reference fish
+population. Read the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/M10_ANALYTICAL_V021_REPLAY_SUMMARY.md" class="external-link">public
+M10 scope statement</a> and the <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/docs/BRACKISH_MEASUREMENT_VALIDATION_M08.md" class="external-link">M08
+measurement protocol</a>.</p>
+<p>The M10 local evidence audit and original third-party media/model
+assets are <strong>not deposited as a public empirical source archive on
+this website</strong>. The repository provides scripts, protocols and
+source-qualified software; a full independent source-based replay
+requires the original third-party research inputs with their own licence
+and provenance conditions. The detailed audit is not claimed to be a new
+external biological ground-truth study.</p>
+</div>
+<div class="section level3">
+<h3 id="capability-and-external-evidence-boundaries">3. Capability and external-evidence boundaries<a class="anchor" aria-label="anchor" href="#capability-and-external-evidence-boundaries"></a>
 </h3>
 <table class="table">
 <colgroup>
@@ -110,147 +214,101 @@ tests</span>
 <col width="33%">
 </colgroup>
 <thead><tr class="header">
-<th align="left">Workstream</th>
-<th align="left">Bounded outcome</th>
-<th align="left">Evidence</th>
+<th align="left">Scientific claim</th>
+<th align="left">What is qualified</th>
+<th align="left">What remains required for a stronger claim</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">01 — Architecture</td>
-<td align="left">Documented unit-aware 2D/3D scientific interfaces</td>
-<td align="left"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/102" class="external-link">PRs
-#100–102</a></td>
+<td align="left">Native R movement and QC calculations</td>
+<td align="left">Exact v0.2.1 source tests and bounded real analytical
+replay</td>
+<td align="left">Application-specific measurement quality and
+assumptions</td>
 </tr>
 <tr class="even">
-<td align="left">02 — QC 2.0</td>
-<td align="left">Preserved original-row lineage,
-gap/missingness/exclusion reporting</td>
-<td align="left"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/103" class="external-link">PR
-#103</a></td>
+<td align="left">External fish detector/tracker</td>
+<td align="left">Published-reference comparison of frozen model
+outputs</td>
+<td align="left">New heldout recordings, prediction-blind reference
+review, identity evaluation</td>
 </tr>
 <tr class="odd">
-<td align="left">03 — Numerical validation</td>
-<td align="left">Independent known-answer and metamorphic tests</td>
-<td align="left"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/104" class="external-link">PR
-#104</a></td>
+<td align="left">Fish biological identity</td>
+<td align="left">Source-labelled track-ID arithmetic</td>
+<td align="left">Independently adjudicated persistent fish
+identities</td>
 </tr>
 <tr class="even">
-<td align="left">04 — Visualization 2.0</td>
-<td align="left">QC-linked journal figure specifications and four export
-formats</td>
-<td align="left"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/105" class="external-link">PR
-#105</a></td>
+<td align="left">Camera synchronization</td>
+<td align="left">Tested affine-clock and holdout software interface</td>
+<td align="left">Measured exposure/synchronization evidence for each
+rig</td>
 </tr>
 <tr class="odd">
-<td align="left">05 — Reproducible research</td>
-<td align="left">Frozen source-to-report, independent Python oracle,
-measured coverage and three-OS benchmarks</td>
-<td align="left"><a href="https://github.com/stefanosbalaskas/AquaTrajectories/pull/106" class="external-link">PR
-#106</a></td>
+<td align="left">Underwater 3D XYZ</td>
+<td align="left">Conditional refractive geometry algorithms and
+synthetic tests</td>
+<td align="left">Independently surveyed underwater XYZ targets, held-out
+calibration configurations</td>
+</tr>
+<tr class="even">
+<td align="left">Uncertainty and school/behaviour estimates</td>
+<td align="left">Sensitivity and output software methods</td>
+<td align="left">Measured error distributions, adequate observational
+support and independent experimental units</td>
+</tr>
+<tr class="odd">
+<td align="left">Feeding, stress or welfare effects</td>
+<td align="left">Descriptive movement/event interfaces</td>
+<td align="left">Ethological/physiological criteria and ethically
+approved, replicated designs</td>
+</tr>
+<tr class="even">
+<td align="left">Hardware/ACI actuation</td>
+<td align="left">Simulated and guarded software interfaces</td>
+<td align="left">Independently qualified physical interlocks and
+animal-research safety procedures</td>
 </tr>
 </tbody>
 </table>
-<p>The release-candidate coverage run measured <strong>89.33% executed R
-source coverage</strong>, above the 80% gate. <strong>24 runtime and
-allocation-memory workloads were benchmarked per OS</strong> on Linux,
-Windows and macOS. The independently recomputed synthetic example has
-<strong>17 source observations, 10 eligible movements and 10 cm of
-supported distance</strong>. The <a href="reproducible-research-release.html">full reproducibility
-walkthrough</a> states the commands, assumptions, provenance and
-measured performance; software coverage is not a numerical-certification
-percentage.</p>
+<p>The original <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/inst/evidence/scientific-validation-gates.json" class="external-link">scientific
+validation registry</a> records earlier external-evidence gaps; software
+release progression and the M10 arithmetic replay do not silently
+promote any unverified biological/physical claim to certification.</p>
 </div>
 <div class="section level3">
-<h3 id="live-qualification-history">Live qualification history<a class="anchor" aria-label="anchor" href="#live-qualification-history"></a>
+<h3 id="reproduce-and-cite-the-appropriate-evidence">4. Reproduce and cite the appropriate evidence<a class="anchor" aria-label="anchor" href="#reproduce-and-cite-the-appropriate-evidence"></a>
 </h3>
-<p>These links point to actual GitHub runs and may include successes,
-failures, skips or reruns:</p>
 <ul>
-<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/reproducible-research-release-v012.yml" class="external-link">Three-OS
-reproducibility release workflow</a></li>
-<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/R-CMD-check.yaml" class="external-link">R
-package checks</a></li>
-<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/pkgdown-research-portal.yml" class="external-link">Website
-build, source parity and browser tests</a></li>
-<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/release-candidate-full-gate.yml" class="external-link">Scientific
-safeguard and overall release gates</a></li>
-<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2" class="external-link">Archived
-v0.1.2 qualification evidence</a></li>
+<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1" class="external-link">Current
+v0.2.1 source release, source SHA-256 checksums and three-OS
+evidence</a></li>
+<li>
+<a href="reproducible-research-release.html">Current reproducibility
+walkthrough</a>, <a href="quickstart-five-minutes.html">five-minute
+synthetic quick start</a>, and <a href="capabilities-and-validation.html">capability/validation
+matrix</a>
+</li>
+<li>
+<a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/docs/M07_REAL_DATA_PARITY_AUDIT_20261120.md" class="external-link">Historical
+M07 real-source parity</a> and <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/docs/BRACKISH_MEASUREMENT_VALIDATION_M08.md" class="external-link">M08
+reference measurement</a>
+</li>
+<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.2.1/docs/M09_EXTERNAL_VALIDATION_READINESS.md" class="external-link">M09
+physical/biological external-validation requirements</a></li>
+<li><a href="https://github.com/stefanosbalaskas/AquaTrajectories/actions/workflows/pkgdown-research-portal.yml" class="external-link">Research
+website build, browser qualification and deployment history</a></li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="biological-and-physical-validation-remains-distinct">Biological and physical validation remains distinct<a class="anchor" aria-label="anchor" href="#biological-and-physical-validation-remains-distinct"></a>
-</h3>
-<p>The <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/inst/evidence/scientific-validation-gates.json" class="external-link">nine-domain
-frozen scientific registry</a>, with underlying evidence recorded
-<strong>12 November 2026</strong>, has
-<code>scientific_certified = false</code> in all nine domains. Those
-flags were not silently promoted by the Scientific Core 2.0 engineering
-release.</p>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Independent scientific claim</th>
-<th align="left">Remaining external evidence</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Fish detection</td>
-<td align="left">Held-out, prediction-blind fish box labels across
-species, tanks and visibility conditions</td>
-</tr>
-<tr class="even">
-<td align="left">Fish identity</td>
-<td align="left">Adjudicated held-out identities and official
-association evaluation</td>
-</tr>
-<tr class="odd">
-<td align="left">Multi-camera exposure timing</td>
-<td align="left">Independently measured shutter/exposure clock
-evidence</td>
-</tr>
-<tr class="even">
-<td align="left">Physical underwater XYZ</td>
-<td align="left">Surveyed independent 3D underwater targets and
-calibration holdouts</td>
-</tr>
-<tr class="odd">
-<td align="left">Joint uncertainty</td>
-<td align="left">Observed detector/identity/calibration errors and
-empirical coverage</td>
-</tr>
-<tr class="even">
-<td align="left">Behaviour and tank inference</td>
-<td align="left">Ethological truth, independent tank replication and
-design validity</td>
-</tr>
-<tr class="odd">
-<td align="left">Research explorer</td>
-<td align="left">Independent real multiview and usability review</td>
-</tr>
-<tr class="even">
-<td align="left">Physical ACI</td>
-<td align="left">Ethics-approved physical safety interlocks and
-independent fish outcomes</td>
-</tr>
-<tr class="odd">
-<td align="left">Independent scientific release</td>
-<td align="left">Third-party replication and externally reviewed
-research-system claims</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Publication practice:</strong> identify the exact software
-tag; record original input hashes, camera/track scopes, units, QC
-exclusions, figure-to-input lineage, independent tanks and separately
-validated physical/biological references. See the <a href="capabilities-and-validation.html">capability matrix</a> and <a href="scientific-status.html">scientific status</a>.</p>
-<p><strong>Citation discipline:</strong> v0.1.2 uses its <a href="https://github.com/stefanosbalaskas/AquaTrajectories/blob/v0.1.2/CITATION.cff" class="external-link">versioned
-GitHub source and CITATION.cff</a>. The <a href="https://doi.org/10.5281/zenodo.24262905" class="external-link">Zenodo DOI
-10.5281/zenodo.24262905</a> and <a href="../AquaTrajectories-v0.1.1.bib">BibTeX</a> refer to historical
-<strong>v0.1.1</strong>, not v0.1.2.</p>
+<p><strong>Publication practice:</strong> cite the exact software tag
+used in an analysis; preserve source input hashes, full-denominator
+exclusion records, camera/track scopes and measurement units;
+distinguish synthetic figures from real observations. A GitHub source
+release is not a CRAN publication or an independently peer-reviewed
+paper.</p>
+<p><strong>DOI boundary:</strong> Zenodo <a href="https://doi.org/10.5281/zenodo.24262905" class="external-link">10.5281/zenodo.24262905</a>
+belongs to <strong>historical v0.1.1</strong>, not v0.2.1. No new v0.2.1
+DOI or accepted MDPI article is claimed.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

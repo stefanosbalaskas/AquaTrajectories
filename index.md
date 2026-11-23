@@ -1,16 +1,15 @@
 # From aquatic observations to reproducible movement science
 
-Open-source aquatic movement science · official v0.1.2 release +
-188-function development branch
+Open-source aquatic movement science · current qualified release v0.2.1
 
-Analyze, validate and visualize 2D/3D aquatic-animal trajectories you
-already have with R. Video and Python tracker adapters are optional.
-Start with documented synthetic examples, then bring your own records,
-explicit units and—where applicable—independent calibration and identity
-evidence.
+Analyze, validate and visualize 2D/3D aquatic-animal trajectories
+already in hand, using R. Video and Python tracker adapters are
+optional. Start with source-linked synthetic examples, then supply
+original records, declared units and—where applicable—independent camera
+calibration and identity evidence.
 
 [Reproduce
-v0.1.2](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)[Run
+v0.2.1](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)[Run
 a five-minute
 example](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstart-five-minutes.md)[Open
 interactive
@@ -18,43 +17,43 @@ lab](https://stefanosbalaskas.github.io/AquaTrajectories/synthetic-explorer.md)[
 your
 experiment](https://stefanosbalaskas.github.io/AquaTrajectories/articles/plan-your-experiment.md)
 
-188 R functions on main15 reference categoriesTagged v0.1.2: 179
-functionsEvidence safeguards now in main
+v0.2.1 · 188 documented R exports15 reference categories100% measured R
+expression coverageLinux · Windows · macOS qualified
 
-**Published software:** [AquaTrajectories
-v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
-is the reproducible GitHub software release. The previous v0.1.1 release
-(not the new v0.1.2 source) is permanently archived as
-[10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) on
-Zenodo. [![Zenodo DOI
-10.5281/zenodo.24262905](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)](https://zenodo.org/badge/DOI/10.5281/zenodo.24262905.svg)
-CRAN qualification is in progress; this package is not yet published on
-CRAN.
+**Current software:** The [AquaTrajectories v0.2.1 GitHub
+release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
+contains 188 documented R exports. Its exact source archive passed
+strict R package checks on Linux, Windows and macOS, with 100.0000%
+measured instrumented R code coverage and zero uncovered expressions.
+Download the source and qualification evidence from the versioned
+release; code coverage is not a measure of fish-detection or biological
+accuracy. The [Zenodo DOI
+10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905)
+belongs to historical v0.1.1, not v0.2.1. Neither CRAN publication nor a
+new v0.2.1 DOI is claimed.
 
-**Reproducible Research 0.1.2:** The locked 17-row synthetic
-trajectory-to-QC-to-report example reproduces 10 source-eligible steps
-(10 cm), has independent Python source-row and Euclidean auditing, and
-is measured for 2D/3D runtime/memory across Linux/Windows/macOS.
-[Exact-source release protocol and
-evidence](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/RELEASE05_REPRODUCIBLE_RESEARCH.md).
-A new version-specific Zenodo DOI is not yet confirmed.
+**Real-data analytical replay (M10):** An exact-v0.2.1 Windows R replay
+of frozen five-sequence BrackishMOT analytical inputs reproduced **65/65
+independent R–Python comparisons**: 59 identical finite values and six
+jointly undefined values. The replay reused archived publisher-reference
+matching and external model/tracker observations; it did **not** rerun
+YOLO/ByteTrack inference, independently reannotate fish, or certify
+physical underwater 3D, camera exposure clocks, welfare or treatment
+effects. [Read the evidence scope and
+limitations](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/M10_ANALYTICAL_V021_REPLAY_SUMMARY.md)
+and [research-evidence
+dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md).
+Source videos, model weights and restricted research inputs are not
+distributed by this site.
 
-**New on main:** All eight evidence-safeguard improvements were merged
-through [PR
-\#109](https://github.com/stefanosbalaskas/AquaTrajectories/pull/109).
-Current `main` has 188 documented R functions and 15 reference
-categories. **These post-release additions are not part of the tagged
-v0.1.2 installation.** The reproducible synthetic example and R Markdown
-analysis were qualified on Linux, Windows and macOS; original SmartFish
-source data and the manuscript are not hosted here. [Read the scientific
-safeguards
-protocol](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md).
-
-**Scientific status:** this release is engineering-qualified, but
-biological identity, underwater metrology, fish welfare inference,
-empirical interval coverage and real actuator safety are **not
-independently certified**. See the [evidence and
-limitations](https://stefanosbalaskas.github.io/AquaTrajectories/articles/scientific-status.md).
+**Scientific safeguards:** The eight-part safeguards upgrade from [PR
+\#109](https://github.com/stefanosbalaskas/AquaTrajectories/pull/109) is
+included in v0.2.1, including estimator-specification comparisons,
+measurement-unit contracts, independent-unit checks, spatial support and
+source-linked reporting. These diagnostics can reveal unsupported
+interpretation; they do not independently establish a fish’s biological
+identity or a causal response. [Methods and
+assumptions](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md).
 
 ## Evidence safeguards — know what your trajectory data can support
 
@@ -111,23 +110,23 @@ manifests from a source-linked synthetic research example.
 
 [Read the evidence-safeguards
 guide](https://github.com/stefanosbalaskas/AquaTrajectories/blob/main/docs/EVIDENCE_SAFEGUARDS_V1.md)[Browse
-all 188 development
+all 188 released
 functions](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)[View
 verified
 implementation](https://github.com/stefanosbalaskas/AquaTrajectories/pull/109)
 
-**Availability:** Install `main` explicitly for these development
-features
-(`remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "main")`).
-The official tagged v0.1.2 release is unchanged. The safeguards are
-scientific diagnostics—not certification of biological identity, causal
-feeding effects or physically validated underwater 3D kinematics.
+**Availability:** Install the immutable v0.2.1 release
+(`remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")`).
+Historical v0.1.1, v0.1.2 and v0.2.0 releases remain unchanged. The
+safeguards are scientific diagnostics—not certification of biological
+identity, causal feeding effects or physically validated underwater 3D
+kinematics.
 
 ## Choose your path
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/reference/aqt_compare_specifications.md)
 
-New on main · Evidence quality
+In v0.2.1 · Evidence quality
 
 ### Evaluate whether results are robust
 
@@ -179,14 +178,11 @@ Interactive laboratory
 Five invented tracks, two camera projections, occlusions, identity
 switches, event markers and exportable teaching outputs.
 
-**Released**[v0.1.2](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
-· 179 exports;
-[main](https://github.com/stefanosbalaskas/AquaTrajectories): 188
-exports
+**Released**[v0.2.1](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
+· 188 exported R functions
 
-**Citable**[Prior v0.1.1 Zenodo
-DOI](https://doi.org/10.5281/zenodo.24262905) ·
-[BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
+**Release evidence**100% executed R coverage · [M10: 65/65 R–Python
+checks](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)
 
 **Scientific validity**Software contracts tested; [independent
 biological validation
@@ -194,24 +190,24 @@ pending](https://stefanosbalaskas.github.io/AquaTrajectories/articles/capabiliti
 
 ## Scientific Core 2.0 — independently reproducible research software
 
-The completed five-milestone roadmap is available in the published
-v0.1.2 GitHub release: stable 2D/3D scientific architecture;
-source-preserving QC2; numerical/metamorphic validation; QC-aware
-publication figures; and cross-platform reproducible research.
+The Scientific Core 2.0 milestones introduced in historical v0.1.2 are
+retained in the published v0.2.1 GitHub release: stable 2D/3D scientific
+architecture; source-preserving QC2; numerical/metamorphic validation;
+QC-aware publication figures; and cross-platform reproducible research.
 
-**Measured release evidence:** 179 exported functions; **89.33% actual
-instrumented R test coverage**; **24 runtime and allocation-memory
-workloads on each of Linux, Windows and macOS**; and a **17-row
-synthetic dataset** with **10 eligible movement steps totaling 10 cm**,
-independently verified against an alternate Python implementation. These
-are bounded software tests and environment-dependent benchmarks, not
-biological-certification percentages or peak resident-memory
-measurements.
+**Current release evidence:** 188 exported R functions; **100.0000%
+measured instrumented R code coverage** with zero uncovered expressions;
+strict source-archive checks on Linux, Windows and macOS; 24 measured
+2D/3D workloads per operating system; and a 17-row synthetic trajectory
+example (10 eligible movements, 10 cm). M10 adds a bounded exact-v0.2.1
+Windows replay of historical real analytical inputs (65/65 R–Python
+comparisons). These are distinct software and numerical-evidence claims,
+not biological accuracy percentages or measured peak resident memory.
 
-**[Complete reproducible v0.1.2 research
+**[Current reproducibility
 guide](https://stefanosbalaskas.github.io/AquaTrajectories/articles/reproducible-research-release.md)**
-· **[Full versioned evidence
-archive](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)**
+· **[v0.2.1 source and qualification
+evidence](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)**
 · **[Current scientific evidence
 dashboard](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-evidence-dashboard.md)**
 
@@ -382,8 +378,9 @@ interpreter from a public CDN only after you choose to initialize it.
 
 Explore deterministic examples that separate **what software computes**
 from **what real biological observations establish**. Each exercise runs
-locally in the browser, uses invented inputs, and links to the published
-v0.1.2 R documentation.
+locally in the browser, uses invented inputs, and links to the current
+v0.2.1 R documentation. Browser simulations remain separate from the
+installed package.
 
 [](https://stefanosbalaskas.github.io/AquaTrajectories/scientific-tracking-lab.md)
 
@@ -441,7 +438,7 @@ analysis](https://stefanosbalaskas.github.io/AquaTrajectories/articles/quickstar
 **Explore**[Complete workflow
 atlas](https://stefanosbalaskas.github.io/AquaTrajectories/articles/workflows-atlas.md)
 
-**Reference**[188-function main-branch guided
+**Reference**[188-function v0.2.1 guided
 index](https://stefanosbalaskas.github.io/AquaTrajectories/articles/function-atlas.md)
 
 **Research**[Evidence and validation
@@ -453,7 +450,7 @@ status](https://stefanosbalaskas.github.io/AquaTrajectories/articles/research-ev
 
 # Install the official versioned GitHub release (not yet on CRAN)
 install.packages("remotes")
-remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.1.2")
+remotes::install_github("stefanosbalaskas/AquaTrajectories", ref = "v0.2.1")
 
 library(aquaTrajectories)
 x <- aqt_simulate_tracks(n_fish = 5, n_frames = 200)
@@ -514,14 +511,14 @@ interpretation limits.
 ## Project and release information
 
 - [GitHub source](https://github.com/stefanosbalaskas/AquaTrajectories)
-- [Official v0.1.2 GitHub
-  release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.1.2)
+- [Official v0.2.1 GitHub
+  release](https://github.com/stefanosbalaskas/AquaTrajectories/releases/tag/v0.2.1)
 - [Historical v0.1.1 Zenodo DOI:
   10.5281/zenodo.24262905](https://doi.org/10.5281/zenodo.24262905) ·
   [Download
   BibTeX](https://stefanosbalaskas.github.io/AquaTrajectories/AquaTrajectories-v0.1.1.bib)
-- [Scientific methods and validation
-  protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.1.2/docs)
+- [Current scientific methods and validation
+  protocols](https://github.com/stefanosbalaskas/AquaTrajectories/tree/v0.2.1/docs)
 - [Function
   documentation](https://stefanosbalaskas.github.io/AquaTrajectories/reference/index.md)
   · [Publication
