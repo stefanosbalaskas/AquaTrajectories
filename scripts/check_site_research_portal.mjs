@@ -79,6 +79,9 @@ for (const claim of [/v0\.2\.1 · 188 documented R exports/,/15 reference catego
 for (const fn of ["aqt_compare_specifications", "aqt_measurement_contract", "aqt_inference_readiness", "aqt_evidence_report"]) {
   assert.ok(fs.existsSync(path.join(site, "reference", fn + ".html")), "Missing safeguard reference page: " + fn);
 }
+assert.match(home,/releases\/tag\/v0\.2\.1/, "Homepage must point to current published GitHub release");
+assert.match(home,/M10/, "Homepage must distinguish exact-version real-data replay");
+assert.match(home,/65\/65/, "Homepage must report bounded M10 R/Python checks");
 assert.match(home,/10\.5281\/zenodo\.24262905/i);
 assert.match(home,/quickstart-five-minutes/);
 assert.match(home,/articles\/reproducible-research-release\.html/);
@@ -90,6 +93,10 @@ for(const claim of [/100\.0000%/,/17 rows/,/24 workloads/,/10 cm/,/macOS/,/Windo
 }
 for(const page of ["articles/quickstart-five-minutes.html","articles/capabilities-and-validation.html","articles/scientific-status.html","articles/research-evidence-dashboard.html"]) {
   assert.match(read(page),/v0\.2\.1/, "Expected current v0.2.1 release description: "+page);
+}
+const dashboard=read("articles/research-evidence-dashboard.html");
+for(const claim of [/v0\.2\.1/,/188/,/100\.0000%/,/65\/65/,/frozen/i,/underwater XYZ/i]) {
+  assert.match(dashboard,claim,"Research evidence dashboard missing bounded current-release statement: "+claim);
 }
 const start=read("articles/aquaTrajectories.html");
 assert.match(start,/v0\.2\.1/);
