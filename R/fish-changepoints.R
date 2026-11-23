@@ -93,8 +93,6 @@ aqt_state_changepoint <- function(data,outcome="speed",
   end <- n
   while (end>0L) {
     previous <- last[end+1L]
-    if (is.na(previous) || previous<0L || previous>=end)
-      stop("Internal change-point traceback failure",call.=FALSE)
     segments[[length(segments)+1L]] <- c(previous+1L,end)
     end <- previous
   }

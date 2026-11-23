@@ -85,3 +85,12 @@ test_that("holdout timing retains provenance and rejects failed or missing trans
   expect_true(all(aligned$clock_within_tolerance))
   expect_false(attr(aligned,"aqt_clock_pulse_verification"))
 })
+
+test_that("heldout clock mapping rejects a nonpositive regression slope",{
+ testthat::with_mocked_bindings({
+   expect_error(.cov100_fit_clock(),
+                "Non-identifiable or invalid positive camera clock mapping")
+ },.aqt_sync_holdout_lm=function(formula) structure(
+   list(coefficients=c("(Intercept)"=0,"time"=-1)),
+   class="lm"),.package="aquaTrajectories")
+})

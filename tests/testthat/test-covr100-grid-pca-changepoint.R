@@ -100,3 +100,18 @@ test_that("segmentation keeps no interpolation and penalized known-truth break",
  expect_invisible(aqt_plot_changepoints(fit))
  expect_invisible(aqt_plot_changepoints(conservative))
 })
+
+test_that("finite source positions with nonfinite interpolator results cannot reach PCA",{
+ tr <- .cov100_grid_tracks()
+ testthat::with_mocked_bindings({
+   expect_error(aqt_trajectory_grid_pca(tr,n_grid=7,n_components=2),
+                "cannot be interpolated onto the full grid")
+ },.aqt_grid_approx=function(x,y,xout,...) list(y=rep(Inf,length(xout))),
+   .package="aquaTrajectories")
+})
+test_that("change-point dynamic program refuses numerical overflow before segmentation",{
+ d <- .cov100_changepoint_source()
+ d$speed <- rep(c(1e154,-1e154),6L)
+ expect_error(aqt_state_changepoint(d,penalty=1,min_segment=3L),
+              "No permissible segmentation under declared minimum duration")
+})

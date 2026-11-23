@@ -120,3 +120,37 @@ test_that("frame-index publisher rejects malformed serialized SVG rather than tr
  },.package="aquaTrajectories")
  expect_false(dir.exists(dest))
 })
+
+test_that("frame-index publisher qualifies native SVG and PNG fallbacks",{
+ if(identical(Sys.info()[["sysname"]],"Darwin") ||
+    !capabilities("cairo") || !capabilities("png"))
+   testthat::skip("Native Cairo SVG/PNG devices unavailable")
+ can_plot <- tryCatch({
+   f <- tempfile(fileext=".svg")
+   grDevices::svg(f)
+   graphics::plot.new()
+   grDevices::dev.off()
+   ok <- file.exists(f) && file.info(f)$size>100
+   unlink(f)
+   isTRUE(ok)
+ },error=function(e){
+   try(grDevices::dev.off(),silent=TRUE)
+   FALSE
+ })
+ if(!can_plot)testthat::skip("Native SVG graphics device unavailable")
+ study <- .cov100_frame_index_study()
+ parent <- tempfile("cov100_native_frame_");base::dir.create(parent)
+ on.exit(unlink(parent,recursive=TRUE,force=TRUE),add=TRUE)
+ dest <- file.path(parent,"figures")
+ mock <- function(package,quietly=TRUE,...) {
+   if(package %in% c("svglite","ragg"))return(FALSE)
+   base::requireNamespace(package,quietly=quietly,...)
+ }
+ testthat::with_mocked_bindings({
+   expect_invisible(aqt_frame_index_publish(study,dest))
+ },requireNamespace=mock,.package="aquaTrajectories")
+ generated <- list.files(file.path(dest,"figures"))
+ expect_true(any(grepl("\\.svg$",generated)))
+ expect_true(any(grepl("\\.png$",generated)))
+ expect_true(all(file.info(file.path(dest,"figures",generated))$size>100))
+})

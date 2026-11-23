@@ -114,3 +114,13 @@ test_that("QC2 evidence export fails closed on staging and atomic rename failure
   },file.rename=function(...) FALSE,.package="aquaTrajectories")
   expect_false(dir.exists(second))
 })
+
+test_that("publication specification refuses QC-reviewed empty source trajectories",{
+ blank <- data.frame(session_id=character(),camera_id=character(),
+    track_id=character(),time_s=numeric(),x=numeric(),y=numeric(),
+    observed=logical())
+ source <- aqt_tracks(blank)
+ report <- aqt_qc2_report(source,gap_limits_s=.5)
+ expect_error(aqt_viz2_spec(report,figure="paths"),
+              "Cannot plot an empty trajectory dataset")
+})

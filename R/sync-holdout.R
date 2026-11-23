@@ -1,3 +1,4 @@
+.aqt_sync_holdout_lm <- function(formula) stats::lm(formula)
 # Independent-event holdout audit for shared camera-clock synchronization.
 # A small regression residual does not prove that physical sync pulses
 # were real, detected correctly, or shared an actual hardware time base.
@@ -92,7 +93,7 @@ aqt_sync_holdout_fit <- function(
       if (cam==reference_camera) {
         intercept <- 0;slope <- 1
       } else {
-        fit <- stats::lm(reference_times[train] ~ t[train])
+        fit <- .aqt_sync_holdout_lm(reference_times[train] ~ t[train])
         intercept <- unname(stats::coef(fit)[1L])
         slope <- unname(stats::coef(fit)[2L])
         if (!is.finite(intercept) || !is.finite(slope) || slope<=0)
